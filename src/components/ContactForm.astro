@@ -1,0 +1,60 @@
+<section class="text-center h-auto border flex items-center justify-left p-20">
+  <div
+    class="w-1/2 max-w-2xl bg-white p-6 rounded-lg flex flex-col gap-8 text-left"
+  >
+    <h2 class="text-3xl md:text-7xl font-semibold mb-4 uppercase">
+      Get in <span
+        class="bg-gradient-to-r from-amber-400 to-red-600 inline-block text-transparent bg-clip-text"
+        >Touch</span
+      >
+    </h2>
+    <p class="text-orange-500">some@gmail.com</p>
+  </div>
+  <div class="w-1/2 max-w-2xl bg-white p-6 rounded-lg flex flex-col gap-8">
+    <div class="flex flex-row gap-4 text-left">
+      <div>
+        <label for="name" class="block text-gray-700 font-medium"
+          >Full Name *</label
+        >
+        <input
+          type="text"
+          id="name"
+          name="name"
+          required
+          class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+      <div>
+        <label for="name" class="block text-gray-700 font-medium"
+          >Email *</label
+        >
+        <input
+          type="text"
+          id="name"
+          name="name"
+          required
+          class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+    </div>
+    <div class="flex flex-col gap-4 text-left">
+      <label for="message" class="block text-gray-700 font-medium"
+        >Message</label
+      >
+      <textarea
+        id="message"
+        name="message"
+        rows="3"
+        class="w-full mt-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      ></textarea>
+    </div>
+
+    <button
+      type="submit"
+      class="px-6 py-3 w-min bg-gradient-to-t from-amber-400 to-red-600 text-white rounded-full hover:scale-110 transition flex"
+    >
+      Submit
+      <span class="ml-2"><i class="fa-solid fa-arrow-right"></i></span>
+    </button>
+  </div>
+</section>
