@@ -1,0 +1,22 @@
+---
+import Layout from "../layouts/Layout.astro";
+import NavigationBar from "../components/NavigationBar.astro";
+import ContactForm from "../components/ContactForm.astro";
+import CaseStudyDetails from "../components/CaseStudyDetails.astro";
+
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+
+const title = "Case Study Detailed - My Astro Site";
+const description =
+  "Explore our detailed case studies to see how we solve real-world problems.";
+---
+
+<Layout title={title} description={description}>
+  <main class="container mx-auto">
+    <NavigationBar />
+    <CaseStudyDetails />
+    <ContactForm />
+    <Footer />
+  </main>
+</Layout>

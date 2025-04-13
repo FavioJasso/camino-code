@@ -1,0 +1,80 @@
+<section
+  class="justify-left flex h-auto flex-col items-center px-4 py-20 text-center text-sm sm:text-base md:flex-row md:px-10 md:text-lg"
+>
+  <div
+    class="flex w-full flex-col gap-6 rounded-lg bg-white text-center md:w-1/2 md:text-left"
+  >
+    <h2
+      class="text-3xl leading-tight font-bold uppercase sm:text-5xl md:text-[4rem] lg:text-[6rem]"
+    >
+      Get in
+      <span
+        class="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent"
+        >Touch</span
+      >
+    </h2>
+    <p class="text-sm text-orange-500 sm:text-base md:text-lg">
+      some@gmail.com
+    </p>
+  </div>
+
+  <div
+    class="flex w-full flex-col items-center gap-6 rounded-lg bg-white text-sm sm:text-base md:w-1/2 md:text-lg"
+  >
+    <div class="flex w-full flex-col gap-4 text-left md:flex-row">
+      <div class="w-full">
+        <label
+          for="name"
+          class="block text-sm font-medium text-gray-700 sm:text-base md:text-lg"
+        >
+          Full Name *
+        </label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          required
+          class="form-input mt-1 w-full rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none sm:text-base md:text-lg"
+        />
+      </div>
+      <div class="w-full">
+        <label
+          for="email"
+          class="block text-sm font-medium text-gray-700 sm:text-base md:text-lg"
+        >
+          Email *
+        </label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          class="form-input mt-1 w-full rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none sm:text-base md:text-lg"
+        />
+      </div>
+    </div>
+
+    <div class="flex w-full flex-col gap-2 text-left">
+      <label
+        for="message"
+        class="block text-sm font-medium text-gray-700 sm:text-base md:text-lg"
+      >
+        Message
+      </label>
+      <textarea
+        id="message"
+        name="message"
+        rows="3"
+        class="mt-1 w-full rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none sm:text-base md:text-lg"
+      ></textarea>
+    </div>
+
+    <button
+      type="submit"
+      class="flex w-min items-center rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-sm text-white transition hover:scale-110 sm:text-base md:text-lg"
+    >
+      Submit
+      <span class="ml-2"><i class="fa-solid fa-arrow-right"></i></span>
+    </button>
+  </div>
+</section>
