@@ -26,44 +26,46 @@
     class="flex w-full flex-col items-start gap-4 text-left text-white md:w-1/2 [&>div]:flex [&>div]:w-full [&>div]:flex-col [&>div]:items-center [&>div]:justify-center [&>div]:gap-4 [&>div]:rounded-lg [&>div]:border [&>div]:border-gray-300 [&>div]:bg-black [&>div]:p-6"
   >
     <!-- Data Science Card -->
-    <div
-      class="group rounded-xl p-4 transition duration-300 hover:bg-gradient-to-t hover:from-amber-400 hover:to-red-600"
-    >
+    <div class="group rounded-xl p-4 transition duration-300">
       <div class="flex w-full items-center justify-between gap-4">
         <h3
-          class="text-base font-bold transition duration-300 group-hover:text-white sm:text-lg md:text-xl lg:text-2xl"
+          class="text-base font-bold transition duration-300 sm:text-lg md:text-xl lg:text-2xl"
         >
           Data Science
         </h3>
         <i
-          class="fa-solid fa-layer-group bg-gradient-to-b from-[#f86a1a] to-[#e74c3c] bg-clip-text text-2xl text-transparent transition duration-300 group-hover:!bg-none group-hover:bg-none group-hover:!text-white group-hover:text-white sm:text-3xl md:text-4xl"
+          class="fa-solid fa-layer-group bg-gradient-to-b from-[#f86a1a] to-[#e74c3c] bg-clip-text text-2xl text-transparent transition duration-300 sm:text-3xl md:text-4xl"
         ></i>
       </div>
       <ul
-        class="w-4/5 list-inside list-disc text-xs transition duration-300 group-hover:text-white sm:text-sm md:text-base"
+        class="w-4/5 list-inside list-disc text-xs transition duration-300 sm:text-sm md:text-base"
       >
         <li>Predictive Analytics</li>
         <li>Machine Learning Models</li>
         <li>Big Data Solutions</li>
       </ul>
+      <div class="absolute bottom-0 left-0 h-1 w-full overflow-hidden">
+        <div
+          class="progress-bar h-full w-0 bg-white transition-all duration-[10000ms] ease-linear"
+        >
+        </div>
+      </div>
     </div>
 
     <!-- Software Development Card -->
-    <div
-      class="group rounded-xl p-4 transition duration-300 hover:bg-gradient-to-t hover:from-amber-400 hover:to-red-600"
-    >
+    <div class="group rounded-xl p-4 transition duration-300">
       <div class="flex w-full items-center justify-between gap-4">
         <h3
-          class="text-base font-bold transition duration-300 group-hover:text-white sm:text-lg md:text-xl lg:text-2xl"
+          class="text-base font-bold transition duration-300 sm:text-lg md:text-xl lg:text-2xl"
         >
           Software Development
         </h3>
         <i
-          class="fa-solid fa-laptop bg-gradient-to-b from-[#f86a1a] to-[#e74c3c] bg-clip-text text-2xl text-transparent transition duration-300 group-hover:!bg-none group-hover:bg-none group-hover:!text-white group-hover:text-white sm:text-3xl md:text-4xl"
+          class="fa-solid fa-laptop bg-gradient-to-b from-[#f86a1a] to-[#e74c3c] bg-clip-text text-2xl text-transparent transition duration-300 sm:text-3xl md:text-4xl"
         ></i>
       </div>
       <ul
-        class="w-4/5 list-inside list-disc text-xs transition duration-300 group-hover:text-white sm:text-sm md:text-base"
+        class="w-4/5 list-inside list-disc text-xs transition duration-300 sm:text-sm md:text-base"
       >
         <li>Custom Web Applications</li>
         <li>Scalable Architecture</li>
@@ -72,21 +74,19 @@
     </div>
 
     <!-- Automated Solutions Card -->
-    <div
-      class="group rounded-xl p-4 transition duration-300 hover:bg-gradient-to-t hover:from-amber-400 hover:to-red-600"
-    >
+    <div class="group rounded-xl p-4 transition duration-300">
       <div class="flex w-full items-center justify-between gap-4">
         <h3
-          class="text-base font-bold transition duration-300 group-hover:text-white sm:text-lg md:text-xl lg:text-2xl"
+          class="text-base font-bold transition duration-300 sm:text-lg md:text-xl lg:text-2xl"
         >
           Automated Solutions
         </h3>
         <i
-          class="fa-solid fa-microchip bg-gradient-to-b from-[#f86a1a] to-[#e74c3c] bg-clip-text text-2xl text-transparent transition duration-300 group-hover:!bg-none group-hover:bg-none group-hover:!text-white group-hover:text-white sm:text-3xl md:text-4xl"
+          class="fa-solid fa-microchip bg-gradient-to-b from-[#f86a1a] to-[#e74c3c] bg-clip-text text-2xl text-transparent transition duration-300 sm:text-3xl md:text-4xl"
         ></i>
       </div>
       <ul
-        class="w-4/5 list-inside list-disc text-xs transition duration-300 group-hover:text-white sm:text-sm md:text-base"
+        class="w-4/5 list-inside list-disc text-xs transition duration-300 sm:text-sm md:text-base"
       >
         <li>Natural Language Processing</li>
         <li>AI-Driven Insights</li>
@@ -97,7 +97,7 @@
     <div class="flex w-full justify-center border-none md:justify-start">
       <a
         href="#"
-        class="w-full rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-center text-xs text-white transition hover:scale-110 sm:text-sm md:w-auto md:text-base lg:text-lg"
+        class="w-full rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-center text-xs text-white transition sm:text-sm md:w-auto md:text-base lg:text-lg"
       >
         See All
         <span class="ml-2"><i class="fa-solid fa-arrow-right"></i></span>
@@ -105,3 +105,66 @@
     </div>
   </div>
 </section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const cards = document.querySelectorAll("#services .group");
+    let currentIndex = 0;
+
+    function activateCard(index) {
+      // Remove active classes and reset progress bars
+      cards.forEach((card) => {
+        card.classList.remove(
+          "bg-gradient-to-t",
+          "from-amber-400",
+          "to-red-600",
+          "text-white"
+        );
+        card.querySelector("h3")?.classList.remove("text-white");
+        card.querySelector("ul")?.classList.remove("text-white");
+        card.querySelector("i")?.classList.remove("!text-white", "text-white");
+
+        // Reset progress bar
+        const progressBar = card.querySelector(".progress-bar");
+        if (progressBar) {
+          progressBar.classList.remove("w-full");
+          progressBar.classList.add("w-0");
+        }
+      });
+
+      // Activate current card
+      const currentCard = cards[index];
+      currentCard.classList.add(
+        "bg-gradient-to-t",
+        "from-amber-400",
+        "to-red-600",
+        "text-white"
+      );
+      currentCard.querySelector("h3")?.classList.add("text-white");
+      currentCard.querySelector("ul")?.classList.add("text-white");
+      currentCard
+        .querySelector("i")
+        ?.classList.add("!text-white", "text-white");
+
+      // Trigger progress bar animation
+      const currentProgressBar = currentCard.querySelector(".progress-bar");
+      if (currentProgressBar) {
+        // Force reflow to restart animation
+        void currentProgressBar.offsetWidth;
+        currentProgressBar.classList.remove("w-0");
+        currentProgressBar.classList.add("w-full");
+      }
+
+      // Schedule next card
+      setTimeout(() => {
+        currentIndex = (currentIndex + 1) % cards.length;
+        activateCard(currentIndex);
+      }, 10000); // 10 seconds per card
+    }
+
+    // Start with delay
+    setTimeout(() => {
+      activateCard(currentIndex);
+    }, 1000);
+  });
+</script>

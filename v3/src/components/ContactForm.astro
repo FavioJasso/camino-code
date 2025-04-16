@@ -13,7 +13,9 @@
         >Touch</span
       >
     </h2>
-    <p class="text-sm text-orange-500 sm:text-base md:text-lg">
+    <p
+      class="w-min text-sm text-orange-500 transition hover:bg-black hover:text-white sm:text-base md:text-lg"
+    >
       some@gmail.com
     </p>
   </div>
@@ -23,7 +25,7 @@
   >
     <div class="flex w-full flex-col gap-4 text-left md:flex-row">
       <div
-        class="flex items-center border-b border-black py-2 text-left focus-within:border-red-500"
+        class="flex items-center border-b border-black py-2 text-left focus-within:border-red-500 hover:border-red-500"
       >
         <input
           class="w-full appearance-none border-none bg-transparent p-4 leading-tight text-gray-700 focus:outline-none"
@@ -34,7 +36,7 @@
         />
       </div>
       <div
-        class="flex items-center border-b border-black py-2 text-left focus-within:border-red-500"
+        class="flex items-center border-b border-black py-2 text-left focus-within:border-red-500 hover:border-red-500"
       >
         <input
           class="w-full appearance-none border-none bg-transparent p-4 leading-tight text-gray-700 focus:outline-none"
@@ -47,13 +49,13 @@
     </div>
 
     <div
-      class="flex w-full flex-col gap-2 border-b border-black py-2 text-left focus-within:border-red-500"
+      class="flex w-full flex-col gap-2 border-b border-black py-2 text-left focus-within:border-red-500 hover:border-red-500"
     >
       <textarea
         id="message"
         name="message"
         rows="3"
-        class="w-full appearance-none border-none bg-transparent p-4 leading-tight text-gray-700 focus:outline-none"
+        class="w-full appearance-none border-none bg-transparent p-4 leading-tight text-gray-700 hover:border-red-500 focus:outline-none"
         placeholder="Message *"
         aria-label="Message"
         required></textarea>
