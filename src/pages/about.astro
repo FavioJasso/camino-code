@@ -1,9 +1,10 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import NavigationBar from "../components/NavigationBar.astro";
-import ContactForm from "../components/ContactForm.astro";
+import ContactForm from "../components/ContactFormPages.astro";
 import Footer from "../components/Footer.astro";
 import AboutUsHeader from "../components/AboutUsHeader.astro";
+import AboutUsFounder from "../components/AboutUsFounder.astro";
 import AboutUsHero from "../components/AboutUsHero.astro";
 import AboutUsOffers from "../components/AboutUsOffers.astro";
 import AboutUsPartners from "../components/AboutUsPartners.astro";
@@ -18,8 +19,13 @@ const description = "Learn more about our company and what we do.";
     <NavigationBar />
     <AboutUsHeader />
     <AboutUsHero />
+    <hr class="mx-20 w-full border-gray-700" />
+    <AboutUsFounder />
+    <hr class="mx-20 w-full border-gray-700" />
     <AboutUsOffers />
+    <hr class="mx-20 w-full border-gray-700" />
     <AboutUsPartners />
+    <hr class="mx-20 w-full border-gray-700" />
     <ContactForm />
     <Footer />
   </main>

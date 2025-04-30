@@ -1,6 +1,14 @@
+---
+import partner1 from "../assets/images/partner_1.png";
+import partner2 from "../assets/images/partner_2.png";
+import partner3 from "../assets/images/partner_3.png";
+import partner4 from "../assets/images/partner_4.png";
+import partner5 from "../assets/images/partner_5.png";
+---
+
 <section
   id="partners"
-  class="flex h-dvh flex-col items-center justify-center px-10 py-20 text-center text-sm sm:text-base md:text-lg lg:text-xl"
+  class="flex flex-col items-center justify-center px-10 py-20 text-center text-sm sm:text-base md:text-lg lg:text-xl"
 >
   <h2
     class="text-4xl font-bold text-gray-800 uppercase sm:text-5xl md:pb-12 md:text-[5rem] lg:text-[6rem]"
@@ -13,27 +21,27 @@
     </span>
   </h2>
   <div class="logo-slider">
-    <div class="logo-track">
-      <div class="logo-set ">
-        <img src="https://picsum.photos/200" alt="Logo 1" />
-        <img src="https://picsum.photos/200" alt="Logo 2" />
-        <img src="https://picsum.photos/200" alt="Logo 3" />
-        <img src="https://picsum.photos/200" alt="Logo 4" />
-        <img src="https://picsum.photos/200" alt="Logo 5" />
+    <div class="logo-track [&>div>img]:rounded-full [&>div>img]:shadow-md">
+      <div class="logo-set">
+        <img src={partner1.src} alt="Logo 1" />
+        <img src={partner2.src} alt="Logo 2" />
+        <img src={partner3.src} alt="Logo 3" />
+        <img src={partner4.src} alt="Logo 4" />
+        <img src={partner5.src} alt="Logo 5" />
       </div>
       <div class="logo-set">
-        <img src="https://picsum.photos/200" alt="Logo 1" />
-        <img src="https://picsum.photos/200" alt="Logo 2" />
-        <img src="https://picsum.photos/200" alt="Logo 3" />
-        <img src="https://picsum.photos/200" alt="Logo 4" />
-        <img src="https://picsum.photos/200" alt="Logo 5" />
+        <img src={partner1.src} alt="Logo 1" />
+        <img src={partner2.src} alt="Logo 2" />
+        <img src={partner3.src} alt="Logo 3" />
+        <img src={partner4.src} alt="Logo 4" />
+        <img src={partner5.src} alt="Logo 5" />
       </div>
       <div class="logo-set">
-        <img src="https://picsum.photos/200" alt="Logo 1" />
-        <img src="https://picsum.photos/200" alt="Logo 2" />
-        <img src="https://picsum.photos/200" alt="Logo 3" />
-        <img src="https://picsum.photos/200" alt="Logo 4" />
-        <img src="https://picsum.photos/200" alt="Logo 5" />
+        <img src={partner1.src} alt="Logo 1" />
+        <img src={partner2.src} alt="Logo 2" />
+        <img src={partner3.src} alt="Logo 3" />
+        <img src={partner4.src} alt="Logo 4" />
+        <img src={partner5.src} alt="Logo 5" />
       </div>
     </div>
   </div>

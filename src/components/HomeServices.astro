@@ -1,8 +1,16 @@
+---
+import imgBg from "../assets/images/landing-bg1.png";
+---
+
 <section
   id="services"
-  class="flex h-auto flex-col items-start justify-around bg-black px-6 py-20 text-center text-sm sm:px-8 sm:text-base md:flex-row md:px-10 md:text-lg"
+  class="relative flex h-auto flex-col items-start justify-around overflow-hidden px-36 py-20 text-center text-sm sm:px-8 sm:text-base md:flex-row md:px-10 md:text-lg"
 >
-  <!-- Left Text Column -->
+  <img
+    src={imgBg.src}
+    alt="Background"
+    class="absolute inset-0 -z-10 h-full w-full object-cover"
+  />
   <div
     class="flex w-full flex-col items-start p-4 text-center text-white md:w-1/2 md:text-left"
   >
@@ -44,12 +52,6 @@
         <li>Machine Learning Models</li>
         <li>Big Data Solutions</li>
       </ul>
-      <div class="absolute bottom-0 left-0 h-1 w-full overflow-hidden">
-        <div
-          class="progress-bar h-full w-0 bg-white transition-all duration-[10000ms] ease-linear"
-        >
-        </div>
-      </div>
     </div>
 
     <!-- Software Development Card -->
@@ -94,7 +96,7 @@
     </div>
 
     <!-- CTA Button -->
-    <div class="flex w-full justify-center border-none md:justify-start">
+    <span class="flex w-full justify-center border-none md:justify-start">
       <a
         href="#"
         class="w-full rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-center text-xs text-white transition sm:text-sm md:w-auto md:text-base lg:text-lg"
@@ -102,7 +104,7 @@
         See All
         <span class="ml-2"><i class="fa-solid fa-arrow-right"></i></span>
       </a>
-    </div>
+    </span>
   </div>
 </section>
 
@@ -123,13 +125,6 @@
         card.querySelector("h3")?.classList.remove("text-white");
         card.querySelector("ul")?.classList.remove("text-white");
         card.querySelector("i")?.classList.remove("!text-white", "text-white");
-
-        // Reset progress bar
-        const progressBar = card.querySelector(".progress-bar");
-        if (progressBar) {
-          progressBar.classList.remove("w-full");
-          progressBar.classList.add("w-0");
-        }
       });
 
       // Activate current card
@@ -145,15 +140,6 @@
       currentCard
         .querySelector("i")
         ?.classList.add("!text-white", "text-white");
-
-      // Trigger progress bar animation
-      const currentProgressBar = currentCard.querySelector(".progress-bar");
-      if (currentProgressBar) {
-        // Force reflow to restart animation
-        void currentProgressBar.offsetWidth;
-        currentProgressBar.classList.remove("w-0");
-        currentProgressBar.classList.add("w-full");
-      }
 
       // Schedule next card
       setTimeout(() => {

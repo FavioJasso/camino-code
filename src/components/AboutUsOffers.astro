@@ -1,3 +1,10 @@
+---
+import img1 from "../assets/images/offers_bg01.png";
+import img2 from "../assets/images/offers_bg02.png";
+import img3 from "../assets/images/offers_bg03.png";
+import img4 from "../assets/images/offers_bg04.png";
+---
+
 <section
   id="what-sets-us-apart"
   class="flex h-auto flex-col items-center justify-center gap-8 px-6 py-20 text-center text-sm sm:px-8 sm:text-base md:px-10 md:text-lg lg:text-xl"
@@ -24,14 +31,14 @@
     Get Started
     <span class="ml-2"><i class="fa-solid fa-arrow-down"></i></span>
   </a>
-  <ul class="flex flex-wrap justify-center gap-6">
+  <ul class="flex flex-wrap justify-center gap-6 md:max-w-3/5">
     <li>
       <div
         class="group relative size-64 overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:scale-110"
       >
         <div
           class="absolute inset-0 bg-cover bg-center transition duration-300 group-hover:blur-sm"
-          style="background-image: url('https://picsum.photos/200');"
+          style={`background-image: url(${img1.src});`}
         >
         </div>
         <div
@@ -49,7 +56,7 @@
       >
         <div
           class="absolute inset-0 bg-cover bg-center transition duration-300 group-hover:blur-sm"
-          style="background-image: url('https://picsum.photos/200');"
+          style={`background-image: url(${img2.src});`}
         >
         </div>
         <div
@@ -68,7 +75,7 @@
       >
         <div
           class="absolute inset-0 bg-cover bg-center transition duration-300 group-hover:blur-sm"
-          style="background-image: url('https://picsum.photos/200');"
+          style={`background-image: url(${img3.src});`}
         >
         </div>
         <div
@@ -87,7 +94,7 @@
       >
         <div
           class="absolute inset-0 bg-cover bg-center transition duration-300 group-hover:blur-sm"
-          style="background-image: url('https://picsum.photos/200');"
+          style={`background-image: url(${img4.src});`}
         >
         </div>
         <div

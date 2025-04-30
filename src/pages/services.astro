@@ -1,13 +1,14 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import NavigationBar from "../components/NavigationBar.astro";
-import ContactForm from "../components/ContactForm.astro";
+import ContactForm from "../components/ContactFormPages.astro";
 import ServicesHeader from "../components/ServicesHeader.astro";
 import ServicesList from "../components/ServicesList.astro";
 import ServicesDetails from "../components/ServicesDetails.astro";
 import Projects from "../components/Projects.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
+import imgBg from "../assets/images/services_bg01.png";
 
 const title = "Our Services - My Astro Site";
 const description = "Explore the range of services we offer to our clients.";
@@ -17,14 +18,13 @@ const description = "Explore the range of services we offer to our clients.";
   <main class="container mx-auto">
     <NavigationBar />
     <ServicesHeader />
+    <hr class="mt-20 w-full border-gray-700" />
     <ServicesList />
-    <img
-      src="https://picsum.photos/200"
-      alt=""
-      class="h-[50rem] w-full object-cover"
-    />
+    <img src={imgBg.src} alt="" class="h-auto w-full object-cover" />
     <ServicesDetails />
+    <hr class="mt-20 w-full border-gray-700" />
     <Projects />
+    <hr class="mt-20 w-full border-gray-700" />
     <ContactForm />
     <Footer />
   </main>

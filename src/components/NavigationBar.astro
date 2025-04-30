@@ -1,30 +1,31 @@
+---
+import { Image } from "astro:assets";
+import logo from "../assets/logo.svg";
+---
+
 <div
   id="main-head"
   class="main-head relative z-10 flex items-center justify-between bg-white"
 >
   <div class="container mx-auto px-4">
-    <div class="flex items-center justify-between p-4 border-b border-gray-300">
-      <img
-        src="https://picsum.photos/200"
+    <div class="flex items-center justify-between border-b border-gray-300 p-4">
+      <Image
+        src={logo}
         alt=""
-        class="h-16 w-32 rounded-md bg-white object-cover p-2 shadow"
+        class="h-14 w-28 rounded-md bg-white object-cover"
       />
 
       <!-- Desktop Navigation -->
       <nav
         class="hidden md:flex md:items-center md:justify-center md:gap-4 [&>a]:no-underline"
       >
-        <a href="/" class="text-gray-600 hover:text-gray-900">Home</a>
-        <a href="/about" class="text-gray-600 hover:text-gray-900">About</a>
-        <a href="/services" class="text-gray-600 hover:text-gray-900"
-          >Services</a
-        >
-        <a href="/case-studies" class="text-gray-600 hover:text-gray-900"
-          >Case Studies</a
-        >
+        <a href="/" class="text-gray-600">Home</a>
+        <a href="/about" class="text-gray-600">About</a>
+        <a href="/services" class="text-gray-600">Services</a>
+        <a href="/case-studies" class="text-gray-600">Case Studies</a>
         <a
           href="/contact"
-          class="rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-white transition hover:scale-110"
+          class="rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-white"
         >
           Contact
           <span class="ml-2"><i class="fa-solid fa-arrow-right"></i></span>
@@ -54,37 +55,26 @@
       <!-- Mobile Fullscreen Menu -->
       <div
         id="nav-links"
-        class="fixed top-0 left-0 z-[9999] hidden h-screen w-full bg-white p-4 transition-all duration-300 md:hidden"
+        class="fixed top-0 left-0 z-[9999] hidden h-screen w-full bg-white p-4 md:hidden"
       >
         <button
           id="menu-close"
-          class="absolute top-4 right-4 text-6xl text-gray-600 hover:text-gray-900 focus:outline-none"
+          class="absolute top-4 right-4 text-6xl text-gray-600 focus:outline-none"
         >
           &times;
         </button>
         <div class="flex h-full flex-col items-center justify-center">
           <div class="flex flex-col gap-4 text-center">
-            <!-- Close Button -->
-            <a href="/" class="block text-xl text-gray-600 hover:text-gray-900"
-              >Home</a
-            >
-            <a
-              href="/about"
-              class="block text-xl text-gray-600 hover:text-gray-900">About</a
-            >
-            <a
-              href="/services"
-              class="block text-xl text-gray-600 hover:text-gray-900"
-              >Services</a
-            >
-            <a
-              href="/case-studies"
-              class="block text-xl text-gray-600 hover:text-gray-900"
+            <!-- Menu Links -->
+            <a href="/" class="block text-xl text-gray-600">Home</a>
+            <a href="/about" class="block text-xl text-gray-600">About</a>
+            <a href="/services" class="block text-xl text-gray-600">Services</a>
+            <a href="/case-studies" class="block text-xl text-gray-600"
               >Case Studies</a
             >
             <a
               href="/contact"
-              class="block rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-white transition hover:scale-110"
+              class="block rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-white"
             >
               Contact
               <span class="ml-2"><i class="fa-solid fa-arrow-right"></i></span>
@@ -98,20 +88,6 @@
 
 <script>
   const mainHead = document.getElementById("main-head");
-
-  let lastScrollY = window.scrollY;
-
-  window.addEventListener("scroll", () => {
-    if (window.scrollY < 100) {
-      mainHead.classList.remove("slideup");
-      mainHead.classList.add("slidedown");
-    } else {
-      mainHead.classList.remove("slidedown");
-      mainHead.classList.add("slideup");
-    }
-
-    lastScrollY = window.scrollY;
-  });
 
   const menuToggle = document.getElementById("menu-toggle");
   const menuClose = document.getElementById("menu-close");

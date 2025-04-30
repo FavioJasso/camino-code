@@ -1,11 +1,21 @@
+---
+import imgBg from "../assets/images/footer-bg.png";
+import logo from "../assets/logo.svg";
+---
+
 <footer
-  class="flex h-auto flex-col gap-10 bg-black px-4 py-20 text-center text-sm text-white sm:text-base md:px-10 md:text-lg"
+  class="relative flex h-auto flex-col gap-10 px-4 py-20 text-center text-sm text-white sm:text-base md:px-10 md:text-lg"
 >
+  <img
+    src={imgBg.src}
+    alt="Background"
+    class="absolute inset-0 -z-10 h-full w-full object-cover"
+  />
   <div class="flex flex-col items-center justify-center gap-10 px-4 sm:px-10">
     <img
-      src="https://picsum.photos/200"
+      src={logo.src}
       alt=""
-      class="h-16 w-32 rounded-md bg-white object-cover p-2 shadow"
+      class="h-20 w-40 rounded-md bg-black object-cover"
     />
     <ul
       class="flex flex-wrap justify-center gap-4 text-sm text-white sm:text-base md:text-lg"

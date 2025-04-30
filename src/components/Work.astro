@@ -1,3 +1,10 @@
+---
+import work1 from "../assets/images/services_work01.png";
+import work2 from "../assets/images/services_work02.png";
+import work3 from "../assets/images/services_work03.png";
+import work4 from "../assets/images/services_work04.png";
+---
+
 <section
   id="work"
   class="flex h-auto flex-col items-center justify-center px-6 py-20 text-center text-sm sm:px-8 sm:text-base md:px-10 md:text-lg"
@@ -22,15 +29,16 @@
   <div
     class="mt-10 flex max-w-4xl flex-wrap justify-center gap-6 [&>a]:w-full [&>a]:md:w-[40%]"
   >
+  <div></div>
     <a
       href="/case-study-detailed"
       rel="noopener noreferrer"
       class="group flex flex-col items-center rounded-lg transition-transform duration-300"
     >
       <img
-        src="https://picsum.photos/200"
+        src={work1.src}
         alt=""
-        class="w-full rounded-lg transition-all duration-300 group-hover:rounded-[6rem]"
+        class="h-full w-full rounded-lg object-cover transition-all duration-300 group-hover:rounded-[6rem]"
       />
       <span class="space-y-2 p-4 text-left">
         <span
@@ -51,9 +59,9 @@
       class="group flex flex-col items-center rounded-lg transition-transform duration-300"
     >
       <img
-        src="https://picsum.photos/200"
+        src={work2.src}
         alt=""
-        class="w-full rounded-lg transition-all duration-300 group-hover:rounded-[6rem]"
+        class="h-full w-full rounded-lg object-cover transition-all duration-300 group-hover:rounded-[6rem]"
       />
       <span class="space-y-2 p-4 text-left">
         <span
