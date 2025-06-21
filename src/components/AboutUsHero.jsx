@@ -1,9 +1,10 @@
-// components/AboutMissionVision.tsx
+// components/AboutMissionVision.jsx
 "use client";
 
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 
+// Dynamically import ModelViewer for client-side rendering only
 const ModelViewer = dynamic(() => import("@/components/ModelViewer"), {
   ssr: false,
 });
@@ -12,9 +13,9 @@ export default function AboutMissionVision() {
   return (
     <div className="relative overflow-x-hidden">
       {/* Mission Section */}
-      <div className="relative w-full mx-auto max-w-[1440px]">
-        {/* Only Right Model - half off screen */}
-        <div className="md:absolute  relative right-0 top-1/2 md:-translate-y-1/2 w-[800px] md:h-[450px] h-[350px] -mr-[400px] md:-tr">
+      <div className="relative mx-auto container">
+        {/* Decorative Model on the right */}
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[800px] h-[350px] md:h-[450px] -mr-[400px] pointer-events-none select-none hidden md:block">
           <ModelViewer url="/ring-2.glb" />
         </div>
         <motion.section
@@ -23,11 +24,11 @@ export default function AboutMissionVision() {
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="flex h-auto flex-col items-start justify-center px-6 py-4 text-left sm:px-8 sm:py-20 md:px-16 md:py-24 lg:px-24 xl:px-36"
+          className="flex flex-col items-start justify-center px-6 py-8 text-left sm:px-8 md:px-16 lg:px-24 xl:px-36"
         >
-          <h2 className="text-4xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl">
+          <h2 className="text-4xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
             Our{" "}
-            <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
               Mission
             </span>
           </h2>
@@ -36,7 +37,7 @@ export default function AboutMissionVision() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="mt-6 max-w-2xl text-base text-orange-600 sm:text-lg md:text-xl"
+            className="mt-6 max-w-2xl text-base text-orange-600 md:text-xl"
           >
             At Camino Code, our mission is to deliver innovative data science
             and web development solutions that empower businesses to thrive in a
@@ -52,8 +53,9 @@ export default function AboutMissionVision() {
       </div>
 
       {/* Vision Section */}
-      <div className="relative w-full mx-auto max-w-[1440px]">
-        <div className="md:absolute  relative left-0 bottom-1/4 w-[800px] md:h-[450px] h-[350px] md:-ml-[400px] -ml-[350px]">
+      <div className="relative mx-auto container">
+        {/* Decorative Model on the left */}
+        <div className="absolute left-0 bottom-1/4 w-[800px] h-[350px] md:h-[450px] -ml-[400px] pointer-events-none select-none hidden md:block">
           <ModelViewer url="/ring-1.glb" />
         </div>
         <motion.section
@@ -62,11 +64,11 @@ export default function AboutMissionVision() {
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="flex h-auto flex-col items-end justify-center px-6 py-4 text-right sm:px-8 sm:py-20 md:px-16 md:py-24 lg:px-24 xl:px-36"
+          className="flex flex-col items-end justify-center px-6 py-8 text-right sm:px-8 md:px-16 lg:px-24 xl:px-36"
         >
-          <h2 className="text-4xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl">
+          <h2 className="text-4xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
             Our{" "}
-            <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
               Vision
             </span>
           </h2>
@@ -75,7 +77,7 @@ export default function AboutMissionVision() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="mt-6 max-w-2xl text-base text-orange-600 sm:text-lg md:text-xl"
+            className="mt-6 max-w-2xl text-base text-orange-600 md:text-xl"
           >
             Our vision is to become a global leader in data science and web
             development by setting new standards for innovation, performance,

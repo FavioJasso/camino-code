@@ -5,21 +5,21 @@ import { motion } from 'framer-motion';
 
 export default function AboutUsHero() {
   return (
-    <section 
+    <section
       id="about-hero"
-      className="relative flex h-auto flex-col items-center justify-center gap-6 px-6 py-24 text-center sm:gap-8 sm:px-8 sm:py-20 md:h-screen md:gap-[34px] md:px-10"
+      className="relative flex flex-col items-center justify-center gap-6 px-6 py-24 text-center min-h-[700px]"
     >
-      {/* Background Image with Overlay */}
+      {/* Background Image with dark overlay */}
       <div className="absolute inset-0 -z-10">
         <Image
           src="/assets/images/about_background.png"
           alt="About Us Background"
           fill
-          className="object-cover blur-[1px] grayscale"
+          className="object-cover grayscale"
           quality={90}
           priority
         />
-        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute inset-0 bg-black/60" />
       </div>
 
       {/* Animated Heading */}
@@ -27,9 +27,9 @@ export default function AboutUsHero() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="text-4xl font-bold uppercase text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl 2xl:leading-[6rem] xl:leading-[4rem] lg:leading-[3.5rem] md:leading-[3rem] sm:leading-[2.5rem]"
+        className="text-4xl font-bold uppercase text-white md:text-6xl"
       >
-        <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
+        <span className="bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
           About
         </span>{' '}
         Us
@@ -40,11 +40,9 @@ export default function AboutUsHero() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="max-w-2xl text-sm text-white/90 sm:text-base md:text-lg"
+        className="max-w-2xl text-base text-white/90"
       >
-        At Camino Code, we specialize in delivering advanced data science and web
-        development solutions. Our goal is to empower businesses with innovative,
-        scalable, and intelligent platforms that drive growth and efficiency.
+        At Camino Code, we specialize in delivering advanced data science and web development solutions. Our goal is to empower businesses with innovative, scalable, and intelligent platforms that drive growth and efficiency.
       </motion.p>
     </section>
   );

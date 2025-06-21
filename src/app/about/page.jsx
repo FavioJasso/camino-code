@@ -12,26 +12,20 @@ export const metadata = {
   description: "Learn more about our company and what we do.",
 };
 
-const Divider = () => (
-  <hr className="mx-auto w-full max-w-[1440px] border-gray-700" />
-);
-
 export default function AboutPage() {
   return (
-    <main className="mx-auto">
+    <main>
       <NavigationBar />
       <AboutUsHeader />
-      <div className="bg-[rgba(248,244,239,1)]">
-        <AboutUsHero />
-        <Divider />
-        <AboutUsFounder />
-        <Divider />
-        <AboutUsOffers />
-        <Divider />
-        <AboutUsPartners />
-        <Divider />
-        <ContactForm />
-      </div>
+      <AboutUsHero />
+      <hr className="my-8 border-gray-300" />
+      <AboutUsFounder />
+      <hr className="my-8 border-gray-300" />
+      <AboutUsOffers />
+      <hr className="my-8 border-gray-300" />
+      <AboutUsPartners />
+      <hr className="my-8 border-gray-300" />
+      <ContactForm />
       <Footer />
     </main>
   );
