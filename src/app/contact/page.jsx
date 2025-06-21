@@ -17,7 +17,7 @@ const ContactUsPage = () => (
     <main className="">
       <NavigationBar />
       <ContactUsHeader />
-      <div className="bg-[rgba(248,244,239,1)]">
+      <div >
         <ContactForm />
       </div>
       <Footer />
