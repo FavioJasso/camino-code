@@ -12,8 +12,9 @@ export const metadata = {
   description: "Explore our service offerings.",
 };
 
+// Background image for the page
 const BackgroundImage = () => (
-  <div className="relative h-screen w-full">
+  <div className="fixed inset-0 -z-10 w-full h-full">
     <Image
       src="/assets/images/services_bg01.png"
       alt="Services background"
@@ -25,25 +26,27 @@ const BackgroundImage = () => (
   </div>
 );
 
-const ContentSection = ({ children, className }) => (
-  <div className={`bg-[rgba(248,244,239,1)] ${className}`}>
+// Section wrapper for consistent background color
+const ContentSection = ({ children, className = "" }) => (
+  <section className={`bg-[#F8F4EF] ${className}`}>
     {children}
-  </div>
+  </section>
 );
 
+// Simple horizontal rule for section separation
 const HorizontalRule = () => (
-  <hr className="mx-auto !pt-20 w-full max-w-[1440px] border-gray-700" />
+  <hr className="mx-auto w-full max-w-6xl border-gray-300 my-12" />
 );
 
 export default function ServicesPage() {
   return (
     <main>
-      <NavigationBar iswhite={true} />
+      <BackgroundImage />
+      <NavigationBar iswhite />
       <ServicesHeader />
       <ContentSection>
         <ServicesList />
       </ContentSection>
-      <BackgroundImage />
       <ServicesDetails />
       <ContentSection>
         <HorizontalRule />
