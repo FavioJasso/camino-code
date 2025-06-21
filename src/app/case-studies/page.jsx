@@ -1,12 +1,10 @@
 import Head from "next/head";
-import {
-  NavigationBar,
-  ContactForm,
-  CaseStudiesHeader,
-  Work,
-  Testimonials,
-  Footer,
-} from "@/components";
+import NavigationBar from "@/components/NavigationBar";
+import ContactForm from "@/components/ContactFormPages";
+import CaseStudiesHeader from "@/components/CaseStudiesHeader";
+import Work from "@/components/Work";
+import Testimonials from "@/components/Testimonials";
+import Footer from "@/components/Footer";
 
 const TITLE = "Case Studies - My Next.js Site";
 const DESCRIPTION =
