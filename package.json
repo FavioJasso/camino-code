@@ -1,0 +1,36 @@
+{
+  "name": "camino",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@react-three/drei": "^10.0.7",
+    "@react-three/fiber": "^9.1.2",
+    "@splinetool/react-spline": "^4.0.0",
+    "@types/gsap": "^3.0.0",
+    "framer-motion": "^12.9.4",
+    "gsap": "^3.13.0",
+    "lucide-react": "^0.506.0",
+    "next": "15.3.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.56.1",
+    "saas": "^1.0.0",
+    "sass": "^1.89.0",
+    "three": "^0.176.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.1",
+    "tailwindcss": "^4"
+  }
+}
