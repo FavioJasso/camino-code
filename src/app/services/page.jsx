@@ -1,3 +1,4 @@
+// app/services/page.tsx
 import NavigationBar from "@/components/NavigationBar";
 import ContactForm from "@/components/ContactFormPages";
 import ServicesHeader from "@/components/ServicesHeader";
@@ -9,51 +10,38 @@ import Work from "@/components/Work";
 
 export const metadata = {
   title: "Our Services - Camino Code",
-  description: "Explore our service offerings.",
+  description: "Explore the range of services we offer to our clients.",
 };
-
-// Background image for the page
-const BackgroundImage = () => (
-  <div className="fixed inset-0 -z-10 w-full h-full">
-    <Image
-      src="/assets/images/services_bg01.png"
-      alt="Services background"
-      fill
-      className="object-cover"
-      quality={90}
-      priority
-    />
-  </div>
-);
-
-// Section wrapper for consistent background color
-const ContentSection = ({ children, className = "" }) => (
-  <section className={`bg-[#F8F4EF] ${className}`}>
-    {children}
-  </section>
-);
-
-// Simple horizontal rule for section separation
-const HorizontalRule = () => (
-  <hr className="mx-auto w-full max-w-6xl border-gray-300 my-12" />
-);
 
 export default function ServicesPage() {
   return (
     <main>
-      <BackgroundImage />
-      <NavigationBar iswhite />
+      <NavigationBar iswhite={true} />
       <ServicesHeader />
-      <ContentSection>
+      {/* Section with light background for services list */}
+      <div className="bg-[rgba(248,244,239,1)]">
         <ServicesList />
-      </ContentSection>
+      </div>
+      {/* Full-screen background image */}
+      <div className="relative h-screen w-full">
+        <Image
+          src="/assets/images/services_bg01.png"
+          alt="Services background"
+          fill
+          className="object-cover"
+          quality={90}
+          priority
+        />
+      </div>
       <ServicesDetails />
-      <ContentSection>
-        <HorizontalRule />
+      {/* Section with light background for work and contact */}
+      <div className="bg-[rgba(248,244,239,1)]">
+        {/* Divider */}
+        <hr className="mx-auto w-full max-w-[1440px] border-gray-700" />
         <Work />
-        <HorizontalRule />
+        <hr className="mx-auto w-full max-w-[1440px] border-gray-700 mt-20" />
         <ContactForm />
-      </ContentSection>
+      </div>
       <Footer />
     </main>
   );
