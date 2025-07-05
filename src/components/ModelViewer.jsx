@@ -28,7 +28,7 @@ function LoadingSpinner() {
   return (
     <div className="absolute inset-0 flex items-center justify-center">
       <motion.div
-        className="w-16 h-16 border-4 border-amber-400 border-t-transparent rounded-full"
+        className="h-16 w-16 rounded-full border-4 border-amber-400 border-t-transparent"
         animate={{ rotate: 360 }}
         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
       />
@@ -38,10 +38,10 @@ function LoadingSpinner() {
 
 export default function ModelViewer({ url }) {
   return (
-    <div className="w-full h-full relative">
+    <div className="relative h-full w-full">
       <Canvas
         camera={{ position: [0, 0, 5], fov: 45 }}
-        gl={{ 
+        gl={{
           antialias: true,
           alpha: true,
           powerPreference: "high-performance",
@@ -58,12 +58,12 @@ export default function ModelViewer({ url }) {
           intensity={0.5}
           castShadow
         />
-        
+
         <Suspense fallback={null}>
           <Model url={url} />
           <Environment preset="sunset" />
         </Suspense>
-        
+
         <OrbitControls
           enablePan={false}
           enableZoom={false}
@@ -72,7 +72,7 @@ export default function ModelViewer({ url }) {
           autoRotate
           autoRotateSpeed={2}
         />
-        
+
         {/* Animated background particles */}
         <mesh>
           <sphereGeometry args={[50, 32, 32]} />
@@ -84,7 +84,7 @@ export default function ModelViewer({ url }) {
           />
         </mesh>
       </Canvas>
-      
+
       <Suspense fallback={<LoadingSpinner />}>
         {/* This ensures loading state is shown */}
       </Suspense>
