@@ -41,13 +41,13 @@ export const useScrollAnimation = () => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setScrollY(currentScrollY);
-      
+
       if (currentScrollY > lastScrollY.current) {
         setScrollDirection("down");
       } else {
         setScrollDirection("up");
       }
-      
+
       lastScrollY.current = currentScrollY;
     };
 
@@ -89,19 +89,22 @@ export const useMagnetic = (strength = 0.3) => {
   const y = useMotionValue(0);
   const ref = useRef(null);
 
-  const handleMouseMove = useCallback((e) => {
-    if (!ref.current) return;
+  const handleMouseMove = useCallback(
+    (e) => {
+      if (!ref.current) return;
 
-    const rect = ref.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    
-    const distanceX = e.clientX - centerX;
-    const distanceY = e.clientY - centerY;
-    
-    x.set(distanceX * strength);
-    y.set(distanceY * strength);
-  }, [x, y, strength]);
+      const rect = ref.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      const distanceX = e.clientX - centerX;
+      const distanceY = e.clientY - centerY;
+
+      x.set(distanceX * strength);
+      y.set(distanceY * strength);
+    },
+    [x, y, strength],
+  );
 
   const handleMouseLeave = useCallback(() => {
     x.set(0);
@@ -188,7 +191,8 @@ export const useScrollProgress = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const totalHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
       const currentProgress = (window.scrollY / totalHeight) * 100;
       setProgress(Math.min(currentProgress, 100));
     };
@@ -211,9 +215,9 @@ export const useInViewport = (offset = 0) => {
 
       const rect = ref.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
-      
+
       setIsInViewport(
-        rect.top <= windowHeight - offset && rect.bottom >= offset
+        rect.top <= windowHeight - offset && rect.bottom >= offset,
       );
     };
 
