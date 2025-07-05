@@ -15,7 +15,7 @@ import ClientProviders from "../components/ClientProviders";
 export default function Home() {
   return (
     <ClientProviders>
-      <main className="w-full h-max overflow-hidden gap-4">
+      <main className="h-max w-full gap-4 overflow-hidden">
         <NavigationBar />
         <HeroSection />
         <AboutUsPartners />
