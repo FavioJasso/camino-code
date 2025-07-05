@@ -1,9 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import { Star } from "lucide-react";
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Star, Quote } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 
 const testimonials = [
@@ -11,66 +10,148 @@ const testimonials = [
     id: 1,
     name: "Alex Johnson",
     role: "CEO of TechWave",
+    company: "TechWave Solutions",
     quote:
       "Camino Code transformed our data strategy, giving us valuable insights that boosted efficiency and decision-making.",
     stars: 5,
+    image: "/assets/images/testimonial-1.jpg",
   },
   {
     id: 2,
     name: "Sarah Chen",
     role: "CTO of StyleHub",
+    company: "StyleHub Inc.",
     quote:
       "Their expertise in web development and AI integration helped us scale our platform beyond our expectations.",
     stars: 5,
+    image: "/assets/images/testimonial-2.jpg",
   },
   {
     id: 3,
     name: "Michael Rodriguez",
     role: "Founder of FinServe",
+    company: "FinServe Technologies",
     quote:
       "The AI-powered solutions they delivered revolutionized our customer service and reduced costs significantly.",
     stars: 5,
+    image: "/assets/images/testimonial-3.jpg",
   },
 ];
 
 export default function Testimonials() {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const { ref: sectionRef, hasIntersected } = useIntersectionObserver({
+  const sectionRef = useRef(null);
+  const canvasRef = useRef(null);
+  
+  const { ref: observerRef, hasIntersected } = useIntersectionObserver({
     threshold: 0.3,
   });
 
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const parallaxY = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
+
+  // Particle animation effect
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const particleCount = 50;
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = Math.random() * 0.5 - 0.25;
+        this.speedY = Math.random() * 0.5 - 0.25;
+        this.opacity = Math.random() * 0.3 + 0.1;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x > canvas.width) this.x = 0;
+        if (this.x < 0) this.x = canvas.width;
+        if (this.y > canvas.height) this.y = 0;
+        if (this.y < 0) this.y = canvas.height;
+      }
+
+      draw() {
+        ctx.fillStyle = `rgba(245, 158, 11, ${this.opacity})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Initialize particles
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      particles.forEach((particle) => {
+        particle.update();
+        particle.draw();
+      });
+      
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     if (!isAutoPlaying) return;
-    
+
     const interval = setInterval(() => {
       setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
     }, 5000);
-    
+
     return () => clearInterval(interval);
   }, [isAutoPlaying]);
 
   const testimonial = testimonials[currentTestimonial];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
+  const titleVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 100,
+      rotateX: -90,
+      filter: "blur(10px)"
     },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
+      rotateX: 0,
+      filter: "blur(0px)",
       transition: {
         duration: 0.8,
-        ease: "easeOut",
+        ease: [0.215, 0.61, 0.355, 1.0],
       },
     },
   };
@@ -78,25 +159,28 @@ export default function Testimonials() {
   const testimonialVariants = {
     enter: {
       opacity: 0,
-      x: 100,
-      scale: 0.9,
+      x: 300,
+      scale: 0.8,
+      rotateY: 45,
     },
     center: {
       opacity: 1,
       x: 0,
       scale: 1,
+      rotateY: 0,
       transition: {
-        duration: 0.5,
-        ease: "easeOut",
+        duration: 0.8,
+        ease: [0.215, 0.61, 0.355, 1.0],
       },
     },
     exit: {
       opacity: 0,
-      x: -100,
-      scale: 0.9,
+      x: -300,
+      scale: 0.8,
+      rotateY: -45,
       transition: {
-        duration: 0.5,
-        ease: "easeIn",
+        duration: 0.8,
+        ease: [0.215, 0.61, 0.355, 1.0],
       },
     },
   };
@@ -105,90 +189,112 @@ export default function Testimonials() {
     <motion.section
       ref={sectionRef}
       id="testimonials"
-      className="relative flex h-[800px] flex-col items-center justify-center gap-10 px-6 py-16 text-center text-white overflow-hidden"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-black via-neutral-900 to-black py-24 sm:py-32"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
+      style={{ opacity }}
     >
-      {/* Animated Background */}
-      <motion.div 
-        className="absolute inset-0 -z-10"
-        initial={{ scale: 1.1 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
-      >
-        <Image
-          src="/assets/images/landing-bg2.png"
-          alt="Background"
-          fill
-          className="object-cover"
-          quality={90}
-          priority
-        />
-        <motion.div 
-          className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/40"
-          animate={{
-            opacity: [0.4, 0.6, 0.4],
-          }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      </motion.div>
+      {/* Animated particles canvas */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 z-0"
+        style={{ mixBlendMode: "screen" }}
+      />
 
-      {/* Floating particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(15)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-2 h-2 bg-amber-400/30 rounded-full"
-            initial={{
-              x: `${Math.random() * 100}%`,
-              y: "100vh",
-            }}
-            animate={{
-              y: "-10vh",
-              x: `${Math.random() * 100}%`,
-            }}
-            transition={{
-              duration: Math.random() * 15 + 10,
-              repeat: Infinity,
-              delay: Math.random() * 5,
-              ease: "linear",
-            }}
-          />
-        ))}
+      {/* Animated mesh gradient background */}
+      <motion.div
+        className="absolute inset-0 opacity-20"
+        animate={{
+          background: [
+            "radial-gradient(ellipse at 0% 0%, rgba(245, 158, 11, 0.3) 0%, transparent 50%)",
+            "radial-gradient(ellipse at 100% 100%, rgba(245, 158, 11, 0.3) 0%, transparent 50%)",
+            "radial-gradient(ellipse at 0% 0%, rgba(245, 158, 11, 0.3) 0%, transparent 50%)",
+          ],
+        }}
+        transition={{
+          duration: 15,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+      />
+
+      {/* Grid pattern overlay */}
+      <div className="absolute inset-0 opacity-5">
+        <div
+          className="h-full w-full"
+          style={{
+            backgroundImage: "linear-gradient(rgba(245, 158, 11, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(245, 158, 11, 0.1) 1px, transparent 1px)",
+            backgroundSize: "50px 50px",
+          }}
+        />
       </div>
 
-      {/* Heading */}
-      <motion.h2 
-        className="font-bold uppercase text-5xl md:text-7xl lg:text-8xl leading-tight z-10"
-        variants={containerVariants}
-        initial="hidden"
-        animate={hasIntersected ? "visible" : "hidden"}
-      >
-        <motion.span variants={itemVariants}>What Our</motion.span>{" "}
-        <motion.span 
-          className="bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent inline-block"
-          variants={itemVariants}
-          whileHover={{ 
-            scale: 1.05,
-            textShadow: "0 0 30px rgba(245, 158, 11, 0.5)",
-            transition: { duration: 0.3 }
-          }}
-        >
-          Clients Say
-        </motion.span>
-      </motion.h2>
+      {/* Floating orbs */}
+      <motion.div
+        className="absolute left-20 top-20 h-96 w-96 rounded-full bg-gradient-to-r from-amber-400/10 to-red-600/10 blur-3xl"
+        animate={{
+          x: [0, 100, 0],
+          y: [0, -50, 0],
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      <motion.div
+        className="absolute bottom-20 right-20 h-80 w-80 rounded-full bg-gradient-to-r from-orange-400/10 to-amber-600/10 blur-3xl"
+        animate={{
+          x: [0, -80, 0],
+          y: [0, 80, 0],
+          scale: [1, 1.3, 1],
+        }}
+        transition={{
+          duration: 25,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
 
-      {/* Testimonial Carousel */}
-      <div className="container mx-auto relative z-10">
+      <div ref={observerRef} className="relative z-10 container mx-auto px-6 sm:px-8">
+        {/* Heading with dramatic animation */}
+        <motion.div className="perspective-1000 mb-16 text-center">
+          <motion.h2
+            className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl"
+            variants={titleVariants}
+            initial="hidden"
+            animate={hasIntersected ? "visible" : "hidden"}
+          >
+            <motion.span 
+              className="block"
+              whileHover={{
+                scale: 1.05,
+                textShadow: "0 0 50px rgba(255, 255, 255, 0.8)",
+                transition: { duration: 0.3 },
+              }}
+            >
+              CLIENT
+            </motion.span>
+            <motion.span
+              className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
+              whileHover={{
+                scale: 1.05,
+                textShadow: "0 0 50px rgba(245, 158, 11, 0.8)",
+                transition: { duration: 0.3 },
+              }}
+            >
+              TESTIMONIALS
+            </motion.span>
+          </motion.h2>
+        </motion.div>
+
+        {/* Testimonial Carousel */}
         <AnimatePresence mode="wait">
           <motion.div
             key={currentTestimonial}
-            className="flex flex-col items-center"
+            className="perspective-1000 flex flex-col items-center"
             variants={testimonialVariants}
             initial="enter"
             animate="center"
@@ -196,137 +302,190 @@ export default function Testimonials() {
             onMouseEnter={() => setIsAutoPlaying(false)}
             onMouseLeave={() => setIsAutoPlaying(true)}
           >
-            {/* Stars */}
-            <motion.div 
-              className="mb-6 flex gap-1"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ 
-                delay: 0.2,
-                type: "spring",
-                stiffness: 200,
-                damping: 15
+            {/* Advanced testimonial card */}
+            <motion.div
+              className="relative max-w-4xl rounded-3xl bg-gradient-to-br from-white/5 to-white/10 p-12 backdrop-blur-md"
+              whileHover={{ 
+                scale: 1.02,
+                transition: { duration: 0.3 }
               }}
             >
-              {[...Array(testimonial.stars)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, rotate: -180, scale: 0 }}
-                  animate={{ opacity: 1, rotate: 0, scale: 1 }}
-                  transition={{ 
-                    delay: 0.3 + i * 0.1,
-                    type: "spring",
-                    stiffness: 200
-                  }}
-                  whileHover={{ 
-                    scale: 1.2,
-                    rotate: 360,
-                    transition: { duration: 0.3 }
-                  }}
+              {/* Glow effect */}
+              <motion.div
+                className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 opacity-0 blur-xl"
+                animate={{
+                  opacity: [0, 0.3, 0],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+              
+              {/* Stars with enhanced animation */}
+              <motion.div
+                className="mb-8 flex justify-center gap-2"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{
+                  delay: 0.2,
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 15,
+                }}
+              >
+                {[...Array(testimonial.stars)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, rotate: -180, scale: 0 }}
+                    animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                    transition={{
+                      delay: 0.3 + i * 0.1,
+                      type: "spring",
+                      stiffness: 200,
+                    }}
+                    whileHover={{
+                      scale: 1.3,
+                      rotate: 360,
+                      transition: { duration: 0.3 },
+                    }}
+                  >
+                    <Star className="h-8 w-8 fill-amber-400 text-amber-400 drop-shadow-[0_0_15px_rgba(245,158,11,0.8)]" />
+                  </motion.div>
+                ))}
+              </motion.div>
+
+              {/* Quote with advanced styling */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.8 }}
+                className="relative mb-8"
+              >
+                <Quote className="absolute -top-6 -left-6 h-16 w-16 text-amber-400/20" />
+                <motion.p 
+                  className="text-center text-2xl font-light leading-relaxed text-white/90 sm:text-3xl"
+                  style={{ y: parallaxY }}
                 >
-                  <Star
-                    className="h-6 w-6 fill-amber-400 text-amber-400 drop-shadow-lg"
-                  />
+                  {testimonial.quote}
+                </motion.p>
+                <Quote className="absolute -bottom-6 -right-6 h-16 w-16 rotate-180 text-amber-400/20" />
+              </motion.div>
+
+              {/* Author info with image placeholder */}
+              <motion.div
+                className="flex flex-col items-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.8 }}
+              >
+                {/* Avatar circle */}
+                <motion.div
+                  className="mb-4 h-20 w-20 overflow-hidden rounded-full bg-gradient-to-br from-amber-400 to-red-600 p-0.5"
+                  whileHover={{ scale: 1.1, rotate: 360 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="h-full w-full rounded-full bg-black flex items-center justify-center">
+                    <span className="text-2xl font-bold text-white">
+                      {testimonial.name.split(' ').map(n => n[0]).join('')}
+                    </span>
+                  </div>
                 </motion.div>
-              ))}
-            </motion.div>
 
-            {/* Quote */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
-              className="relative"
-            >
-              <motion.span
-                className="absolute -top-8 -left-8 text-6xl text-amber-400/20 font-serif"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.6 }}
-              >
-                "
-              </motion.span>
-              <p className="text-xl italic lg:text-2xl max-w-3xl px-8">
-                {testimonial.quote}
-              </p>
-              <motion.span
-                className="absolute -bottom-8 -right-8 text-6xl text-amber-400/20 font-serif rotate-180"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.6 }}
-              >
-                "
-              </motion.span>
-            </motion.div>
-
-            {/* Author */}
-            <motion.div 
-              className="mt-12"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
-            >
-              <motion.p 
-                className="text-lg font-semibold"
-                whileHover={{ scale: 1.05 }}
-              >
-                {testimonial.name}
-              </motion.p>
-              <motion.p 
-                className="bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent text-base italic"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
-              >
-                {testimonial.role}
-              </motion.p>
+                <motion.h3
+                  className="text-2xl font-semibold text-white"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  {testimonial.name}
+                </motion.h3>
+                <motion.p
+                  className="mt-1 bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-lg text-transparent"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.8 }}
+                >
+                  {testimonial.role}
+                </motion.p>
+                <motion.p
+                  className="mt-1 text-sm text-white/60"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.9 }}
+                >
+                  {testimonial.company}
+                </motion.p>
+              </motion.div>
             </motion.div>
           </motion.div>
         </AnimatePresence>
-      </div>
 
-      {/* Navigation Dots */}
-      <motion.div 
-        className="mt-8 flex gap-3 z-10"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
-      >
-        {testimonials.map((_, index) => (
-          <motion.button
-            key={index}
-            onClick={() => {
-              setCurrentTestimonial(index);
-              setIsAutoPlaying(false);
-              setTimeout(() => setIsAutoPlaying(true), 10000);
+        {/* Navigation Dots with enhanced styling */}
+        <motion.div
+          className="mt-12 flex justify-center gap-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+        >
+          {testimonials.map((_, index) => (
+            <motion.button
+              key={index}
+              onClick={() => {
+                setCurrentTestimonial(index);
+                setIsAutoPlaying(false);
+                setTimeout(() => setIsAutoPlaying(true), 10000);
+              }}
+              className={`relative h-3 rounded-full transition-all duration-500 ${
+                currentTestimonial === index
+                  ? "w-12 bg-gradient-to-r from-amber-400 to-red-600"
+                  : "w-3 bg-white/30 hover:bg-white/50"
+              }`}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+              aria-label={`View testimonial ${index + 1}`}
+            >
+              {currentTestimonial === index && (
+                <motion.div
+                  className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 to-red-600"
+                  layoutId="activeTestimonial"
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                />
+              )}
+            </motion.button>
+          ))}
+        </motion.div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.6 }}
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut",
             }}
-            className={`relative h-3 w-3 rounded-full transition-all duration-300 ${
-              currentTestimonial === index 
-                ? "bg-amber-400 w-8" 
-                : "bg-white/30 hover:bg-white/50"
-            }`}
-            whileHover={{ scale: 1.2 }}
-            whileTap={{ scale: 0.9 }}
-            aria-label={`View testimonial ${index + 1}`}
+            className="flex flex-col items-center"
           >
-            {currentTestimonial === index && (
-              <motion.div
-                className="absolute inset-0 rounded-full bg-amber-400"
-                layoutId="activeTestimonial"
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              />
-            )}
-          </motion.button>
-        ))}
-      </motion.div>
-
-      {/* Background decoration */}
-      <motion.div
-        className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black/50 to-transparent"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-      />
+            <span className="mb-2 text-xs uppercase tracking-widest text-white/40">
+              Scroll
+            </span>
+            <motion.div
+              className="h-16 w-[1px] bg-gradient-to-b from-amber-400 to-transparent"
+              animate={{ scaleY: [0, 1, 0] }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+          </motion.div>
+        </motion.div>
+      </div>
     </motion.section>
   );
 }
