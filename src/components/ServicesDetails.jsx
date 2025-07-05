@@ -1,14 +1,10 @@
-// components/ServicesDetails.jsx
 "use client";
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion, useScroll, useTransform } from "framer-motion";
 import {
-  Layers,
   Laptop,
-  Cpu,
   ClipboardList,
   CloudUpload,
   LineChart,
@@ -22,318 +18,381 @@ import {
   PanelTop,
   BarChart2,
   Headphones,
+  Database,
+  Shield,
+  Code,
 } from "lucide-react";
 
-// Register GSAP plugin only on client
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+const servicesSections = [
+  {
+    id: "data-science",
+    title: "Data Science",
+    subtitle: "Transform Data Into Competitive Advantage",
+    icon: <Database className="h-full w-full" />,
+    gradient: "from-blue-400 to-purple-600",
+    services: [
+      {
+        icon: <ClipboardList className="h-full w-full" />,
+        title: "Data Strategy and Consulting",
+        description: "We analyze your business challenges, optimize data systems, and create comprehensive strategies for data collection and utilization. Our approach ensures data security, compliance, and establishes KPIs that drive measurable business growth.",
+      },
+      {
+        icon: <CloudUpload className="h-full w-full" />,
+        title: "Data Engineering",
+        description: "Build robust, scalable data pipelines and infrastructure using cutting-edge cloud technologies. We design systems that efficiently collect, store, and process massive datasets while ensuring reliability and performance.",
+      },
+      {
+        icon: <LineChart className="h-full w-full" />,
+        title: "Data Analysis & Visualization",
+        description: "Transform complex data into actionable insights through advanced analytics and stunning visualizations. Our interactive dashboards and reports make data-driven decision-making intuitive and accessible.",
+      },
+      {
+        icon: <Brain className="h-full w-full" />,
+        title: "Machine Learning and AI",
+        description: "Leverage state-of-the-art AI solutions for automation, predictive analytics, fraud detection, and intelligent decision-making. We build custom models tailored to your specific business needs.",
+      },
+      {
+        icon: <Cloud className="h-full w-full" />,
+        title: "Industry-Specific Solutions",
+        description: "Specialized AI-driven solutions designed for healthcare, finance, retail, manufacturing, and other industries. Our domain expertise ensures solutions that address your unique challenges.",
+      },
+    ],
+  },
+  {
+    id: "software-development",
+    title: "Software Development",
+    subtitle: "Build Digital Products That Scale",
+    icon: <Code className="h-full w-full" />,
+    gradient: "from-amber-400 to-red-600",
+    services: [
+      {
+        icon: <Laptop className="h-full w-full" />,
+        title: "Software Strategy & Solutions",
+        description: "We architect and design scalable software solutions that align perfectly with your business objectives. Our strategic approach ensures long-term success and adaptability.",
+      },
+      {
+        icon: <Paintbrush className="h-full w-full" />,
+        title: "UI/UX Design",
+        description: "Create exceptional user experiences through research-driven design. We craft intuitive interfaces that delight users and drive engagement across all platforms.",
+      },
+      {
+        icon: <Globe className="h-full w-full" />,
+        title: "Website Development",
+        description: "Build lightning-fast, secure, and SEO-optimized websites that deliver results. Our modern web applications are designed to convert visitors into customers.",
+      },
+      {
+        icon: <Smartphone className="h-full w-full" />,
+        title: "Mobile Development",
+        description: "Develop powerful cross-platform mobile applications using React Native and Flutter. We create seamless experiences that work flawlessly on iOS and Android.",
+      },
+    ],
+  },
+  {
+    id: "audit-sme",
+    title: "Audit & SME Solutions",
+    subtitle: "Optimize and Scale Your Operations",
+    icon: <Shield className="h-full w-full" />,
+    gradient: "from-green-400 to-teal-600",
+    services: [
+      {
+        icon: <SearchCheck className="h-full w-full" />,
+        title: "Analyze Existing Solutions",
+        description: "Comprehensive evaluation of your current systems to identify optimization opportunities, security vulnerabilities, and areas for improvement.",
+      },
+      {
+        icon: <FilePlus className="h-full w-full" />,
+        title: "Improve Business Processes",
+        description: "Streamline workflows and automate repetitive tasks to enhance efficiency, reduce costs, and accelerate growth.",
+      },
+      {
+        icon: <PanelTop className="h-full w-full" />,
+        title: "Customize for SME Needs",
+        description: "Tailored solutions designed specifically for small and medium enterprises, addressing unique challenges with scalable approaches.",
+      },
+      {
+        icon: <BarChart2 className="h-full w-full" />,
+        title: "Ensure Smooth Integration",
+        description: "Seamlessly integrate new solutions with your existing infrastructure, ensuring minimal disruption and maximum compatibility.",
+      },
+      {
+        icon: <Headphones className="h-full w-full" />,
+        title: "Ongoing Support and Updates",
+        description: "Continuous monitoring, maintenance, and updates to keep your solutions running at peak performance with 24/7 support.",
+      },
+    ],
+  },
+];
 
 export default function ServicesDetails() {
-  const sectionRefs = useRef([]);
-  const [isMounted, setIsMounted] = useState(false);
+  const containerRef = useRef(null);
+  const [activeSection, setActiveSection] = useState(0);
 
   useEffect(() => {
-    setIsMounted(true);
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    const handleScroll = () => {
+      const sections = document.querySelectorAll('.service-section');
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+
+      sections.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        const sectionTop = rect.top + window.scrollY;
+        const sectionBottom = sectionTop + rect.height;
+
+        if (scrollPosition >= sectionTop && scrollPosition <= sectionBottom) {
+          setActiveSection(index);
+        }
+      });
     };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (!isMounted) return;
-    const sections = sectionRefs.current.filter(Boolean);
-
-    sections.forEach((section) => {
-      const content = section.querySelector(".scroll-content");
-      const sticky = section.querySelector(".sticky-content");
-
-      gsap.from(content, {
-        y: 100,
-        opacity: 0,
-        duration: 1,
-        immediateRender: false,
-        scrollTrigger: {
-          trigger: section,
-          start: "top 70%",
-          toggleActions: "play none none none",
-        },
-      });
-
-      gsap.from(sticky, {
-        x: -100,
-        opacity: 0,
-        duration: 1,
-        immediateRender: false,
-        scrollTrigger: {
-          trigger: section,
-          start: "top 70%",
-          toggleActions: "play none none none",
-        },
-      });
-    });
-
-    const timer = setTimeout(() => {
-      ScrollTrigger.refresh();
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [isMounted]);
-
-  // Helper to add refs only once
-  const addToRefs = (el) => {
-    if (el && !sectionRefs.current.includes(el)) {
-      sectionRefs.current.push(el);
-    }
-  };
-
-  // Common classes for card containers
-  const cardBase =
-    "transition-all duration-300 hover:scale-[1.02] flex flex-col gap-4 rounded-xl p-10";
-
   return (
-    <div className="flex flex-col items-center container mx-auto text-center text-white">
-      {/* Data Science Section */}
-      <section
-        ref={addToRefs}
-        id="data-science"
-        className="relative flex flex-col w-full bg-gradient-to-b from-neutral-800 to-black md:min-h-screen md:flex-row"
-      >
-        <div className="relative mx-auto flex w-full max-w-[1440px] flex-col md:min-h-screen md:flex-row">
-          {/* Sticky left content */}
-          <div className="sticky-content w-full md:sticky md:top-0 md:h-screen md:w-1/2 md:p-12 md:pt-24 flex flex-col gap-8 text-left">
-            <span className="inline-block h-32 w-32 text-orange-400">
-              <Layers className="h-full w-full" />
-            </span>
-            <h2 className="text-2xl font-bold sm:text-3xl md:text-4xl lg:text-5xl">
-              Data Science
-            </h2>
-            <p>Data, Insights, Infrastructure & AI</p>
-            <Link
-              href="/contact"
-              className="btn mt-6 inline-block rounded-full border-2 border-orange-400 px-8 py-3 text-sm uppercase transition-all duration-300 hover:bg-orange-400 hover:text-black md:px-10 md:py-4 md:text-base"
-            >
-              Let's Talk
-            </Link>
-          </div>
-
-          {/* Scrollable right content */}
-          <div className="scroll-content flex flex-col gap-6 w-full text-left md:w-1/2 md:p-12 md:pt-24">
-            <div className={`${cardBase} bg-black`}>
-              <span className="inline-block h-9 w-9 text-orange-400">
-                <ClipboardList className="h-full w-full" />
-              </span>
-              <h3 className="text-lg font-bold md:text-2xl">
-                Data Strategy and Consulting
-              </h3>
-              <p className="text-sm md:text-lg">
-                We look at your business problems, make your data systems better, and plan how to gather and use your data effectively. We make sure your data is safe and follows the rules. We also set up ways to measure success and manage your data. This helps you make smart decisions based on data and grow your business over time.
-              </p>
-            </div>
-            <div className={`${cardBase} bg-black`}>
-              <span className="inline-block h-9 w-9 text-orange-400">
-                <CloudUpload className="h-full w-full" />
-              </span>
-              <h3 className="text-lg font-bold md:text-2xl">
-                Data Engineering
-              </h3>
-              <p className="text-sm md:text-lg">
-                We build systems to collect, store, and manage data efficiently using cloud technology.
-              </p>
-            </div>
-            <div className={`${cardBase} bg-black`}>
-              <span className="inline-block h-9 w-9 text-orange-400">
-                <LineChart className="h-full w-full" />
-              </span>
-              <h3 className="text-lg font-bold md:text-2xl">
-                Data Analysis & Visualization
-              </h3>
-              <p className="text-sm md:text-lg">
-                We uncover insights through data analysis and present them in easy-to-understand reports and charts.
-              </p>
-            </div>
-            <div className={`${cardBase} bg-black`}>
-              <span className="inline-block h-9 w-9 text-orange-400">
-                <Brain className="h-full w-full" />
-              </span>
-              <h3 className="text-lg font-bold md:text-2xl">
-                Machine Learning and AI
-              </h3>
-              <p className="text-sm md:text-lg">
-                We create AI solutions for automation, predictive analytics, fraud detection, and more.
-              </p>
-            </div>
-            <div className={`${cardBase} bg-black`}>
-              <span className="inline-block h-9 w-9 text-orange-400">
-                <Cloud className="h-full w-full" />
-              </span>
-              <h3 className="text-lg font-bold md:text-2xl">
-                Specific Industry Solutions
-              </h3>
-              <p className="text-sm md:text-lg">
-                We offer AI-driven solutions for healthcare, finance, retail, manufacturing, and other industries.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Software Development Section */}
-      <section
-        ref={addToRefs}
-        id="software-development"
-        className="relative flex flex-col w-full bg-neutral-100 text-black md:min-h-screen md:flex-row"
-      >
-        <div className="relative mx-auto flex w-full max-w-[1440px] flex-col md:min-h-screen md:flex-row">
-          <div className="sticky-content w-full md:sticky md:top-0 md:h-screen md:w-1/2 md:p-12 md:pt-24 flex flex-col gap-8 text-left">
-            <span className="inline-block h-32 w-32 text-orange-400">
-              <Laptop className="h-full w-full" />
-            </span>
-            <h2 className="text-2xl font-bold sm:text-3xl md:text-4xl lg:text-5xl">
-              Software Development
-            </h2>
-            <p className="bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
-              Data, Insights, Infrastructure & AI
-            </p>
-            <Link
-              href="/contact"
-              className="btn mt-6 inline-block rounded-full border-2 border-orange-400 px-8 py-3 text-sm uppercase transition-all duration-300 hover:bg-orange-400 hover:text-black md:px-10 md:py-4 md:text-base"
-            >
-              Let's Talk
-            </Link>
-          </div>
-
-          <div className="scroll-content flex flex-col gap-6 w-full text-left md:w-1/2 md:p-12 md:pt-24">
-            <div className={`${cardBase} bg-neutral-200`}>
-              <span className="inline-block h-9 w-9 text-orange-400">
-                <Laptop className="h-full w-full" />
-              </span>
-              <h3 className="text-lg font-bold md:text-2xl">
-                Software Strategy & Solutions
-              </h3>
-              <p className="text-sm md:text-lg">
-                We plan and design scalable software solutions tailored to your business needs.
-              </p>
-            </div>
-            <div className={`${cardBase} bg-neutral-200`}>
-              <span className="inline-block h-9 w-9 text-orange-400">
-                <Paintbrush className="h-full w-full" />
-              </span>
-              <h3 className="text-lg font-bold md:text-2xl">
-                UI/UX Design
-              </h3>
-              <p className="text-sm md:text-lg">
-                We create intuitive and visually appealing designs to enhance user experience.
-              </p>
-            </div>
-            <div className={`${cardBase} bg-neutral-200`}>
-              <span className="inline-block h-9 w-9 text-orange-400">
-                <Globe className="h-full w-full" />
-              </span>
-              <h3 className="text-lg font-bold md:text-2xl">
-                Website Development
-              </h3>
-              <p className="text-sm md:text-lg">
-                We build fast, secure, and SEO-friendly websites to strengthen your online presence.
-              </p>
-            </div>
-            <div className={`${cardBase} bg-neutral-200`}>
-              <span className="inline-block h-9 w-9 text-orange-400">
-                <Smartphone className="h-full w-full" />
-              </span>
-              <h3 className="text-lg font-bold md:text-2xl">
-                Mobile Development
-              </h3>
-              <p className="text-sm md:text-lg">
-                We develop cross-platform mobile apps using modern technologies like React Native and Flutter.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Audit and SME Solutions */}
-      <section
-        ref={addToRefs}
-        id="audit"
-        className="relative flex flex-col w-full bg-gradient-to-b from-neutral-800 to-black md:min-h-screen md:flex-row"
-      >
-        <div className="relative mx-auto flex w-full max-w-[1440px] flex-col md:min-h-screen md:flex-row">
-          <div className="sticky-content w-full md:sticky md:top-0 md:h-screen md:w-1/2 md:p-12 md:pt-24 flex flex-col gap-8 text-left">
-            <span className="inline-block h-32 w-32 text-orange-400">
-              <Cpu className="h-full w-full" />
-            </span>
-            <h2 className="text-2xl font-bold sm:text-3xl md:text-4xl lg:text-5xl">
-              Audit and Refined SME Solutions
-            </h2>
-            <p>Data, Insights, Infrastructure & AI</p>
-            <Link
-              href="/contact"
-              className="btn mt-6 inline-block rounded-full border-2 border-orange-400 px-8 py-3 text-sm uppercase transition-all duration-300 hover:bg-orange-400 hover:text-black md:px-10 md:py-4 md:text-base"
-            >
-              Let's Talk
-            </Link>
-          </div>
-
-          <div className="scroll-content flex flex-col gap-6 w-full text-left md:w-1/2 md:p-12 md:pt-24">
-            <div className={`${cardBase} bg-black`}>
-              <span className="inline-block h-9 w-9 text-orange-400">
-                <SearchCheck className="h-full w-full" />
-              </span>
-              <h3 className="text-lg font-bold md:text-2xl">
-                Analyze Existing Solutions
-              </h3>
-              <p className="text-sm md:text-lg">
-                We evaluate your business solutions to identify areas for improvement.
-              </p>
-            </div>
-            <div className={`${cardBase} bg-black`}>
-              <span className="inline-block h-9 w-9 text-orange-400">
-                <FilePlus className="h-full w-full" />
-              </span>
-              <h3 className="text-lg font-bold md:text-2xl">
-                Improve Business Processes
-              </h3>
-              <p className="text-sm md:text-lg">
-                We optimize workflows to enhance efficiency and reduce costs.
-              </p>
-            </div>
-            <div className={`${cardBase} bg-black`}>
-              <span className="inline-block h-9 w-9 text-orange-400">
-                <PanelTop className="h-full w-full" />
-              </span>
-              <h3 className="text-lg font-bold md:text-2xl">
-                Customize for SME Needs
-              </h3>
-              <p className="text-sm md:text-lg">
-                We develop solutions tailored to the unique challenges of small and medium-sized businesses.
-              </p>
-            </div>
-            <div className={`${cardBase} bg-black`}>
-              <span className="inline-block h-9 w-9 text-orange-400">
-                <BarChart2 className="h-full w-full" />
-              </span>
-              <h3 className="text-lg font-bold md:text-2xl">
-                Ensure Smooth Integration
-              </h3>
-              <p className="text-sm md:text-lg">
-                We integrate new solutions seamlessly into your existing systems with minimal disruptions.
-              </p>
-            </div>
-            <div className={`${cardBase} bg-black`}>
-              <span className="inline-block h-9 w-9 text-orange-400">
-                <Headphones className="h-full w-full" />
-              </span>
-              <h3 className="text-lg font-bold md:text-2xl">
-                Ongoing Support and Updates
-              </h3>
-              <p className="text-sm md:text-lg">
-                We provide continuous support to keep your solutions running smoothly.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div ref={containerRef} className="relative">
+      {servicesSections.map((section, sectionIndex) => (
+        <ServiceSection
+          key={section.id}
+          section={section}
+          index={sectionIndex}
+          isActive={activeSection === sectionIndex}
+        />
+      ))}
     </div>
   );
 }
+
+const ServiceSection = ({ section, index, isActive }) => {
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1, 0.95]);
+
+  return (
+    <motion.section
+      ref={sectionRef}
+      id={section.id}
+      className="service-section relative min-h-screen bg-gradient-to-b from-black via-neutral-900 to-black"
+      style={{ opacity, scale }}
+    >
+      {/* Animated background */}
+      <motion.div
+        className="absolute inset-0"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isActive ? 0.3 : 0.1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div
+          className="h-full w-full"
+          style={{
+            backgroundImage: `radial-gradient(ellipse at ${index % 2 === 0 ? 'top left' : 'bottom right'}, rgba(245, 158, 11, 0.2) 0%, transparent 50%)`,
+          }}
+        />
+      </motion.div>
+
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col lg:flex-row">
+        {/* Sticky left content */}
+        <motion.div
+          className="flex w-full flex-col justify-center gap-8 p-8 text-left lg:sticky lg:top-0 lg:h-screen lg:w-1/2 lg:p-12"
+          initial={{ opacity: 0, x: -100 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          {/* Icon with gradient background */}
+          <motion.div
+            className={`relative h-32 w-32 rounded-3xl bg-gradient-to-br ${section.gradient} p-1`}
+            animate={{
+              rotate: isActive ? 360 : 0,
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          >
+            <div className="flex h-full w-full items-center justify-center rounded-3xl bg-black/50 text-white backdrop-blur-sm">
+              {section.icon}
+            </div>
+          </motion.div>
+
+          {/* Title with gradient */}
+          <motion.h2
+            className="text-4xl font-black uppercase sm:text-5xl lg:text-6xl"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            viewport={{ once: true }}
+          >
+            <motion.span
+              className={`bg-gradient-to-r ${section.gradient} bg-clip-text text-transparent`}
+              animate={{
+                backgroundPosition: isActive ? ["0%", "100%", "0%"] : "0%",
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
+              style={{ backgroundSize: "200% 100%" }}
+            >
+              {section.title}
+            </motion.span>
+          </motion.h2>
+
+          <motion.p
+            className="text-xl text-white/70"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            viewport={{ once: true }}
+          >
+            {section.subtitle}
+          </motion.p>
+
+          {/* CTA Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            viewport={{ once: true }}
+          >
+            <Link href="/contact">
+              <motion.button
+                className={`group relative overflow-hidden rounded-full bg-gradient-to-r ${section.gradient} px-8 py-4 text-lg font-semibold text-white shadow-2xl`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <span className="relative z-10">Let's Talk</span>
+                <motion.span
+                  className="relative z-10 ml-2 inline-block"
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  →
+                </motion.span>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10"
+                  initial={{ x: "-100%" }}
+                  whileHover={{ x: 0 }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.button>
+            </Link>
+          </motion.div>
+        </motion.div>
+
+        {/* Scrollable right content */}
+        <div className="flex w-full flex-col gap-6 p-8 lg:w-1/2 lg:p-12 lg:pt-24">
+          {section.services.map((service, serviceIndex) => (
+            <ServiceCard
+              key={serviceIndex}
+              service={service}
+              index={serviceIndex}
+              gradient={section.gradient}
+              isActive={isActive}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Floating orbs */}
+      <motion.div
+        className={`absolute ${index % 2 === 0 ? 'left-20 top-1/4' : 'right-20 bottom-1/4'} h-64 w-64 rounded-full bg-gradient-to-r ${section.gradient} opacity-10 blur-3xl`}
+        animate={{
+          x: [0, index % 2 === 0 ? 50 : -50, 0],
+          y: [0, -30, 0],
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          duration: 15,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+    </motion.section>
+  );
+};
+
+const ServiceCard = ({ service, index, gradient, isActive }) => {
+  const cardRef = useRef(null);
+
+  return (
+    <motion.div
+      ref={cardRef}
+      initial={{ opacity: 0, y: 50, rotateX: -20 }}
+      whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+      transition={{
+        duration: 0.6,
+        delay: index * 0.1,
+        ease: [0.215, 0.61, 0.355, 1.0],
+      }}
+      viewport={{ once: true, margin: "-50px" }}
+      className="group relative"
+    >
+      <motion.div
+        className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm"
+        whileHover={{
+          scale: 1.02,
+          transition: { duration: 0.3 },
+        }}
+      >
+        {/* Glow effect */}
+        <motion.div
+          className={`absolute -inset-1 rounded-3xl bg-gradient-to-r ${gradient} opacity-0 blur-xl`}
+          animate={{
+            opacity: isActive ? [0, 0.3, 0] : 0,
+          }}
+          transition={{
+            duration: 2,
+            repeat: isActive ? Infinity : 0,
+            delay: index * 0.2,
+          }}
+        />
+
+        {/* Icon */}
+        <motion.div
+          className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r ${gradient} text-white`}
+          whileHover={{
+            scale: 1.1,
+            rotate: 360,
+            transition: { duration: 0.5 },
+          }}
+        >
+          {service.icon}
+        </motion.div>
+
+        {/* Title */}
+        <motion.h3
+          className="mb-3 text-xl font-bold text-white"
+          whileHover={{ x: 5 }}
+          transition={{ duration: 0.3 }}
+        >
+          {service.title}
+        </motion.h3>
+
+        {/* Description */}
+        <p className="text-white/70 leading-relaxed">
+          {service.description}
+        </p>
+
+        {/* Hover indicator */}
+        <motion.div
+          className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100"
+          transition={{ duration: 0.3 }}
+        >
+          <motion.div
+            className={`h-8 w-8 rounded-full bg-gradient-to-r ${gradient}`}
+            animate={{
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+            }}
+          />
+        </motion.div>
+      </motion.div>
+    </motion.div>
+  );
+};
