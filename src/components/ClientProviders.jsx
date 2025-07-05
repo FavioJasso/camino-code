@@ -25,7 +25,10 @@ export default function ClientProviders({ children }) {
           <SmoothScroll>{children}</SmoothScroll>
         </PageTransition>
       </AnimatePresence>
-      <Script src="https://code.jquery.com/jquery-3.6.0.min.js" strategy="lazyOnload" />
+      <Script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        strategy="lazyOnload"
+      />
     </>
   );
 }
