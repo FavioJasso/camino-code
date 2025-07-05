@@ -75,31 +75,31 @@ export default function WhatSetsUsApart() {
   };
 
   return (
-    <motion.section 
+    <motion.section
       ref={sectionRef}
-      className="relative w-full flex flex-col items-center justify-center py-16 px-4 sm:px-6 lg:px-8 bg-[rgba(248,244,239,1)] overflow-hidden"
+      className="relative flex w-full flex-col items-center justify-center overflow-hidden bg-[rgba(248,244,239,1)] px-4 py-16 sm:px-6 lg:px-8"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="container mx-auto relative">
+      <div className="relative container mx-auto">
         {/* Left Model with animation */}
-        <motion.div 
-          className="absolute left-0 bottom-0 w-[50vw] h-[500px] ml-[-15vw] z-0 hidden lg:block"
+        <motion.div
+          className="absolute bottom-0 left-0 z-0 ml-[-15vw] hidden h-[500px] w-[50vw] lg:block"
           initial={{ opacity: 0, x: -100 }}
           animate={hasIntersected ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 1, ease: "easeOut" }}
         >
-          <motion.div 
-            className="w-full h-full flex items-center justify-end pr-[25vw] overflow-hidden"
-            animate={{ 
+          <motion.div
+            className="flex h-full w-full items-center justify-end overflow-hidden pr-[25vw]"
+            animate={{
               y: [0, -20, 0],
               rotate: [0, 5, 0],
             }}
-            transition={{ 
+            transition={{
               duration: 6,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "easeInOut",
             }}
           >
             <ModelViewer url="/bolb-1.glb" />
@@ -107,50 +107,50 @@ export default function WhatSetsUsApart() {
         </motion.div>
 
         {/* Right Model with animation */}
-        <motion.div 
-          className="absolute right-0 top-1/2 -translate-y-1/2 w-[50vw] h-[500px] mr-[-15vw] z-0 hidden lg:block"
+        <motion.div
+          className="absolute top-1/2 right-0 z-0 mr-[-15vw] hidden h-[500px] w-[50vw] -translate-y-1/2 lg:block"
           initial={{ opacity: 0, x: 100 }}
           animate={hasIntersected ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
         >
-          <motion.div 
-            className="w-full h-full flex items-center justify-start pl-[25vw] overflow-hidden"
-            animate={{ 
+          <motion.div
+            className="flex h-full w-full items-center justify-start overflow-hidden pl-[25vw]"
+            animate={{
               y: [0, 20, 0],
               rotate: [0, -5, 0],
             }}
-            transition={{ 
+            transition={{
               duration: 7,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "easeInOut",
             }}
           >
             <ModelViewer url="/bolb-2.glb" />
           </motion.div>
         </motion.div>
 
-        <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center justify-center gap-8">
-          <motion.h2 
-            className="text-3xl font-bold uppercase text-black sm:text-4xl md:text-[4rem] lg:text-[5rem] text-center"
+        <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center justify-center gap-8">
+          <motion.h2
+            className="text-center text-3xl font-bold text-black uppercase sm:text-4xl md:text-[4rem] lg:text-[5rem]"
             variants={titleVariants}
             initial="hidden"
             animate={hasIntersected ? "visible" : "hidden"}
           >
             What Sets Us{" "}
-            <motion.span 
+            <motion.span
               className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent"
-              whileHover={{ 
+              whileHover={{
                 scale: 1.05,
                 textShadow: "0 0 30px rgba(245, 158, 11, 0.5)",
-                transition: { duration: 0.3 }
+                transition: { duration: 0.3 },
               }}
             >
               Apart
             </motion.span>
           </motion.h2>
 
-          <motion.p 
-            className="max-w-[600px] text-sm sm:text-base md:text-lg text-gray-700 text-center"
+          <motion.p
+            className="max-w-[600px] text-center text-sm text-gray-700 sm:text-base md:text-lg"
             variants={fadeInUp}
             initial="initial"
             animate={hasIntersected ? "animate" : "initial"}
@@ -162,7 +162,7 @@ export default function WhatSetsUsApart() {
             age.
           </motion.p>
 
-          <motion.div 
+          <motion.div
             className="mb-8 sm:mb-12"
             initial={{ opacity: 0, y: 30 }}
             animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
@@ -176,10 +176,14 @@ export default function WhatSetsUsApart() {
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
                 <span className="relative z-10">Get Started</span>
-                <motion.span 
-                  className="ml-2 inline-block relative z-10"
+                <motion.span
+                  className="relative z-10 ml-2 inline-block"
                   animate={{ y: [0, 3, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                 >
                   <ArrowDown className="h-4 w-4" />
                 </motion.span>
@@ -193,14 +197,14 @@ export default function WhatSetsUsApart() {
             </Link>
           </motion.div>
 
-          <motion.ul 
-            className="grid w-full max-w-5xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6"
+          <motion.ul
+            className="grid w-full max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2"
             variants={staggerContainer}
             initial="initial"
             animate={hasIntersected ? "animate" : "initial"}
           >
             {features.map((feature, index) => (
-              <motion.li 
+              <motion.li
                 key={feature.id}
                 custom={index}
                 variants={cardVariants}
@@ -218,15 +222,15 @@ export default function WhatSetsUsApart() {
                       className="object-cover transition-all duration-500 group-hover:scale-110"
                       quality={90}
                     />
-                    <motion.div 
+                    <motion.div
                       className="absolute inset-0 bg-black/40"
                       whileHover={{ backgroundColor: "rgba(0,0,0,0.6)" }}
                       transition={{ duration: 0.3 }}
                     />
                   </div>
-                  <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white p-6">
-                    <motion.div 
-                      className="mb-4 p-4 rounded-full bg-gradient-to-t from-amber-400/20 to-red-600/20 backdrop-blur-sm"
+                  <div className="relative z-10 flex h-full flex-col items-center justify-center p-6 text-center text-white">
+                    <motion.div
+                      className="mb-4 rounded-full bg-gradient-to-t from-amber-400/20 to-red-600/20 p-4 backdrop-blur-sm"
                       whileHover={{ scale: 1.1, rotate: 360 }}
                       transition={{ duration: 0.5 }}
                     >
