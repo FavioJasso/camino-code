@@ -26,11 +26,11 @@ export default function AboutSection() {
   };
 
   const wordVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: 50,
       rotateX: -90,
-      filter: "blur(10px)"
+      filter: "blur(10px)",
     },
     visible: (i) => ({
       opacity: 1,
@@ -46,10 +46,10 @@ export default function AboutSection() {
   };
 
   const splineVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       scale: 0,
-      rotate: -180
+      rotate: -180,
     },
     visible: {
       opacity: 0.7,
@@ -66,7 +66,7 @@ export default function AboutSection() {
     <motion.section
       ref={sectionRef}
       id="about"
-      className="relative flex h-[120vh] items-center justify-center overflow-hidden rounded-lg bg-black mx-auto md:h-auto md:px-10 md:py-20"
+      className="relative mx-auto flex h-[120vh] items-center justify-center overflow-hidden rounded-lg bg-black md:h-auto md:px-10 md:py-20"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -88,22 +88,22 @@ export default function AboutSection() {
         }}
       />
 
-      <div className="relative flex w-full max-w-[1440px] flex-col items-center justify-center gap-8 text-center h-full">
+      <div className="relative flex h-full w-full max-w-[1440px] flex-col items-center justify-center gap-8 text-center">
         {/* Top Left Spline Model */}
-        <motion.div 
+        <motion.div
           className="absolute top-0 left-10 h-[200px] w-[200px] -translate-x-1/4 -translate-y-1/4 sm:h-[300px] sm:w-[300px]"
           variants={splineVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
         >
           <motion.div
-            animate={{ 
+            animate={{
               rotate: 360,
               scale: [1, 1.1, 1],
             }}
-            transition={{ 
+            transition={{
               rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-              scale: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+              scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
             }}
             whileHover={{ scale: 1.2 }}
             className="h-full w-full"
@@ -116,21 +116,21 @@ export default function AboutSection() {
         </motion.div>
 
         {/* Bottom Right Spline Model */}
-        <motion.div 
-          className="absolute bottom-0 right-10 h-[200px] w-[200px] translate-x-1/4 translate-y-1/4 sm:h-[300px] sm:w-[300px]"
+        <motion.div
+          className="absolute right-10 bottom-0 h-[200px] w-[200px] translate-x-1/4 translate-y-1/4 sm:h-[300px] sm:w-[300px]"
           variants={splineVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
           transition={{ delay: 0.2 }}
         >
           <motion.div
-            animate={{ 
+            animate={{
               rotate: -360,
               y: [0, -20, 0],
             }}
-            transition={{ 
+            transition={{
               rotate: { duration: 25, repeat: Infinity, ease: "linear" },
-              y: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+              y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
             }}
             whileHover={{ scale: 1.2 }}
             className="h-full w-full"
@@ -143,8 +143,8 @@ export default function AboutSection() {
         </motion.div>
 
         {/* Heading with split text animation */}
-        <motion.h2 
-          className="mx-auto w-full max-w-[900px] text-5xl font-bold uppercase text-white leading-[60px] md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px] perspective-1000"
+        <motion.h2
+          className="perspective-1000 mx-auto w-full max-w-[900px] text-5xl leading-[60px] font-bold text-white uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px]"
           variants={containerVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
@@ -152,18 +152,22 @@ export default function AboutSection() {
           {titleWords.map((word, index) => (
             <motion.span
               key={index}
-              className={`inline-block mr-4 ${
-                word === "Technology" 
-                  ? "bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent" 
+              className={`mr-4 inline-block ${
+                word === "Technology"
+                  ? "bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent"
                   : ""
               }`}
               custom={index}
               variants={wordVariants}
-              whileHover={word === "Technology" ? {
-                scale: 1.05,
-                textShadow: "0 0 30px rgba(245, 158, 11, 0.5)",
-                transition: { duration: 0.3 }
-              } : {}}
+              whileHover={
+                word === "Technology"
+                  ? {
+                      scale: 1.05,
+                      textShadow: "0 0 30px rgba(245, 158, 11, 0.5)",
+                      transition: { duration: 0.3 },
+                    }
+                  : {}
+              }
             >
               {word}
             </motion.span>
@@ -171,7 +175,7 @@ export default function AboutSection() {
         </motion.h2>
 
         {/* Description with fade in animation */}
-        <motion.p 
+        <motion.p
           className="relative z-10 max-w-md text-xs text-white sm:text-sm md:max-w-lg md:text-base lg:max-w-xl lg:text-lg"
           variants={fadeInUp}
           initial="initial"
@@ -186,28 +190,34 @@ export default function AboutSection() {
         </motion.p>
 
         {/* Button with advanced hover effects */}
-        <motion.div 
+        <motion.div
           className="relative z-10"
           initial={{ opacity: 0, y: 30 }}
-          animate={hasIntersected ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          animate={
+            hasIntersected ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }
+          }
           transition={{ delay: 1, duration: 0.6 }}
         >
           <Link href="/contact">
             <motion.button
-              className="relative overflow-hidden flex items-center justify-center gap-1 rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-8 py-4 text-white group"
+              className="group relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-8 py-4 text-white"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
               <span className="relative z-10 font-medium">Learn More</span>
-              <motion.span 
-                className="ml-2 relative z-10"
+              <motion.span
+                className="relative z-10 ml-2"
                 animate={{ x: [0, 5, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
               >
                 <ArrowRightIcon className="h-4 w-4" />
               </motion.span>
-              
+
               {/* Animated background gradient */}
               <motion.div
                 className="absolute inset-0 bg-gradient-to-t from-red-600 to-amber-400"
@@ -215,7 +225,7 @@ export default function AboutSection() {
                 whileHover={{ x: 0 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
               />
-              
+
               {/* Glow effect */}
               <motion.div
                 className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100"
@@ -223,7 +233,8 @@ export default function AboutSection() {
                 whileHover={{ scale: 1.2 }}
                 transition={{ duration: 0.3 }}
                 style={{
-                  background: "radial-gradient(circle, rgba(245, 158, 11, 0.3) 0%, transparent 70%)",
+                  background:
+                    "radial-gradient(circle, rgba(245, 158, 11, 0.3) 0%, transparent 70%)",
                   filter: "blur(20px)",
                 }}
               />
@@ -232,11 +243,11 @@ export default function AboutSection() {
         </motion.div>
 
         {/* Floating particles */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
           {[...Array(20)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-1 h-1 bg-amber-400 rounded-full"
+              className="absolute h-1 w-1 rounded-full bg-amber-400"
               initial={{
                 x: `${Math.random() * 100}%`,
                 y: "100vh",
