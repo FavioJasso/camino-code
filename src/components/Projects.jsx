@@ -44,7 +44,7 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className="flex flex-col items-center px-6 py-16 sm:px-8 sm:py-20 md:px-10 justify-center w-full max-w-[1440px] mx-auto"
+      className="mx-auto flex w-full max-w-[1440px] flex-col items-center justify-center px-6 py-16 sm:px-8 sm:py-20 md:px-10"
     >
       {/* Section Header */}
       <motion.div
@@ -71,14 +71,14 @@ export default function Projects() {
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8, staggerChildren: 0.1 }}
         viewport={{ once: true }}
-        className="relative mt-12 grid w-full max-w-[1440px] mx-auto grid-cols-1 sm:grid-cols-2 gap-8 h-[250vh]"
+        className="relative mx-auto mt-12 grid h-[250vh] w-full max-w-[1440px] grid-cols-1 gap-8 sm:grid-cols-2"
       >
         {caseStudies.map((study, index) => (
           <motion.div
             key={study.id}
             whileHover={{ y: -5 }}
             transition={{ duration: 0.2 }}
-            className={`group max-w-[414px] rounded-lg w-full ${
+            className={`group w-full max-w-[414px] rounded-lg ${
               index % 2 === 1 ? "sm:translate-y-1/2" : ""
             }`}
           >
@@ -92,7 +92,7 @@ export default function Projects() {
                   src={study.image}
                   alt={study.title}
                   fill
-                  className="object-cover transition-all duration-500 group-hover:scale-105 h-[548px]"
+                  className="h-[548px] object-cover transition-all duration-500 group-hover:scale-105"
                   quality={90}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
