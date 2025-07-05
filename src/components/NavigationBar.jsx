@@ -50,9 +50,9 @@ export default function NavigationBar({ iswhite = false }) {
   const linkVariants = {
     initial: { opacity: 0, y: -20 },
     animate: { opacity: 1, y: 0 },
-    hover: { 
+    hover: {
       scale: 1.05,
-      transition: { duration: 0.2 }
+      transition: { duration: 0.2 },
     },
   };
 
@@ -89,9 +89,10 @@ export default function NavigationBar({ iswhite = false }) {
   return (
     <motion.div
       id="main-head"
-      className={`main-head z-50 flex items-center justify-between fixed top-0 left-0 right-0 w-full h-16 md:h-20 
-      transition-all duration-300 ease-in-out border-b-[1px] ${
-        scrollY > 50 ? "backdrop-blur-md bg-white/80 border-gray-200" : "border-black/10"
+      className={`main-head fixed top-0 right-0 left-0 z-50 flex h-16 w-full items-center justify-between border-b-[1px] transition-all duration-300 ease-in-out md:h-20 ${
+        scrollY > 50
+          ? "border-gray-200 bg-white/80 backdrop-blur-md"
+          : "border-black/10"
       }`}
       variants={navVariants}
       animate={isVisible ? "visible" : "hidden"}
@@ -122,32 +123,38 @@ export default function NavigationBar({ iswhite = false }) {
             </Link>
           </motion.div>
 
-          <nav className="hidden md:flex md:items-center md:justify-center md:gap-6 [&>a]:no-underline text-black">
-            {["Home", "About", "Services", "Case Studies"].map((item, index) => (
-              <motion.div
-                key={item}
-                variants={linkVariants}
-                initial="initial"
-                animate="animate"
-                whileHover="hover"
-                transition={{ delay: index * 0.1 }}
-              >
-                <Link
-                  href={item === "Home" ? "/" : `/${item.toLowerCase().replace(" ", "-")}`}
-                  className={`${
-                    iswhite ? "text-white" : "text-black"
-                  } relative group`}
+          <nav className="hidden text-black md:flex md:items-center md:justify-center md:gap-6 [&>a]:no-underline">
+            {["Home", "About", "Services", "Case Studies"].map(
+              (item, index) => (
+                <motion.div
+                  key={item}
+                  variants={linkVariants}
+                  initial="initial"
+                  animate="animate"
+                  whileHover="hover"
+                  transition={{ delay: index * 0.1 }}
                 >
-                  <span className="relative z-10">{item}</span>
-                  <motion.span
-                    className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-amber-400 to-red-600"
-                    whileHover={{ width: "100%" }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                  />
-                </Link>
-              </motion.div>
-            ))}
-            
+                  <Link
+                    href={
+                      item === "Home"
+                        ? "/"
+                        : `/${item.toLowerCase().replace(" ", "-")}`
+                    }
+                    className={`${
+                      iswhite ? "text-white" : "text-black"
+                    } group relative`}
+                  >
+                    <span className="relative z-10">{item}</span>
+                    <motion.span
+                      className="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-amber-400 to-red-600"
+                      whileHover={{ width: "100%" }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                    />
+                  </Link>
+                </motion.div>
+              ),
+            )}
+
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -155,16 +162,20 @@ export default function NavigationBar({ iswhite = false }) {
             >
               <Link href="/contact">
                 <motion.button
-                  className="relative overflow-hidden rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-white flex items-center justify-center gap-1 group"
+                  className="group relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-white"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
                   <span className="relative z-10">Contact</span>
                   <motion.span
-                    className="ml-2 relative z-10"
+                    className="relative z-10 ml-2"
                     animate={{ x: [0, 5, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
                   >
                     <ArrowRightIcon className="h-4 w-4" />
                   </motion.span>
@@ -182,7 +193,7 @@ export default function NavigationBar({ iswhite = false }) {
           {/* Mobile Menu Button */}
           <motion.button
             id="menu-toggle"
-            className={`md:hidden relative w-8 h-8 focus:outline-none ${
+            className={`relative h-8 w-8 focus:outline-none md:hidden ${
               iswhite ? "text-white" : "text-black"
             }`}
             onClick={() => setIsMenuOpen(true)}
@@ -191,19 +202,21 @@ export default function NavigationBar({ iswhite = false }) {
             whileTap={{ scale: 0.9 }}
           >
             <motion.span
-              className="absolute left-0 w-full h-0.5 bg-current"
+              className="absolute left-0 h-0.5 w-full bg-current"
               style={{ top: "25%" }}
               animate={isMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
             />
             <motion.span
-              className="absolute left-0 w-full h-0.5 bg-current"
+              className="absolute left-0 h-0.5 w-full bg-current"
               style={{ top: "50%" }}
               animate={isMenuOpen ? { opacity: 0 } : { opacity: 1 }}
             />
             <motion.span
-              className="absolute left-0 w-full h-0.5 bg-current"
+              className="absolute left-0 h-0.5 w-full bg-current"
               style={{ top: "75%" }}
-              animate={isMenuOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
+              animate={
+                isMenuOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }
+              }
             />
           </motion.button>
 
@@ -220,20 +233,36 @@ export default function NavigationBar({ iswhite = false }) {
               >
                 <motion.button
                   id="menu-close"
-                  className="absolute top-6 right-6 w-12 h-12 flex items-center justify-center text-gray-600 focus:outline-none"
+                  className="absolute top-6 right-6 flex h-12 w-12 items-center justify-center text-gray-600 focus:outline-none"
                   onClick={() => setIsMenuOpen(false)}
                   aria-label="Close menu"
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
                 >
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="h-8 w-8"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </motion.button>
-                
+
                 <div className="flex h-full flex-col items-center justify-center">
                   <div className="flex flex-col gap-8 text-center">
-                    {["Home", "About", "Services", "Case Studies", "Contact"].map((item, i) => (
+                    {[
+                      "Home",
+                      "About",
+                      "Services",
+                      "Case Studies",
+                      "Contact",
+                    ].map((item, i) => (
                       <motion.div
                         key={item}
                         custom={i}
@@ -243,8 +272,12 @@ export default function NavigationBar({ iswhite = false }) {
                         exit="closed"
                       >
                         <Link
-                          href={item === "Home" ? "/" : `/${item.toLowerCase().replace(" ", "-")}`}
-                          className="block text-3xl font-medium text-gray-800 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-amber-400 hover:to-red-600 transition-all duration-300"
+                          href={
+                            item === "Home"
+                              ? "/"
+                              : `/${item.toLowerCase().replace(" ", "-")}`
+                          }
+                          className="block text-3xl font-medium text-gray-800 transition-all duration-300 hover:bg-gradient-to-r hover:from-amber-400 hover:to-red-600 hover:bg-clip-text hover:text-transparent"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           {item}
@@ -253,10 +286,10 @@ export default function NavigationBar({ iswhite = false }) {
                     ))}
                   </div>
                 </div>
-                
+
                 {/* Background decoration */}
                 <motion.div
-                  className="absolute bottom-0 left-0 w-full h-1/3 bg-gradient-to-t from-amber-400/10 to-transparent"
+                  className="absolute bottom-0 left-0 h-1/3 w-full bg-gradient-to-t from-amber-400/10 to-transparent"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
