@@ -1,14 +1,32 @@
 "use client";
 
-import { ArrowRightIcon } from "lucide-react";
-import Image from "next/image";
+import { ArrowDown } from "lucide-react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { useEffect, useRef } from "react";
-import { fadeInUp, staggerContainer } from "@/utils/animations";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
 const HeroSection = () => {
   const canvasRef = useRef(null);
+  const sectionRef = useRef(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, -150]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -17,20 +35,20 @@ const HeroSection = () => {
     if (!canvas) return;
 
     const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = dimensions.width;
+    canvas.height = dimensions.height;
 
     const particles = [];
-    const particleCount = 50;
+    const particleCount = 80;
 
     class Particle {
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
+        this.size = Math.random() * 3 + 0.5;
         this.speedX = Math.random() * 0.5 - 0.25;
         this.speedY = Math.random() * 0.5 - 0.25;
-        this.opacity = Math.random() * 0.5 + 0.2;
+        this.opacity = Math.random() * 0.3 + 0.1;
       }
 
       update() {
@@ -65,176 +83,182 @@ const HeroSection = () => {
     };
 
     animate();
+  }, [dimensions]);
 
-    const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const titleVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut",
-      },
-    },
-  };
 
   const wordVariants = {
-    hidden: { opacity: 0, y: 50, rotateX: -90 },
+    hidden: { 
+      opacity: 0, 
+      y: 100,
+      rotateX: -90,
+      filter: "blur(10px)"
+    },
     visible: (i) => ({
       opacity: 1,
       y: 0,
       rotateX: 0,
+      filter: "blur(0px)",
       transition: {
         duration: 0.8,
-        delay: i * 0.1,
-        ease: "easeOut",
+        delay: i * 0.2,
+        ease: [0.215, 0.61, 0.355, 1.0],
       },
     }),
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
   return (
-    <motion.main
-      className="relative container mx-auto flex h-[900px] w-full items-center justify-center overflow-hidden bg-[rgba(248,244,239,1)]"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+    <section
+      ref={sectionRef}
+      className="relative flex h-[120vh] min-h-[900px] w-full flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-900 via-black to-neutral-900"
     >
-      {/* Animated background canvas */}
+      {/* Animated particles canvas */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 z-0"
-        style={{ opacity: 0.3 }}
+        style={{ mixBlendMode: "screen" }}
       />
 
-      {/* Top Right Animated Element */}
+      {/* Gradient overlay */}
       <motion.div
-        className="absolute top-0 -right-10 h-[250px] w-[250px] md:top-32 md:h-[318px] md:w-[315px]"
-        initial={{ opacity: 0, scale: 0.8, rotate: -180 }}
-        animate={{ opacity: 1, scale: 1, rotate: 0 }}
-        transition={{ duration: 1.2, ease: "easeOut" }}
-      >
-        <motion.div
-          animate={{
-            rotate: 360,
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-            scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-          }}
-        >
-          <Image
-            src="/assets/Vector-1.png"
-            alt="Vector Graphic"
-            width={500}
-            height={500}
-            className="h-[230px] w-[230px] object-contain md:h-[318px] md:w-[315px]"
-          />
-        </motion.div>
-      </motion.div>
+        className="absolute inset-0 z-[1]"
+        animate={{
+          background: [
+            "radial-gradient(circle at 20% 50%, rgba(245, 158, 11, 0.1) 0%, transparent 50%)",
+            "radial-gradient(circle at 80% 50%, rgba(245, 158, 11, 0.1) 0%, transparent 50%)",
+            "radial-gradient(circle at 20% 50%, rgba(245, 158, 11, 0.1) 0%, transparent 50%)",
+          ],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+      />
 
-      {/* Bottom Left Animated Element */}
+      {/* Decorative floating elements */}
       <motion.div
-        className="absolute -bottom-10 -left-10 h-[250px] w-[250px] md:-bottom-16 md:-left-32 md:h-[540px] md:w-[540px]"
-        initial={{ opacity: 0, scale: 0.8, rotate: 180 }}
-        animate={{ opacity: 1, scale: 1, rotate: 0 }}
-        transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
-      >
-        <motion.div
-          animate={{
-            rotate: -360,
-            y: [0, -20, 0],
-          }}
-          transition={{
-            rotate: { duration: 25, repeat: Infinity, ease: "linear" },
-            y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
-          }}
-        >
-          <Image
-            src="/assets/Vector.png"
-            alt="Vector Graphic"
-            width={500}
-            height={500}
-            className="h-[230px] w-[230px] object-contain md:h-[468px] md:w-[468px]"
-          />
-        </motion.div>
-      </motion.div>
+        className="absolute left-10 top-1/4 h-32 w-32 rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 blur-3xl"
+        animate={{
+          x: [0, 50, 0],
+          y: [0, -30, 0],
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 right-10 h-40 w-40 rounded-full bg-gradient-to-r from-amber-400/20 to-orange-500/20 blur-3xl"
+        animate={{
+          x: [0, -30, 0],
+          y: [0, 50, 0],
+          scale: [1, 1.3, 1],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
 
-      {/* Centered Content */}
-      <motion.section
-        id="home"
-        className="relative z-10 flex w-full flex-col items-center justify-center gap-6 px-8 py-10 text-center md:px-10"
-        variants={staggerContainer}
-        initial="initial"
-        animate="animate"
+      <motion.div
+        style={{ y, opacity }}
+        className="relative z-10 flex flex-col items-center justify-center text-center"
       >
-        <motion.h1
-          className="perspective-1000 w-full text-6xl font-bold text-black uppercase md:max-w-4xl md:text-6xl lg:text-6xl xl:text-[10rem]"
-          variants={titleVariants}
+        {/* Main Title with perspective */}
+        <motion.div 
+          className="perspective-1000 mb-8"
+          variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
+          <motion.h1 className="flex flex-col items-center justify-center">
+            <motion.span
+              custom={0}
+              variants={wordVariants}
+              className="block text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
+              whileHover={{
+                scale: 1.05,
+                textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
+                transition: { duration: 0.3 },
+              }}
+            >
+              CODE
+            </motion.span>
+            <motion.span
+              custom={1}
+              variants={wordVariants}
+              className="block text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] text-white"
+              whileHover={{
+                scale: 1.05,
+                textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
+                transition: { duration: 0.3 },
+              }}
+            >
+              THE FUTURE
+            </motion.span>
+          </motion.h1>
+        </motion.div>
+
+        {/* Animated Description */}
+        <motion.p
+          initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 1, delay: 0.6 }}
+          className="mx-auto mb-12 max-w-3xl px-6 text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl"
+        >
+          At Camino Code, we combine{" "}
           <motion.span
-            className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent"
-            custom={0}
-            variants={wordVariants}
-            initial="hidden"
-            animate="visible"
-            whileHover={{
+            className="font-semibold text-amber-400"
+            whileHover={{ 
+              textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
               scale: 1.05,
-              textShadow: "0 0 30px rgba(245, 158, 11, 0.5)",
-              transition: { duration: 0.3 },
             }}
           >
-            Code
+            data science
           </motion.span>{" "}
+          and{" "}
           <motion.span
-            custom={1}
-            variants={wordVariants}
-            initial="hidden"
-            animate="visible"
+            className="font-semibold text-amber-400"
+            whileHover={{ 
+              textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+              scale: 1.05,
+            }}
           >
-            the Future
-          </motion.span>
-        </motion.h1>
-
-        <motion.p
-          className="w-full text-xs text-black sm:text-sm md:max-w-2xl md:text-base lg:text-[21px] lg:leading-[31px]"
-          variants={fadeInUp}
-          initial="initial"
-          animate="animate"
-          transition={{ delay: 0.3 }}
-        >
-          At Camino Code, we combine data science and web development to create
-          innovative, future-ready solutions. From predictive analytics to
-          custom web applications, we help businesses thrive in the digital age.
+            web development
+          </motion.span>{" "}
+          to create innovative, future-ready solutions. From predictive analytics to custom web applications, we help businesses thrive in the digital age.
         </motion.p>
 
+        {/* CTA Button */}
         <motion.div
-          className="flex flex-col items-center gap-4"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
         >
           <Link href="/contact">
             <motion.button
-              className="group relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-8 py-4 text-white"
+              className="group relative overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-red-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              <span className="relative z-10 font-medium">Get Started</span>
+              <span className="relative z-10">Get Started</span>
               <motion.span
-                className="relative z-10 ml-2"
+                className="relative z-10 ml-2 inline-block"
                 animate={{ x: [0, 5, 0] }}
                 transition={{
                   duration: 1.5,
@@ -242,57 +266,42 @@ const HeroSection = () => {
                   ease: "easeInOut",
                 }}
               >
-                <ArrowRightIcon className="h-4 w-4" />
+                →
               </motion.span>
-
-              {/* Animated background gradient */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-t from-red-600 to-amber-400"
-                initial={{ y: "100%" }}
-                whileHover={{ y: 0 }}
+                className="absolute inset-0 bg-gradient-to-r from-red-600 to-amber-400"
+                initial={{ x: "100%" }}
+                whileHover={{ x: 0 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
-              />
-
-              {/* Ripple effect on hover */}
-              <motion.div
-                className="absolute inset-0 rounded-full"
-                initial={{ scale: 0, opacity: 0 }}
-                whileHover={{ scale: 2, opacity: 0 }}
-                transition={{ duration: 0.6 }}
-                style={{
-                  background:
-                    "radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 70%)",
-                }}
               />
             </motion.button>
           </Link>
         </motion.div>
+      </motion.div>
 
-        {/* Scroll indicator */}
+      {/* Scroll indicator */}
+      <motion.div
+        className="absolute bottom-10 left-1/2 z-10 -translate-x-1/2"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.2, duration: 0.6 }}
+      >
         <motion.div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 transform"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.5 }}
+          animate={{ y: [0, 12, 0] }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="flex flex-col items-center"
         >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            className="flex h-10 w-6 justify-center rounded-full border-2 border-gray-400"
-          >
-            <motion.div
-              animate={{ y: [0, 15, 0] }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="mt-2 h-3 w-1 rounded-full bg-gray-400"
-            />
-          </motion.div>
+          <span className="mb-2 text-sm uppercase tracking-widest text-white/60">
+            Scroll
+          </span>
+          <ArrowDown className="h-6 w-6 text-amber-400" />
         </motion.div>
-      </motion.section>
-    </motion.main>
+      </motion.div>
+    </section>
   );
 };
 
