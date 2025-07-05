@@ -51,7 +51,7 @@ export default function Footer() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="flex flex-col items-center gap-10 py-12 w-full max-w-6xl"
+        className="flex w-full max-w-6xl flex-col items-center gap-10 py-12"
       >
         {/* Logo */}
         <Link href="/" className="group">
@@ -88,14 +88,14 @@ export default function Footer() {
         </nav>
       </motion.div>
 
-      <div className="w-full max-w-6xl mx-auto flex flex-col items-center">
+      <div className="mx-auto flex w-full max-w-6xl flex-col items-center">
         {/* Divider */}
         <motion.hr
           initial={{ width: 0 }}
           whileInView={{ width: "100%" }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="w-full border-t border-gray-700 mb-4"
+          className="mb-4 w-full border-t border-gray-700"
         />
 
         {/* Bottom Section */}
