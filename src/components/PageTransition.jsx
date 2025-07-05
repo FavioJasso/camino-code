@@ -42,7 +42,7 @@ export default function PageTransition({ children }) {
       >
         {children}
       </motion.div>
-      
+
       {/* Page transition overlay - removed to prevent blocking */}
     </>
   );
