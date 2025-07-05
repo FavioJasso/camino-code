@@ -61,17 +61,21 @@ const CaseStudyCard = ({ study, index }) => {
   const cardVariants = {
     hidden: {
       opacity: 0,
-      y: 50,
-      scale: 0.9,
+      y: 100,
+      scale: 0.8,
+      rotateX: -30,
+      filter: "blur(10px)",
     },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
+      rotateX: 0,
+      filter: "blur(0px)",
       transition: {
-        duration: 0.6,
-        delay: index * 0.1,
-        ease: "easeOut",
+        duration: 0.8,
+        delay: index * 0.15,
+        ease: [0.215, 0.61, 0.355, 1.0],
       },
     },
   };
@@ -82,141 +86,177 @@ const CaseStudyCard = ({ study, index }) => {
       variants={cardVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-50px" }}
-      className={`group relative max-w-[414px] overflow-hidden rounded-3xl transition-all duration-300 ${
-        index % 2 === 1 ? "sm:translate-y-12" : ""
+      viewport={{ once: true, margin: "-100px" }}
+      className={`group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm transition-all duration-500 ${
+        index % 2 === 1 ? "lg:translate-y-16" : ""
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      whileHover={{ 
+        scale: 1.02,
+        transition: { duration: 0.3 }
+      }}
       style={{
         transform: isHovered
-          ? `perspective(1000px) rotateX(${position.y * 5}deg) rotateY(${
-              position.x * 5
+          ? `perspective(1000px) rotateX(${position.y * 8}deg) rotateY(${
+              position.x * 8
             }deg)`
           : "perspective(1000px) rotateX(0deg) rotateY(0deg)",
-        transition: "transform 0.1s ease-out",
+        transformStyle: "preserve-3d",
+        transition: "transform 0.15s ease-out",
       }}
     >
-      <Link href={study.href} className="flex flex-col">
-        <div className="relative h-64 sm:h-80 md:h-96 overflow-hidden">
-          <motion.div
-            className="absolute inset-0"
-            animate={{
-              scale: isHovered ? 1.1 : 1,
-            }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-          >
-            <Image
-              src={study.image}
-              alt={study.title}
-              fill
-              className="object-cover"
-              quality={90}
-            />
-          </motion.div>
-
-          {/* Gradient overlay */}
-          <motion.div
-            className={`absolute inset-0 bg-gradient-to-br ${study.color} mix-blend-multiply`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isHovered ? 0.7 : 0 }}
-            transition={{ duration: 0.3 }}
-          />
-
-          {/* Animated border */}
-          <motion.div
-            className="absolute inset-0 border-4 border-transparent rounded-3xl"
-            animate={{
-              borderColor: isHovered
-                ? "rgba(245, 158, 11, 0.5)"
-                : "transparent",
-            }}
-            transition={{ duration: 0.3 }}
-          />
-
-          {/* Floating elements on hover */}
-          <motion.div
-            className="absolute top-4 right-4 w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center"
-            initial={{ scale: 0, rotate: -180 }}
-            animate={{
-              scale: isHovered ? 1 : 0,
-              rotate: isHovered ? 0 : -180,
-            }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-          >
-            <motion.svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 7l5 5m0 0l-5 5m5-5H6"
-              />
-            </motion.svg>
-          </motion.div>
-        </div>
-
+      <Link href={study.href} className="relative block h-full">
+        {/* Card glow effect */}
         <motion.div
-          className="p-6 bg-white"
+          className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 opacity-0 blur-xl"
           animate={{
-            backgroundColor: isHovered ? "#fef3c7" : "#ffffff",
+            opacity: isHovered ? 0.6 : 0,
           }}
-          transition={{ duration: 0.3 }}
-        >
-          <motion.h3
-            className="text-lg font-semibold text-gray-900 sm:text-xl"
-            animate={{
-              color: isHovered ? "#f59e0b" : "#111827",
-            }}
-            transition={{ duration: 0.3 }}
-          >
-            {study.title}
-          </motion.h3>
-
-          <motion.p
-            className="mt-2 text-sm text-gray-600 sm:text-base"
-            initial={{ opacity: 0.7 }}
-            animate={{ opacity: isHovered ? 1 : 0.7 }}
-            transition={{ duration: 0.3 }}
-          >
-            {study.description}
-          </motion.p>
-
-          <motion.div
-            className="mt-4 flex items-center text-sm font-medium text-amber-600"
-            animate={{
-              x: isHovered ? 10 : 0,
-            }}
-            transition={{ duration: 0.3 }}
-          >
-            View case study
-            <motion.svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="ml-2 h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+          transition={{ duration: 0.5 }}
+        />
+        
+        <div className="relative h-full overflow-hidden rounded-3xl bg-black/80 backdrop-blur-xl">
+          <div className="relative h-80 overflow-hidden sm:h-96 lg:h-[28rem]">
+            <motion.div
+              className="absolute inset-0"
               animate={{
-                x: isHovered ? [0, 5, 0] : 0,
+                scale: isHovered ? 1.15 : 1,
+                rotate: isHovered ? 2 : 0,
               }}
-              transition={{ duration: 0.5, repeat: isHovered ? Infinity : 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              <Image
+                src={study.image}
+                alt={study.title}
+                fill
+                className="object-cover"
+                quality={90}
               />
-            </motion.svg>
-          </motion.div>
-        </motion.div>
+            </motion.div>
+
+            {/* Advanced gradient overlay */}
+            <motion.div
+              className="absolute inset-0"
+              initial={{ opacity: 0.3 }}
+              animate={{ opacity: isHovered ? 0.8 : 0.3 }}
+              transition={{ duration: 0.5 }}
+              style={{
+                background: `linear-gradient(135deg, ${study.color.split(' ')[1]} 0%, transparent 50%, ${study.color.split(' ')[3]} 100%)`,
+                mixBlendMode: "multiply",
+              }}
+            />
+
+            {/* Animated particles overlay */}
+            <motion.div
+              className="absolute inset-0"
+              animate={{
+                backgroundPosition: isHovered ? ["0% 0%", "100% 100%"] : "0% 0%",
+              }}
+              transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+              style={{
+                backgroundImage: "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 1px)",
+                backgroundSize: "30px 30px",
+              }}
+            />
+
+            {/* Content overlay */}
+            <motion.div
+              className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent p-8"
+              initial={{ opacity: 0.8 }}
+              animate={{ opacity: isHovered ? 1 : 0.8 }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.1 }}
+              >
+                <motion.h3
+                  className="mb-3 text-2xl font-bold text-white sm:text-3xl lg:text-4xl"
+                  animate={{
+                    y: isHovered ? -5 : 0,
+                  }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {study.title}
+                </motion.h3>
+
+                <motion.p
+                  className="mb-6 text-base text-white/80 sm:text-lg"
+                  initial={{ opacity: 0.8 }}
+                  animate={{ opacity: isHovered ? 1 : 0.8 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {study.description}
+                </motion.p>
+
+                <motion.div
+                  className="flex items-center gap-3"
+                  animate={{
+                    x: isHovered ? 10 : 0,
+                  }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <span className="text-lg font-semibold text-amber-400">
+                    View Case Study
+                  </span>
+                  <motion.div
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-400/20 backdrop-blur-sm"
+                    animate={{
+                      scale: isHovered ? [1, 1.2, 1] : 1,
+                      rotate: isHovered ? 360 : 0,
+                    }}
+                    transition={{
+                      scale: { duration: 0.5, repeat: isHovered ? Infinity : 0 },
+                      rotate: { duration: 0.5 },
+                    }}
+                  >
+                    <svg
+                      className="h-5 w-5 text-amber-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                      />
+                    </svg>
+                  </motion.div>
+                </motion.div>
+              </motion.div>
+            </motion.div>
+
+            {/* Corner accent */}
+            <motion.div
+              className="absolute top-0 right-0 h-32 w-32"
+              animate={{
+                scale: isHovered ? 1.5 : 1,
+                rotate: isHovered ? 90 : 0,
+              }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="h-full w-full bg-gradient-to-br from-amber-400/30 to-transparent" />
+            </motion.div>
+
+            {/* Number badge */}
+            <motion.div
+              className="absolute top-6 left-6 flex h-16 w-16 items-center justify-center rounded-full bg-black/50 backdrop-blur-md"
+              animate={{
+                scale: isHovered ? 1.1 : 1,
+                rotate: isHovered ? 360 : 0,
+              }}
+              transition={{ duration: 0.5 }}
+            >
+              <span className="text-2xl font-bold text-amber-400">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+            </motion.div>
+          </div>
+        </div>
       </Link>
     </motion.div>
   );
@@ -224,17 +264,24 @@ const CaseStudyCard = ({ study, index }) => {
 
 export default function WorkShowcase() {
   const { ref: sectionRef, hasIntersected } = useIntersectionObserver({
-    threshold: 0.1,
+    threshold: 0.05,
   });
 
   const titleVariants = {
-    hidden: { opacity: 0, y: 50 },
+    hidden: { 
+      opacity: 0, 
+      y: 100,
+      rotateX: -45,
+      filter: "blur(10px)"
+    },
     visible: {
       opacity: 1,
       y: 0,
+      rotateX: 0,
+      filter: "blur(0px)",
       transition: {
         duration: 0.8,
-        ease: "easeOut",
+        ease: [0.215, 0.61, 0.355, 1.0],
       },
     },
   };
@@ -243,31 +290,49 @@ export default function WorkShowcase() {
     <motion.section
       ref={sectionRef}
       id="work"
-      className="relative w-full flex flex-col items-center py-16 px-4 bg-[rgba(248,244,239,1)] overflow-hidden"
+      className="relative flex w-full flex-col items-center overflow-hidden bg-gradient-to-b from-black via-neutral-900 to-black py-24 sm:py-32"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Animated background pattern */}
-      <div className="absolute inset-0 opacity-5">
+      {/* Animated mesh gradient background */}
+      <motion.div
+        className="absolute inset-0 opacity-30"
+        animate={{
+          background: [
+            "radial-gradient(ellipse at 20% 0%, rgba(245, 158, 11, 0.2) 0%, transparent 40%)",
+            "radial-gradient(ellipse at 80% 100%, rgba(245, 158, 11, 0.2) 0%, transparent 40%)",
+            "radial-gradient(ellipse at 20% 0%, rgba(245, 158, 11, 0.2) 0%, transparent 40%)",
+          ],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+      />
+
+      {/* Grid pattern overlay */}
+      <div className="absolute inset-0 opacity-10">
         <div
-          className="absolute inset-0"
+          className="h-full w-full"
           style={{
-            backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(245, 158, 11, 0.1) 35px, rgba(245, 158, 11, 0.1) 70px)`,
+            backgroundImage: "linear-gradient(rgba(245, 158, 11, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(245, 158, 11, 0.1) 1px, transparent 1px)",
+            backgroundSize: "50px 50px",
           }}
         />
       </div>
 
-      <div className="w-full container mx-auto relative">
+      <div className="relative container mx-auto w-full">
         {/* Left Model with enhanced animation */}
         <motion.div
-          className="absolute left-0 bottom-0 w-[50vw] h-[350px] -ml-[13vw] z-0 hidden lg:block"
+          className="absolute bottom-0 left-0 z-0 -ml-[13vw] hidden h-[350px] w-[50vw] lg:block"
           initial={{ opacity: 0, x: -100 }}
           animate={hasIntersected ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 1, ease: "easeOut" }}
         >
           <motion.div
-            className="w-full h-full flex items-center justify-end pr-[25vw] overflow-hidden"
+            className="flex h-full w-full items-center justify-end overflow-hidden pr-[25vw]"
             animate={{
               y: [0, -20, 0],
               rotate: [0, 5, 0],
@@ -284,13 +349,13 @@ export default function WorkShowcase() {
 
         {/* Right Model with enhanced animation */}
         <motion.div
-          className="absolute right-0 top-1/4 -translate-y-1/2 w-[50vw] h-[350px] -mr-[13vw] z-0 hidden lg:block"
+          className="absolute top-1/4 right-0 z-0 -mr-[13vw] hidden h-[350px] w-[50vw] -translate-y-1/2 lg:block"
           initial={{ opacity: 0, x: 100 }}
           animate={hasIntersected ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
         >
           <motion.div
-            className="w-full h-full flex items-center justify-start pl-[25vw] overflow-hidden"
+            className="flex h-full w-full items-center justify-start overflow-hidden pl-[25vw]"
             animate={{
               y: [0, 20, 0],
               rotate: [0, -5, 0],
@@ -306,42 +371,59 @@ export default function WorkShowcase() {
         </motion.div>
 
         {/* Center Content */}
-        <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center gap-8">
-          <motion.h2
-            className="font-bold uppercase text-5xl md:text-[70px] lg:text-[120px] text-center leading-tight"
-            variants={titleVariants}
-            initial="hidden"
-            animate={hasIntersected ? "visible" : "hidden"}
-          >
-            Our{" "}
-            <motion.span
-              className="bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent"
-              whileHover={{
-                scale: 1.05,
-                textShadow: "0 0 30px rgba(245, 158, 11, 0.5)",
-                transition: { duration: 0.3 },
-              }}
+        <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center px-6">
+          <motion.div className="perspective-1000 mb-12">
+            <motion.h2
+              className="text-center text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem]"
+              variants={titleVariants}
+              initial="hidden"
+              animate={hasIntersected ? "visible" : "hidden"}
             >
-              Work
-            </motion.span>
-          </motion.h2>
+              <motion.span 
+                className="block"
+                whileHover={{
+                  scale: 1.05,
+                  textShadow: "0 0 50px rgba(255, 255, 255, 0.8)",
+                  transition: { duration: 0.3 },
+                }}
+              >
+                OUR
+              </motion.span>
+              <motion.span
+                className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
+                whileHover={{
+                  scale: 1.05,
+                  textShadow: "0 0 50px rgba(245, 158, 11, 0.8)",
+                  transition: { duration: 0.3 },
+                }}
+              >
+                WORK
+              </motion.span>
+            </motion.h2>
+          </motion.div>
 
           <motion.p
-            className="max-w-2xl text-base text-gray-600 text-center"
-            variants={fadeInUp}
-            initial="initial"
-            animate={hasIntersected ? "animate" : "initial"}
-            transition={{ delay: 0.3 }}
+            className="mb-16 max-w-3xl text-center text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl"
+            initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+            animate={hasIntersected ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
           >
-            We take pride in delivering innovative and impactful solutions for
-            our clients. Our work reflects our expertise in data science, web
-            development, and AI integration, helping businesses achieve
-            measurable success.
+            We take pride in delivering{" "}
+            <motion.span
+              className="font-semibold text-amber-400"
+              whileHover={{ 
+                textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+                scale: 1.05,
+              }}
+            >
+              innovative solutions
+            </motion.span>{" "}
+            that drive measurable success. Our portfolio showcases transformative projects in data science, web development, and AI integration.
           </motion.p>
 
           {/* Mobile Models with enhanced animation */}
           <motion.div
-            className="relative h-[200px] w-[200px] lg:hidden -mr-[150px]"
+            className="relative -mr-[150px] h-[200px] w-[200px] lg:hidden"
             animate={{
               rotate: 360,
               scale: [1, 1.1, 1],
@@ -354,9 +436,9 @@ export default function WorkShowcase() {
             <ModelViewer url="/triangle-1.glb" />
           </motion.div>
 
-          {/* Case Studies Grid with stagger animation */}
+          {/* Case Studies Grid with enhanced stagger animation */}
           <motion.div
-            className="grid w-full max-w-6xl grid-cols-1 gap-8 sm:grid-cols-2"
+            className="grid w-full max-w-7xl grid-cols-1 gap-8 md:gap-12 lg:grid-cols-2"
             variants={staggerContainer}
             initial="initial"
             animate={hasIntersected ? "animate" : "initial"}
@@ -366,8 +448,44 @@ export default function WorkShowcase() {
             ))}
           </motion.div>
 
+          {/* View All Projects Button */}
           <motion.div
-            className="relative h-[200px] w-[200px] lg:hidden -ml-[150px]"
+            className="mt-16"
+            initial={{ opacity: 0, y: 30 }}
+            animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.8, duration: 0.6 }}
+          >
+            <Link href="/case-study-detailed">
+              <motion.button
+                className="group relative overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-red-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <span className="relative z-10">View All Projects</span>
+                <motion.span
+                  className="relative z-10 ml-2 inline-block"
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  →
+                </motion.span>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-red-600 to-amber-400"
+                  initial={{ x: "100%" }}
+                  whileHover={{ x: 0 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                />
+              </motion.button>
+            </Link>
+          </motion.div>
+
+          <motion.div
+            className="relative -ml-[150px] h-[200px] w-[200px] lg:hidden"
             animate={{
               rotate: -360,
               y: [0, -20, 0],
@@ -381,6 +499,34 @@ export default function WorkShowcase() {
           </motion.div>
         </div>
       </div>
+
+      {/* Floating decorative elements */}
+      <motion.div
+        className="absolute left-10 top-1/4 h-64 w-64 rounded-full bg-gradient-to-r from-amber-400/10 to-red-600/10 blur-3xl"
+        animate={{
+          x: [0, 100, 0],
+          y: [0, -50, 0],
+          scale: [1, 1.5, 1],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      <motion.div
+        className="absolute bottom-1/4 right-10 h-80 w-80 rounded-full bg-gradient-to-r from-orange-400/10 to-amber-600/10 blur-3xl"
+        animate={{
+          x: [0, -80, 0],
+          y: [0, 80, 0],
+          scale: [1, 1.3, 1],
+        }}
+        transition={{
+          duration: 25,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
     </motion.section>
   );
 }
