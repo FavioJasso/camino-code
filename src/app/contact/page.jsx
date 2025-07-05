@@ -1,28 +1,22 @@
-import Head from "next/head";
+"use client";
+
 import NavigationBar from "@/components/NavigationBar";
 import ContactUsHeader from "@/components/ContactUsHeader";
 import ContactForm from "@/components/ContactFormPages";
 import Footer from "@/components/Footer";
+import ClientProviders from "@/components/ClientProviders";
 
-const TITLE = "Contact Us - My Next.js Site";
-const DESCRIPTION = "Get in touch with us for any inquiries or support.";
-
-const ContactUsPage = () => (
-  <>
-    <Head>
-      <title>{TITLE}</title>
-      <meta name="description" content={DESCRIPTION} />
-    </Head>
-
-    <main className="">
-      <NavigationBar />
-      <ContactUsHeader />
-      <div className="bg-[rgba(248,244,239,1)]">
+const ContactUsPage = () => {
+  return (
+    <ClientProviders>
+      <main className="h-max w-full gap-4 overflow-hidden">
+        <NavigationBar />
+        <ContactUsHeader />
         <ContactForm />
-      </div>
-      <Footer />
-    </main>
-  </>
-);
+        <Footer />
+      </main>
+    </ClientProviders>
+  );
+};
 
 export default ContactUsPage;
