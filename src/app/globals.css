@@ -44,6 +44,11 @@ body.is-scrolling ::-webkit-scrollbar-thumb {
   background: linear-gradient(to bottom, #d97706, #dc2626);
 }
 
+/* Perspective utility */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
 /* Reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   html {
