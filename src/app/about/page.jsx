@@ -1,3 +1,5 @@
+"use client";
+
 import NavigationBar from "@/components/NavigationBar";
 import ContactForm from "@/components/ContactFormPages";
 import Footer from "@/components/Footer";
@@ -6,27 +8,21 @@ import AboutUsFounder from "@/components/AboutUsFounder";
 import AboutUsHero from "@/components/AboutUsHero";
 import AboutUsOffers from "@/components/AboutUsOffers";
 import AboutUsPartners from "@/components/AboutUsPartners";
-
-export const metadata = {
-  title: "About Us - Camino Code",
-  description: "Learn more about our company and what we do.",
-};
+import ClientProviders from "@/components/ClientProviders";
 
 export default function AboutPage() {
   return (
-    <main>
-      <NavigationBar />
-      <AboutUsHeader />
-      <AboutUsHero />
-      <hr className="my-8 border-gray-300" />
-      <AboutUsFounder />
-      <hr className="my-8 border-gray-300" />
-      <AboutUsOffers />
-      <hr className="my-8 border-gray-300" />
-      <AboutUsPartners />
-      <hr className="my-8 border-gray-300" />
-      <ContactForm />
-      <Footer />
-    </main>
+    <ClientProviders>
+      <main className="h-max w-full gap-4 overflow-hidden">
+        <NavigationBar />
+        <AboutUsHeader />
+        <AboutUsHero />
+        <AboutUsFounder />
+        <AboutUsOffers />
+        <AboutUsPartners />
+        <ContactForm />
+        <Footer />
+      </main>
+    </ClientProviders>
   );
 }
