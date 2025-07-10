@@ -126,7 +126,7 @@ export default function AboutSection() {
         className="relative z-10 flex h-full w-full max-w-[1440px] flex-col items-center justify-center gap-8 text-center px-6">
         {/* Top Left Spline Model */}
         <motion.div
-          className="absolute top-0 left-10 h-[250px] w-[250px] -translate-x-1/4 -translate-y-1/4 sm:h-[350px] sm:w-[350px]"
+          className="absolute top-10 left-10 h-[250px] w-[250px] -translate-x-1/4 sm:h-[350px] sm:w-[350px]"
           variants={splineVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
@@ -152,7 +152,7 @@ export default function AboutSection() {
 
         {/* Bottom Right Spline Model */}
         <motion.div
-          className="absolute right-10 bottom-0 h-[250px] w-[250px] translate-x-1/4 translate-y-1/4 sm:h-[350px] sm:w-[350px]"
+          className="absolute right-10 bottom-10 h-[250px] w-[250px] translate-x-1/4 sm:h-[350px] sm:w-[350px]"
           variants={splineVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
@@ -179,7 +179,7 @@ export default function AboutSection() {
 
         {/* Heading with split text animation */}
         <motion.h2
-          className="perspective-1000 mx-auto w-full max-w-[900px] text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem]"
+          className="perspective-1000 mx-auto w-full max-w-[900px] mt-16 sm:mt-20 md:mt-24 text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem]"
           variants={containerVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
