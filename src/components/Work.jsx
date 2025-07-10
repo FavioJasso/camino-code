@@ -290,7 +290,7 @@ export default function WorkShowcase() {
     <motion.section
       ref={sectionRef}
       id="work"
-      className="relative flex w-full flex-col items-center overflow-hidden bg-gradient-to-b from-black via-neutral-900 to-black py-24 sm:py-32"
+      className="relative flex w-full flex-col items-center overflow-hidden bg-white py-24 sm:py-32"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -374,7 +374,7 @@ export default function WorkShowcase() {
         <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center px-6">
           <motion.div className="perspective-1000 mb-12">
             <motion.h2
-              className="text-center text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem]"
+              className="text-center text-6xl font-black uppercase tracking-tighter text-black sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem]"
               variants={titleVariants}
               initial="hidden"
               animate={hasIntersected ? "visible" : "hidden"}
@@ -383,7 +383,7 @@ export default function WorkShowcase() {
                 className="block"
                 whileHover={{
                   scale: 1.05,
-                  textShadow: "0 0 50px rgba(255, 255, 255, 0.8)",
+                  textShadow: "0 0 50px rgba(0, 0, 0, 0.08)",
                   transition: { duration: 0.3 },
                 }}
               >
@@ -403,7 +403,7 @@ export default function WorkShowcase() {
           </motion.div>
 
           <motion.p
-            className="mb-16 max-w-3xl text-center text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl"
+            className="mb-16 max-w-3xl text-center text-lg font-light leading-relaxed text-black/80 sm:text-xl md:text-2xl"
             initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
             animate={hasIntersected ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
             transition={{ duration: 0.8, delay: 0.3 }}
