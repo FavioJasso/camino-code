@@ -140,9 +140,7 @@ export default function NavigationBar({ iswhite = false }) {
                         ? "/"
                         : `/${item.toLowerCase().replace(" ", "-")}`
                     }
-                    className={`${
-                      iswhite ? "text-white" : "text-black"
-                    } group relative`}
+                    className="relative flex items-center justify-center px-4 py-2 text-lg font-medium text-white transition-all duration-300 hover:text-orange-600"
                   >
                     <span className="relative z-10">{item}</span>
                     <motion.span
