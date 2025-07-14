@@ -178,7 +178,7 @@ export default function WhatSetsUsApart() {
     <motion.section
       ref={containerRef}
       id="offers"
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-900 via-black to-neutral-900"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -245,7 +245,7 @@ export default function WhatSetsUsApart() {
         <div className="relative w-full max-w-7xl flex justify-between items-center">
           {/* Left Model */}
           <motion.div
-            className="absolute left-0 h-[300px] w-[300px] -translate-x-1/2 hidden lg:block"
+            className="absolute left-0 h-[400px] w-[400px] -translate-x-1/3 hidden lg:block"
             initial={{ scale: 0, rotate: -180 }}
             animate={hasIntersected ? { scale: 1, rotate: 0 } : {}}
             transition={{ duration: 1, ease: "easeOut" }}
@@ -263,7 +263,6 @@ export default function WhatSetsUsApart() {
                   scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
                 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 to-transparent blur-3xl" />
                 <ModelViewer url="/bolb-1.glb" />
               </motion.div>
             </motion.div>
@@ -271,7 +270,7 @@ export default function WhatSetsUsApart() {
 
           {/* Right Model */}
           <motion.div
-            className="absolute right-0 h-[300px] w-[300px] translate-x-1/2 hidden lg:block"
+            className="absolute right-0 h-[400px] w-[400px] translate-x-1/3 hidden lg:block"
             initial={{ scale: 0, rotate: 180 }}
             animate={hasIntersected ? { scale: 1, rotate: 0 } : {}}
             transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
@@ -296,7 +295,6 @@ export default function WhatSetsUsApart() {
                   ease: "linear",
                 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-l from-amber-400/10 to-transparent blur-3xl" />
                 <ModelViewer url="/bolb-2.glb" />
               </motion.div>
             </motion.div>
@@ -312,7 +310,7 @@ export default function WhatSetsUsApart() {
         >
           <motion.h2 className="text-5xl leading-tight font-black uppercase tracking-tighter md:text-[70px] lg:text-[120px]">
             <motion.span 
-              className="text-white"
+              className="text-black"
               whileHover={{
                 scale: 1.05,
                 textShadow: "0 0 40px rgba(255, 255, 255, 0.8)",
@@ -333,7 +331,7 @@ export default function WhatSetsUsApart() {
             </motion.span>
           </motion.h2>
           <motion.p
-            className="mt-6 max-w-3xl mx-auto text-lg font-light leading-relaxed text-white/80 md:text-xl"
+            className="mt-6 max-w-3xl mx-auto text-lg font-light leading-relaxed text-black md:text-xl"
             initial={{ opacity: 0, y: 50, filter: "blur(5px)" }}
             animate={hasIntersected ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
