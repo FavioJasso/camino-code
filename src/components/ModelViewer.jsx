@@ -45,7 +45,10 @@ export default function ModelViewer({ url }) {
           antialias: true,
           alpha: true,
           powerPreference: "high-performance",
+          // Remove background color
+          clearColor: 'transparent',
         }}
+        style={{ background: 'transparent' }}
         dpr={[1, 2]}
       >
         <ambientLight intensity={0.5} />
@@ -73,16 +76,7 @@ export default function ModelViewer({ url }) {
           autoRotateSpeed={2}
         />
 
-        {/* Animated background particles */}
-        <mesh>
-          <sphereGeometry args={[50, 32, 32]} />
-          <meshBasicMaterial
-            color="#f59e0b"
-            side={THREE.BackSide}
-            transparent
-            opacity={0.1}
-          />
-        </mesh>
+        {/* Removed background sphere mesh */}
       </Canvas>
 
       <Suspense fallback={<LoadingSpinner />}>
