@@ -23,7 +23,7 @@ export default function ContactForm() {
   const [submitStatus, setSubmitStatus] = useState(null);
   const sectionRef = useRef(null);
   const formRef = useRef(null);
-  
+
   const { ref: observerRef, hasIntersected } = useIntersectionObserver({
     threshold: 0.1,
   });
@@ -39,9 +39,7 @@ export default function ContactForm() {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
       setSubmitStatus("success");
       reset();
       setTimeout(() => setSubmitStatus(null), 3000);
@@ -89,16 +87,16 @@ export default function ContactForm() {
     <section
       ref={sectionRef}
       id="contact-form"
-      className="relative min-h-screen bg-gradient-to-b from-black via-neutral-900 to-black py-24 sm:py-32"
+      className="relative min-h-screen bg-white py-24 sm:py-32 border-t border-neutral-200 overflow-hidden"
     >
       {/* Animated mesh gradient background */}
       <motion.div
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-20"
         animate={{
           background: [
-            "radial-gradient(ellipse at 0% 0%, rgba(245, 158, 11, 0.2) 0%, transparent 50%)",
-            "radial-gradient(ellipse at 100% 100%, rgba(245, 158, 11, 0.2) 0%, transparent 50%)",
-            "radial-gradient(ellipse at 0% 0%, rgba(245, 158, 11, 0.2) 0%, transparent 50%)",
+            "radial-gradient(ellipse at 0% 0%, rgba(245, 158, 11, 0.12) 0%, transparent 50%)",
+            "radial-gradient(ellipse at 100% 100%, rgba(245, 158, 11, 0.12) 0%, transparent 50%)",
+            "radial-gradient(ellipse at 0% 0%, rgba(245, 158, 11, 0.12) 0%, transparent 50%)",
           ],
         }}
         transition={{
@@ -109,11 +107,11 @@ export default function ContactForm() {
       />
 
       {/* Grid pattern overlay */}
-      <div className="absolute inset-0 opacity-10">
+      <div className="absolute inset-0 opacity-5">
         <div
           className="h-full w-full"
           style={{
-            backgroundImage: "linear-gradient(rgba(245, 158, 11, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(245, 158, 11, 0.1) 1px, transparent 1px)",
+            backgroundImage: "linear-gradient(rgba(245, 158, 11, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(245, 158, 11, 0.08) 1px, transparent 1px)",
             backgroundSize: "50px 50px",
           }}
         />
@@ -123,7 +121,7 @@ export default function ContactForm() {
         {/* Section Title */}
         <motion.div className="perspective-1000 mb-16 text-center">
           <motion.h2
-            className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl"
+            className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl text-neutral-900"
             variants={titleVariants}
             initial="hidden"
             animate={hasIntersected ? "visible" : "hidden"}
@@ -132,17 +130,17 @@ export default function ContactForm() {
               className="block"
               whileHover={{
                 scale: 1.05,
-                textShadow: "0 0 40px rgba(255, 255, 255, 0.8)",
+                textShadow: "0 0 40px rgba(0,0,0,0.15)",
                 transition: { duration: 0.3 },
               }}
             >
               LET'S
             </motion.span>
             <motion.span
-              className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
+              className="block bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent"
               whileHover={{
                 scale: 1.05,
-                textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
+                textShadow: "0 0 40px rgba(245, 158, 11, 0.4)",
                 transition: { duration: 0.3 },
               }}
             >
@@ -175,14 +173,14 @@ export default function ContactForm() {
               animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.4 }}
             >
-              <p className="text-xl text-white/80">
+              <p className="text-xl text-neutral-700">
                 Ready to transform your ideas into reality? Send us a message and let's start building something amazing together.
               </p>
               
               <div className="flex flex-col gap-4">
                 <motion.a
                   href="mailto:hello@caminocode.com"
-                  className="group flex items-center gap-3 text-white/70 hover:text-amber-400"
+                  className="group flex items-center gap-3 text-neutral-600 hover:text-amber-500"
                   whileHover={{ x: 10 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
@@ -192,7 +190,7 @@ export default function ContactForm() {
                 
                 <motion.a
                   href="tel:+15551234567"
-                  className="group flex items-center gap-3 text-white/70 hover:text-amber-400"
+                  className="group flex items-center gap-3 text-neutral-600 hover:text-amber-500"
                   whileHover={{ x: 10 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
@@ -212,7 +210,7 @@ export default function ContactForm() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <motion.div
-              className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm sm:p-12"
+              className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-neutral-100 to-white p-8 backdrop-blur-sm sm:p-12 border border-neutral-200"
               whileHover={{ scale: 1.01 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -220,7 +218,7 @@ export default function ContactForm() {
               <motion.div
                 className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 opacity-0 blur-xl"
                 animate={{
-                  opacity: [0, 0.3, 0],
+                  opacity: [0, 0.15, 0],
                 }}
                 transition={{
                   duration: 3,
@@ -241,7 +239,7 @@ export default function ContactForm() {
                   scale: { duration: 2, repeat: Infinity },
                 }}
               >
-                <Sparkles className="h-8 w-8 text-amber-400/20" />
+                <Sparkles className="h-8 w-8 text-amber-400/30" />
               </motion.div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="relative space-y-6">
@@ -252,14 +250,14 @@ export default function ContactForm() {
                   initial="hidden"
                   animate={hasIntersected ? "visible" : "hidden"}
                 >
-                  <label className="mb-2 block text-sm font-medium text-white/80">
+                  <label className="mb-2 block text-sm font-medium text-neutral-700">
                     Your Name
                   </label>
                   <div className="relative">
                     <input
                       {...register("name", { required: "Name is required" })}
                       type="text"
-                      className="w-full rounded-xl bg-white/5 px-4 py-3 text-white placeholder-white/40 backdrop-blur-sm transition-all duration-300 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-amber-400/50"
+                      className="w-full rounded-xl bg-neutral-100 px-4 py-3 text-neutral-900 placeholder-neutral-400 backdrop-blur-sm transition-all duration-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-400/50 border border-neutral-200"
                       placeholder="John Doe"
                     />
                     <motion.div
@@ -275,7 +273,7 @@ export default function ContactForm() {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="mt-2 text-sm text-red-400"
+                        className="mt-2 text-sm text-red-500"
                       >
                         {errors.name.message}
                       </motion.p>
@@ -290,7 +288,7 @@ export default function ContactForm() {
                   initial="hidden"
                   animate={hasIntersected ? "visible" : "hidden"}
                 >
-                  <label className="mb-2 block text-sm font-medium text-white/80">
+                  <label className="mb-2 block text-sm font-medium text-neutral-700">
                     Email Address
                   </label>
                   <div className="relative">
@@ -303,7 +301,7 @@ export default function ContactForm() {
                         },
                       })}
                       type="email"
-                      className="w-full rounded-xl bg-white/5 px-4 py-3 text-white placeholder-white/40 backdrop-blur-sm transition-all duration-300 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-amber-400/50"
+                      className="w-full rounded-xl bg-neutral-100 px-4 py-3 text-neutral-900 placeholder-neutral-400 backdrop-blur-sm transition-all duration-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-400/50 border border-neutral-200"
                       placeholder="john@example.com"
                     />
                     <motion.div
@@ -319,7 +317,7 @@ export default function ContactForm() {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="mt-2 text-sm text-red-400"
+                        className="mt-2 text-sm text-red-500"
                       >
                         {errors.email.message}
                       </motion.p>
@@ -334,14 +332,14 @@ export default function ContactForm() {
                   initial="hidden"
                   animate={hasIntersected ? "visible" : "hidden"}
                 >
-                  <label className="mb-2 block text-sm font-medium text-white/80">
+                  <label className="mb-2 block text-sm font-medium text-neutral-700">
                     Subject
                   </label>
                   <div className="relative">
                     <input
                       {...register("subject", { required: "Subject is required" })}
                       type="text"
-                      className="w-full rounded-xl bg-white/5 px-4 py-3 text-white placeholder-white/40 backdrop-blur-sm transition-all duration-300 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-amber-400/50"
+                      className="w-full rounded-xl bg-neutral-100 px-4 py-3 text-neutral-900 placeholder-neutral-400 backdrop-blur-sm transition-all duration-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-400/50 border border-neutral-200"
                       placeholder="Project Inquiry"
                     />
                     <motion.div
@@ -357,7 +355,7 @@ export default function ContactForm() {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="mt-2 text-sm text-red-400"
+                        className="mt-2 text-sm text-red-500"
                       >
                         {errors.subject.message}
                       </motion.p>
@@ -372,14 +370,14 @@ export default function ContactForm() {
                   initial="hidden"
                   animate={hasIntersected ? "visible" : "hidden"}
                 >
-                  <label className="mb-2 block text-sm font-medium text-white/80">
+                  <label className="mb-2 block text-sm font-medium text-neutral-700">
                     Message
                   </label>
                   <div className="relative">
                     <textarea
                       {...register("message", { required: "Message is required" })}
                       rows={5}
-                      className="w-full resize-none rounded-xl bg-white/5 px-4 py-3 text-white placeholder-white/40 backdrop-blur-sm transition-all duration-300 focus:bg-white/10 focus:outline-none focus:ring-2 focus:ring-amber-400/50"
+                      className="w-full resize-none rounded-xl bg-neutral-100 px-4 py-3 text-neutral-900 placeholder-neutral-400 backdrop-blur-sm transition-all duration-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-400/50 border border-neutral-200"
                       placeholder="Tell us about your project..."
                     />
                     <motion.div
@@ -395,7 +393,7 @@ export default function ContactForm() {
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="mt-2 text-sm text-red-400"
+                        className="mt-2 text-sm text-red-500"
                       >
                         {errors.message.message}
                       </motion.p>
@@ -462,8 +460,8 @@ export default function ContactForm() {
                     exit={{ opacity: 0, y: -20, scale: 0.9 }}
                     className={`mt-6 rounded-xl p-4 text-center backdrop-blur-sm ${
                       submitStatus === "success"
-                        ? "bg-green-500/20 text-green-400"
-                        : "bg-red-500/20 text-red-400"
+                        ? "bg-green-500/10 text-green-600"
+                        : "bg-red-500/10 text-red-600"
                     }`}
                   >
                     {submitStatus === "success"
