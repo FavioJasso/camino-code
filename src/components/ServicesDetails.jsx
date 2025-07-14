@@ -169,14 +169,25 @@ const ServiceSection = ({ section, index, isActive }) => {
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1, 0.95]);
+
+  // Alternate backgrounds and text colors
+  const isEven = index % 2 === 0;
+  const bgClass = isEven ? "bg-black" : "bg-white";
+  // Use complementary text colors for each background
+  const textClass = isEven ? "text-white" : "text-gray-900";
+  const subtitleClass = isEven ? "text-white/70" : "text-gray-700";
+  const cardTextClass = isEven ? "text-white" : "text-gray-900";
+  const cardDescClass = isEven ? "text-white/70" : "text-gray-700";
+
+  // Only first section gets min-h-screen, others get min-h-0
+  const minHeightClass = index === 0 ? "min-h-screen" : "min-h-0";
 
   return (
     <motion.section
       ref={sectionRef}
       id={section.id}
-      className="service-section relative min-h-screen bg-gradient-to-b from-black via-neutral-900 to-black"
-      style={{ opacity, scale }}
+      className={`service-section relative ${minHeightClass} ${bgClass} transition-colors duration-500`}
+      style={{ opacity }}
     >
       {/* Animated background */}
       <motion.div
@@ -195,94 +206,108 @@ const ServiceSection = ({ section, index, isActive }) => {
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col lg:flex-row">
         {/* Sticky left content */}
-        <motion.div
-          className="flex w-full flex-col justify-center gap-8 p-8 text-left lg:sticky lg:top-0 lg:h-screen lg:w-1/2 lg:p-12"
-          initial={{ opacity: 0, x: -100 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          {/* Icon with gradient background */}
           <motion.div
-            className={`relative h-32 w-32 rounded-3xl bg-gradient-to-br ${section.gradient} p-1`}
-            animate={{
-              rotate: isActive ? 360 : 0,
-            }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          >
-            <div className="flex h-full w-full items-center justify-center rounded-3xl bg-black/50 text-white backdrop-blur-sm">
-              {section.icon}
-            </div>
-          </motion.div>
-
-          {/* Title with gradient */}
-          <motion.h2
-            className="text-4xl font-black uppercase sm:text-5xl lg:text-6xl"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            className={`flex w-full flex-col justify-center gap-8 p-8 text-left lg:sticky lg:top-0 lg:h-screen lg:w-1/2 lg:p-12 ${textClass}`}
+            initial={{ opacity: 0, x: -100 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <motion.span
-              className={`bg-gradient-to-r ${section.gradient} bg-clip-text text-transparent`}
-              animate={{
-                backgroundPosition: isActive ? ["0%", "100%", "0%"] : "0%",
-              }}
-              transition={{ duration: 3, repeat: Infinity }}
+            {/* Icon with gradient background */}
+            <motion.div
+              className={`relative h-32 w-32 rounded-3xl bg-gradient-to-br ${section.gradient} p-1`}
+              // Removed whileHover rotate animation
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              whileTap={{ scale: 0.95 }}
+              whileFocus={{ scale: 1.05 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               style={{ backgroundSize: "200% 100%" }}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 },
+              }}
             >
-              {section.title}
-            </motion.span>
-          </motion.h2>
+              <div className={`flex h-full w-full items-center justify-center rounded-3xl bg-black/50 text-white backdrop-blur-sm`}>
+                {section.icon}
+              </div>
+            </motion.div>
 
-          <motion.p
-            className="text-xl text-white/70"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            viewport={{ once: true }}
-          >
-            {section.subtitle}
-          </motion.p>
-
-          {/* CTA Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            viewport={{ once: true }}
-          >
-            <Link href="/contact">
-              <motion.button
-                className={`group relative overflow-hidden rounded-full bg-gradient-to-r ${section.gradient} px-8 py-4 text-lg font-semibold text-white shadow-2xl`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            {/* Title with gradient */}
+            <motion.h2
+              className={`text-4xl font-black uppercase sm:text-5xl lg:text-6xl ${textClass}`}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              style={{ backgroundSize: "200% 100%" }}
+              whileFocus={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.05 }}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 },
+              }}
+            >
+              <motion.span
+                className={`bg-gradient-to-r ${section.gradient} bg-clip-text text-transparent`}
+                transition={{ duration: 3, repeat: Infinity }}
+                style={{ backgroundSize: "200% 100%" }}
               >
-                <span className="relative z-10">Let's Talk</span>
-                <motion.span
-                  className="relative z-10 ml-2 inline-block"
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
-                  →
-                </motion.span>
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10"
-                  initial={{ x: "-100%" }}
-                  whileHover={{ x: 0 }}
-                  transition={{ duration: 0.3 }}
-                />
-              </motion.button>
-            </Link>
-          </motion.div>
-        </motion.div>
+                {section.title}
+              </motion.span>
+            </motion.h2>
 
-        {/* Scrollable right content */}
+            <motion.p
+              className={`text-xl ${subtitleClass}`}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              {section.subtitle}
+            </motion.p>
+
+            {/* CTA Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              viewport={{ once: true }}
+            >
+              <Link href="/contact">
+                <motion.button
+            className={`group relative overflow-hidden rounded-full bg-gradient-to-r ${section.gradient} px-8 py-4 text-lg font-semibold text-white shadow-2xl`}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+            <span className="relative z-10">Let's Talk</span>
+            <motion.span
+              className="relative z-10 ml-2 inline-block"
+              animate={{ x: [0, 5, 0] }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              →
+            </motion.span>
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 "
+              initial={{ x: "-100%" }}
+              whileHover={{ x: 0 }}
+              transition={{ duration: 0.3 }}
+            />
+                </motion.button>
+              </Link>
+            </motion.div>
+          </motion.div>
+
+          {/* Scrollable right content */}
         <div className="flex w-full flex-col gap-6 p-8 lg:w-1/2 lg:p-12 lg:pt-24">
           {section.services.map((service, serviceIndex) => (
             <ServiceCard
@@ -291,6 +316,8 @@ const ServiceSection = ({ section, index, isActive }) => {
               index={serviceIndex}
               gradient={section.gradient}
               isActive={isActive}
+              textClass={cardTextClass}
+              descClass={cardDescClass}
             />
           ))}
         </div>
@@ -314,7 +341,7 @@ const ServiceSection = ({ section, index, isActive }) => {
   );
 };
 
-const ServiceCard = ({ service, index, gradient, isActive }) => {
+const ServiceCard = ({ service, index, gradient, isActive, textClass, descClass }) => {
   const cardRef = useRef(null);
 
   return (
@@ -331,7 +358,7 @@ const ServiceCard = ({ service, index, gradient, isActive }) => {
       className="group relative"
     >
       <motion.div
-        className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm"
+        className={`relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm ${textClass} shadow-lg transition-transform duration-300 hover:scale-105`}
         whileHover={{
           scale: 1.02,
           transition: { duration: 0.3 },
@@ -364,7 +391,7 @@ const ServiceCard = ({ service, index, gradient, isActive }) => {
 
         {/* Title */}
         <motion.h3
-          className="mb-3 text-xl font-bold text-white"
+          className={`mb-3 text-xl font-bold ${textClass}`}
           whileHover={{ x: 5 }}
           transition={{ duration: 0.3 }}
         >
@@ -372,7 +399,7 @@ const ServiceCard = ({ service, index, gradient, isActive }) => {
         </motion.h3>
 
         {/* Description */}
-        <p className="text-white/70 leading-relaxed">
+        <p className={`${descClass} leading-relaxed`}>
           {service.description}
         </p>
 
