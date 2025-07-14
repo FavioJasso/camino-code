@@ -1,3 +1,9 @@
+// Changes:
+// - All text colors are now lighter for better contrast on black background.
+// - Used text-white, text-white/90, text-white/80, text-white/60, etc. for all text elements.
+// - Removed gradients from text, replaced with solid white or white/amber for accent.
+// - Ensured navigation dots and scroll indicator are visible on black.
+
 "use client";
 
 import { Star, Quote } from "lucide-react";
@@ -43,7 +49,7 @@ export default function Testimonials() {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const sectionRef = useRef(null);
   const canvasRef = useRef(null);
-  
+
   const { ref: observerRef, hasIntersected } = useIntersectionObserver({
     threshold: 0.3,
   });
@@ -56,7 +62,6 @@ export default function Testimonials() {
   const parallaxY = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
 
-  // Particle animation effect
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -98,19 +103,18 @@ export default function Testimonials() {
       }
     }
 
-    // Initialize particles
     for (let i = 0; i < particleCount; i++) {
       particles.push(new Particle());
     }
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       particles.forEach((particle) => {
         particle.update();
         particle.draw();
       });
-      
+
       requestAnimationFrame(animate);
     };
 
@@ -138,8 +142,8 @@ export default function Testimonials() {
   const testimonial = testimonials[currentTestimonial];
 
   const titleVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: 100,
       rotateX: -90,
       filter: "blur(10px)"
@@ -195,14 +199,12 @@ export default function Testimonials() {
       transition={{ duration: 0.5 }}
       style={{ opacity }}
     >
-      {/* Animated particles canvas */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 z-0"
         style={{ mixBlendMode: "screen" }}
       />
 
-      {/* Animated mesh gradient background */}
       <motion.div
         className="absolute inset-0 opacity-20"
         animate={{
@@ -219,7 +221,6 @@ export default function Testimonials() {
         }}
       />
 
-      {/* Grid pattern overlay */}
       <div className="absolute inset-0 opacity-5">
         <div
           className="h-full w-full"
@@ -230,7 +231,6 @@ export default function Testimonials() {
         />
       </div>
 
-      {/* Floating orbs */}
       <motion.div
         className="absolute left-20 top-20 h-96 w-96 rounded-full bg-gradient-to-r from-amber-400/10 to-red-600/10 blur-3xl"
         animate={{
@@ -262,13 +262,13 @@ export default function Testimonials() {
         {/* Heading with dramatic animation */}
         <motion.div className="perspective-1000 mb-16 text-center">
           <motion.h2
-            className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl"
+            className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-white"
             variants={titleVariants}
             initial="hidden"
             animate={hasIntersected ? "visible" : "hidden"}
           >
-            <motion.span 
-              className="block"
+            <motion.span
+              className="block text-white"
               whileHover={{
                 scale: 1.05,
                 textShadow: "0 0 50px rgba(255, 255, 255, 0.8)",
@@ -278,7 +278,7 @@ export default function Testimonials() {
               CLIENT
             </motion.span>
             <motion.span
-              className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
+              className="block text-orange-400"
               whileHover={{
                 scale: 1.05,
                 textShadow: "0 0 50px rgba(245, 158, 11, 0.8)",
@@ -302,15 +302,13 @@ export default function Testimonials() {
             onMouseEnter={() => setIsAutoPlaying(false)}
             onMouseLeave={() => setIsAutoPlaying(true)}
           >
-            {/* Advanced testimonial card */}
             <motion.div
               className="relative max-w-4xl rounded-3xl bg-gradient-to-br from-white/5 to-white/10 p-12 backdrop-blur-md"
-              whileHover={{ 
+              whileHover={{
                 scale: 1.02,
                 transition: { duration: 0.3 }
               }}
             >
-              {/* Glow effect */}
               <motion.div
                 className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 opacity-0 blur-xl"
                 animate={{
@@ -322,8 +320,7 @@ export default function Testimonials() {
                   ease: "easeInOut",
                 }}
               />
-              
-              {/* Stars with enhanced animation */}
+
               <motion.div
                 className="mb-8 flex justify-center gap-2"
                 initial={{ scale: 0 }}
@@ -356,7 +353,6 @@ export default function Testimonials() {
                 ))}
               </motion.div>
 
-              {/* Quote with advanced styling */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -364,7 +360,7 @@ export default function Testimonials() {
                 className="relative mb-8"
               >
                 <Quote className="absolute -top-6 -left-6 h-16 w-16 text-amber-400/20" />
-                <motion.p 
+                <motion.p
                   className="text-center text-2xl font-light leading-relaxed text-white/90 sm:text-3xl"
                   style={{ y: parallaxY }}
                 >
@@ -373,14 +369,12 @@ export default function Testimonials() {
                 <Quote className="absolute -bottom-6 -right-6 h-16 w-16 rotate-180 text-amber-400/20" />
               </motion.div>
 
-              {/* Author info with image placeholder */}
               <motion.div
                 className="flex flex-col items-center"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.8 }}
               >
-                {/* Avatar circle */}
                 <motion.div
                   className="mb-4 h-20 w-20 overflow-hidden rounded-full bg-gradient-to-br from-amber-400 to-red-600 p-0.5"
                   whileHover={{ scale: 1.1, rotate: 360 }}
@@ -400,7 +394,7 @@ export default function Testimonials() {
                   {testimonial.name}
                 </motion.h3>
                 <motion.p
-                  className="mt-1 bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-lg text-transparent"
+                  className="mt-1 text-lg text-white/80"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.8 }}
@@ -420,7 +414,6 @@ export default function Testimonials() {
           </motion.div>
         </AnimatePresence>
 
-        {/* Navigation Dots with enhanced styling */}
         <motion.div
           className="mt-12 flex justify-center gap-4"
           initial={{ opacity: 0, y: 20 }}
@@ -437,8 +430,8 @@ export default function Testimonials() {
               }}
               className={`relative h-3 rounded-full transition-all duration-500 ${
                 currentTestimonial === index
-                  ? "w-12 bg-gradient-to-r from-amber-400 to-red-600"
-                  : "w-3 bg-white/30 hover:bg-white/50"
+                  ? "w-12 bg-amber-400"
+                  : "w-3 bg-white/60 hover:bg-white/80"
               }`}
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.9 }}
@@ -446,7 +439,7 @@ export default function Testimonials() {
             >
               {currentTestimonial === index && (
                 <motion.div
-                  className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 to-red-600"
+                  className="absolute inset-0 rounded-full bg-amber-400"
                   layoutId="activeTestimonial"
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 />
@@ -455,7 +448,6 @@ export default function Testimonials() {
           ))}
         </motion.div>
 
-        {/* Scroll indicator */}
         <motion.div
           className="absolute bottom-10 left-1/2 -translate-x-1/2"
           initial={{ opacity: 0, y: -20 }}
@@ -471,7 +463,7 @@ export default function Testimonials() {
             }}
             className="flex flex-col items-center"
           >
-            <span className="mb-2 text-xs uppercase tracking-widest text-white/40">
+            <span className="mb-2 text-xs uppercase tracking-widest text-white/60">
               Scroll
             </span>
             <motion.div
