@@ -76,7 +76,7 @@ const ServiceCard = ({ service, index }) => {
       className="group relative"
     >
       <motion.div
-        className="relative h-full overflow-hidden rounded-3xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm"
+        className="relative h-full overflow-hidden rounded-3xl bg-gradient-to-br from-black/5 to-black/10 p-8 backdrop-blur-sm"
         whileHover={{ 
           scale: 1.02,
           transition: { duration: 0.3 }
@@ -94,7 +94,7 @@ const ServiceCard = ({ service, index }) => {
           <div
             className="h-full w-full"
             style={{
-              backgroundImage: "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.1) 1px, transparent 1px)",
+              backgroundImage: "radial-gradient(circle at 1px 1px, rgba(0,0,0,0.08) 1px, transparent 1px)",
               backgroundSize: "20px 20px",
             }}
           />
@@ -117,7 +117,7 @@ const ServiceCard = ({ service, index }) => {
 
           {/* Title */}
           <motion.h3
-            className="mb-4 text-2xl font-bold text-white"
+            className="mb-4 text-2xl font-bold text-neutral-900"
             whileHover={{ x: 5 }}
             transition={{ duration: 0.3 }}
           >
@@ -125,7 +125,7 @@ const ServiceCard = ({ service, index }) => {
           </motion.h3>
 
           {/* Description */}
-          <p className="mb-6 text-white/70 leading-relaxed">
+          <p className="mb-6 text-neutral-700 leading-relaxed">
             {service.description}
           </p>
 
@@ -149,7 +149,7 @@ const ServiceCard = ({ service, index }) => {
                   animate={{ scale: [1, 1.5, 1] }}
                   transition={{ duration: 2, repeat: Infinity, delay: idx * 0.2 }}
                 />
-                <span className="text-sm text-white/60">{feature}</span>
+                <span className="text-sm text-neutral-500">{feature}</span>
               </motion.div>
             ))}
           </motion.div>
@@ -220,16 +220,16 @@ export default function ServicesList() {
     <section
       ref={sectionRef}
       id="services-list"
-      className="relative min-h-screen bg-gradient-to-b from-black via-neutral-900 to-black py-24 sm:py-32"
+      className="relative min-h-screen bg-white py-24 sm:py-32"
     >
       {/* Animated mesh gradient background */}
       <motion.div
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-20"
         animate={{
           background: [
-            "radial-gradient(ellipse at 20% 0%, rgba(245, 158, 11, 0.2) 0%, transparent 40%)",
-            "radial-gradient(ellipse at 80% 100%, rgba(245, 158, 11, 0.2) 0%, transparent 40%)",
-            "radial-gradient(ellipse at 20% 0%, rgba(245, 158, 11, 0.2) 0%, transparent 40%)",
+            "radial-gradient(ellipse at 20% 0%, rgba(245, 158, 11, 0.12) 0%, transparent 40%)",
+            "radial-gradient(ellipse at 80% 100%, rgba(245, 158, 11, 0.12) 0%, transparent 40%)",
+            "radial-gradient(ellipse at 20% 0%, rgba(245, 158, 11, 0.12) 0%, transparent 40%)",
           ],
         }}
         transition={{
@@ -244,7 +244,7 @@ export default function ServicesList() {
         <div
           className="h-full w-full"
           style={{
-            backgroundImage: "linear-gradient(rgba(245, 158, 11, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(245, 158, 11, 0.1) 1px, transparent 1px)",
+            backgroundImage: "linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px)",
             backgroundSize: "50px 50px",
           }}
         />
@@ -254,7 +254,7 @@ export default function ServicesList() {
         {/* Section Heading */}
         <motion.div className="perspective-1000 mb-16 text-center">
           <motion.h2
-            className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl"
+            className="text-5xl font-black uppercase tracking-tighter text-neutral-900 sm:text-6xl md:text-7xl lg:text-8xl"
             variants={titleVariants}
             initial="hidden"
             animate={hasIntersected ? "visible" : "hidden"}
@@ -263,7 +263,7 @@ export default function ServicesList() {
               className="block"
               whileHover={{
                 scale: 1.05,
-                textShadow: "0 0 40px rgba(255, 255, 255, 0.8)",
+                textShadow: "0 0 40px rgba(0,0,0,0.2)",
                 transition: { duration: 0.3 },
               }}
             >
@@ -273,7 +273,7 @@ export default function ServicesList() {
               className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
               whileHover={{
                 scale: 1.05,
-                textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
+                textShadow: "0 0 40px rgba(245, 158, 11, 0.5)",
                 transition: { duration: 0.3 },
               }}
             >
@@ -298,7 +298,7 @@ export default function ServicesList() {
           viewport={{ once: true }}
         >
           <motion.p
-            className="mb-8 text-xl text-white/70"
+            className="mb-8 text-xl text-neutral-700"
             whileInView={{ opacity: [0, 1] }}
             transition={{ duration: 1 }}
           >
