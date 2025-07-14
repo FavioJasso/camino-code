@@ -91,8 +91,10 @@ export default function NavigationBar({ iswhite = false }) {
       id="main-head"
       className={`main-head fixed top-0 right-0 left-0 z-50 flex h-16 w-full items-center justify-between border-b-[1px] transition-all duration-300 ease-in-out md:h-20 ${
         scrollY > 50
-          ? "border-gray-200 bg-white/80 backdrop-blur-md"
-          : "border-black/10"
+          ? "border-gray-200 bg-white/95 backdrop-blur-md"
+          : iswhite
+          ? "border-white/20 bg-black/10 backdrop-blur-sm"
+          : "border-black/10 bg-white/90 backdrop-blur-sm"
       }`}
       variants={navVariants}
       animate={isVisible ? "visible" : "hidden"}
@@ -140,7 +142,13 @@ export default function NavigationBar({ iswhite = false }) {
                         ? "/"
                         : `/${item.toLowerCase().replace(" ", "-")}`
                     }
-                    className="relative flex items-center justify-center px-4 py-2 text-lg font-medium text-white transition-all duration-300 hover:text-orange-600"
+                    className={`relative flex items-center justify-center px-4 py-2 text-lg font-medium transition-all duration-300 hover:text-orange-600 ${
+                      scrollY > 50
+                        ? "text-gray-800"
+                        : iswhite
+                        ? "text-white"
+                        : "text-gray-800"
+                    }`}
                   >
                     <span className="relative z-10">{item}</span>
                     <motion.span

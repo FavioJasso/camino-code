@@ -104,40 +104,40 @@ export default function AboutUsFounder() {
       />
 
       <div className="container relative z-10 mx-auto px-6 sm:px-8 md:px-16 lg:px-24">
-        {/* Animated Heading with perspective */}
-        <motion.div className="perspective-1000 text-center mb-16">
-          <motion.h1
-            className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl"
-            variants={titleVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            <motion.span 
-              className="block"
-              whileHover={{
-                scale: 1.05,
-                textShadow: "0 0 40px rgba(255, 255, 255, 0.8)",
-                transition: { duration: 0.3 },
-              }}
+        /* Animated Heading with perspective */
+          <motion.div className="perspective-1000 text-center mb-16">
+            <motion.h1
+              className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl"
+              variants={titleVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
             >
-              OUR
-            </motion.span>
-            <motion.span 
-              className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
-              whileHover={{
-                scale: 1.05,
-                textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
-                transition: { duration: 0.3 },
-              }}
-            >
-              FOUNDER
-            </motion.span>
-          </motion.h1>
-        </motion.div>
+              <motion.span 
+                className="block text-white"
+                whileHover={{
+            scale: 1.05,
+            textShadow: "0 0 40px rgba(255, 255, 255, 0.8) text-amber-400",
+            transition: { duration: 0.3 },
+                }}
+              >
+                OUR
+              </motion.span>
+              <motion.span 
+                className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
+                whileHover={{
+            scale: 1.05,
+            textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
+            transition: { duration: 0.3 },
+                }}
+              >
+                FOUNDER
+              </motion.span>
+            </motion.h1>
+          </motion.div>
 
-        <div className="grid gap-16 lg:grid-cols-2 lg:gap-24 items-center">
-          {/* Founder Image with advanced effects */}
+          <div className="grid gap-16 lg:grid-cols-2 lg:gap-24 items-center">
+            {/* Founder Image with advanced effects */}
           <motion.div
             ref={imageRef}
             className="relative mx-auto max-w-lg lg:max-w-none"

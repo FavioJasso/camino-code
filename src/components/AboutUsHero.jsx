@@ -1,4 +1,3 @@
-// components/AboutMissionVision.jsx
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -6,7 +5,6 @@ import dynamic from "next/dynamic";
 import { useRef } from "react";
 import { Sparkles, Target, Eye } from "lucide-react";
 
-// Dynamically import ModelViewer for client-side rendering only
 const ModelViewer = dynamic(() => import("@/components/ModelViewer"), {
   ssr: false,
 });
@@ -70,17 +68,17 @@ export default function AboutMissionVision() {
   return (
     <motion.div 
       ref={containerRef}
-      className="relative min-h-screen overflow-hidden bg-gradient-to-b from-neutral-900 via-black to-neutral-900"
+      className="relative min-h-screen overflow-hidden bg-white"
       style={{ backgroundPositionY: backgroundY }}
     >
       {/* Animated background gradient */}
       <motion.div
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-20"
         animate={{
           background: [
-            "radial-gradient(circle at 0% 0%, rgba(245, 158, 11, 0.15) 0%, transparent 50%)",
-            "radial-gradient(circle at 100% 100%, rgba(245, 158, 11, 0.15) 0%, transparent 50%)",
-            "radial-gradient(circle at 0% 0%, rgba(245, 158, 11, 0.15) 0%, transparent 50%)",
+            "radial-gradient(circle at 0% 0%, rgba(245, 158, 11, 0.10) 0%, transparent 50%)",
+            "radial-gradient(circle at 100% 100%, rgba(245, 158, 11, 0.10) 0%, transparent 50%)",
+            "radial-gradient(circle at 0% 0%, rgba(245, 158, 11, 0.10) 0%, transparent 50%)",
           ],
         }}
         transition={{
@@ -130,14 +128,14 @@ export default function AboutMissionVision() {
               whileHover={{ scale: 1.1, rotate: 180 }}
               transition={{ duration: 0.5 }}
             >
-              <Target className="h-8 w-8 text-amber-400" />
+              <Target className="h-8 w-8 text-amber-500" />
             </motion.div>
-            <span className="text-sm font-medium uppercase tracking-widest text-amber-400">Our Purpose</span>
+            <span className="text-sm font-medium uppercase tracking-widest text-amber-600">Our Purpose</span>
           </motion.div>
 
           <motion.div className="perspective-1000">
             <motion.h2 
-              className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl"
+              className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-gray-900"
               variants={titleVariants}
               initial="hidden"
               whileInView="visible"
@@ -147,14 +145,14 @@ export default function AboutMissionVision() {
                 className="block"
                 whileHover={{
                   scale: 1.05,
-                  textShadow: "0 0 40px rgba(255, 255, 255, 0.8)",
+                  textShadow: "0 0 40px rgba(0,0,0,0.15)",
                   transition: { duration: 0.3 },
                 }}
               >
                 OUR
               </motion.span>
               <motion.span 
-                className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
+                className="block bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent"
                 whileHover={{
                   scale: 1.05,
                   textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
@@ -171,11 +169,11 @@ export default function AboutMissionVision() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="mt-8 max-w-3xl text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl"
+            className="mt-8 max-w-3xl text-lg font-light leading-relaxed text-gray-700 sm:text-xl md:text-2xl"
           >
             At Camino Code, our mission is to deliver{" "}
             <motion.span
-              className="font-semibold text-amber-400"
+              className="font-semibold text-amber-600"
               whileHover={{ 
                 textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
                 scale: 1.05,
@@ -185,7 +183,7 @@ export default function AboutMissionVision() {
             </motion.span>{" "}
             and{" "}
             <motion.span
-              className="font-semibold text-amber-400"
+              className="font-semibold text-amber-600"
               whileHover={{ 
                 textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
                 scale: 1.05,
@@ -211,16 +209,16 @@ export default function AboutMissionVision() {
             ].map((item, index) => (
               <motion.div
                 key={index}
-                className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-white/5 to-white/10 p-6 backdrop-blur-sm"
+                className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-amber-100/40 to-white/80 p-6 backdrop-blur-sm border border-amber-100"
                 whileHover={{ scale: 1.05, y: -5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-red-600/20 opacity-0 group-hover:opacity-100"
+                  className="absolute inset-0 bg-gradient-to-br from-amber-400/10 to-red-600/10 opacity-0 group-hover:opacity-100"
                   transition={{ duration: 0.3 }}
                 />
                 <span className="text-3xl">{item.icon}</span>
-                <p className="mt-2 font-medium text-white">{item.text}</p>
+                <p className="mt-2 font-medium text-gray-900">{item.text}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -262,19 +260,19 @@ export default function AboutMissionVision() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <span className="text-sm font-medium uppercase tracking-widest text-amber-400">Our Future</span>
+            <span className="text-sm font-medium uppercase tracking-widest text-amber-600">Our Future</span>
             <motion.div
               className="rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 p-4 backdrop-blur-sm"
               whileHover={{ scale: 1.1, rotate: -180 }}
               transition={{ duration: 0.5 }}
             >
-              <Eye className="h-8 w-8 text-amber-400" />
+              <Eye className="h-8 w-8 text-amber-500" />
             </motion.div>
           </motion.div>
 
           <motion.div className="perspective-1000">
             <motion.h2 
-              className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl"
+              className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-gray-900"
               variants={titleVariants}
               initial="hidden"
               whileInView="visible"
@@ -284,14 +282,14 @@ export default function AboutMissionVision() {
                 className="block"
                 whileHover={{
                   scale: 1.05,
-                  textShadow: "0 0 40px rgba(255, 255, 255, 0.8)",
+                  textShadow: "0 0 40px rgba(0,0,0,0.15)",
                   transition: { duration: 0.3 },
                 }}
               >
                 OUR
               </motion.span>
               <motion.span 
-                className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
+                className="block bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent"
                 whileHover={{
                   scale: 1.05,
                   textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
@@ -308,11 +306,11 @@ export default function AboutMissionVision() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="mt-8 ml-auto max-w-3xl text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl"
+            className="mt-8 ml-auto max-w-3xl text-lg font-light leading-relaxed text-gray-700 sm:text-xl md:text-2xl"
           >
             Our vision is to become a{" "}
             <motion.span
-              className="font-semibold text-amber-400"
+              className="font-semibold text-amber-600"
               whileHover={{ 
                 textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
                 scale: 1.05,
@@ -331,7 +329,7 @@ export default function AboutMissionVision() {
             transition={{ duration: 0.6, delay: 0.5 }}
             viewport={{ once: true }}
           >
-            <Sparkles className="h-12 w-12 text-amber-400" />
+            <Sparkles className="h-12 w-12 text-amber-500" />
           </motion.div>
         </motion.section>
       </div>

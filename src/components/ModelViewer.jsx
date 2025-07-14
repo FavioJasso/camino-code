@@ -38,27 +38,31 @@ function LoadingSpinner() {
 
 export default function ModelViewer({ url }) {
   return (
-    <div className="relative h-full w-full">
+    <div className="relative h-full w-full overflow-hidden">
       <Canvas
-        camera={{ position: [0, 0, 5], fov: 45 }}
+        camera={{ position: [0, 0, 4], fov: 50 }}
         gl={{
           antialias: true,
           alpha: true,
           powerPreference: "high-performance",
-          // Remove background color
           clearColor: 'transparent',
         }}
-        style={{ background: 'transparent' }}
+        style={{ 
+          background: 'transparent',
+          width: '100%',
+          height: '100%'
+        }}
         dpr={[1, 2]}
+        resize={{ scroll: false, debounce: { scroll: 50, resize: 0 } }}
       >
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 10, 5]} intensity={1} />
-        <pointLight position={[-10, -10, -5]} intensity={0.5} color="#f59e0b" />
+        <ambientLight intensity={0.6} />
+        <directionalLight position={[10, 10, 5]} intensity={1.2} />
+        <pointLight position={[-10, -10, -5]} intensity={0.7} color="#f59e0b" />
         <spotLight
           position={[0, 10, 0]}
           angle={0.3}
           penumbra={1}
-          intensity={0.5}
+          intensity={0.7}
           castShadow
         />
 
@@ -73,10 +77,8 @@ export default function ModelViewer({ url }) {
           minPolarAngle={Math.PI / 2.5}
           maxPolarAngle={Math.PI / 1.5}
           autoRotate
-          autoRotateSpeed={2}
+          autoRotateSpeed={1.5}
         />
-
-        {/* Removed background sphere mesh */}
       </Canvas>
 
       <Suspense fallback={<LoadingSpinner />}>

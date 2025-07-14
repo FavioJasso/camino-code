@@ -160,7 +160,7 @@ export default function ContactForm() {
           >
             {/* 3D Model */}
             <motion.div
-              className="relative h-[400px] lg:h-[500px]"
+              className="relative h-[500px]"
               style={{ rotate: modelRotate }}
             >
               <ModelViewer url="/triangle-1.glb" />

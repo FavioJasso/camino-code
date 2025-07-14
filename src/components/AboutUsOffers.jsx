@@ -242,12 +242,12 @@ export default function WhatSetsUsApart() {
         style={{ y: textY }}
       >
         {/* 3D Models */}
-        <div className="relative w-full max-w-7xl flex justify-between items-center">
+        <div className="relative w-full max-w-7xl mx-auto">
           {/* Left Model */}
           <motion.div
-            className="absolute left-0 h-[400px] w-[400px] -translate-x-1/3 hidden lg:block"
-            initial={{ scale: 0, rotate: -180 }}
-            animate={hasIntersected ? { scale: 1, rotate: 0 } : {}}
+            className="absolute left-4 top-0 h-[200px] w-[200px] lg:h-[250px] lg:w-[250px] xl:h-[300px] xl:w-[300px] hidden md:block z-20"
+            initial={{ scale: 0, rotate: -180, opacity: 0 }}
+            animate={hasIntersected ? { scale: 1, rotate: 0, opacity: 0.8 } : {}}
             transition={{ duration: 1, ease: "easeOut" }}
           >
             <motion.div
@@ -262,6 +262,7 @@ export default function WhatSetsUsApart() {
                   rotate: { duration: 20, repeat: Infinity, ease: "linear" },
                   scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
                 }}
+                className="h-full w-full"
               >
                 <ModelViewer url="/bolb-1.glb" />
               </motion.div>
@@ -270,9 +271,9 @@ export default function WhatSetsUsApart() {
 
           {/* Right Model */}
           <motion.div
-            className="absolute right-0 h-[400px] w-[400px] translate-x-1/3 hidden lg:block"
-            initial={{ scale: 0, rotate: 180 }}
-            animate={hasIntersected ? { scale: 1, rotate: 0 } : {}}
+            className="absolute right-4 top-0 h-[200px] w-[200px] lg:h-[250px] lg:w-[250px] xl:h-[300px] xl:w-[300px] hidden md:block z-20"
+            initial={{ scale: 0, rotate: 180, opacity: 0 }}
+            animate={hasIntersected ? { scale: 1, rotate: 0, opacity: 0.8 } : {}}
             transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
           >
             <motion.div
@@ -294,6 +295,7 @@ export default function WhatSetsUsApart() {
                   repeat: Infinity,
                   ease: "linear",
                 }}
+                className="h-full w-full"
               >
                 <ModelViewer url="/bolb-2.glb" />
               </motion.div>
