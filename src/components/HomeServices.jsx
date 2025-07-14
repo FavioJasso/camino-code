@@ -297,7 +297,7 @@ export default function ServicesSection() {
           </motion.p>
 
           <motion.div
-            className="mt-8 flex h-[300px] w-full items-center justify-center"
+            className="mt-8 flex h-full w-full items-center justify-center"
             initial={{ opacity: 0, scale: 0.8, rotate: -180 }}
             animate={hasIntersected ? { opacity: 1, scale: 1, rotate: 0 } : {}}
             transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
