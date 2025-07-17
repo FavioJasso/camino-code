@@ -3,7 +3,15 @@
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
-import { Star, ArrowRight, CheckCircle, TrendingUp, Users, Clock, Award } from "lucide-react";
+import {
+  Star,
+  ArrowRight,
+  CheckCircle,
+  TrendingUp,
+  Users,
+  Clock,
+  Award,
+} from "lucide-react";
 import dynamic from "next/dynamic";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 
@@ -15,7 +23,7 @@ const CaseStudyDetails = () => {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  
+
   const { scrollY } = useScroll();
   const heroParallax = useTransform(scrollY, [0, 1000], [0, -200]);
   const heroOpacity = useTransform(scrollY, [0, 500], [1, 0]);
@@ -82,12 +90,12 @@ const CaseStudyDetails = () => {
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       particles.forEach((particle) => {
         particle.update();
         particle.draw();
       });
-      
+
       requestAnimationFrame(animate);
     };
 
@@ -100,13 +108,30 @@ const CaseStudyDetails = () => {
     duration: "6 months",
     team: "8 members",
     title: "Data-Driven Transformation",
-    subtitle: "How we increased customer retention by 30% through predictive analytics",
+    subtitle:
+      "How we increased customer retention by 30% through predictive analytics",
     heroImage: "/assets/images/services_work01.png",
     stats: [
-      { value: "30%", label: "Retention Increase", icon: <TrendingUp className="h-6 w-6" /> },
-      { value: "150%", label: "ROI Growth", icon: <Award className="h-6 w-6" /> },
-      { value: "2.5M", label: "Data Points Analyzed", icon: <Users className="h-6 w-6" /> },
-      { value: "45%", label: "Time Saved", icon: <Clock className="h-6 w-6" /> },
+      {
+        value: "30%",
+        label: "Retention Increase",
+        icon: <TrendingUp className="h-6 w-6" />,
+      },
+      {
+        value: "150%",
+        label: "ROI Growth",
+        icon: <Award className="h-6 w-6" />,
+      },
+      {
+        value: "2.5M",
+        label: "Data Points Analyzed",
+        icon: <Users className="h-6 w-6" />,
+      },
+      {
+        value: "45%",
+        label: "Time Saved",
+        icon: <Clock className="h-6 w-6" />,
+      },
     ],
     images: [
       "/assets/images/case_image01.png",
@@ -119,7 +144,7 @@ const CaseStudyDetails = () => {
   return (
     <div ref={containerRef} className="relative overflow-hidden bg-black">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center">
+      <section className="relative flex min-h-screen items-center justify-center">
         {/* Animated particles canvas */}
         <canvas
           ref={canvasRef}
@@ -161,7 +186,7 @@ const CaseStudyDetails = () => {
           </motion.div>
 
           <motion.h1
-            className="mb-6 text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl"
+            className="mb-6 text-5xl font-black tracking-tighter uppercase sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
@@ -202,7 +227,7 @@ const CaseStudyDetails = () => {
               transition={{ duration: 1.5, repeat: Infinity }}
               className="flex flex-col items-center"
             >
-              <span className="mb-2 text-xs uppercase tracking-widest text-white/60">
+              <span className="mb-2 text-xs tracking-widest text-white/60 uppercase">
                 Scroll
               </span>
               <motion.div
@@ -244,7 +269,10 @@ const StatsSection = ({ stats }) => {
   const { ref, hasIntersected } = useIntersectionObserver({ threshold: 0.3 });
 
   return (
-    <section ref={ref} className="relative py-24 bg-gradient-to-b from-black to-neutral-900">
+    <section
+      ref={ref}
+      className="relative bg-gradient-to-b from-black to-neutral-900 py-24"
+    >
       <div className="container mx-auto px-6">
         <motion.div
           className="grid grid-cols-2 gap-8 sm:grid-cols-4"
@@ -295,7 +323,7 @@ const ChallengeSection = () => {
   const modelRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen bg-black py-24">
+    <section ref={sectionRef} className="relative min-h-screen bg-white py-24">
       <div className="container mx-auto px-6">
         <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
           {/* Text Content */}
@@ -318,14 +346,17 @@ const ChallengeSection = () => {
             </motion.h2>
 
             <motion.div
-              className="space-y-6 text-lg text-white/80"
+              className="space-y-6 text-lg text-gray-700"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
               viewport={{ once: true }}
             >
               <p>
-                TechWave faced significant challenges with declining customer retention rates and fragmented data systems. Their inability to predict customer behavior led to missed opportunities and decreased satisfaction.
+                TechWave faced significant challenges with declining customer
+                retention rates and fragmented data systems. Their inability to
+                predict customer behavior led to missed opportunities and
+                decreased satisfaction.
               </p>
               <ul className="space-y-4">
                 {[
@@ -342,7 +373,7 @@ const ChallengeSection = () => {
                     transition={{ delay: 0.3 + index * 0.1 }}
                     viewport={{ once: true }}
                   >
-                    <CheckCircle className="h-6 w-6 flex-shrink-0 text-red-500" />
+                    <CheckCircle className="h-6 w-6 flex-shrink-0 text-amber-500" />
                     <span>{item}</span>
                   </motion.li>
                 ))}
@@ -352,7 +383,7 @@ const ChallengeSection = () => {
 
           {/* 3D Model */}
           <motion.div
-            className="relative h-[400px] lg:h-[500px]"
+            className="relative flex h-[400px] items-center justify-center rounded-2xl bg-gradient-to-br from-gray-100 to-white shadow-lg lg:h-[500px]"
             style={{ rotate: modelRotate }}
           >
             <ModelViewer url="/cone.glb" />
@@ -362,7 +393,7 @@ const ChallengeSection = () => {
 
       {/* Floating orb */}
       <motion.div
-        className="absolute right-20 top-20 h-64 w-64 rounded-full bg-gradient-to-r from-red-400/20 to-orange-600/20 blur-3xl"
+        className="absolute top-20 right-20 h-64 w-64 rounded-full bg-gradient-to-r from-amber-200/40 to-orange-300/30 blur-3xl"
         animate={{
           x: [0, 50, 0],
           y: [0, -30, 0],
@@ -390,12 +421,12 @@ const SolutionSection = () => {
   const modelRotate = useTransform(scrollYProgress, [0, 1], [0, -360]);
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen bg-gradient-to-b from-black to-neutral-900 py-24">
+    <section ref={sectionRef} className="relative min-h-screen bg-white py-24">
       <div className="container mx-auto px-6">
         <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
           {/* 3D Model */}
           <motion.div
-            className="relative h-[400px] lg:h-[500px] order-2 lg:order-1"
+            className="relative order-2 flex h-[400px] items-center justify-center rounded-2xl bg-gradient-to-br from-gray-100 to-white shadow-lg lg:order-1 lg:h-[500px]"
             style={{ rotate: modelRotate }}
           >
             <ModelViewer url="/cone-1.glb" />
@@ -422,14 +453,16 @@ const SolutionSection = () => {
             </motion.h2>
 
             <motion.div
-              className="space-y-6 text-lg text-white/80"
+              className="space-y-6 text-lg text-gray-700"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
               viewport={{ once: true }}
             >
               <p>
-                We developed a comprehensive data strategy leveraging advanced machine learning algorithms and real-time analytics to transform TechWave's customer engagement approach.
+                We developed a comprehensive data strategy leveraging advanced
+                machine learning algorithms and real-time analytics to transform
+                TechWave's customer engagement approach.
               </p>
               <ul className="space-y-4">
                 {[
@@ -458,7 +491,7 @@ const SolutionSection = () => {
 
       {/* Floating orb */}
       <motion.div
-        className="absolute left-20 bottom-20 h-80 w-80 rounded-full bg-gradient-to-r from-amber-400/20 to-yellow-600/20 blur-3xl"
+        className="absolute bottom-20 left-20 h-80 w-80 rounded-full bg-gradient-to-r from-amber-200/40 to-yellow-300/30 blur-3xl"
         animate={{
           x: [0, -60, 0],
           y: [0, 40, 0],
@@ -482,7 +515,8 @@ const ImplementationSection = () => {
     {
       title: "Discovery & Analysis",
       duration: "4 weeks",
-      description: "Comprehensive audit of existing systems and data architecture",
+      description:
+        "Comprehensive audit of existing systems and data architecture",
       color: "from-blue-400 to-purple-600",
     },
     {
@@ -540,17 +574,21 @@ const ImplementationSection = () => {
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <span className="text-xl font-bold text-white">{index + 1}</span>
+                  <span className="text-xl font-bold text-white">
+                    {index + 1}
+                  </span>
                 </motion.div>
 
-                <h3 className="mb-2 text-xl font-bold text-white">{phase.title}</h3>
+                <h3 className="mb-2 text-xl font-bold text-white">
+                  {phase.title}
+                </h3>
                 <p className="mb-4 text-sm text-amber-400">{phase.duration}</p>
                 <p className="text-white/70">{phase.description}</p>
 
                 {/* Connecting line */}
                 {index < phases.length - 1 && (
                   <motion.div
-                    className="absolute -right-4 top-1/2 hidden h-[2px] w-8 bg-gradient-to-r from-amber-400 to-red-600 lg:block"
+                    className="absolute top-1/2 -right-4 hidden h-[2px] w-8 bg-gradient-to-r from-amber-400 to-red-600 lg:block"
                     initial={{ scaleX: 0 }}
                     animate={hasIntersected ? { scaleX: 1 } : {}}
                     transition={{ delay: 0.5 + index * 0.1 }}
@@ -666,7 +704,9 @@ const ResultsSection = () => {
               <motion.div
                 key={i}
                 initial={{ opacity: 0, rotate: -180, scale: 0 }}
-                animate={hasIntersected ? { opacity: 1, rotate: 0, scale: 1 } : {}}
+                animate={
+                  hasIntersected ? { opacity: 1, rotate: 0, scale: 1 } : {}
+                }
                 transition={{ delay: 0.5 + i * 0.1 }}
               >
                 <Star className="h-8 w-8 fill-amber-400 text-amber-400" />
@@ -680,11 +720,17 @@ const ResultsSection = () => {
             animate={hasIntersected ? { opacity: 1 } : {}}
             transition={{ delay: 0.6 }}
           >
-            <span className="absolute -top-8 -left-8 text-6xl text-amber-400/20">"</span>
-            <p className="text-2xl font-light italic text-white/90 sm:text-3xl">
-              Camino Code transformed our data strategy, giving us valuable insights that boosted efficiency and decision-making. The 30% increase in retention exceeded our expectations.
+            <span className="absolute -top-8 -left-8 text-6xl text-amber-400/20">
+              "
+            </span>
+            <p className="text-2xl font-light text-white/90 italic sm:text-3xl">
+              Camino Code transformed our data strategy, giving us valuable
+              insights that boosted efficiency and decision-making. The 30%
+              increase in retention exceeded our expectations.
             </p>
-            <span className="absolute -bottom-8 -right-8 rotate-180 text-6xl text-amber-400/20">"</span>
+            <span className="absolute -right-8 -bottom-8 rotate-180 text-6xl text-amber-400/20">
+              "
+            </span>
           </motion.blockquote>
 
           <motion.div
@@ -692,7 +738,9 @@ const ResultsSection = () => {
             animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.8 }}
           >
-            <p className="mb-2 text-xl font-semibold text-white">Alex Johnson</p>
+            <p className="mb-2 text-xl font-semibold text-white">
+              Alex Johnson
+            </p>
             <p className="bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
               CEO of TechWave Solutions
             </p>
