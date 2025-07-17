@@ -74,7 +74,7 @@ export default function Partners() {
       transition={{ duration: 0.5 }}
     >
       <motion.div
-        className="flex h-[350px] w-full items-center justify-center overflow-clip"
+        className="flex h-[500px] w-full items-center justify-center overflow-clip relative pt-4"
         initial={{ scale: 0, rotate: -180 }}
         animate={hasIntersected ? { scale: 1, rotate: 0 } : {}}
         transition={{ duration: 1, ease: "easeOut" }}
@@ -105,7 +105,7 @@ export default function Partners() {
 
       <motion.div
         ref={containerRef}
-        className="logo-slider relative mx-auto w-full max-w-[1440px] overflow-hidden py-4"
+        className="logo-slider relative mx-auto w-full container overflow-hidden py-4"
         initial={{ opacity: 0 }}
         animate={hasIntersected ? { opacity: 1 } : {}}
         transition={{ delay: 0.3, duration: 0.8 }}
