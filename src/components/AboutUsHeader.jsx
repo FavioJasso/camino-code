@@ -4,14 +4,17 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { ArrowDown } from "lucide-react";
 import Link from "next/link";
+import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
 export default function AboutUsHero() {
   const canvasRef = useRef(null);
   const sectionRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
   
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, -150]);
+  const y = useTransform(scrollY, [0, 500], [0, isMobile ? -50 : -150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   // Split text animation for "ABOUT US"
@@ -43,7 +46,7 @@ export default function AboutUsHero() {
     canvas.height = dimensions.height;
 
     const particles = [];
-    const particleCount = 80;
+    const particleCount = isMobile ? 0 : (prefersReducedMotion ? 20 : 40);
 
     class Particle {
       constructor() {
@@ -93,18 +96,18 @@ export default function AboutUsHero() {
   const wordVariants = {
     hidden: { 
       opacity: 0, 
-      y: 100,
-      rotateX: -90,
-      filter: "blur(10px)"
+      y: isMobile ? 50 : 100,
+      rotateX: isMobile ? 0 : -90,
+      filter: isMobile ? "none" : "blur(10px)"
     },
     visible: (i) => ({
       opacity: 1,
       y: 0,
       rotateX: 0,
-      filter: "blur(0px)",
+      filter: "none",
       transition: {
-        duration: 0.8,
-        delay: i * 0.2,
+        duration: isMobile ? 0.5 : 0.8,
+        delay: i * (isMobile ? 0.1 : 0.2),
         ease: [0.215, 0.61, 0.355, 1.0],
       },
     }),
@@ -127,22 +130,24 @@ export default function AboutUsHero() {
       className="relative flex h-[120vh] min-h-[900px] w-full flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-900 via-black to-neutral-900"
     >
       {/* Animated particles canvas */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 z-0"
-        style={{ mixBlendMode: "screen" }}
-      />
+      {!isMobile && !prefersReducedMotion && (
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 z-0"
+          style={{ mixBlendMode: "screen" }}
+        />
+      )}
 
       {/* Gradient overlay */}
       <motion.div
         className="absolute inset-0 z-[1]"
-        animate={{
+        animate={!isMobile && !prefersReducedMotion ? {
           background: [
             "radial-gradient(circle at 20% 50%, rgba(245, 158, 11, 0.1) 0%, transparent 50%)",
             "radial-gradient(circle at 80% 50%, rgba(245, 158, 11, 0.1) 0%, transparent 50%)",
             "radial-gradient(circle at 20% 50%, rgba(245, 158, 11, 0.1) 0%, transparent 50%)",
           ],
-        }}
+        } : {}}
         transition={{
           duration: 10,
           repeat: Infinity,
@@ -172,11 +177,11 @@ export default function AboutUsHero() {
                     ? "bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent" 
                     : "text-white"
                 }`}
-                whileHover={{
+                whileHover={!isMobile ? {
                   scale: 1.05,
                   textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
                   transition: { duration: 0.3 },
-                }}
+                } : {}}
               >
                 {word}
               </motion.span>
@@ -186,9 +191,9 @@ export default function AboutUsHero() {
 
         {/* Animated Description */}
         <motion.p
-          initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 1, delay: 0.6 }}
+          initial={{ opacity: 0, y: isMobile ? 20 : 30, filter: isMobile ? "none" : "blur(10px)" }}
+          animate={{ opacity: 1, y: 0, filter: "none" }}
+          transition={{ duration: isMobile ? 0.6 : 1, delay: 0.6 }}
           className="mx-auto mb-12 max-w-3xl px-6 text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl"
         >
           At Camino Code, we specialize in delivering{" "}
@@ -274,32 +279,36 @@ export default function AboutUsHero() {
       </motion.div>
 
       {/* Decorative floating elements */}
-      <motion.div
-        className="absolute left-10 top-1/4 h-32 w-32 rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 blur-3xl"
-        animate={{
-          x: [0, 50, 0],
-          y: [0, -30, 0],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="absolute bottom-1/4 right-10 h-40 w-40 rounded-full bg-gradient-to-r from-amber-400/20 to-orange-500/20 blur-3xl"
-        animate={{
-          x: [0, -30, 0],
-          y: [0, 50, 0],
-          scale: [1, 1.3, 1],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
+      {!isMobile && (
+        <>
+          <motion.div
+            className="absolute left-10 top-1/4 h-32 w-32 rounded-full bg-gradient-to-r from-amber-400/10 to-red-600/10 blur-2xl"
+            animate={!prefersReducedMotion ? {
+              x: [0, 30, 0],
+              y: [0, -20, 0],
+              scale: [1, 1.1, 1],
+            } : {}}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.div
+            className="absolute bottom-1/4 right-10 h-40 w-40 rounded-full bg-gradient-to-r from-amber-400/10 to-orange-500/10 blur-2xl"
+            animate={!prefersReducedMotion ? {
+              x: [0, -20, 0],
+              y: [0, 30, 0],
+              scale: [1, 1.2, 1],
+            } : {}}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        </>
+      )}
     </section>
   );
 }
