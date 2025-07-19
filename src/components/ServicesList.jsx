@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { Code, Brain, Palette, Database, Cloud, Shield } from "lucide-react";
 import { useRef } from "react";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
+import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
 const services = [
   {
@@ -58,29 +59,31 @@ const services = [
 
 const ServiceCard = ({ service, index }) => {
   const cardRef = useRef(null);
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: cardRef,
     offset: ["start end", "end start"],
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.6, 1, 0.6]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [0.8, 1, 0.8] : [0.6, 1, 0.6]);
 
   return (
     <motion.div
       ref={cardRef}
-      initial={{ opacity: 0, y: 50, rotateX: -30 }}
+      initial={{ opacity: 0, y: isMobile ? 30 : 50, rotateX: isMobile ? 0 : -30 }}
       whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-      transition={{ duration: 0.8, delay: index * 0.1 }}
+      transition={{ duration: isMobile ? 0.5 : 0.8, delay: index * (isMobile ? 0.05 : 0.1) }}
       viewport={{ once: true }}
       style={{ opacity }}
       className="group relative"
     >
       <motion.div
         className="relative h-full overflow-hidden rounded-3xl bg-gradient-to-br from-black/5 to-black/10 p-8 backdrop-blur-sm"
-        whileHover={{ 
+        whileHover={!isMobile ? { 
           scale: 1.02,
           transition: { duration: 0.3 }
-        }}
+        } : {}}
       >
         {/* Glow effect */}
         <motion.div
@@ -104,11 +107,11 @@ const ServiceCard = ({ service, index }) => {
           {/* Icon container */}
           <motion.div
             className={`mb-6 inline-flex rounded-2xl bg-gradient-to-r ${service.gradient} p-4`}
-            whileHover={{ 
+            whileHover={!isMobile ? { 
               scale: 1.1,
               rotate: 360,
               transition: { duration: 0.5 }
-            }}
+            } : {}}
           >
             <div className="text-white">
               {service.icon}
@@ -118,7 +121,7 @@ const ServiceCard = ({ service, index }) => {
           {/* Title */}
           <motion.h3
             className="mb-4 text-2xl font-bold text-neutral-900"
-            whileHover={{ x: 5 }}
+            whileHover={!isMobile ? { x: 5 } : {}}
             transition={{ duration: 0.3 }}
           >
             {service.title}
@@ -146,7 +149,7 @@ const ServiceCard = ({ service, index }) => {
               >
                 <motion.div
                   className={`h-1.5 w-1.5 rounded-full bg-gradient-to-r ${service.gradient}`}
-                  animate={{ scale: [1, 1.5, 1] }}
+                  animate={!prefersReducedMotion ? { scale: [1, 1.5, 1] } : {}}
                   transition={{ duration: 2, repeat: Infinity, delay: idx * 0.2 }}
                 />
                 <span className="text-sm text-neutral-500">{feature}</span>
@@ -181,7 +184,7 @@ const ServiceCard = ({ service, index }) => {
         {/* Corner accent */}
         <motion.div
           className="absolute top-0 right-0 h-32 w-32"
-          whileHover={{ scale: 1.5, rotate: 90 }}
+          whileHover={!isMobile ? { scale: 1.5, rotate: 90 } : {}}
           transition={{ duration: 0.5 }}
         >
           <div className={`h-full w-full bg-gradient-to-br ${service.gradient} opacity-10`} />
@@ -193,6 +196,8 @@ const ServiceCard = ({ service, index }) => {
 
 export default function ServicesList() {
   const sectionRef = useRef(null);
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
   const { ref: observerRef, hasIntersected } = useIntersectionObserver({
     threshold: 0.1,
   });
@@ -200,17 +205,17 @@ export default function ServicesList() {
   const titleVariants = {
     hidden: { 
       opacity: 0, 
-      y: 100,
-      rotateX: -45,
-      filter: "blur(10px)"
+      y: isMobile ? 50 : 100,
+      rotateX: isMobile ? 0 : -45,
+      filter: isMobile ? "none" : "blur(10px)"
     },
     visible: {
       opacity: 1,
       y: 0,
       rotateX: 0,
-      filter: "blur(0px)",
+      filter: "none",
       transition: {
-        duration: 0.8,
+        duration: isMobile ? 0.5 : 0.8,
         ease: [0.215, 0.61, 0.355, 1.0],
       },
     },
@@ -225,13 +230,13 @@ export default function ServicesList() {
       {/* Animated mesh gradient background */}
       <motion.div
         className="absolute inset-0 opacity-20"
-        animate={{
+        animate={!isMobile && !prefersReducedMotion ? {
           background: [
             "radial-gradient(ellipse at 20% 0%, rgba(245, 158, 11, 0.12) 0%, transparent 40%)",
             "radial-gradient(ellipse at 80% 100%, rgba(245, 158, 11, 0.12) 0%, transparent 40%)",
             "radial-gradient(ellipse at 20% 0%, rgba(245, 158, 11, 0.12) 0%, transparent 40%)",
           ],
-        }}
+        } : {}}
         transition={{
           duration: 20,
           repeat: Infinity,
@@ -261,21 +266,21 @@ export default function ServicesList() {
           >
             <motion.span 
               className="block"
-              whileHover={{
+              whileHover={!isMobile ? {
                 scale: 1.05,
                 textShadow: "0 0 40px rgba(0,0,0,0.2)",
                 transition: { duration: 0.3 },
-              }}
+              } : {}}
             >
               WHAT WE
             </motion.span>
             <motion.span
               className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
-              whileHover={{
+              whileHover={!isMobile ? {
                 scale: 1.05,
                 textShadow: "0 0 40px rgba(245, 158, 11, 0.5)",
                 transition: { duration: 0.3 },
-              }}
+              } : {}}
             >
               OFFER
             </motion.span>
@@ -322,32 +327,36 @@ export default function ServicesList() {
       </div>
 
       {/* Floating orbs */}
-      <motion.div
-        className="absolute left-10 top-1/3 h-64 w-64 rounded-full bg-gradient-to-r from-amber-400/10 to-red-600/10 blur-3xl"
-        animate={{
-          x: [0, 100, 0],
-          y: [0, -50, 0],
-          scale: [1, 1.5, 1],
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="absolute bottom-1/3 right-10 h-80 w-80 rounded-full bg-gradient-to-r from-orange-400/10 to-amber-600/10 blur-3xl"
-        animate={{
-          x: [0, -80, 0],
-          y: [0, 80, 0],
-          scale: [1, 1.3, 1],
-        }}
-        transition={{
-          duration: 25,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
+      {!isMobile && (
+        <>
+          <motion.div
+            className="absolute left-10 top-1/3 h-64 w-64 rounded-full bg-gradient-to-r from-amber-400/5 to-red-600/5 blur-2xl"
+            animate={!prefersReducedMotion ? {
+              x: [0, 50, 0],
+              y: [0, -30, 0],
+              scale: [1, 1.2, 1],
+            } : {}}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.div
+            className="absolute bottom-1/3 right-10 h-80 w-80 rounded-full bg-gradient-to-r from-orange-400/5 to-amber-600/5 blur-2xl"
+            animate={!prefersReducedMotion ? {
+              x: [0, -40, 0],
+              y: [0, 40, 0],
+              scale: [1, 1.2, 1],
+            } : {}}
+            transition={{
+              duration: 25,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        </>
+      )}
     </section>
   );
 }
