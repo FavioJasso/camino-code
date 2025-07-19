@@ -5,6 +5,7 @@ import { useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
+import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
 const ModelViewer = dynamic(() => import("@/components/ModelViewer"), {
   ssr: false,
@@ -21,6 +22,8 @@ const partners = [
 export default function Partners() {
   const containerRef = useRef(null);
   const trackRef = useRef(null);
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
   const { ref: sectionRef, hasIntersected } = useIntersectionObserver({
     threshold: 0.1,
   });
@@ -73,14 +76,18 @@ export default function Partners() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <motion.div
-        className="flex h-[500px] w-full items-center justify-center overflow-clip relative pt-4"
-        initial={{ scale: 0, rotate: -180 }}
-        animate={hasIntersected ? { scale: 1, rotate: 0 } : {}}
-        transition={{ duration: 1, ease: "easeOut" }}
-      >
-        <ModelViewer url="/triangle.glb" />
-      </motion.div>
+      {!isMobile ? (
+        <motion.div
+          className="flex h-[500px] w-full items-center justify-center overflow-clip relative pt-4"
+          initial={{ scale: 0, rotate: -180 }}
+          animate={hasIntersected ? { scale: 1, rotate: 0 } : {}}
+          transition={{ duration: 1, ease: "easeOut" }}
+        >
+          <ModelViewer url="/triangle.glb" />
+        </motion.div>
+      ) : (
+        <div className="h-[200px] w-full" />
+      )}
 
       <motion.div
         className="flex w-full flex-col-reverse items-center md:flex-col"
@@ -92,11 +99,11 @@ export default function Partners() {
           Our{" "}
           <motion.span
             className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent"
-            whileHover={{
+            whileHover={!isMobile ? {
               scale: 1.05,
               textShadow: "0 0 30px rgba(245, 158, 11, 0.5)",
               transition: { duration: 0.3 },
-            }}
+            } : {}}
           >
             Partners
           </motion.span>
@@ -119,7 +126,7 @@ export default function Partners() {
               <motion.div
                 key={`first-${index}`}
                 className="flex-shrink-0"
-                whileHover={{ scale: 1.1, rotate: 5 }}
+                whileHover={!isMobile ? { scale: 1.1, rotate: 5 } : {}}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <Image
@@ -147,7 +154,7 @@ export default function Partners() {
           );
         }
         .logo-track {
-          animation: scroll var(--duration) linear infinite;
+          animation: ${prefersReducedMotion ? 'none' : 'scroll var(--duration) linear infinite'};
           transform: translateX(0);
         }
         @keyframes scroll {
