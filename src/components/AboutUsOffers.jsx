@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { useRef, useEffect, useState } from "react";
+import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
 const ModelViewer = dynamic(() => import("@/components/ModelViewer"), {
   ssr: false,
@@ -47,6 +48,8 @@ export default function WhatSetsUsApart() {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
   const { ref: sectionRef, hasIntersected } = useIntersectionObserver({
     threshold: 0.1,
   });
@@ -56,8 +59,8 @@ export default function WhatSetsUsApart() {
     offset: ["start end", "end start"],
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "50%" : "100%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "-10%" : "-20%"]);
 
   // Update dimensions on resize
   useEffect(() => {
@@ -76,7 +79,7 @@ export default function WhatSetsUsApart() {
 
   // Particle animation effect
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || isMobile || prefersReducedMotion) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -86,7 +89,7 @@ export default function WhatSetsUsApart() {
     canvas.height = dimensions.height;
 
     const particles = [];
-    const particleCount = 50;
+    const particleCount = 30;
 
     class Particle {
       constructor() {
@@ -130,22 +133,22 @@ export default function WhatSetsUsApart() {
     };
 
     animate();
-  }, [dimensions]);
+  }, [dimensions, isMobile, prefersReducedMotion]);
 
   const titleVariants = {
     hidden: {
       opacity: 0,
-      y: 100,
-      rotateX: -90,
-      filter: "blur(10px)",
+      y: isMobile ? 50 : 100,
+      rotateX: isMobile ? 0 : -90,
+      filter: isMobile ? "none" : "blur(10px)",
     },
     visible: {
       opacity: 1,
       y: 0,
       rotateX: 0,
-      filter: "blur(0px)",
+      filter: "none",
       transition: {
-        duration: 0.8,
+        duration: isMobile ? 0.5 : 0.8,
         ease: [0.215, 0.61, 0.355, 1.0],
       },
     },
@@ -185,22 +188,24 @@ export default function WhatSetsUsApart() {
       style={{ backgroundPositionY: backgroundY }}
     >
       {/* Animated particles canvas */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 z-0"
-        style={{ mixBlendMode: "screen" }}
-      />
+      {!isMobile && !prefersReducedMotion && (
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 z-0"
+          style={{ mixBlendMode: "screen" }}
+        />
+      )}
 
       {/* Animated background gradient */}
       <motion.div
         className="absolute inset-0 opacity-30"
-        animate={{
+        animate={!isMobile && !prefersReducedMotion ? {
           background: [
             "radial-gradient(circle at 20% 50%, rgba(245, 158, 11, 0.15) 0%, transparent 50%)",
             "radial-gradient(circle at 80% 50%, rgba(245, 158, 11, 0.15) 0%, transparent 50%)",
             "radial-gradient(circle at 20% 50%, rgba(245, 158, 11, 0.15) 0%, transparent 50%)",
           ],
-        }}
+        } : {}}
         transition={{
           duration: 15,
           repeat: Infinity,
@@ -209,32 +214,36 @@ export default function WhatSetsUsApart() {
       />
 
       {/* Decorative floating elements */}
-      <motion.div
-        className="absolute top-1/4 left-10 h-32 w-32 rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 blur-3xl"
-        animate={{
-          x: [0, 50, 0],
-          y: [0, -30, 0],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="absolute right-10 bottom-1/4 h-40 w-40 rounded-full bg-gradient-to-r from-amber-400/20 to-orange-500/20 blur-3xl"
-        animate={{
-          x: [0, -30, 0],
-          y: [0, 50, 0],
-          scale: [1, 1.3, 1],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
+      {!isMobile && (
+        <>
+          <motion.div
+            className="absolute top-1/4 left-10 h-32 w-32 rounded-full bg-gradient-to-r from-amber-400/10 to-red-600/10 blur-2xl"
+            animate={!prefersReducedMotion ? {
+              x: [0, 30, 0],
+              y: [0, -20, 0],
+              scale: [1, 1.1, 1],
+            } : {}}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.div
+            className="absolute right-10 bottom-1/4 h-40 w-40 rounded-full bg-gradient-to-r from-amber-400/10 to-orange-500/10 blur-2xl"
+            animate={!prefersReducedMotion ? {
+              x: [0, -20, 0],
+              y: [0, 30, 0],
+              scale: [1, 1.2, 1],
+            } : {}}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        </>
+      )}
 
       <motion.div
         ref={sectionRef}
@@ -244,73 +253,76 @@ export default function WhatSetsUsApart() {
         {/* 3D Models */}
         <div className="relative mx-auto w-full max-w-7xl">
           {/* Left Model */}
-          {/* Left Model */}
-          <motion.div
-            className="absolute top-1/2 left-4 z-20 hidden h-[300px] w-[300px] -translate-y-1/2 md:block"
-            initial={{ scale: 0, rotate: -180, opacity: 0 }}
-            animate={
-              hasIntersected ? { scale: 1, rotate: 0, opacity: 0.8 } : {}
-            }
-            transition={{ duration: 1, ease: "easeOut" }}
-          >
-            <motion.div animate={floatingAnimation}>
-              <motion.div
-                animate={{
-                  rotate: 360,
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{
-                  rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-                  scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-                }}
-                className="h-full w-full"
-              >
-                <ModelViewer
-                  url="/bolb-1.glb"
-                  style={{ height: "100%", width: "100%" }}
-                />
+          {!isMobile && (
+            <motion.div
+              className="absolute top-1/2 left-4 z-20 hidden h-[300px] w-[300px] -translate-y-1/2 md:block"
+              initial={{ scale: 0, rotate: -180, opacity: 0 }}
+              animate={
+                hasIntersected ? { scale: 1, rotate: 0, opacity: 0.8 } : {}
+              }
+              transition={{ duration: 1, ease: "easeOut" }}
+            >
+              <motion.div animate={!prefersReducedMotion ? floatingAnimation : {}}>
+                <motion.div
+                  animate={!prefersReducedMotion ? {
+                    rotate: 360,
+                    scale: [1, 1.1, 1],
+                  } : {}}
+                  transition={{
+                    rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+                    scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                  }}
+                  className="h-full w-full"
+                >
+                  <ModelViewer
+                    url="/bolb-1.glb"
+                    style={{ height: "100%", width: "100%" }}
+                  />
+                </motion.div>
               </motion.div>
             </motion.div>
-          </motion.div>
+          )}
 
           {/* Right Model */}
-          <motion.div
-            className="absolute top-1/2 right-4 z-20 hidden h-[300px] w-[300px] -translate-y-1/2 md:block"
-            initial={{ scale: 0, rotate: 180, opacity: 0 }}
-            animate={
-              hasIntersected ? { scale: 1, rotate: 0, opacity: 0.8 } : {}
-            }
-            transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-          >
+          {!isMobile && (
             <motion.div
-              animate={{
-                y: [0, 20, 0],
-              }}
-              transition={{
-                duration: 7,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="h-full w-full"
+              className="absolute top-1/2 right-4 z-20 hidden h-[300px] w-[300px] -translate-y-1/2 md:block"
+              initial={{ scale: 0, rotate: 180, opacity: 0 }}
+              animate={
+                hasIntersected ? { scale: 1, rotate: 0, opacity: 0.8 } : {}
+              }
+              transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
             >
               <motion.div
-                animate={{
-                  rotate: -360,
-                }}
+                animate={!prefersReducedMotion ? {
+                  y: [0, 20, 0],
+                } : {}}
                 transition={{
-                  duration: 25,
+                  duration: 7,
                   repeat: Infinity,
-                  ease: "linear",
+                  ease: "easeInOut",
                 }}
                 className="h-full w-full"
               >
-                <ModelViewer
-                  url="/bolb-2.glb"
-                  style={{ height: "100%", width: "100%" }}
-                />
+                <motion.div
+                  animate={!prefersReducedMotion ? {
+                    rotate: -360,
+                  } : {}}
+                  transition={{
+                    duration: 25,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                  className="h-full w-full"
+                >
+                  <ModelViewer
+                    url="/bolb-2.glb"
+                    style={{ height: "100%", width: "100%" }}
+                  />
+                </motion.div>
               </motion.div>
             </motion.div>
-          </motion.div>
+          )}
         </div>
 
         {/* Title */}
@@ -323,50 +335,50 @@ export default function WhatSetsUsApart() {
           <motion.h2 className="text-5xl leading-tight font-black tracking-tighter uppercase md:text-[70px] lg:text-[120px]">
             <motion.span
               className="text-black"
-              whileHover={{
+              whileHover={!isMobile ? {
                 scale: 1.05,
                 textShadow: "0 0 40px rgba(255, 255, 255, 0.8)",
                 transition: { duration: 0.3 },
-              }}
+              } : {}}
             >
               What Sets Us{" "}
             </motion.span>
             <motion.span
               className="bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
-              whileHover={{
+              whileHover={!isMobile ? {
                 scale: 1.05,
                 textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
                 transition: { duration: 0.3 },
-              }}
+              } : {}}
             >
               Apart
             </motion.span>
           </motion.h2>
           <motion.p
             className="mx-auto mt-6 max-w-3xl text-lg leading-relaxed font-light text-black md:text-xl"
-            initial={{ opacity: 0, y: 50, filter: "blur(5px)" }}
+            initial={{ opacity: 0, y: isMobile ? 30 : 50, filter: isMobile ? "none" : "blur(5px)" }}
             animate={
-              hasIntersected ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}
+              hasIntersected ? { opacity: 1, y: 0, filter: "none" } : {}
             }
-            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            transition={{ duration: isMobile ? 0.5 : 0.8, delay: 0.3, ease: "easeOut" }}
           >
             At Camino Code, we combine{" "}
             <motion.span
               className="font-semibold text-amber-400"
-              whileHover={{
+              whileHover={!isMobile ? {
                 textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
                 scale: 1.05,
-              }}
+              } : {}}
             >
               data science
             </motion.span>{" "}
             and{" "}
             <motion.span
               className="font-semibold text-amber-400"
-              whileHover={{
+              whileHover={!isMobile ? {
                 textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
                 scale: 1.05,
-              }}
+              } : {}}
             >
               web development
             </motion.span>{" "}
@@ -427,11 +439,11 @@ export default function WhatSetsUsApart() {
         {/* Features Grid */}
         <motion.ul
           className="grid w-full max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2"
-          initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
+          initial={{ opacity: 0, y: isMobile ? 30 : 50, filter: isMobile ? "none" : "blur(10px)" }}
           animate={
-            hasIntersected ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}
+            hasIntersected ? { opacity: 1, y: 0, filter: "none" } : {}
           }
-          transition={{ delay: 0.6, duration: 0.8 }}
+          transition={{ delay: 0.6, duration: isMobile ? 0.5 : 0.8 }}
         >
           {features.map((feature, index) => (
             <motion.li
@@ -440,7 +452,7 @@ export default function WhatSetsUsApart() {
               variants={cardVariants}
               initial="hidden"
               animate={hasIntersected ? "visible" : "hidden"}
-              whileHover={{ y: -10, scale: 1.02 }}
+              whileHover={!isMobile ? { y: -10, scale: 1.02 } : {}}
               transition={{ type: "spring", stiffness: 300 }}
             >
               <div className="group relative h-64 w-full overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
@@ -464,7 +476,7 @@ export default function WhatSetsUsApart() {
                 <div className="relative z-10 flex h-full flex-col items-center justify-center p-6 text-center text-white">
                   <motion.div
                     className="mb-4 rounded-full border border-white/10 bg-gradient-to-r from-amber-400/20 to-red-600/20 p-4 backdrop-blur-sm"
-                    whileHover={{ scale: 1.1, rotate: 360 }}
+                    whileHover={!isMobile ? { scale: 1.1, rotate: 360 } : {}}
                     transition={{ duration: 0.5 }}
                   >
                     {feature.icon}
