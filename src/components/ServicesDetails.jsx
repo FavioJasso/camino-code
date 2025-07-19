@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 import {
   Laptop,
   ClipboardList,
@@ -163,12 +164,14 @@ export default function ServicesDetails() {
 
 const ServiceSection = ({ section, index, isActive }) => {
   const sectionRef = useRef(null);
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [0.9, 1, 0.9] : [0.8, 1, 0.8]);
 
   // Alternate backgrounds and text colors
   const isEven = index % 2 === 0;
@@ -193,8 +196,8 @@ const ServiceSection = ({ section, index, isActive }) => {
       <motion.div
         className="absolute inset-0"
         initial={{ opacity: 0 }}
-        animate={{ opacity: isActive ? 0.3 : 0.1 }}
-        transition={{ duration: 0.5 }}
+        animate={{ opacity: isActive ? (isMobile ? 0.2 : 0.3) : 0.1 }}
+        transition={{ duration: isMobile ? 0.3 : 0.5 }}
       >
         <div
           className="h-full w-full"
@@ -208,21 +211,17 @@ const ServiceSection = ({ section, index, isActive }) => {
         {/* Sticky left content */}
           <motion.div
             className={`flex w-full flex-col justify-center gap-8 p-8 text-left lg:sticky lg:top-0 lg:h-screen lg:w-1/2 lg:p-12 ${textClass}`}
-            initial={{ opacity: 0, x: -100 }}
+            initial={{ opacity: 0, x: isMobile ? -50 : -100 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: isMobile ? 0.5 : 0.8 }}
             viewport={{ once: true }}
           >
             {/* Icon with gradient background */}
             <motion.div
               className={`relative h-32 w-32 rounded-3xl bg-gradient-to-br ${section.gradient} p-1`}
-              // Removed whileHover rotate animation
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
               whileTap={{ scale: 0.95 }}
-              whileFocus={{ scale: 1.05 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              style={{ backgroundSize: "200% 100%" }}
               variants={{
                 hidden: { opacity: 0, y: 20 },
                 visible: { opacity: 1, y: 0 },
@@ -236,25 +235,14 @@ const ServiceSection = ({ section, index, isActive }) => {
             {/* Title with gradient */}
             <motion.h2
               className={`text-4xl font-black uppercase sm:text-5xl lg:text-6xl ${textClass}`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
+              initial={{ opacity: 0, y: isMobile ? 15 : 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: isMobile ? 0.4 : 0.5 }}
               viewport={{ once: true }}
-              style={{ backgroundSize: "200% 100%" }}
-              whileFocus={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              whileHover={{ scale: 1.05 }}
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0 },
-              }}
+              whileHover={!isMobile ? { scale: 1.05 } : {}}
             >
               <motion.span
                 className={`bg-gradient-to-r ${section.gradient} bg-clip-text text-transparent`}
-                transition={{ duration: 3, repeat: Infinity }}
-                style={{ backgroundSize: "200% 100%" }}
               >
                 {section.title}
               </motion.span>
@@ -280,14 +268,14 @@ const ServiceSection = ({ section, index, isActive }) => {
               <Link href="/contact">
                 <motion.button
             className={`group relative overflow-hidden rounded-full bg-gradient-to-r ${section.gradient} px-8 py-4 text-lg font-semibold text-white shadow-2xl`}
-            whileHover={{ scale: 1.05 }}
+            whileHover={!isMobile ? { scale: 1.05 } : {}}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
             <span className="relative z-10">Let's Talk</span>
             <motion.span
               className="relative z-10 ml-2 inline-block"
-              animate={{ x: [0, 5, 0] }}
+              animate={!prefersReducedMotion ? { x: [0, 5, 0] } : {}}
               transition={{
                 duration: 1.5,
                 repeat: Infinity,
@@ -299,7 +287,7 @@ const ServiceSection = ({ section, index, isActive }) => {
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 "
               initial={{ x: "-100%" }}
-              whileHover={{ x: 0 }}
+              whileHover={!isMobile ? { x: 0 } : {}}
               transition={{ duration: 0.3 }}
             />
                 </motion.button>
@@ -324,55 +312,59 @@ const ServiceSection = ({ section, index, isActive }) => {
       </div>
 
       {/* Floating orbs */}
-      <motion.div
-        className={`absolute ${index % 2 === 0 ? 'left-20 top-1/4' : 'right-20 bottom-1/4'} h-64 w-64 rounded-full bg-gradient-to-r ${section.gradient} opacity-10 blur-3xl`}
-        animate={{
-          x: [0, index % 2 === 0 ? 50 : -50, 0],
-          y: [0, -30, 0],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{
-          duration: 15,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
+      {!isMobile && (
+        <motion.div
+          className={`absolute ${index % 2 === 0 ? 'left-20 top-1/4' : 'right-20 bottom-1/4'} h-64 w-64 rounded-full bg-gradient-to-r ${section.gradient} opacity-10 blur-2xl`}
+          animate={!prefersReducedMotion ? {
+            x: [0, index % 2 === 0 ? 50 : -50, 0],
+            y: [0, -30, 0],
+            scale: [1, 1.2, 1],
+          } : {}}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      )}
     </motion.section>
   );
 };
 
 const ServiceCard = ({ service, index, gradient, isActive, textClass, descClass }) => {
   const cardRef = useRef(null);
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <motion.div
       ref={cardRef}
-      initial={{ opacity: 0, y: 50, rotateX: -20 }}
+      initial={{ opacity: 0, y: isMobile ? 30 : 50, rotateX: isMobile ? 0 : -20 }}
       whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
       transition={{
-        duration: 0.6,
-        delay: index * 0.1,
+        duration: isMobile ? 0.4 : 0.6,
+        delay: index * (isMobile ? 0.05 : 0.1),
         ease: [0.215, 0.61, 0.355, 1.0],
       }}
       viewport={{ once: true, margin: "-50px" }}
       className="group relative"
     >
       <motion.div
-        className={`relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm ${textClass} shadow-lg transition-transform duration-300 hover:scale-105`}
-        whileHover={{
+        className={`relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm ${textClass} shadow-lg ${!isMobile ? 'transition-transform duration-300 hover:scale-105' : ''}`}
+        whileHover={!isMobile ? {
           scale: 1.02,
           transition: { duration: 0.3 },
-        }}
+        } : {}}
       >
         {/* Glow effect */}
         <motion.div
-          className={`absolute -inset-1 rounded-3xl bg-gradient-to-r ${gradient} opacity-0 blur-xl`}
-          animate={{
-            opacity: isActive ? [0, 0.3, 0] : 0,
-          }}
+          className={`absolute -inset-1 rounded-3xl bg-gradient-to-r ${gradient} opacity-0 ${isMobile ? 'blur-lg' : 'blur-xl'}`}
+          animate={!prefersReducedMotion ? {
+            opacity: isActive ? [0, isMobile ? 0.2 : 0.3, 0] : 0,
+          } : {}}
           transition={{
             duration: 2,
-            repeat: isActive ? Infinity : 0,
+            repeat: isActive && !prefersReducedMotion ? Infinity : 0,
             delay: index * 0.2,
           }}
         />
@@ -380,11 +372,11 @@ const ServiceCard = ({ service, index, gradient, isActive, textClass, descClass 
         {/* Icon */}
         <motion.div
           className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-r ${gradient} text-white`}
-          whileHover={{
+          whileHover={!isMobile ? {
             scale: 1.1,
             rotate: 360,
             transition: { duration: 0.5 },
-          }}
+          } : {}}
         >
           {service.icon}
         </motion.div>
@@ -392,7 +384,7 @@ const ServiceCard = ({ service, index, gradient, isActive, textClass, descClass 
         {/* Title */}
         <motion.h3
           className={`mb-3 text-xl font-bold ${textClass}`}
-          whileHover={{ x: 5 }}
+          whileHover={!isMobile ? { x: 5 } : {}}
           transition={{ duration: 0.3 }}
         >
           {service.title}
@@ -404,21 +396,23 @@ const ServiceCard = ({ service, index, gradient, isActive, textClass, descClass 
         </p>
 
         {/* Hover indicator */}
-        <motion.div
-          className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100"
-          transition={{ duration: 0.3 }}
-        >
+        {!isMobile && (
           <motion.div
-            className={`h-8 w-8 rounded-full bg-gradient-to-r ${gradient}`}
-            animate={{
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-            }}
-          />
-        </motion.div>
+            className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100"
+            transition={{ duration: 0.3 }}
+          >
+            <motion.div
+              className={`h-8 w-8 rounded-full bg-gradient-to-r ${gradient}`}
+              animate={!prefersReducedMotion ? {
+                scale: [1, 1.2, 1],
+              } : {}}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+              }}
+            />
+          </motion.div>
+        )}
       </motion.div>
     </motion.div>
   );
