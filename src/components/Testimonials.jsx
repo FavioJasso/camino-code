@@ -10,6 +10,7 @@ import { Star, Quote } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
+import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
 const testimonials = [
   {
@@ -49,6 +50,8 @@ export default function Testimonials() {
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const sectionRef = useRef(null);
   const canvasRef = useRef(null);
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
 
   const { ref: observerRef, hasIntersected } = useIntersectionObserver({
     threshold: 0.3,
@@ -59,11 +62,11 @@ export default function Testimonials() {
     offset: ["start end", "end start"],
   });
 
-  const parallaxY = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
+  const parallaxY = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "-10%" : "-20%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || isMobile || prefersReducedMotion) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -73,7 +76,7 @@ export default function Testimonials() {
     canvas.height = window.innerHeight;
 
     const particles = [];
-    const particleCount = 50;
+    const particleCount = 25;
 
     class Particle {
       constructor() {
@@ -127,7 +130,7 @@ export default function Testimonials() {
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [isMobile, prefersReducedMotion]);
 
   useEffect(() => {
     if (!isAutoPlaying) return;
@@ -144,17 +147,17 @@ export default function Testimonials() {
   const titleVariants = {
     hidden: {
       opacity: 0,
-      y: 100,
-      rotateX: -90,
-      filter: "blur(10px)"
+      y: isMobile ? 50 : 100,
+      rotateX: isMobile ? 0 : -90,
+      filter: isMobile ? "none" : "blur(10px)"
     },
     visible: {
       opacity: 1,
       y: 0,
       rotateX: 0,
-      filter: "blur(0px)",
+      filter: "none",
       transition: {
-        duration: 0.8,
+        duration: isMobile ? 0.5 : 0.8,
         ease: [0.215, 0.61, 0.355, 1.0],
       },
     },
@@ -199,21 +202,23 @@ export default function Testimonials() {
       transition={{ duration: 0.5 }}
       style={{ opacity }}
     >
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 z-0"
-        style={{ mixBlendMode: "screen" }}
-      />
+      {!isMobile && !prefersReducedMotion && (
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 z-0"
+          style={{ mixBlendMode: "screen" }}
+        />
+      )}
 
       <motion.div
         className="absolute inset-0 opacity-20"
-        animate={{
+        animate={!isMobile && !prefersReducedMotion ? {
           background: [
             "radial-gradient(ellipse at 0% 0%, rgba(245, 158, 11, 0.3) 0%, transparent 50%)",
             "radial-gradient(ellipse at 100% 100%, rgba(245, 158, 11, 0.3) 0%, transparent 50%)",
             "radial-gradient(ellipse at 0% 0%, rgba(245, 158, 11, 0.3) 0%, transparent 50%)",
           ],
-        }}
+        } : {}}
         transition={{
           duration: 15,
           repeat: Infinity,
@@ -231,32 +236,36 @@ export default function Testimonials() {
         />
       </div>
 
-      <motion.div
-        className="absolute left-20 top-20 h-96 w-96 rounded-full bg-gradient-to-r from-amber-400/10 to-red-600/10 blur-3xl"
-        animate={{
-          x: [0, 100, 0],
-          y: [0, -50, 0],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="absolute bottom-20 right-20 h-80 w-80 rounded-full bg-gradient-to-r from-orange-400/10 to-amber-600/10 blur-3xl"
-        animate={{
-          x: [0, -80, 0],
-          y: [0, 80, 0],
-          scale: [1, 1.3, 1],
-        }}
-        transition={{
-          duration: 25,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
+      {!isMobile && (
+        <>
+          <motion.div
+            className="absolute left-20 top-20 h-96 w-96 rounded-full bg-gradient-to-r from-amber-400/5 to-red-600/5 blur-2xl"
+            animate={!prefersReducedMotion ? {
+              x: [0, 50, 0],
+              y: [0, -30, 0],
+              scale: [1, 1.1, 1],
+            } : {}}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.div
+            className="absolute bottom-20 right-20 h-80 w-80 rounded-full bg-gradient-to-r from-orange-400/5 to-amber-600/5 blur-2xl"
+            animate={!prefersReducedMotion ? {
+              x: [0, -40, 0],
+              y: [0, 40, 0],
+              scale: [1, 1.2, 1],
+            } : {}}
+            transition={{
+              duration: 25,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        </>
+      )}
 
       <div ref={observerRef} className="relative z-10 container mx-auto px-6 sm:px-8">
         {/* Heading with dramatic animation */}
@@ -269,21 +278,21 @@ export default function Testimonials() {
           >
             <motion.span
               className="block text-white"
-              whileHover={{
+              whileHover={!isMobile ? {
                 scale: 1.05,
                 textShadow: "0 0 50px rgba(255, 255, 255, 0.8)",
                 transition: { duration: 0.3 },
-              }}
+              } : {}}
             >
               CLIENT
             </motion.span>
             <motion.span
               className="block text-orange-400"
-              whileHover={{
+              whileHover={!isMobile ? {
                 scale: 1.05,
                 textShadow: "0 0 50px rgba(245, 158, 11, 0.8)",
                 transition: { duration: 0.3 },
-              }}
+              } : {}}
             >
               TESTIMONIALS
             </motion.span>
@@ -304,22 +313,24 @@ export default function Testimonials() {
           >
             <motion.div
               className="relative max-w-4xl rounded-3xl bg-gradient-to-br from-white/5 to-white/10 p-12 backdrop-blur-md"
-              whileHover={{
+              whileHover={!isMobile ? {
                 scale: 1.02,
                 transition: { duration: 0.3 }
-              }}
+              } : {}}
             >
-              <motion.div
-                className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 opacity-0 blur-xl"
-                animate={{
-                  opacity: [0, 0.3, 0],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
+              {!isMobile && (
+                <motion.div
+                  className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 opacity-0 blur-xl"
+                  animate={!prefersReducedMotion ? {
+                    opacity: [0, 0.3, 0],
+                  } : {}}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+              )}
 
               <motion.div
                 className="mb-8 flex justify-center gap-2"
@@ -342,11 +353,11 @@ export default function Testimonials() {
                       type: "spring",
                       stiffness: 200,
                     }}
-                    whileHover={{
+                    whileHover={!isMobile ? {
                       scale: 1.3,
                       rotate: 360,
                       transition: { duration: 0.3 },
-                    }}
+                    } : {}}
                   >
                     <Star className="h-8 w-8 fill-amber-400 text-amber-400 drop-shadow-[0_0_15px_rgba(245,158,11,0.8)]" />
                   </motion.div>
@@ -377,7 +388,7 @@ export default function Testimonials() {
               >
                 <motion.div
                   className="mb-4 h-20 w-20 overflow-hidden rounded-full bg-gradient-to-br from-amber-400 to-red-600 p-0.5"
-                  whileHover={{ scale: 1.1, rotate: 360 }}
+                  whileHover={!isMobile ? { scale: 1.1, rotate: 360 } : {}}
                   transition={{ duration: 0.5 }}
                 >
                   <div className="h-full w-full rounded-full bg-black flex items-center justify-center">
@@ -389,7 +400,7 @@ export default function Testimonials() {
 
                 <motion.h3
                   className="text-2xl font-semibold text-white"
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={!isMobile ? { scale: 1.05 } : {}}
                 >
                   {testimonial.name}
                 </motion.h3>
