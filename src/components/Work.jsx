@@ -10,6 +10,7 @@ import {
 } from "@/hooks/useAnimations";
 import { staggerContainer, fadeInUp } from "@/utils/animations";
 import { useRef, useState } from "react";
+import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
 const ModelViewer = dynamic(() => import("@/components/ModelViewer"), {
   ssr: false,
@@ -57,24 +58,26 @@ const caseStudies = [
 const CaseStudyCard = ({ study, index }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { ref: cardRef, position } = useCursorPosition();
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
 
   const cardVariants = {
     hidden: {
       opacity: 0,
-      y: 100,
-      scale: 0.8,
-      rotateX: -30,
-      filter: "blur(10px)",
+      y: isMobile ? 50 : 100,
+      scale: isMobile ? 0.9 : 0.8,
+      rotateX: isMobile ? 0 : -30,
+      filter: isMobile ? "none" : "blur(10px)",
     },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
       rotateX: 0,
-      filter: "blur(0px)",
+      filter: "none",
       transition: {
-        duration: 0.8,
-        delay: index * 0.15,
+        duration: isMobile ? 0.5 : 0.8,
+        delay: index * (isMobile ? 0.1 : 0.15),
         ease: [0.215, 0.61, 0.355, 1.0],
       },
     },
@@ -92,12 +95,12 @@ const CaseStudyCard = ({ study, index }) => {
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      whileHover={{ 
+      whileHover={!isMobile ? { 
         scale: 1.02,
         transition: { duration: 0.3 }
-      }}
+      } : {}}
       style={{
-        transform: isHovered
+        transform: !isMobile && isHovered
           ? `perspective(1000px) rotateX(${position.y * 8}deg) rotateY(${
               position.x * 8
             }deg)`
@@ -148,17 +151,19 @@ const CaseStudyCard = ({ study, index }) => {
             />
 
             {/* Animated particles overlay */}
-            <motion.div
-              className="absolute inset-0"
-              animate={{
-                backgroundPosition: isHovered ? ["0% 0%", "100% 100%"] : "0% 0%",
-              }}
-              transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-              style={{
-                backgroundImage: "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 1px)",
-                backgroundSize: "30px 30px",
-              }}
-            />
+            {!isMobile && (
+              <motion.div
+                className="absolute inset-0"
+                animate={{
+                  backgroundPosition: isHovered && !prefersReducedMotion ? ["0% 0%", "100% 100%"] : "0% 0%",
+                }}
+                transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+                style={{
+                  backgroundImage: "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 1px)",
+                  backgroundSize: "30px 30px",
+                }}
+              />
+            )}
 
             {/* Content overlay */}
             <motion.div
@@ -266,21 +271,23 @@ export default function WorkShowcase() {
   const { ref: sectionRef, hasIntersected } = useIntersectionObserver({
     threshold: 0.05,
   });
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
 
   const titleVariants = {
     hidden: { 
       opacity: 0, 
-      y: 100,
-      rotateX: -45,
-      filter: "blur(10px)"
+      y: isMobile ? 50 : 100,
+      rotateX: isMobile ? 0 : -45,
+      filter: isMobile ? "none" : "blur(10px)"
     },
     visible: {
       opacity: 1,
       y: 0,
       rotateX: 0,
-      filter: "blur(0px)",
+      filter: "none",
       transition: {
-        duration: 0.8,
+        duration: isMobile ? 0.5 : 0.8,
         ease: [0.215, 0.61, 0.355, 1.0],
       },
     },
@@ -298,13 +305,13 @@ export default function WorkShowcase() {
       {/* Animated mesh gradient background */}
       <motion.div
         className="absolute inset-0 opacity-30"
-        animate={{
+        animate={!isMobile && !prefersReducedMotion ? {
           background: [
             "radial-gradient(ellipse at 20% 0%, rgba(245, 158, 11, 0.2) 0%, transparent 40%)",
             "radial-gradient(ellipse at 80% 100%, rgba(245, 158, 11, 0.2) 0%, transparent 40%)",
             "radial-gradient(ellipse at 20% 0%, rgba(245, 158, 11, 0.2) 0%, transparent 40%)",
           ],
-        }}
+        } : {}}
         transition={{
           duration: 20,
           repeat: Infinity,
@@ -325,50 +332,54 @@ export default function WorkShowcase() {
 
       <div className="relative container mx-auto w-full">
         {/* Left Model with enhanced animation */}
-        <motion.div
-          className="absolute bottom-0 left-0 z-0 -ml-[13vw] hidden h-[350px] w-[50vw] lg:block"
-          initial={{ opacity: 0, x: -100 }}
-          animate={hasIntersected ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 1, ease: "easeOut" }}
-        >
+        {!isMobile && (
           <motion.div
-            className="flex h-full w-full items-center justify-end overflow-hidden pr-[25vw]"
-            animate={{
-              y: [0, -20, 0],
-              rotate: [0, 5, 0],
-            }}
-            transition={{
-              duration: 6,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+            className="absolute bottom-0 left-0 z-0 -ml-[13vw] hidden h-[350px] w-[50vw] lg:block"
+            initial={{ opacity: 0, x: -100 }}
+            animate={hasIntersected ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 1, ease: "easeOut" }}
           >
-            <ModelViewer url="/triangle-1.glb" />
+            <motion.div
+              className="flex h-full w-full items-center justify-end overflow-hidden pr-[25vw]"
+              animate={!prefersReducedMotion ? {
+                y: [0, -20, 0],
+                rotate: [0, 5, 0],
+              } : {}}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              <ModelViewer url="/triangle-1.glb" />
+            </motion.div>
           </motion.div>
-        </motion.div>
+        )}
 
         {/* Right Model with enhanced animation */}
-        <motion.div
-          className="absolute top-1/4 right-0 z-0 -mr-[13vw] hidden h-[350px] w-[50vw] -translate-y-1/2 lg:block"
-          initial={{ opacity: 0, x: 100 }}
-          animate={hasIntersected ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-        >
+        {!isMobile && (
           <motion.div
-            className="flex h-full w-full items-center justify-start overflow-hidden pl-[25vw]"
-            animate={{
-              y: [0, 20, 0],
-              rotate: [0, -5, 0],
-            }}
-            transition={{
-              duration: 7,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+            className="absolute top-1/4 right-0 z-0 -mr-[13vw] hidden h-[350px] w-[50vw] -translate-y-1/2 lg:block"
+            initial={{ opacity: 0, x: 100 }}
+            animate={hasIntersected ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
           >
-            <ModelViewer url="/triangle-2.glb" />
+            <motion.div
+              className="flex h-full w-full items-center justify-start overflow-hidden pl-[25vw]"
+              animate={!prefersReducedMotion ? {
+                y: [0, 20, 0],
+                rotate: [0, -5, 0],
+              } : {}}
+              transition={{
+                duration: 7,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              <ModelViewer url="/triangle-2.glb" />
+            </motion.div>
           </motion.div>
-        </motion.div>
+        )}
 
         {/* Center Content */}
         <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center px-6">
@@ -381,21 +392,21 @@ export default function WorkShowcase() {
             >
               <motion.span 
                 className="block"
-                whileHover={{
+                whileHover={!isMobile ? {
                   scale: 1.05,
                   textShadow: "0 0 50px rgba(0, 0, 0, 0.08)",
                   transition: { duration: 0.3 },
-                }}
+                } : {}}
               >
                 OUR
               </motion.span>
               <motion.span
                 className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
-                whileHover={{
+                whileHover={!isMobile ? {
                   scale: 1.05,
                   textShadow: "0 0 50px rgba(245, 158, 11, 0.8)",
                   transition: { duration: 0.3 },
-                }}
+                } : {}}
               >
                 WORK
               </motion.span>
@@ -404,17 +415,17 @@ export default function WorkShowcase() {
 
           <motion.p
             className="mb-16 max-w-3xl text-center text-lg font-light leading-relaxed text-black/80 sm:text-xl md:text-2xl"
-            initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-            animate={hasIntersected ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
-            transition={{ duration: 0.8, delay: 0.3 }}
+            initial={{ opacity: 0, y: isMobile ? 20 : 30, filter: isMobile ? "none" : "blur(10px)" }}
+            animate={hasIntersected ? { opacity: 1, y: 0, filter: "none" } : {}}
+            transition={{ duration: isMobile ? 0.5 : 0.8, delay: 0.3 }}
           >
             We take pride in delivering{" "}
             <motion.span
               className="font-semibold text-amber-400"
-              whileHover={{ 
+              whileHover={!isMobile ? { 
                 textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
                 scale: 1.05,
-              }}
+              } : {}}
             >
               innovative solutions
             </motion.span>{" "}
@@ -422,19 +433,21 @@ export default function WorkShowcase() {
           </motion.p>
 
           {/* Mobile Models with enhanced animation */}
-          <motion.div
-            className="relative -mr-[150px] h-[200px] w-[200px] lg:hidden"
-            animate={{
-              rotate: 360,
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-              scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-            }}
-          >
-            <ModelViewer url="/triangle-1.glb" />
-          </motion.div>
+          {!isMobile && (
+            <motion.div
+              className="relative -mr-[150px] h-[200px] w-[200px] lg:hidden"
+              animate={!prefersReducedMotion ? {
+                rotate: 360,
+                scale: [1, 1.1, 1],
+              } : {}}
+              transition={{
+                rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+                scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+              }}
+            >
+              <ModelViewer url="/triangle-1.glb" />
+            </motion.div>
+          )}
 
           {/* Case Studies Grid with enhanced stagger animation */}
           <motion.div
@@ -484,49 +497,55 @@ export default function WorkShowcase() {
             </Link>
           </motion.div>
 
-          <motion.div
-            className="relative -ml-[150px] h-[200px] w-[200px] lg:hidden"
-            animate={{
-              rotate: -360,
-              y: [0, -20, 0],
-            }}
-            transition={{
-              rotate: { duration: 25, repeat: Infinity, ease: "linear" },
-              y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
-            }}
-          >
-            <ModelViewer url="/triangle-2.glb" />
-          </motion.div>
+          {!isMobile && (
+            <motion.div
+              className="relative -ml-[150px] h-[200px] w-[200px] lg:hidden"
+              animate={!prefersReducedMotion ? {
+                rotate: -360,
+                y: [0, -20, 0],
+              } : {}}
+              transition={{
+                rotate: { duration: 25, repeat: Infinity, ease: "linear" },
+                y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
+              }}
+            >
+              <ModelViewer url="/triangle-2.glb" />
+            </motion.div>
+          )}
         </div>
       </div>
 
       {/* Floating decorative elements */}
-      <motion.div
-        className="absolute left-10 top-1/4 h-64 w-64 rounded-full bg-gradient-to-r from-amber-400/10 to-red-600/10 blur-3xl"
-        animate={{
-          x: [0, 100, 0],
-          y: [0, -50, 0],
-          scale: [1, 1.5, 1],
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="absolute bottom-1/4 right-10 h-80 w-80 rounded-full bg-gradient-to-r from-orange-400/10 to-amber-600/10 blur-3xl"
-        animate={{
-          x: [0, -80, 0],
-          y: [0, 80, 0],
-          scale: [1, 1.3, 1],
-        }}
-        transition={{
-          duration: 25,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
+      {!isMobile && (
+        <>
+          <motion.div
+            className="absolute left-10 top-1/4 h-64 w-64 rounded-full bg-gradient-to-r from-amber-400/5 to-red-600/5 blur-2xl"
+            animate={!prefersReducedMotion ? {
+              x: [0, 50, 0],
+              y: [0, -30, 0],
+              scale: [1, 1.2, 1],
+            } : {}}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.div
+            className="absolute bottom-1/4 right-10 h-80 w-80 rounded-full bg-gradient-to-r from-orange-400/5 to-amber-600/5 blur-2xl"
+            animate={!prefersReducedMotion ? {
+              x: [0, -40, 0],
+              y: [0, 40, 0],
+              scale: [1, 1.2, 1],
+            } : {}}
+            transition={{
+              duration: 25,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        </>
+      )}
     </motion.section>
   );
 }
