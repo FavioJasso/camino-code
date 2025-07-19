@@ -565,7 +565,7 @@ const ImplementationSection = () => {
             >
               <motion.div
                 className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm"
-                whileHover={{ scale: 1.05 }}
+                whileHover={!isMobile ? { scale: 1.05 } : {}}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 {/* Phase number */}
@@ -649,7 +649,7 @@ const GallerySection = ({ images }) => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
-                whileHover={{ scale: 1.05 }}
+                whileHover={!isMobile ? { scale: 1.05 } : {}}
               >
                 <Image
                   src={image}
