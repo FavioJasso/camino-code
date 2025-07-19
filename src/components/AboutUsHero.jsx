@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import dynamic from "next/dynamic";
 import { useRef } from "react";
 import { Sparkles, Target, Eye } from "lucide-react";
+import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
 const ModelViewer = dynamic(() => import("@/components/ModelViewer"), {
   ssr: false,
@@ -11,28 +12,30 @@ const ModelViewer = dynamic(() => import("@/components/ModelViewer"), {
 
 export default function AboutMissionVision() {
   const containerRef = useRef(null);
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "50%" : "100%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "-10%" : "-20%"]);
 
   const titleVariants = {
     hidden: { 
       opacity: 0, 
-      y: 100,
-      rotateX: -90,
-      filter: "blur(10px)"
+      y: isMobile ? 50 : 100,
+      rotateX: isMobile ? 0 : -90,
+      filter: isMobile ? "none" : "blur(10px)"
     },
     visible: {
       opacity: 1,
       y: 0,
       rotateX: 0,
-      filter: "blur(0px)",
+      filter: "none",
       transition: {
-        duration: 0.8,
+        duration: isMobile ? 0.5 : 0.8,
         ease: [0.215, 0.61, 0.355, 1.0],
       },
     },
@@ -41,16 +44,16 @@ export default function AboutMissionVision() {
   const paragraphVariants = {
     hidden: { 
       opacity: 0, 
-      y: 50,
-      filter: "blur(5px)"
+      y: isMobile ? 30 : 50,
+      filter: isMobile ? "none" : "blur(5px)"
     },
     visible: {
       opacity: 1,
       y: 0,
-      filter: "blur(0px)",
+      filter: "none",
       transition: {
-        duration: 0.8,
-        delay: 0.3,
+        duration: isMobile ? 0.5 : 0.8,
+        delay: isMobile ? 0.2 : 0.3,
         ease: "easeOut",
       },
     },
@@ -74,13 +77,13 @@ export default function AboutMissionVision() {
       {/* Animated background gradient */}
       <motion.div
         className="absolute inset-0 opacity-20"
-        animate={{
+        animate={!isMobile && !prefersReducedMotion ? {
           background: [
             "radial-gradient(circle at 0% 0%, rgba(245, 158, 11, 0.10) 0%, transparent 50%)",
             "radial-gradient(circle at 100% 100%, rgba(245, 158, 11, 0.10) 0%, transparent 50%)",
             "radial-gradient(circle at 0% 0%, rgba(245, 158, 11, 0.10) 0%, transparent 50%)",
           ],
-        }}
+        } : {}}
         transition={{
           duration: 15,
           repeat: Infinity,
@@ -91,25 +94,27 @@ export default function AboutMissionVision() {
       {/* Mission Section */}
       <div className="relative min-h-screen flex items-center">
         {/* Decorative Model on the right with enhanced animation */}
-        <motion.div 
-          className="absolute right-0 top-1/2 z-0 hidden h-[600px] w-[50vw] -translate-y-1/2 lg:block"
-          animate={floatingAnimation}
-        >
-          <motion.div
-            className="relative h-full w-full"
-            animate={{
-              rotate: [0, 360],
-            }}
-            transition={{
-              duration: 30,
-              repeat: Infinity,
-              ease: "linear",
-            }}
+        {!isMobile && (
+          <motion.div 
+            className="absolute right-0 top-1/2 z-0 hidden h-[600px] w-[50vw] -translate-y-1/2 lg:block"
+            animate={!prefersReducedMotion ? floatingAnimation : {}}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 to-transparent blur-3xl" />
-            <ModelViewer url="/ring-2.glb" />
+            <motion.div
+              className="relative h-full w-full"
+              animate={!prefersReducedMotion ? {
+                rotate: [0, 360],
+              } : {}}
+              transition={{
+                duration: 30,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 to-transparent blur-2xl" />
+              <ModelViewer url="/ring-2.glb" />
+            </motion.div>
           </motion.div>
-        </motion.div>
+        )}
 
         <motion.section
           id="mission"
@@ -125,7 +130,7 @@ export default function AboutMissionVision() {
           >
             <motion.div
               className="rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 p-4 backdrop-blur-sm"
-              whileHover={{ scale: 1.1, rotate: 180 }}
+              whileHover={!isMobile ? { scale: 1.1, rotate: 180 } : {}}
               transition={{ duration: 0.5 }}
             >
               <Target className="h-8 w-8 text-amber-500" />
@@ -143,21 +148,21 @@ export default function AboutMissionVision() {
             >
               <motion.span 
                 className="block"
-                whileHover={{
+                whileHover={!isMobile ? {
                   scale: 1.05,
                   textShadow: "0 0 40px rgba(0,0,0,0.15)",
                   transition: { duration: 0.3 },
-                }}
+                } : {}}
               >
                 OUR
               </motion.span>
               <motion.span 
                 className="block bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent"
-                whileHover={{
+                whileHover={!isMobile ? {
                   scale: 1.05,
                   textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
                   transition: { duration: 0.3 },
-                }}
+                } : {}}
               >
                 MISSION
               </motion.span>
@@ -174,20 +179,20 @@ export default function AboutMissionVision() {
             At Camino Code, our mission is to deliver{" "}
             <motion.span
               className="font-semibold text-amber-600"
-              whileHover={{ 
+              whileHover={!isMobile ? { 
                 textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
                 scale: 1.05,
-              }}
+              } : {}}
             >
               innovative data science
             </motion.span>{" "}
             and{" "}
             <motion.span
               className="font-semibold text-amber-600"
-              whileHover={{ 
+              whileHover={!isMobile ? { 
                 textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
                 scale: 1.05,
-              }}
+              } : {}}
             >
               web development solutions
             </motion.span>{" "}
@@ -210,7 +215,7 @@ export default function AboutMissionVision() {
               <motion.div
                 key={index}
                 className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-amber-100/40 to-white/80 p-6 backdrop-blur-sm border border-amber-100"
-                whileHover={{ scale: 1.05, y: -5 }}
+                whileHover={!isMobile ? { scale: 1.05, y: -5 } : {}}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <motion.div
@@ -228,25 +233,27 @@ export default function AboutMissionVision() {
       {/* Vision Section */}
       <div className="relative min-h-screen flex items-center">
         {/* Decorative Model on the left with enhanced animation */}
-        <motion.div 
-          className="absolute left-0 top-1/2 z-0 hidden h-[600px] w-[50vw] -translate-y-1/2 lg:block"
-          animate={floatingAnimation}
-        >
-          <motion.div
-            className="relative h-full w-full"
-            animate={{
-              rotate: [0, -360],
-            }}
-            transition={{
-              duration: 35,
-              repeat: Infinity,
-              ease: "linear",
-            }}
+        {!isMobile && (
+          <motion.div 
+            className="absolute left-0 top-1/2 z-0 hidden h-[600px] w-[50vw] -translate-y-1/2 lg:block"
+            animate={!prefersReducedMotion ? floatingAnimation : {}}
           >
-            <div className="absolute inset-0 bg-gradient-to-l from-amber-400/10 to-transparent blur-3xl" />
-            <ModelViewer url="/ring-1.glb" />
+            <motion.div
+              className="relative h-full w-full"
+              animate={!prefersReducedMotion ? {
+                rotate: [0, -360],
+              } : {}}
+              transition={{
+                duration: 35,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-l from-amber-400/10 to-transparent blur-2xl" />
+              <ModelViewer url="/ring-1.glb" />
+            </motion.div>
           </motion.div>
-        </motion.div>
+        )}
 
         <motion.section
           id="vision"
@@ -263,7 +270,7 @@ export default function AboutMissionVision() {
             <span className="text-sm font-medium uppercase tracking-widest text-amber-600">Our Future</span>
             <motion.div
               className="rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 p-4 backdrop-blur-sm"
-              whileHover={{ scale: 1.1, rotate: -180 }}
+              whileHover={!isMobile ? { scale: 1.1, rotate: -180 } : {}}
               transition={{ duration: 0.5 }}
             >
               <Eye className="h-8 w-8 text-amber-500" />
@@ -280,21 +287,21 @@ export default function AboutMissionVision() {
             >
               <motion.span 
                 className="block"
-                whileHover={{
+                whileHover={!isMobile ? {
                   scale: 1.05,
                   textShadow: "0 0 40px rgba(0,0,0,0.15)",
                   transition: { duration: 0.3 },
-                }}
+                } : {}}
               >
                 OUR
               </motion.span>
               <motion.span 
                 className="block bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent"
-                whileHover={{
+                whileHover={!isMobile ? {
                   scale: 1.05,
                   textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
                   transition: { duration: 0.3 },
-                }}
+                } : {}}
               >
                 VISION
               </motion.span>
@@ -311,10 +318,10 @@ export default function AboutMissionVision() {
             Our vision is to become a{" "}
             <motion.span
               className="font-semibold text-amber-600"
-              whileHover={{ 
+              whileHover={!isMobile ? { 
                 textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
                 scale: 1.05,
-              }}
+              } : {}}
             >
               global leader
             </motion.span>{" "}
