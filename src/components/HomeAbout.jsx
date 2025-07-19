@@ -1,19 +1,33 @@
 "use client";
 
 import Link from "next/link";
-import Spline from "@splinetool/react-spline";
+import dynamic from "next/dynamic";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { useRef } from "react";
+import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
+
+// Temporarily replace Spline with placeholder until package issue is resolved
+const Spline = ({ scene, className }) => (
+  <div
+    className={`${className} flex items-center justify-center rounded-lg border border-amber-400/30 bg-gradient-to-br from-amber-400/20 to-red-600/20 backdrop-blur-sm`}
+  >
+    <div className="text-sm font-medium text-amber-400 opacity-70">
+      3D Model Loading...
+    </div>
+  </div>
+);
 
 export default function AboutSection() {
   const { ref: sectionRef, hasIntersected } = useIntersectionObserver({
     threshold: 0.1,
   });
   const containerRef = useRef(null);
-  
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
+
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, -100]);
+  const y = useTransform(scrollY, [0, 500], [0, isMobile ? -50 : -100]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0.8]);
 
   const titleWords = "Shaping the Future of Technology".split(" ");
@@ -32,18 +46,18 @@ export default function AboutSection() {
   const wordVariants = {
     hidden: {
       opacity: 0,
-      y: 100,
-      rotateX: -90,
-      filter: "blur(10px)",
+      y: isMobile ? 50 : 100,
+      rotateX: isMobile ? 0 : -90,
+      filter: isMobile ? "none" : "blur(10px)",
     },
     visible: (i) => ({
       opacity: 1,
       y: 0,
       rotateX: 0,
-      filter: "blur(0px)",
+      filter: "none",
       transition: {
-        duration: 0.8,
-        delay: i * 0.1,
+        duration: isMobile ? 0.5 : 0.8,
+        delay: i * (isMobile ? 0.05 : 0.1),
         ease: [0.215, 0.61, 0.355, 1.0],
       },
     }),
@@ -78,108 +92,137 @@ export default function AboutSection() {
       {/* Animated background gradient */}
       <motion.div
         className="absolute inset-0 z-[1]"
-        animate={{
-          background: [
-            "radial-gradient(circle at 20% 50%, rgba(245, 158, 11, 0.1) 0%, transparent 50%)",
-            "radial-gradient(circle at 80% 50%, rgba(245, 158, 11, 0.1) 0%, transparent 50%)",
-            "radial-gradient(circle at 20% 50%, rgba(245, 158, 11, 0.1) 0%, transparent 50%)",
-          ],
-        }}
+        animate={
+          !isMobile && !prefersReducedMotion
+            ? {
+                background: [
+                  "radial-gradient(circle at 20% 50%, rgba(245, 158, 11, 0.1) 0%, transparent 50%)",
+                  "radial-gradient(circle at 80% 50%, rgba(245, 158, 11, 0.1) 0%, transparent 50%)",
+                  "radial-gradient(circle at 20% 50%, rgba(245, 158, 11, 0.1) 0%, transparent 50%)",
+                ],
+              }
+            : {}
+        }
         transition={{
           duration: 10,
           repeat: Infinity,
           ease: "linear",
         }}
       />
-      
-      {/* Decorative floating elements */}
-      <motion.div
-        className="absolute left-20 top-1/3 h-40 w-40 rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 blur-3xl"
-        animate={{
-          x: [0, 50, 0],
-          y: [0, -30, 0],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="absolute bottom-1/3 right-20 h-48 w-48 rounded-full bg-gradient-to-r from-amber-400/20 to-orange-500/20 blur-3xl"
-        animate={{
-          x: [0, -30, 0],
-          y: [0, 50, 0],
-          scale: [1, 1.3, 1],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
 
-      <motion.div 
+      {/* Decorative floating elements */}
+      {!isMobile && (
+        <>
+          <motion.div
+            className="absolute top-1/3 left-20 h-40 w-40 rounded-full bg-gradient-to-r from-amber-400/10 to-red-600/10 blur-2xl"
+            animate={
+              !prefersReducedMotion
+                ? {
+                    x: [0, 30, 0],
+                    y: [0, -20, 0],
+                    scale: [1, 1.1, 1],
+                  }
+                : {}
+            }
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.div
+            className="absolute right-20 bottom-1/3 h-48 w-48 rounded-full bg-gradient-to-r from-amber-400/10 to-orange-500/10 blur-2xl"
+            animate={
+              !prefersReducedMotion
+                ? {
+                    x: [0, -20, 0],
+                    y: [0, 30, 0],
+                    scale: [1, 1.2, 1],
+                  }
+                : {}
+            }
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        </>
+      )}
+
+      <motion.div
         ref={containerRef}
         style={{ y, opacity }}
-        className="relative z-10 flex h-full w-full max-w-[1440px] flex-col items-center justify-center gap-8 text-center px-6">
+        className="relative z-10 flex h-full w-full max-w-[1440px] flex-col items-center justify-center gap-8 px-6 text-center"
+      >
         {/* Top Left Spline Model */}
-        <motion.div
-          className="absolute top-10 left-10 h-[250px] w-[250px] -translate-x-1/4 sm:h-[350px] sm:w-[350px]"
-          variants={splineVariants}
-          initial="hidden"
-          animate={hasIntersected ? "visible" : "hidden"}
-        >
+        {!isMobile && (
           <motion.div
-            animate={{
-              rotate: 360,
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-              scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-            }}
-            whileHover={{ scale: 1.2 }}
-            className="h-full w-full"
+            className="absolute top-10 left-10 h-[250px] w-[250px] -translate-x-1/4 sm:h-[350px] sm:w-[350px]"
+            variants={splineVariants}
+            initial="hidden"
+            animate={hasIntersected ? "visible" : "hidden"}
           >
-            <Spline
-              scene="https://prod.spline.design/hxXzHDWdUo11wqob/scene.splinecode"
+            <motion.div
+              animate={
+                !prefersReducedMotion
+                  ? {
+                      rotate: 360,
+                      scale: [1, 1.1, 1],
+                    }
+                  : {}
+              }
+              transition={{
+                rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+                scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+              }}
+              whileHover={!isMobile ? { scale: 1.2 } : {}}
               className="h-full w-full"
-            />
+            >
+              <Spline
+                scene="https://prod.spline.design/hxXzHDWdUo11wqob/scene.splinecode"
+                className="h-full w-full"
+              />
+            </motion.div>
           </motion.div>
-        </motion.div>
+        )}
 
         {/* Bottom Right Spline Model */}
-        <motion.div
-          className="absolute right-10 bottom-10 h-[250px] w-[250px] translate-x-1/4 sm:h-[350px] sm:w-[350px]"
-          variants={splineVariants}
-          initial="hidden"
-          animate={hasIntersected ? "visible" : "hidden"}
-          transition={{ delay: 0.2 }}
-        >
+        {!isMobile && (
           <motion.div
-            animate={{
-              rotate: -360,
-              y: [0, -20, 0],
-            }}
-            transition={{
-              rotate: { duration: 25, repeat: Infinity, ease: "linear" },
-              y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
-            }}
-            whileHover={{ scale: 1.2 }}
-            className="h-full w-full"
+            className="absolute right-10 bottom-10 h-[250px] w-[250px] translate-x-1/4 sm:h-[350px] sm:w-[350px]"
+            variants={splineVariants}
+            initial="hidden"
+            animate={hasIntersected ? "visible" : "hidden"}
+            transition={{ delay: 0.2 }}
           >
-            <Spline
-              scene="https://prod.spline.design/hxXzHDWdUo11wqob/scene.splinecode"
+            <motion.div
+              animate={
+                !prefersReducedMotion
+                  ? {
+                      rotate: -360,
+                      y: [0, -20, 0],
+                    }
+                  : {}
+              }
+              transition={{
+                rotate: { duration: 25, repeat: Infinity, ease: "linear" },
+                y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
+              }}
+              whileHover={!isMobile ? { scale: 1.2 } : {}}
               className="h-full w-full"
-            />
+            >
+              <Spline
+                scene="https://prod.spline.design/hxXzHDWdUo11wqob/scene.splinecode"
+                className="h-full w-full"
+              />
+            </motion.div>
           </motion.div>
-        </motion.div>
+        )}
 
         {/* Heading with split text animation */}
         <motion.h2
-          className="perspective-1000 mx-auto w-full max-w-[900px] mt-16 sm:mt-20 md:mt-24 text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem]"
+          className="perspective-1000 mx-auto mt-16 w-full max-w-[900px] text-6xl font-black tracking-tighter uppercase sm:mt-20 sm:text-7xl md:mt-24 md:text-8xl lg:text-9xl xl:text-[10rem]"
           variants={containerVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
@@ -195,16 +238,18 @@ export default function AboutSection() {
               custom={index}
               variants={wordVariants}
               whileHover={
-                word === "Technology"
-                  ? {
-                      scale: 1.05,
-                      textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
-                      transition: { duration: 0.3 },
-                    }
-                  : {
-                      scale: 1.02,
-                      transition: { duration: 0.3 },
-                    }
+                !isMobile
+                  ? word === "Technology"
+                    ? {
+                        scale: 1.05,
+                        textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
+                        transition: { duration: 0.3 },
+                      }
+                    : {
+                        scale: 1.02,
+                        transition: { duration: 0.3 },
+                      }
+                  : {}
               }
             >
               {word}
@@ -214,29 +259,50 @@ export default function AboutSection() {
 
         {/* Description with fade in animation */}
         <motion.p
-          className="relative z-10 mx-auto mb-8 max-w-3xl text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl"
-          initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-          animate={hasIntersected ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 30, filter: "blur(10px)" }}
-          transition={{ duration: 1, delay: 0.8 }}
+          className="relative z-10 mx-auto mb-8 max-w-3xl text-lg leading-relaxed font-light text-white/80 sm:text-xl md:text-2xl"
+          initial={{
+            opacity: 0,
+            y: isMobile ? 20 : 30,
+            filter: isMobile ? "none" : "blur(10px)",
+          }}
+          animate={
+            hasIntersected
+              ? { opacity: 1, y: 0, filter: "none" }
+              : {
+                  opacity: 0,
+                  y: isMobile ? 20 : 30,
+                  filter: isMobile ? "none" : "blur(10px)",
+                }
+          }
+          transition={{ duration: isMobile ? 0.6 : 1, delay: 0.8 }}
         >
           At Camino Code, we are passionate about transforming businesses
           through the power of{" "}
           <motion.span
             className="font-semibold text-amber-400"
-            whileHover={{ 
-              textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
-              scale: 1.05,
-            }}
+            whileHover={
+              !isMobile
+                ? {
+                    textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+                    scale: 1.05,
+                  }
+                : {}
+            }
           >
             data and technology
           </motion.span>
-          . Founded with a vision to redefine the digital landscape, we specialize in{" "}
+          . Founded with a vision to redefine the digital landscape, we
+          specialize in{" "}
           <motion.span
             className="font-semibold text-amber-400"
-            whileHover={{ 
-              textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
-              scale: 1.05,
-            }}
+            whileHover={
+              !isMobile
+                ? {
+                    textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+                    scale: 1.05,
+                  }
+                : {}
+            }
           >
             cutting-edge solutions
           </motion.span>{" "}
@@ -295,7 +361,6 @@ export default function AboutSection() {
             </motion.button>
           </Link>
         </motion.div>
-
       </motion.div>
     </motion.section>
   );
