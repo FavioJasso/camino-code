@@ -2,9 +2,15 @@
 
 import { ArrowRight, Send, Sparkles } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { useState, useRef } from "react";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import dynamic from "next/dynamic";
 
 const ModelViewer = dynamic(() => import("@/components/ModelViewer"), {
@@ -23,6 +29,7 @@ export default function ContactForm() {
   const [submitStatus, setSubmitStatus] = useState(null);
   const sectionRef = useRef(null);
   const formRef = useRef(null);
+  const isMobile = useIsMobile();
 
   const { ref: observerRef, hasIntersected } = useIntersectionObserver({
     threshold: 0.1,
@@ -39,7 +46,7 @@ export default function ContactForm() {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       setSubmitStatus("success");
       reset();
       setTimeout(() => setSubmitStatus(null), 3000);
@@ -52,11 +59,11 @@ export default function ContactForm() {
   };
 
   const titleVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: 100,
       rotateX: -45,
-      filter: "blur(10px)"
+      filter: "blur(10px)",
     },
     visible: {
       opacity: 1,
@@ -87,7 +94,7 @@ export default function ContactForm() {
     <section
       ref={sectionRef}
       id="contact-form"
-      className="relative min-h-screen bg-white py-24 sm:py-32 border-t border-neutral-200 overflow-hidden"
+      className="relative min-h-screen overflow-hidden border-t border-neutral-200 bg-white py-24 sm:py-32"
     >
       {/* Animated mesh gradient background */}
       <motion.div
@@ -111,22 +118,26 @@ export default function ContactForm() {
         <div
           className="h-full w-full"
           style={{
-            backgroundImage: "linear-gradient(rgba(245, 158, 11, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(245, 158, 11, 0.08) 1px, transparent 1px)",
+            backgroundImage:
+              "linear-gradient(rgba(245, 158, 11, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(245, 158, 11, 0.08) 1px, transparent 1px)",
             backgroundSize: "50px 50px",
           }}
         />
       </div>
 
-      <div ref={observerRef} className="container relative z-10 mx-auto px-6 sm:px-8">
+      <div
+        ref={observerRef}
+        className="relative z-10 container mx-auto px-6 sm:px-8"
+      >
         {/* Section Title */}
         <motion.div className="perspective-1000 mb-16 text-center">
           <motion.h2
-            className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl text-neutral-900"
+            className="text-5xl font-black tracking-tighter text-neutral-900 uppercase sm:text-6xl md:text-7xl lg:text-8xl"
             variants={titleVariants}
             initial="hidden"
             animate={hasIntersected ? "visible" : "hidden"}
           >
-            <motion.span 
+            <motion.span
               className="block"
               whileHover={{
                 scale: 1.05,
@@ -174,24 +185,25 @@ export default function ContactForm() {
               transition={{ delay: 0.4 }}
             >
               <p className="text-xl text-neutral-700">
-                Ready to transform your ideas into reality? Send us a message and let's start building something amazing together.
+                Ready to transform your ideas into reality? Send us a message
+                and let's start building something amazing together.
               </p>
-              
+
               <div className="flex flex-col gap-4">
                 <motion.a
                   href="mailto:hello@caminocode.com"
                   className="group flex items-center gap-3 text-neutral-600 hover:text-amber-500"
-                  whileHover={{ x: 10 }}
+                  whileHover={!isMobile ? { x: 10 } : {}}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <span className="text-lg">hello@caminocode.com</span>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </motion.a>
-                
+
                 <motion.a
                   href="tel:+15551234567"
                   className="group flex items-center gap-3 text-neutral-600 hover:text-amber-500"
-                  whileHover={{ x: 10 }}
+                  whileHover={!isMobile ? { x: 10 } : {}}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <span className="text-lg">+1 (555) 123-4567</span>
@@ -210,13 +222,13 @@ export default function ContactForm() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <motion.div
-              className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-neutral-100 to-white p-8 backdrop-blur-sm sm:p-12 border border-neutral-200"
+              className="relative overflow-hidden rounded-3xl border border-neutral-200 bg-gradient-to-br from-neutral-100 to-white p-8 backdrop-blur-sm sm:p-12"
               whileHover={{ scale: 1.01 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
               {/* Glow effect */}
               <motion.div
-                className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 opacity-0 blur-xl"
+                className={`absolute -inset-1 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 opacity-0 ${isMobile ? "blur-lg" : "blur-xl"}`}
                 animate={{
                   opacity: [0, 0.15, 0],
                 }}
@@ -242,7 +254,10 @@ export default function ContactForm() {
                 <Sparkles className="h-8 w-8 text-amber-400/30" />
               </motion.div>
 
-              <form onSubmit={handleSubmit(onSubmit)} className="relative space-y-6">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="relative space-y-6"
+              >
                 {/* Name Field */}
                 <motion.div
                   custom={0}
@@ -257,7 +272,7 @@ export default function ContactForm() {
                     <input
                       {...register("name", { required: "Name is required" })}
                       type="text"
-                      className="w-full rounded-xl bg-neutral-100 px-4 py-3 text-neutral-900 placeholder-neutral-400 backdrop-blur-sm transition-all duration-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-400/50 border border-neutral-200"
+                      className="w-full rounded-xl border border-neutral-200 bg-neutral-100 px-4 py-3 text-neutral-900 placeholder-neutral-400 backdrop-blur-sm transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-amber-400/50 focus:outline-none"
                       placeholder="John Doe"
                     />
                     <motion.div
@@ -301,7 +316,7 @@ export default function ContactForm() {
                         },
                       })}
                       type="email"
-                      className="w-full rounded-xl bg-neutral-100 px-4 py-3 text-neutral-900 placeholder-neutral-400 backdrop-blur-sm transition-all duration-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-400/50 border border-neutral-200"
+                      className="w-full rounded-xl border border-neutral-200 bg-neutral-100 px-4 py-3 text-neutral-900 placeholder-neutral-400 backdrop-blur-sm transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-amber-400/50 focus:outline-none"
                       placeholder="john@example.com"
                     />
                     <motion.div
@@ -337,9 +352,11 @@ export default function ContactForm() {
                   </label>
                   <div className="relative">
                     <input
-                      {...register("subject", { required: "Subject is required" })}
+                      {...register("subject", {
+                        required: "Subject is required",
+                      })}
                       type="text"
-                      className="w-full rounded-xl bg-neutral-100 px-4 py-3 text-neutral-900 placeholder-neutral-400 backdrop-blur-sm transition-all duration-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-400/50 border border-neutral-200"
+                      className="w-full rounded-xl border border-neutral-200 bg-neutral-100 px-4 py-3 text-neutral-900 placeholder-neutral-400 backdrop-blur-sm transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-amber-400/50 focus:outline-none"
                       placeholder="Project Inquiry"
                     />
                     <motion.div
@@ -375,9 +392,11 @@ export default function ContactForm() {
                   </label>
                   <div className="relative">
                     <textarea
-                      {...register("message", { required: "Message is required" })}
+                      {...register("message", {
+                        required: "Message is required",
+                      })}
                       rows={5}
-                      className="w-full resize-none rounded-xl bg-neutral-100 px-4 py-3 text-neutral-900 placeholder-neutral-400 backdrop-blur-sm transition-all duration-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-400/50 border border-neutral-200"
+                      className="w-full resize-none rounded-xl border border-neutral-200 bg-neutral-100 px-4 py-3 text-neutral-900 placeholder-neutral-400 backdrop-blur-sm transition-all duration-300 focus:bg-white focus:ring-2 focus:ring-amber-400/50 focus:outline-none"
                       placeholder="Tell us about your project..."
                     />
                     <motion.div
@@ -419,7 +438,11 @@ export default function ContactForm() {
                         <motion.div
                           className="mr-2 h-5 w-5 rounded-full border-2 border-white border-t-transparent"
                           animate={{ rotate: 360 }}
-                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          transition={{
+                            duration: 1,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
                         />
                         Sending...
                       </>
@@ -477,7 +500,7 @@ export default function ContactForm() {
 
       {/* Floating decorative elements */}
       <motion.div
-        className="absolute left-10 top-1/3 h-64 w-64 rounded-full bg-gradient-to-r from-amber-400/10 to-red-600/10 blur-3xl"
+        className="absolute top-1/3 left-10 h-64 w-64 rounded-full bg-gradient-to-r from-amber-400/10 to-red-600/10 blur-3xl"
         animate={{
           x: [0, 100, 0],
           y: [0, -50, 0],
@@ -490,7 +513,7 @@ export default function ContactForm() {
         }}
       />
       <motion.div
-        className="absolute bottom-1/3 right-10 h-80 w-80 rounded-full bg-gradient-to-r from-orange-400/10 to-amber-600/10 blur-3xl"
+        className="absolute right-10 bottom-1/3 h-80 w-80 rounded-full bg-gradient-to-r from-orange-400/10 to-amber-600/10 blur-3xl"
         animate={{
           x: [0, -80, 0],
           y: [0, 80, 0],
