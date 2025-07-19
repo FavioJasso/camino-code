@@ -4,14 +4,17 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { ArrowDown, Code, Palette, Brain } from "lucide-react";
 import Link from "next/link";
+import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
 const ServicesHeader = () => {
   const canvasRef = useRef(null);
   const sectionRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
   
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, -150]);
+  const y = useTransform(scrollY, [0, 500], [0, isMobile ? -50 : -150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
 
   // Split text animation
@@ -33,7 +36,7 @@ const ServicesHeader = () => {
 
   // Particle animation effect
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || isMobile || prefersReducedMotion) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -43,7 +46,7 @@ const ServicesHeader = () => {
     canvas.height = dimensions.height;
 
     const particles = [];
-    const particleCount = 120;
+    const particleCount = 50;
 
     class Particle {
       constructor() {
@@ -80,17 +83,18 @@ const ServicesHeader = () => {
       particles.push(new Particle());
     }
 
-    // Connect particles
+    // Connect particles (optimized)
     const connectParticles = () => {
+      const maxDistance = 100;
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 150) {
-            ctx.strokeStyle = `rgba(245, 158, 11, ${0.15 * (1 - distance / 150)})`;
-            ctx.lineWidth = 1;
+          if (distance < maxDistance) {
+            ctx.strokeStyle = `rgba(245, 158, 11, ${0.1 * (1 - distance / maxDistance)})`;
+            ctx.lineWidth = 0.5;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
@@ -113,23 +117,23 @@ const ServicesHeader = () => {
     };
 
     animate();
-  }, [dimensions]);
+  }, [dimensions, isMobile, prefersReducedMotion]);
 
   const wordVariants = {
     hidden: { 
       opacity: 0, 
-      y: 100,
-      rotateX: -90,
-      filter: "blur(10px)"
+      y: isMobile ? 50 : 100,
+      rotateX: isMobile ? 0 : -90,
+      filter: isMobile ? "none" : "blur(10px)"
     },
     visible: (i) => ({
       opacity: 1,
       y: 0,
       rotateX: 0,
-      filter: "blur(0px)",
+      filter: "none",
       transition: {
-        duration: 0.8,
-        delay: i * 0.2,
+        duration: isMobile ? 0.5 : 0.8,
+        delay: i * (isMobile ? 0.1 : 0.2),
         ease: [0.215, 0.61, 0.355, 1.0],
       },
     }),
@@ -167,22 +171,24 @@ const ServicesHeader = () => {
       className="relative flex h-[120vh] min-h-[900px] w-full flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-900 via-black to-neutral-900"
     >
       {/* Animated particles canvas */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 z-0"
-        style={{ mixBlendMode: "screen" }}
-      />
+      {!isMobile && !prefersReducedMotion && (
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 z-0"
+          style={{ mixBlendMode: "screen" }}
+        />
+      )}
 
       {/* Animated gradient overlay */}
       <motion.div
         className="absolute inset-0 z-[1]"
-        animate={{
+        animate={!isMobile && !prefersReducedMotion ? {
           background: [
             "radial-gradient(ellipse at top left, rgba(245, 158, 11, 0.15) 0%, transparent 40%)",
             "radial-gradient(ellipse at bottom right, rgba(245, 158, 11, 0.15) 0%, transparent 40%)",
             "radial-gradient(ellipse at top left, rgba(245, 158, 11, 0.15) 0%, transparent 40%)",
           ],
-        }}
+        } : {}}
         transition={{
           duration: 12,
           repeat: Infinity,
@@ -212,13 +218,13 @@ const ServicesHeader = () => {
                     ? "bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent" 
                     : "text-white"
                 }`}
-                whileHover={{
+                whileHover={!isMobile ? {
                   scale: 1.05,
                   textShadow: index === 1 
                     ? "0 0 50px rgba(245, 158, 11, 0.8)" 
                     : "0 0 50px rgba(255, 255, 255, 0.8)",
                   transition: { duration: 0.3 },
-                }}
+                } : {}}
               >
                 {word}
               </motion.span>
@@ -228,38 +234,38 @@ const ServicesHeader = () => {
 
         {/* Animated Description */}
         <motion.p
-          initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 1, delay: 0.6 }}
+          initial={{ opacity: 0, y: isMobile ? 20 : 30, filter: isMobile ? "none" : "blur(10px)" }}
+          animate={{ opacity: 1, y: 0, filter: "none" }}
+          transition={{ duration: isMobile ? 0.6 : 1, delay: 0.6 }}
           className="mx-auto mb-12 max-w-4xl px-6 text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl"
         >
           Empowering businesses with{" "}
           <motion.span
             className="font-semibold text-amber-400"
-            whileHover={{ 
+            whileHover={!isMobile ? { 
               textShadow: "0 0 30px rgba(245, 158, 11, 0.8)",
               scale: 1.05,
-            }}
+            } : {}}
           >
             advanced data science
           </motion.span>
           ,{" "}
           <motion.span
             className="font-semibold text-amber-400"
-            whileHover={{ 
+            whileHover={!isMobile ? { 
               textShadow: "0 0 30px rgba(245, 158, 11, 0.8)",
               scale: 1.05,
-            }}
+            } : {}}
           >
             web development
           </motion.span>
           , and{" "}
           <motion.span
             className="font-semibold text-amber-400"
-            whileHover={{ 
+            whileHover={!isMobile ? { 
               textShadow: "0 0 30px rgba(245, 158, 11, 0.8)",
               scale: 1.05,
-            }}
+            } : {}}
           >
             AI integration
           </motion.span>
@@ -285,11 +291,11 @@ const ServicesHeader = () => {
               initial="hidden"
               animate="visible"
               className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm"
-              whileHover={{ 
+              whileHover={!isMobile ? { 
                 scale: 1.05, 
                 y: -10,
                 transition: { type: "spring", stiffness: 300 }
-              }}
+              } : {}}
             >
               <motion.div
                 className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-red-600/20 opacity-0 group-hover:opacity-100"
@@ -297,7 +303,7 @@ const ServicesHeader = () => {
               />
               <motion.div
                 className="relative z-10 flex flex-col items-center"
-                whileHover={{ scale: 1.1 }}
+                whileHover={!isMobile ? { scale: 1.1 } : {}}
                 transition={{ duration: 0.3 }}
               >
                 <div className="mb-4 text-amber-400">{service.icon}</div>
@@ -367,32 +373,36 @@ const ServicesHeader = () => {
       </motion.div>
 
       {/* Decorative floating elements */}
-      <motion.div
-        className="absolute left-20 top-1/4 h-40 w-40 rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 blur-3xl"
-        animate={{
-          x: [0, 60, 0],
-          y: [0, -40, 0],
-          scale: [1, 1.3, 1],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="absolute bottom-1/4 right-20 h-48 w-48 rounded-full bg-gradient-to-r from-orange-400/20 to-amber-600/20 blur-3xl"
-        animate={{
-          x: [0, -40, 0],
-          y: [0, 60, 0],
-          scale: [1, 1.4, 1],
-        }}
-        transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
+      {!isMobile && (
+        <>
+          <motion.div
+            className="absolute left-20 top-1/4 h-40 w-40 rounded-full bg-gradient-to-r from-amber-400/10 to-red-600/10 blur-2xl"
+            animate={!prefersReducedMotion ? {
+              x: [0, 30, 0],
+              y: [0, -20, 0],
+              scale: [1, 1.2, 1],
+            } : {}}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.div
+            className="absolute bottom-1/4 right-20 h-48 w-48 rounded-full bg-gradient-to-r from-orange-400/10 to-amber-600/10 blur-2xl"
+            animate={!prefersReducedMotion ? {
+              x: [0, -20, 0],
+              y: [0, 30, 0],
+              scale: [1, 1.3, 1],
+            } : {}}
+            transition={{
+              duration: 12,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        </>
+      )}
     </section>
   );
 };
