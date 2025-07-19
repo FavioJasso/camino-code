@@ -2,11 +2,19 @@
 
 import { Layers2, Laptop, Cpu, ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
-import Spline from "@splinetool/react-spline";
+// Temporarily replace Spline with placeholder until package issue is resolved
+const Spline = ({ scene }) => (
+  <div className="flex h-full w-full items-center justify-center rounded-lg border border-amber-400/30 bg-gradient-to-br from-amber-400/20 to-red-600/20 backdrop-blur-sm">
+    <div className="text-sm font-medium text-amber-400 opacity-70">
+      3D Model Loading...
+    </div>
+  </div>
+);
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { staggerContainer } from "@/utils/animations";
 import { useRef, useEffect, useState } from "react";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 const services = [
   {
@@ -44,21 +52,22 @@ export default function ServicesSection() {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  
+  const isMobile = useIsMobile();
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
   });
-  
+
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
 
   const titleVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: 100,
       rotateX: -90,
-      filter: "blur(10px)"
+      filter: "blur(10px)",
     },
     visible: {
       opacity: 1,
@@ -73,10 +82,10 @@ export default function ServicesSection() {
   };
 
   const cardVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       x: -50,
-      filter: "blur(5px)"
+      filter: "blur(5px)",
     },
     visible: (i) => ({
       opacity: 1,
@@ -177,7 +186,7 @@ export default function ServicesSection() {
     <motion.section
       ref={containerRef}
       id="services"
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-900 via-black to-neutral-900"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-900 via-black to-neutral-900"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -209,7 +218,7 @@ export default function ServicesSection() {
 
       {/* Decorative floating elements */}
       <motion.div
-        className="absolute left-10 top-1/4 h-32 w-32 rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 blur-3xl"
+        className="absolute top-1/4 left-10 h-32 w-32 rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 blur-3xl"
         animate={{
           x: [0, 50, 0],
           y: [0, -30, 0],
@@ -222,7 +231,7 @@ export default function ServicesSection() {
         }}
       />
       <motion.div
-        className="absolute bottom-1/4 right-10 h-40 w-40 rounded-full bg-gradient-to-r from-amber-400/20 to-orange-500/20 blur-3xl"
+        className="absolute right-10 bottom-1/4 h-40 w-40 rounded-full bg-gradient-to-r from-amber-400/20 to-orange-500/20 blur-3xl"
         animate={{
           x: [0, -30, 0],
           y: [0, 50, 0],
@@ -235,7 +244,7 @@ export default function ServicesSection() {
         }}
       />
 
-      <motion.div 
+      <motion.div
         ref={sectionRef}
         className="relative z-10 container flex flex-col items-center gap-10 px-6 py-24 md:flex-row"
         style={{ y: textY }}
@@ -249,12 +258,12 @@ export default function ServicesSection() {
         >
           <motion.div className="perspective-1000">
             <motion.h2
-              className="text-5xl leading-tight font-black uppercase tracking-tighter md:text-[70px] lg:text-[120px]"
+              className="text-5xl leading-tight font-black tracking-tighter uppercase md:text-[70px] lg:text-[120px]"
               variants={titleVariants}
               initial="hidden"
               animate={hasIntersected ? "visible" : "hidden"}
             >
-              <motion.span 
+              <motion.span
                 className="block"
                 whileHover={{
                   scale: 1.05,
@@ -278,22 +287,25 @@ export default function ServicesSection() {
           </motion.div>
 
           <motion.p
-            className="mt-6 max-w-md text-lg font-light leading-relaxed text-white/80 md:text-xl"
+            className="mt-6 max-w-md text-lg leading-relaxed font-light text-white/80 md:text-xl"
             initial={{ opacity: 0, y: 50, filter: "blur(5px)" }}
-            animate={hasIntersected ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+            animate={
+              hasIntersected ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}
+            }
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
           >
             At Camino Code, we provide{" "}
             <motion.span
               className="font-semibold text-amber-400"
-              whileHover={{ 
+              whileHover={{
                 textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
                 scale: 1.05,
               }}
             >
               cutting-edge solutions
             </motion.span>{" "}
-            in data science and web development to help businesses unlock new opportunities and drive growth.
+            in data science and web development to help businesses unlock new
+            opportunities and drive growth.
           </motion.p>
 
           <motion.div
@@ -302,9 +314,7 @@ export default function ServicesSection() {
             animate={hasIntersected ? { opacity: 1, scale: 1, rotate: 0 } : {}}
             transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
           >
-            <motion.div
-              animate={floatingAnimation}
-            >
+            <motion.div animate={floatingAnimation}>
               <motion.div
                 animate={{
                   rotate: 360,
@@ -341,24 +351,31 @@ export default function ServicesSection() {
                 y: -5,
                 transition: { type: "spring", stiffness: 300 },
               }}
-              className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-white/5 to-white/10 p-6 backdrop-blur-md border border-white/10"
+              className="group relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-white/10 p-6 backdrop-blur-md"
             >
               <motion.div
                 className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-red-600/20 opacity-0 group-hover:opacity-100"
                 transition={{ duration: 0.3 }}
               />
               <div className="relative flex items-center justify-between gap-4">
-                <h3 className="text-xl font-black uppercase tracking-tight md:text-2xl">
+                <h3 className="text-xl font-black tracking-tight uppercase md:text-2xl">
                   {service.title}
                 </h3>
                 <motion.div
                   className="rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 p-3 backdrop-blur-sm"
-                  whileHover={{ rotate: 360, scale: 1.1 }}
+                  whileHover={!isMobile ? { rotate: 360, scale: 1.1 } : {}}
                   transition={{ duration: 0.5 }}
                 >
                   <motion.div
                     className="text-amber-400"
-                    whileHover={{ filter: "drop-shadow(0 0 20px rgba(245, 158, 11, 0.8))" }}
+                    whileHover={
+                      !isMobile
+                        ? {
+                            filter:
+                              "drop-shadow(0 0 20px rgba(245, 158, 11, 0.8))",
+                          }
+                        : {}
+                    }
                   >
                     {service.icon}
                   </motion.div>
@@ -390,7 +407,9 @@ export default function ServicesSection() {
           <motion.div
             className="flex w-full justify-center pt-6 md:justify-start"
             initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
-            animate={hasIntersected ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
+            animate={
+              hasIntersected ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}
+            }
             transition={{ delay: 0.8, duration: 0.6 }}
           >
             <Link href="/services">
