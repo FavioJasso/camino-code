@@ -5,34 +5,37 @@ import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Quote, Award, Rocket } from "lucide-react";
+import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
 export default function AboutUsFounder() {
   const sectionRef = useRef(null);
   const imageRef = useRef(null);
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
   
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   });
 
-  const imageScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1.1, 0.8]);
-  const imageRotate = useTransform(scrollYProgress, [0, 1], [-5, 5]);
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
+  const imageScale = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [1, 1, 1] : [0.8, 1.1, 0.8]);
+  const imageRotate = useTransform(scrollYProgress, [0, 1], isMobile ? [0, 0] : [-5, 5]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "-5%" : "-10%"]);
 
   const titleVariants = {
     hidden: { 
       opacity: 0, 
-      y: 100,
-      rotateX: -90,
-      filter: "blur(10px)"
+      y: isMobile ? 50 : 100,
+      rotateX: isMobile ? 0 : -90,
+      filter: isMobile ? "none" : "blur(10px)"
     },
     visible: {
       opacity: 1,
       y: 0,
       rotateX: 0,
-      filter: "blur(0px)",
+      filter: "none",
       transition: {
-        duration: 0.8,
+        duration: isMobile ? 0.5 : 0.8,
         ease: [0.215, 0.61, 0.355, 1.0],
       },
     },
@@ -65,9 +68,9 @@ export default function AboutUsFounder() {
           backgroundImage: "radial-gradient(circle at 1px 1px, rgba(245, 158, 11, 0.3) 1px, transparent 1px)",
           backgroundSize: "50px 50px",
         }}
-        animate={{
+        animate={!isMobile && !prefersReducedMotion ? {
           backgroundPosition: ["0px 0px", "50px 50px"],
-        }}
+        } : {}}
         transition={{
           duration: 20,
           repeat: Infinity,
@@ -76,32 +79,36 @@ export default function AboutUsFounder() {
       />
 
       {/* Floating orbs */}
-      <motion.div
-        className="absolute left-1/4 top-1/4 h-64 w-64 rounded-full bg-gradient-to-r from-amber-400/10 to-red-600/10 blur-3xl"
-        animate={{
-          x: [0, 100, 0],
-          y: [0, -50, 0],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{
-          duration: 15,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-gradient-to-r from-orange-400/10 to-amber-600/10 blur-3xl"
-        animate={{
-          x: [0, -80, 0],
-          y: [0, 60, 0],
-          scale: [1, 1.3, 1],
-        }}
-        transition={{
-          duration: 18,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
+      {!isMobile && (
+        <>
+          <motion.div
+            className="absolute left-1/4 top-1/4 h-64 w-64 rounded-full bg-gradient-to-r from-amber-400/5 to-red-600/5 blur-2xl"
+            animate={!prefersReducedMotion ? {
+              x: [0, 50, 0],
+              y: [0, -30, 0],
+              scale: [1, 1.1, 1],
+            } : {}}
+            transition={{
+              duration: 15,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.div
+            className="absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-gradient-to-r from-orange-400/5 to-amber-600/5 blur-2xl"
+            animate={!prefersReducedMotion ? {
+              x: [0, -40, 0],
+              y: [0, 30, 0],
+              scale: [1, 1.2, 1],
+            } : {}}
+            transition={{
+              duration: 18,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        </>
+      )}
 
       <div className="container relative z-10 mx-auto px-6 sm:px-8 md:px-16 lg:px-24">
         /* Animated Heading with perspective */
@@ -115,21 +122,21 @@ export default function AboutUsFounder() {
             >
               <motion.span 
                 className="block text-white"
-                whileHover={{
+                whileHover={!isMobile ? {
             scale: 1.05,
             textShadow: "0 0 40px rgba(255, 255, 255, 0.8) text-amber-400",
             transition: { duration: 0.3 },
-                }}
+                } : {}}
               >
                 OUR
               </motion.span>
               <motion.span 
                 className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
-                whileHover={{
+                whileHover={!isMobile ? {
             scale: 1.05,
             textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
             transition: { duration: 0.3 },
-                }}
+                } : {}}
               >
                 FOUNDER
               </motion.span>
@@ -151,17 +158,19 @@ export default function AboutUsFounder() {
               className="relative overflow-hidden rounded-3xl"
             >
               {/* Glow effect */}
-              <motion.div
-                className="absolute -inset-4 bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 opacity-50 blur-3xl"
-                animate={{
-                  opacity: [0.3, 0.6, 0.3],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
+              {!isMobile && (
+                <motion.div
+                  className="absolute -inset-4 bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 opacity-30 blur-2xl"
+                  animate={!prefersReducedMotion ? {
+                    opacity: [0.2, 0.4, 0.2],
+                  } : {}}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+              )}
               
               <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-400/20 to-red-600/20 p-1">
                 <div className="relative overflow-hidden rounded-3xl">
@@ -182,10 +191,10 @@ export default function AboutUsFounder() {
                   {/* Floating badge */}
                   <motion.div
                     className="absolute top-6 right-6 rounded-full bg-gradient-to-r from-amber-400 to-red-600 p-4 shadow-2xl"
-                    animate={{
+                    animate={!isMobile && !prefersReducedMotion ? {
                       y: [0, -10, 0],
                       rotate: [0, 5, -5, 0],
-                    }}
+                    } : {}}
                     transition={{
                       duration: 4,
                       repeat: Infinity,
@@ -222,29 +231,29 @@ export default function AboutUsFounder() {
 
             {/* Bio with animated highlighting */}
             <motion.p
-              initial={{ opacity: 0, y: 30, filter: "blur(5px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 0.8, delay: 0.3 }}
+              initial={{ opacity: 0, y: isMobile ? 20 : 30, filter: isMobile ? "none" : "blur(5px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "none" }}
+              transition={{ duration: isMobile ? 0.5 : 0.8, delay: 0.3 }}
               viewport={{ once: true }}
               className="text-lg font-light leading-relaxed text-white/80 sm:text-xl"
             >
               With over 15 years of experience in{" "}
               <motion.span
                 className="font-semibold text-amber-400"
-                whileHover={{ 
+                whileHover={!isMobile ? { 
                   textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
                   scale: 1.05,
-                }}
+                } : {}}
               >
                 data science
               </motion.span>{" "}
               and{" "}
               <motion.span
                 className="font-semibold text-amber-400"
-                whileHover={{ 
+                whileHover={!isMobile ? { 
                   textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
                   scale: 1.05,
-                }}
+                } : {}}
               >
                 software development
               </motion.span>
@@ -271,7 +280,7 @@ export default function AboutUsFounder() {
                   whileInView="visible"
                   viewport={{ once: true }}
                   className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-white/5 to-white/10 p-6 backdrop-blur-sm"
-                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileHover={!isMobile ? { scale: 1.05, y: -5 } : {}}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
                   <motion.div
@@ -282,9 +291,9 @@ export default function AboutUsFounder() {
                     <div className="mb-2 text-amber-400">{stat.icon}</div>
                     <motion.p 
                       className="text-3xl font-bold text-white"
-                      animate={{ 
+                      animate={!isMobile && !prefersReducedMotion ? { 
                         scale: [1, 1.1, 1],
-                      }}
+                      } : {}}
                       transition={{
                         duration: 2,
                         repeat: Infinity,
