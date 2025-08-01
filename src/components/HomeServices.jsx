@@ -2,14 +2,7 @@
 
 import { Layers2, Laptop, Cpu, ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
-// Temporarily replace Spline with placeholder until package issue is resolved
-const Spline = ({ scene }) => (
-  <div className="flex h-full w-full items-center justify-center rounded-lg border border-amber-400/30 bg-gradient-to-br from-amber-400/20 to-red-600/20 backdrop-blur-sm">
-    <div className="text-sm font-medium text-amber-400 opacity-70">
-      3D Model Loading...
-    </div>
-  </div>
-);
+import Spline from "@splinetool/react-spline";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { staggerContainer } from "@/utils/animations";
