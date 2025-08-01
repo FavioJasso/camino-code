@@ -1,14 +1,9 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import dynamic from "next/dynamic";
 import { useRef } from "react";
 import { Sparkles, Target, Eye } from "lucide-react";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
-
-const ModelViewer = dynamic(() => import("@/components/ModelViewer"), {
-  ssr: false,
-});
 
 export default function AboutMissionVision() {
   const containerRef = useRef(null);
@@ -59,14 +54,6 @@ export default function AboutMissionVision() {
     },
   };
 
-  const floatingAnimation = {
-    y: [0, -20, 0],
-    transition: {
-      duration: 6,
-      repeat: Infinity,
-      ease: "easeInOut",
-    },
-  };
 
   return (
     <motion.div 
@@ -93,28 +80,7 @@ export default function AboutMissionVision() {
 
       {/* Mission Section */}
       <div className="relative min-h-screen flex items-center">
-        {/* Decorative Model on the right with enhanced animation */}
-        {!isMobile && (
-          <motion.div 
-            className="absolute right-0 top-1/2 z-0 hidden h-[600px] w-[50vw] -translate-y-1/2 lg:block"
-            animate={!prefersReducedMotion ? floatingAnimation : {}}
-          >
-            <motion.div
-              className="relative h-full w-full"
-              animate={!prefersReducedMotion ? {
-                rotate: [0, 360],
-              } : {}}
-              transition={{
-                duration: 30,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 to-transparent blur-2xl" />
-              <ModelViewer url="/ring-2.glb" />
-            </motion.div>
-          </motion.div>
-        )}
+        {/* Decorative Model removed */}
 
         <motion.section
           id="mission"
@@ -232,28 +198,7 @@ export default function AboutMissionVision() {
 
       {/* Vision Section */}
       <div className="relative min-h-screen flex items-center">
-        {/* Decorative Model on the left with enhanced animation */}
-        {!isMobile && (
-          <motion.div 
-            className="absolute left-0 top-1/2 z-0 hidden h-[600px] w-[50vw] -translate-y-1/2 lg:block"
-            animate={!prefersReducedMotion ? floatingAnimation : {}}
-          >
-            <motion.div
-              className="relative h-full w-full"
-              animate={!prefersReducedMotion ? {
-                rotate: [0, -360],
-              } : {}}
-              transition={{
-                duration: 35,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-l from-amber-400/10 to-transparent blur-2xl" />
-              <ModelViewer url="/ring-1.glb" />
-            </motion.div>
-          </motion.div>
-        )}
+        {/* Decorative Model removed */}
 
         <motion.section
           id="vision"
