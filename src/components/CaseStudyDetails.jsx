@@ -12,17 +12,14 @@ import {
   Clock,
   Award,
 } from "lucide-react";
-import dynamic from "next/dynamic";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
-
-const ModelViewer = dynamic(() => import("@/components/ModelViewer"), {
-  ssr: false,
-});
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 const CaseStudyDetails = () => {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const isMobile = useIsMobile();
 
   const { scrollY } = useScroll();
   const heroParallax = useTransform(scrollY, [0, 1000], [0, -200]);
@@ -250,10 +247,10 @@ const CaseStudyDetails = () => {
       <SolutionSection />
 
       {/* Implementation Section */}
-      <ImplementationSection />
+      <ImplementationSection isMobile={isMobile} />
 
       {/* Gallery Section */}
-      <GallerySection images={caseData.images} />
+      <GallerySection images={caseData.images} isMobile={isMobile} />
 
       {/* Results Section */}
       <ResultsSection />
@@ -381,12 +378,12 @@ const ChallengeSection = () => {
             </motion.div>
           </motion.div>
 
-          {/* 3D Model */}
+          {/* 3D Model placeholder */}
           <motion.div
             className="relative flex h-[400px] items-center justify-center rounded-2xl bg-gradient-to-br from-gray-100 to-white shadow-lg lg:h-[500px]"
             style={{ rotate: modelRotate }}
           >
-            <ModelViewer url="/cone.glb" />
+            {/* Model removed */}
           </motion.div>
         </div>
       </div>
@@ -424,12 +421,12 @@ const SolutionSection = () => {
     <section ref={sectionRef} className="relative min-h-screen bg-white py-24">
       <div className="container mx-auto px-6">
         <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
-          {/* 3D Model */}
+          {/* 3D Model placeholder */}
           <motion.div
             className="relative order-2 flex h-[400px] items-center justify-center rounded-2xl bg-gradient-to-br from-gray-100 to-white shadow-lg lg:order-1 lg:h-[500px]"
             style={{ rotate: modelRotate }}
           >
-            <ModelViewer url="/cone-1.glb" />
+            {/* Model removed */}
           </motion.div>
 
           {/* Text Content */}
@@ -508,7 +505,7 @@ const SolutionSection = () => {
 };
 
 // Implementation Section Component
-const ImplementationSection = () => {
+const ImplementationSection = ({ isMobile }) => {
   const { ref, hasIntersected } = useIntersectionObserver({ threshold: 0.3 });
 
   const phases = [
@@ -604,7 +601,7 @@ const ImplementationSection = () => {
 };
 
 // Gallery Section Component
-const GallerySection = ({ images }) => {
+const GallerySection = ({ images, isMobile }) => {
   return (
     <section className="relative bg-gradient-to-b from-black to-neutral-900 py-24">
       <div className="container mx-auto px-6">
