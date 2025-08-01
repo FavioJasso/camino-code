@@ -11,11 +11,6 @@ import {
 import { useState, useRef } from "react";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import dynamic from "next/dynamic";
-
-const ModelViewer = dynamic(() => import("@/components/ModelViewer"), {
-  ssr: false,
-});
 
 export default function ContactForm() {
   const {
@@ -41,7 +36,6 @@ export default function ContactForm() {
   });
 
   const formY = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const modelRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
 
   const onSubmit = async (data) => {
     setIsSubmitting(true);
@@ -169,13 +163,7 @@ export default function ContactForm() {
             animate={hasIntersected ? { opacity: 1 } : {}}
             transition={{ duration: 0.8 }}
           >
-            {/* 3D Model */}
-            <motion.div
-              className="relative h-[500px]"
-              style={{ rotate: modelRotate }}
-            >
-              <ModelViewer url="/triangle-1.glb" />
-            </motion.div>
+            {/* 3D Model removed */}
 
             {/* Contact Info */}
             <motion.div
