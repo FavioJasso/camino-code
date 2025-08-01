@@ -2,14 +2,9 @@
 
 import Image from "next/image";
 import { useRef, useEffect } from "react";
-import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
-
-const ModelViewer = dynamic(() => import("@/components/ModelViewer"), {
-  ssr: false,
-});
 
 const partners = [
   { src: "/assets/images/partner_1.png", alt: "Partner 1" },
@@ -76,18 +71,8 @@ export default function Partners() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {!isMobile ? (
-        <motion.div
-          className="flex h-[500px] w-full items-center justify-center overflow-clip relative pt-4"
-          initial={{ scale: 0, rotate: -180 }}
-          animate={hasIntersected ? { scale: 1, rotate: 0 } : {}}
-          transition={{ duration: 1, ease: "easeOut" }}
-        >
-          <ModelViewer url="/triangle.glb" />
-        </motion.div>
-      ) : (
-        <div className="h-[200px] w-full" />
-      )}
+      {/* 3D Model removed */}
+      <div className="h-[200px] w-full md:h-[500px]" />
 
       <motion.div
         className="flex w-full flex-col-reverse items-center md:flex-col"
