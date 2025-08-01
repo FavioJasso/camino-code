@@ -1,22 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { useRef } from "react";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
-
-// Temporarily replace Spline with placeholder until package issue is resolved
-const Spline = ({ scene, className }) => (
-  <div
-    className={`${className} flex items-center justify-center rounded-lg border border-amber-400/30 bg-gradient-to-br from-amber-400/20 to-red-600/20 backdrop-blur-sm`}
-  >
-    <div className="text-sm font-medium text-amber-400 opacity-70">
-      3D Model Loading...
-    </div>
-  </div>
-);
 
 export default function AboutSection() {
   const { ref: sectionRef, hasIntersected } = useIntersectionObserver({
@@ -63,22 +51,6 @@ export default function AboutSection() {
     }),
   };
 
-  const splineVariants = {
-    hidden: {
-      opacity: 0,
-      scale: 0,
-      rotate: -180,
-    },
-    visible: {
-      opacity: 0.7,
-      scale: 1,
-      rotate: 0,
-      transition: {
-        duration: 1.2,
-        ease: "easeOut",
-      },
-    },
-  };
 
   return (
     <motion.section
@@ -155,70 +127,7 @@ export default function AboutSection() {
         style={{ y, opacity }}
         className="relative z-10 flex h-full w-full max-w-[1440px] flex-col items-center justify-center gap-8 px-6 text-center"
       >
-        {/* Top Left Spline Model */}
-        {!isMobile && (
-          <motion.div
-            className="absolute top-10 left-10 h-[250px] w-[250px] -translate-x-1/4 sm:h-[350px] sm:w-[350px]"
-            variants={splineVariants}
-            initial="hidden"
-            animate={hasIntersected ? "visible" : "hidden"}
-          >
-            <motion.div
-              animate={
-                !prefersReducedMotion
-                  ? {
-                      rotate: 360,
-                      scale: [1, 1.1, 1],
-                    }
-                  : {}
-              }
-              transition={{
-                rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-                scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-              }}
-              whileHover={!isMobile ? { scale: 1.2 } : {}}
-              className="h-full w-full"
-            >
-              <Spline
-                scene="https://prod.spline.design/hxXzHDWdUo11wqob/scene.splinecode"
-                className="h-full w-full"
-              />
-            </motion.div>
-          </motion.div>
-        )}
 
-        {/* Bottom Right Spline Model */}
-        {!isMobile && (
-          <motion.div
-            className="absolute right-10 bottom-10 h-[250px] w-[250px] translate-x-1/4 sm:h-[350px] sm:w-[350px]"
-            variants={splineVariants}
-            initial="hidden"
-            animate={hasIntersected ? "visible" : "hidden"}
-            transition={{ delay: 0.2 }}
-          >
-            <motion.div
-              animate={
-                !prefersReducedMotion
-                  ? {
-                      rotate: -360,
-                      y: [0, -20, 0],
-                    }
-                  : {}
-              }
-              transition={{
-                rotate: { duration: 25, repeat: Infinity, ease: "linear" },
-                y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
-              }}
-              whileHover={!isMobile ? { scale: 1.2 } : {}}
-              className="h-full w-full"
-            >
-              <Spline
-                scene="https://prod.spline.design/hxXzHDWdUo11wqob/scene.splinecode"
-                className="h-full w-full"
-              />
-            </motion.div>
-          </motion.div>
-        )}
 
         {/* Heading with split text animation */}
         <motion.h2
