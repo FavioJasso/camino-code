@@ -2,19 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import {
   useIntersectionObserver,
   useCursorPosition,
 } from "@/hooks/useAnimations";
-import { staggerContainer, fadeInUp } from "@/utils/animations";
-import { useRef, useState } from "react";
+import { staggerContainer } from "@/utils/animations";
+import { useState } from "react";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
-
-const ModelViewer = dynamic(() => import("@/components/ModelViewer"), {
-  ssr: false,
-});
 
 const caseStudies = [
   {
@@ -331,55 +326,9 @@ export default function WorkShowcase() {
       </div>
 
       <div className="relative container mx-auto w-full">
-        {/* Left Model with enhanced animation */}
-        {!isMobile && (
-          <motion.div
-            className="absolute bottom-0 left-0 z-0 -ml-[13vw] hidden h-[350px] w-[50vw] lg:block"
-            initial={{ opacity: 0, x: -100 }}
-            animate={hasIntersected ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 1, ease: "easeOut" }}
-          >
-            <motion.div
-              className="flex h-full w-full items-center justify-end overflow-hidden pr-[25vw]"
-              animate={!prefersReducedMotion ? {
-                y: [0, -20, 0],
-                rotate: [0, 5, 0],
-              } : {}}
-              transition={{
-                duration: 6,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
-              <ModelViewer url="/triangle-1.glb" />
-            </motion.div>
-          </motion.div>
-        )}
+        {/* Left Model removed */}
 
-        {/* Right Model with enhanced animation */}
-        {!isMobile && (
-          <motion.div
-            className="absolute top-1/4 right-0 z-0 -mr-[13vw] hidden h-[350px] w-[50vw] -translate-y-1/2 lg:block"
-            initial={{ opacity: 0, x: 100 }}
-            animate={hasIntersected ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-          >
-            <motion.div
-              className="flex h-full w-full items-center justify-start overflow-hidden pl-[25vw]"
-              animate={!prefersReducedMotion ? {
-                y: [0, 20, 0],
-                rotate: [0, -5, 0],
-              } : {}}
-              transition={{
-                duration: 7,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
-              <ModelViewer url="/triangle-2.glb" />
-            </motion.div>
-          </motion.div>
-        )}
+        {/* Right Model removed */}
 
         {/* Center Content */}
         <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center px-6">
@@ -432,22 +381,7 @@ export default function WorkShowcase() {
             that drive measurable success. Our portfolio showcases transformative projects in data science, web development, and AI integration.
           </motion.p>
 
-          {/* Mobile Models with enhanced animation */}
-          {!isMobile && (
-            <motion.div
-              className="relative -mr-[150px] h-[200px] w-[200px] lg:hidden"
-              animate={!prefersReducedMotion ? {
-                rotate: 360,
-                scale: [1, 1.1, 1],
-              } : {}}
-              transition={{
-                rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-                scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-              }}
-            >
-              <ModelViewer url="/triangle-1.glb" />
-            </motion.div>
-          )}
+          {/* Mobile Models removed */}
 
           {/* Case Studies Grid with enhanced stagger animation */}
           <motion.div
@@ -497,21 +431,7 @@ export default function WorkShowcase() {
             </Link>
           </motion.div>
 
-          {!isMobile && (
-            <motion.div
-              className="relative -ml-[150px] h-[200px] w-[200px] lg:hidden"
-              animate={!prefersReducedMotion ? {
-                rotate: -360,
-                y: [0, -20, 0],
-              } : {}}
-              transition={{
-                rotate: { duration: 25, repeat: Infinity, ease: "linear" },
-                y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
-              }}
-            >
-              <ModelViewer url="/triangle-2.glb" />
-            </motion.div>
-          )}
+          {/* Mobile Model removed */}
         </div>
       </div>
 
