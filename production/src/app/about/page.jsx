@@ -18,35 +18,11 @@ export default function AboutPage() {
     <main className="min-h-screen bg-white">
       <NavigationBar />
       <AboutUsHeader />
-      <div className="bg-gradient-to-b from-[rgba(248,244,239,1)] to-white">
-        <section className="relative">
-          <AboutUsHero />
-        </section>
-        <div className="mx-auto max-w-[1440px] px-8 md:px-12 lg:px-16">
-          <hr className="border-t-2 border-gradient-to-r from-transparent via-gray-300 to-transparent opacity-50" />
-        </div>
-        <section className="relative py-8">
-          <AboutUsFounder />
-        </section>
-        <div className="mx-auto max-w-[1440px] px-8 md:px-12 lg:px-16">
-          <hr className="border-t-2 border-gradient-to-r from-transparent via-gray-300 to-transparent opacity-50" />
-        </div>
-        <section className="relative py-8">
-          <AboutUsOffers />
-        </section>
-        <div className="mx-auto max-w-[1440px] px-8 md:px-12 lg:px-16">
-          <hr className="mb-16 border-t-2 border-gradient-to-r from-transparent via-gray-300 to-transparent opacity-50" />
-        </div>
-        <section className="relative">
-          <AboutUsPartners />
-        </section>
-        <div className="mx-auto max-w-[1440px] px-8 md:px-12 lg:px-16">
-          <hr className="border-t-2 border-gradient-to-r from-transparent via-gray-300 to-transparent opacity-50" />
-        </div>
-        <section className="py-16 md:py-20 lg:py-24">
-          <ContactForm />
-        </section>
-      </div>
+      <AboutUsHero />
+      <AboutUsFounder />
+      <AboutUsOffers />
+      <AboutUsPartners />
+      <ContactForm />
       <Footer />
     </main>
   );
