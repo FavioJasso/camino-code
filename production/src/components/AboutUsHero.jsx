@@ -12,9 +12,9 @@ export default function AboutMissionVision() {
   return (
     <div className="relative overflow-x-hidden">
       {/* Mission Section */}
-      <div className="relative w-full mx-auto max-w-[1440px]">
+      <div className="relative mx-auto w-full max-w-[1440px]">
         {/* Only Right Model - half off screen */}
-        <div className="md:absolute  relative right-0 top-1/2 md:-translate-y-1/2 w-[800px] md:h-[450px] h-[350px] -mr-[400px] md:-tr">
+        <div className="md:-tr relative top-1/2 right-0 -mr-[400px] h-[350px] w-[800px] md:absolute md:h-[450px] md:-translate-y-1/2">
           <ModelViewer url="/ring-2.glb" />
         </div>
         <motion.section
@@ -52,8 +52,8 @@ export default function AboutMissionVision() {
       </div>
 
       {/* Vision Section */}
-      <div className="relative w-full mx-auto max-w-[1440px]">
-        <div className="md:absolute  relative left-0 bottom-1/4 w-[800px] md:h-[450px] h-[350px] md:-ml-[400px] -ml-[350px]">
+      <div className="relative mx-auto w-full max-w-[1440px]">
+        <div className="relative bottom-1/4 left-0 -ml-[350px] h-[350px] w-[800px] md:absolute md:-ml-[400px] md:h-[450px]">
           <ModelViewer url="/ring-1.glb" />
         </div>
         <motion.section
