@@ -1,35 +1,45 @@
 "use client";
 import Image from "next/image";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { Building2, Handshake, Rocket, Shield, Star, Zap } from "lucide-react";
 
 const ModelViewer = dynamic(() => import("@/components/ModelViewer"), {
   ssr: false,
 });
 
 const partners = [
-  { src: "/assets/images/partner_1.png", alt: "Partner 1" },
-  { src: "/assets/images/partner_2.png", alt: "Partner 2" },
-  { src: "/assets/images/partner_3.png", alt: "Partner 3" },
-  { src: "/assets/images/partner_4.png", alt: "Partner 4" },
-  { src: "/assets/images/partner_5.png", alt: "Partner 5" },
+  { src: "/assets/images/partner_1.png", alt: "Partner 1", category: "Technology" },
+  { src: "/assets/images/partner_2.png", alt: "Partner 2", category: "Innovation" },
+  { src: "/assets/images/partner_3.png", alt: "Partner 3", category: "Enterprise" },
+  { src: "/assets/images/partner_4.png", alt: "Partner 4", category: "Solutions" },
+  { src: "/assets/images/partner_5.png", alt: "Partner 5", category: "Digital" },
+];
+
+const stats = [
+  { icon: Building2, value: "50+", label: "Global Partners", color: "from-cyan-400 to-blue-500" },
+  { icon: Handshake, value: "200+", label: "Joint Projects", color: "from-purple-400 to-pink-500" },
+  { icon: Rocket, value: "15+", label: "Years Experience", color: "from-amber-400 to-orange-500" },
+  { icon: Shield, value: "99%", label: "Success Rate", color: "from-green-400 to-emerald-500" },
 ];
 
 export default function Partners() {
   const containerRef = useRef(null);
   const trackRef = useRef(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
     if (!trackRef.current || !containerRef.current) return;
 
     const track = trackRef.current;
     const container = containerRef.current;
-    const duration = 20;
+    const duration = 30;
 
     const originalContent = track.innerHTML;
-    track.innerHTML = originalContent + originalContent;
+    track.innerHTML = originalContent + originalContent + originalContent;
 
-    const trackWidth = track.scrollWidth / 2;
+    const trackWidth = track.scrollWidth / 3;
     container.style.setProperty("--track-width", `${trackWidth}px`);
     container.style.setProperty("--duration", `${duration}s`);
 
@@ -48,62 +58,186 @@ export default function Partners() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (rect) {
+        setMousePosition({
+          x: ((e.clientX - rect.left) / rect.width) * 100,
+          y: ((e.clientY - rect.top) / rect.height) * 100,
+        });
+      }
+    };
+
+    if (isHovering && containerRef.current) {
+      window.addEventListener("mousemove", handleMouseMove);
+      return () => window.removeEventListener("mousemove", handleMouseMove);
+    }
+  }, [isHovering]);
+
   return (
     <section
       id="partners"
-      className="relative flex flex-col items-center justify-center gap-12 overflow-hidden bg-gradient-to-b from-[rgba(248,244,239,1)] to-white px-6 py-20 text-center sm:px-8 md:px-10 md:py-24 lg:py-32"
+      className="relative flex flex-col items-center justify-center gap-16 overflow-hidden bg-black px-6 py-20 text-center sm:px-8 md:px-10 md:py-24 lg:py-32"
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
     >
-      <div className="object-fit flex h-[350px] w-full items-center justify-center overflow-clip rounded-2xl">
-        <ModelViewer url="/triangle.glb" />
+      {/* Futuristic Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-950">
+        <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
       </div>
-      <div className="flex w-full flex-col-reverse items-center md:flex-col">
-        <h2 className="mx-auto text-center text-5xl leading-[60px] font-black tracking-tight text-gray-900 uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px] animate-fade-in-up">
-          Our{" "}
-          <span className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent drop-shadow-sm">
+
+      {/* Dynamic Gradient Orbs */}
+      <div 
+        className="absolute inset-0 opacity-30 transition-all duration-1000"
+        style={{
+          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(6, 182, 212, 0.15), transparent 50%)`,
+        }}
+      />
+
+      {/* Floating Particles */}
+      <div className="absolute inset-0">
+        <div className="particle particle-1"></div>
+        <div className="particle particle-2"></div>
+        <div className="particle particle-3"></div>
+        <div className="particle particle-4"></div>
+      </div>
+
+      {/* Header Section */}
+      <div className="relative z-10 flex w-full max-w-6xl flex-col items-center gap-8">
+        {/* Badge */}
+        <div className="animate-fade-in-down">
+          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-950/50 px-4 py-2 backdrop-blur-sm">
+            <Star className="h-4 w-4 text-cyan-400" />
+            <span className="text-sm font-medium text-cyan-200">Trusted by Industry Leaders</span>
+          </div>
+        </div>
+
+        <h2 className="mx-auto text-center text-5xl leading-[60px] font-black tracking-tight uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px] animate-fade-in-up">
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-300">
+            Our
+          </span>{" "}
+          <span className="inline-block bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow-glow animate-gradient-x">
             Partners
           </span>
         </h2>
+
+        <p className="animate-fade-in-up animation-delay-200 max-w-2xl text-gray-400 text-lg">
+          Collaborating with visionary companies to push the boundaries of technology and innovation
+        </p>
       </div>
 
-      <div
-        ref={containerRef}
-        className="logo-slider relative mx-auto w-full max-w-[1440px] overflow-hidden py-8"
-      >
-        <div
-          ref={trackRef}
-          className="logo-track flex w-max items-center"
-        >
-          <div className="logo-set ml-8 flex items-center gap-8 sm:ml-12 sm:gap-12 md:ml-16 md:gap-16 lg:ml-20 lg:gap-20">
-            {partners.map((partner, index) => (
-              <div key={`first-${index}`} className="group flex-shrink-0 transition-transform duration-300 hover:scale-110">
-                <Image
-                  src={partner.src}
-                  alt={partner.alt}
-                  width={160}
-                  height={160}
-                  className="h-32 w-32 rounded-full border-2 border-gray-200 object-contain shadow-lg transition-all duration-300 group-hover:border-amber-400 group-hover:shadow-xl md:h-[200px] md:w-[200px]"
-                />
-              </div>
-            ))}
+      {/* 3D Model Section with Enhanced Container */}
+      <div className="relative z-10 w-full max-w-4xl animate-fade-in-up animation-delay-400">
+        <div className="relative rounded-3xl border border-purple-500/20 bg-gradient-to-br from-purple-950/20 to-cyan-950/20 p-1 backdrop-blur-xl">
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 opacity-20 blur-2xl"></div>
+          <div className="relative h-[400px] w-full overflow-hidden rounded-3xl bg-black/50">
+            {/* Futuristic Corner Decorations */}
+            <div className="absolute top-0 left-0 h-20 w-20 border-l-2 border-t-2 border-cyan-500/50"></div>
+            <div className="absolute top-0 right-0 h-20 w-20 border-r-2 border-t-2 border-purple-500/50"></div>
+            <div className="absolute bottom-0 left-0 h-20 w-20 border-l-2 border-b-2 border-pink-500/50"></div>
+            <div className="absolute bottom-0 right-0 h-20 w-20 border-r-2 border-b-2 border-yellow-500/50"></div>
+            
+            <ModelViewer url="/triangle.glb" />
           </div>
         </div>
       </div>
 
-      {/* CSS Animation */}
+      {/* Stats Section */}
+      <div className="relative z-10 grid w-full max-w-5xl grid-cols-2 gap-6 md:grid-cols-4 animate-fade-in-up animation-delay-600">
+        {stats.map((stat, index) => (
+          <div
+            key={index}
+            className="group relative overflow-hidden rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-900/50 to-gray-950/50 p-6 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-gray-700"
+          >
+            <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-0 transition-opacity duration-300 group-hover:opacity-10`}></div>
+            <stat.icon className={`mb-3 h-8 w-8 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`} />
+            <div className="text-3xl font-bold text-white">{stat.value}</div>
+            <div className="text-sm text-gray-400">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Partners Carousel */}
+      <div
+        ref={containerRef}
+        className="logo-slider relative mx-auto w-full overflow-hidden py-12"
+      >
+        <div
+          ref={trackRef}
+          className="logo-track flex w-max items-center gap-12"
+        >
+          {[...Array(3)].map((_, setIndex) => (
+            <div key={setIndex} className="flex items-center gap-12">
+              {partners.map((partner, index) => (
+                <div 
+                  key={`${setIndex}-${index}`} 
+                  className="group relative flex-shrink-0"
+                >
+                  {/* Partner Card */}
+                  <div className="relative overflow-hidden rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-900/80 to-gray-950/80 p-8 backdrop-blur-sm transition-all duration-500 hover:scale-110 hover:border-cyan-500/50">
+                    {/* Hover Glow */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-pink-500/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+                    
+                    {/* Partner Logo */}
+                    <Image
+                      src={partner.src}
+                      alt={partner.alt}
+                      width={160}
+                      height={160}
+                      className="relative z-10 h-32 w-32 object-contain filter grayscale transition-all duration-500 group-hover:grayscale-0 md:h-40 md:w-40"
+                    />
+                    
+                    {/* Category Badge */}
+                    <div className="absolute top-2 right-2 rounded-full bg-gradient-to-r from-cyan-500/20 to-purple-500/20 px-3 py-1 backdrop-blur-sm">
+                      <span className="text-xs font-medium text-cyan-300">{partner.category}</span>
+                    </div>
+                    
+                    {/* Floating Icons */}
+                    <Zap className="absolute -bottom-2 -right-2 h-6 w-6 text-purple-500/30 transition-all duration-500 group-hover:text-purple-400 group-hover:rotate-12" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="relative z-10 flex flex-col items-center gap-6 animate-fade-in-up animation-delay-800">
+        <div className="text-center">
+          <h3 className="mb-2 text-2xl font-bold text-white">Ready to Partner with Us?</h3>
+          <p className="text-gray-400">Join our ecosystem of innovation and growth</p>
+        </div>
+        <button className="group relative overflow-hidden rounded-full bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 px-8 py-4 font-semibold text-white shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-neon">
+          <span className="relative z-10 flex items-center gap-2">
+            Become a Partner
+            <Handshake className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
+          </span>
+        </button>
+      </div>
+
+      {/* Enhanced CSS Animation */}
       <style jsx global>{`
         .logo-slider {
           mask-image: linear-gradient(
             to right,
             transparent 0%,
-            black 10%,
-            black 90%,
+            black 15%,
+            black 85%,
             transparent 100%
           );
         }
+        
         .logo-track {
           animation: scroll var(--duration) linear infinite;
           transform: translateX(0);
         }
+        
+        .logo-track:hover {
+          animation-play-state: paused;
+        }
+        
         @keyframes scroll {
           0% {
             transform: translateX(0);
