@@ -2,133 +2,266 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Instagram, Linkedin } from "lucide-react";
-import { motion } from "framer-motion";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Instagram,
+  Linkedin,
+  Twitter,
+  Github,
+  ChevronRight,
+  Sparkles,
+  Code2,
+  Globe,
+  Cpu,
+  Binary,
+  Network,
+  Terminal,
+  Zap,
+  ArrowUp
+} from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const footerLinks = [
-    { name: "Home", href: "/" },
-    { name: "About Us", href: "/about" },
-    { name: "Works", href: "/case-studies" },
-    { name: "Services", href: "/services" },
-    { name: "Contact", href: "/contact" },
-    { name: "Terms", href: "/terms" },
-    { name: "Privacy", href: "/privacy" },
+
+  const footerSections = [
+    {
+      title: "Navigation",
+      icon: <Network className="h-4 w-4" />,
+      links: [
+        { name: "Home", href: "/" },
+        { name: "About Us", href: "/about" },
+        { name: "Services", href: "/services" },
+        { name: "Case Studies", href: "/case-studies" },
+      ],
+    },
+    {
+      title: "Legal",
+      icon: <Terminal className="h-4 w-4" />,
+      links: [
+        { name: "Terms of Service", href: "/terms" },
+        { name: "Privacy Policy", href: "/privacy" },
+        { name: "Cookie Policy", href: "/cookies" },
+      ],
+    },
+    {
+      title: "Contact",
+      icon: <Cpu className="h-4 w-4" />,
+      links: [
+        {
+          name: "hello@caminocode.com",
+          href: "mailto:hello@caminocode.com",
+          icon: Mail,
+        },
+        {
+          name: "+1 (555) 123-4567",
+          href: "tel:+15551234567",
+          icon: Phone,
+        },
+        {
+          name: "San Francisco, CA",
+          href: "#",
+          icon: MapPin,
+        },
+      ],
+    },
   ];
 
   const socialLinks = [
     {
-      icon: <Instagram className="h-5 w-5" />,
+      icon: Instagram,
       href: "https://instagram.com",
       label: "Instagram",
     },
     {
-      icon: <Linkedin className="h-5 w-5" />,
+      icon: Linkedin,
       href: "https://linkedin.com",
       label: "LinkedIn",
+    },
+    {
+      icon: Twitter,
+      href: "https://twitter.com",
+      label: "Twitter",
+    },
+    {
+      icon: Github,
+      href: "https://github.com",
+      label: "GitHub",
     },
   ];
 
   return (
-    <footer className="relative flex h-auto flex-col items-center justify-between gap-10 overflow-hidden px-6 py-16 text-center sm:gap-12 sm:px-8 sm:py-5 md:px-10">
-      {/* Background Image */}
-      <div className="absolute inset-0 -z-10">
-        <Image
-          src="/assets/images/footer-bg.png"
-          alt="Footer background"
-          fill
-          className="object-cover"
-          quality={90}
-          priority
-        />
-        <div className="absolute inset-0 bg-black/80" />
+    <footer className="relative overflow-hidden bg-gradient-to-b from-gray-900 via-gray-950 to-black text-white">
+      {/* Background Design Elements */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a1a1a_1px,transparent_1px),linear-gradient(to_bottom,#1a1a1a_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20" />
+        
+        {/* Gradient Orbs */}
+        <div className="absolute -left-40 top-20 h-96 w-96 rounded-full bg-gradient-to-r from-purple-600/10 to-pink-600/10 blur-3xl" />
+        <div className="absolute -right-40 bottom-20 h-96 w-96 rounded-full bg-gradient-to-r from-cyan-600/10 to-blue-600/10 blur-3xl" />
+        <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-indigo-600/5 to-purple-600/5 blur-3xl" />
       </div>
 
-      {/* Logo and Navigation */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="flex w-full max-w-6xl flex-col items-center gap-10 py-20"
-      >
-        {/* Logo */}
-        <Link href="/" className="group">
-          <div className="relative h-20 w-40 rounded-md bg-black/80 p-2 backdrop-blur-sm">
-            <Image
-              src="/assets/footer-logo.png"
-              alt="Camino Code Logo"
-              fill
-              className="object-contain transition-transform duration-300 group-hover:scale-105"
-            />
-          </div>
-        </Link>
+      {/* Tech Pattern Overlay */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <div className="absolute inset-0 opacity-10">
+          <div className="h-full w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]" />
+        </div>
+      </div>
 
-        {/* Navigation Links */}
-        <nav>
-          <ul className="flex flex-wrap justify-center gap-4 text-sm sm:gap-6 sm:text-base md:text-lg">
-            {footerLinks.map((link, index) => (
-              <motion.li
-                key={link.name}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Link
-                  href={link.href}
-                  className="text-white/80 transition-colors hover:text-white hover:underline"
+      {/* Main Footer Content */}
+      <div className="relative z-20 mx-auto max-w-7xl px-6 py-20">
+        <div className="grid gap-12 lg:grid-cols-5">
+          {/* Logo and Description */}
+          <div className="lg:col-span-2">
+            <Link href="/" className="inline-block">
+              <div className="group relative overflow-hidden rounded-2xl border border-gray-800/50 bg-gradient-to-br from-gray-900/90 to-gray-950/90 p-6 backdrop-blur-xl transition-all duration-300 hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/10">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 transition-all duration-300 group-hover:from-purple-500/10 group-hover:to-pink-500/10" />
+                <Image
+                  src="/assets/logo.svg"
+                  alt="Camino Code Logo"
+                  width={140}
+                  height={70}
+                  className="relative z-10 h-16 w-32 object-contain"
+                />
+              </div>
+            </Link>
+
+            <p className="mt-6 text-gray-300 leading-relaxed">
+              Innovating the future through cutting-edge{" "}
+              <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text font-semibold text-transparent">
+                data science
+              </span>{" "}
+              and{" "}
+              <span className="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text font-semibold text-transparent">
+                web development
+              </span>{" "}
+              solutions.
+            </p>
+
+            {/* Social Links */}
+            <div className="mt-8 flex gap-3">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative overflow-hidden rounded-xl border border-gray-800/50 bg-gray-900/50 p-3 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-gray-700 hover:bg-gray-800/50 hover:shadow-lg"
+                  aria-label={social.label}
                 >
-                  {link.name}
-                </Link>
-              </motion.li>
-            ))}
-          </ul>
-        </nav>
-      </motion.div>
+                  <social.icon className="relative z-10 h-5 w-5 text-gray-400 transition-colors duration-300 group-hover:text-white" />
+                </a>
+              ))}
+            </div>
+          </div>
 
-      <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center justify-center">
+          {/* Footer Sections */}
+          {footerSections.map((section) => (
+            <div key={section.title}>
+              <div className="mb-6 flex items-center gap-3">
+                <div className="rounded-lg border border-gray-800/50 bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-2.5 backdrop-blur-sm">
+                  <div className="text-purple-400">{section.icon}</div>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-100">{section.title}</h3>
+              </div>
+              <ul className="space-y-3">
+                {section.links.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      href={link.href}
+                      className="group flex items-center gap-2 text-gray-400 transition-all duration-300 hover:translate-x-1 hover:text-white"
+                    >
+                      {link.icon && (
+                        <link.icon className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+                      )}
+                      <span className="relative">
+                        {link.name}
+                        <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-300 group-hover:w-full" />
+                      </span>
+                      {!link.icon && (
+                        <ChevronRight className="h-3 w-3 opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100" />
+                      )}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Newsletter Section */}
+        <div className="relative mt-16 overflow-hidden rounded-3xl border border-gray-800/50 bg-gradient-to-br from-gray-900/50 to-gray-950/50 p-8 backdrop-blur-xl">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 via-transparent to-cyan-600/5" />
+          
+          {/* Decorative Elements */}
+          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 blur-3xl" />
+
+          <div className="relative z-10 flex flex-col items-center gap-6 text-center lg:flex-row lg:justify-between lg:text-left">
+            <div>
+              <h3 className="mb-2 flex items-center gap-2 text-2xl font-bold text-gray-100">
+                Stay Updated
+                <Sparkles className="h-5 w-5 text-purple-400" />
+              </h3>
+              <p className="text-gray-400">
+                Get the latest insights and updates from Camino Code
+              </p>
+            </div>
+            <form className="flex w-full max-w-md gap-3 lg:w-auto">
+              <div className="relative flex-1">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="w-full rounded-xl border border-gray-700/50 bg-gray-900/50 px-4 py-3 text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-300 focus:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/20"
+              >
+                <span className="relative z-10">Subscribe</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-700 to-pink-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              </button>
+            </form>
+          </div>
+        </div>
+
         {/* Divider */}
-        <motion.hr
-          initial={{ width: 0 }}
-          whileInView={{ width: "100%" }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-2 w-full border-t border-gray-700"
-        />
+        <div className="relative my-12">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-800/50"></div>
+          </div>
+          <div className="relative flex justify-center">
+            <div className="bg-gradient-to-b from-gray-900 via-gray-950 to-black px-4">
+              <Code2 className="h-5 w-5 text-purple-400" />
+            </div>
+          </div>
+        </div>
 
         {/* Bottom Section */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row"
-        >
-          {/* Copyright Text */}
-          <p className="text-xs text-white/60 sm:text-sm md:text-base">
-            &copy; {currentYear} Camino Code. All Rights Reserved.
+        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <p className="flex items-center gap-2 text-sm text-gray-400">
+            <Binary className="h-4 w-4 text-purple-400" />
+            &copy; {currentYear}{" "}
+            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text font-semibold text-transparent">
+              Camino Code
+            </span>
+            . All Rights Reserved.
           </p>
 
-          {/* Social Icons */}
-          <div className="flex gap-4">
-            {socialLinks.map((social) => (
-              <motion.a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ y: -3 }}
-                whileTap={{ scale: 0.95 }}
-                className="text-white transition-colors hover:text-amber-400"
-                aria-label={social.label}
-              >
-                {social.icon}
-              </motion.a>
-            ))}
-          </div>
-        </motion.div>
+          {/* Back to Top Button */}
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="group relative overflow-hidden rounded-full border border-gray-700/50 bg-gray-900/50 p-3 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-purple-500/30 hover:bg-gray-800/50 hover:shadow-lg hover:shadow-purple-500/10"
+            aria-label="Back to top"
+          >
+            <ArrowUp className="relative z-10 h-5 w-5 text-gray-400 transition-all duration-300 group-hover:text-white" />
+          </button>
+        </div>
       </div>
     </footer>
   );
