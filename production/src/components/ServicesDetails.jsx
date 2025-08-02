@@ -96,10 +96,10 @@ export default function ServicesDetails() {
       <section
         ref={addToRefs}
         id="data-science"
-        className="relative flex w-full flex-col bg-[radial-gradient(111.43%_111.43%_at_50%_50%,#222222_0%,#000000_100%)] md:min-h-screen md:flex-row"
+        className="relative flex w-full flex-col bg-[radial-gradient(111.43%_111.43%_at_50%_50%,#222222_0%,#000000_100%)] md:flex-row"
       >
-        <div className="relative mx-auto flex w-full max-w-[1440px] flex-col md:min-h-screen md:flex-row">
-          <div className="sticky-content w-full gap-8 p-6 text-left md:sticky md:top-0 md:h-screen md:w-1/2 md:p-12 md:pt-24">
+        <div className="relative mx-auto flex w-full max-w-[1440px] flex-col md:flex-row">
+          <div className="sticky-content w-full gap-8 p-6 text-left md:sticky md:top-0 md:w-1/2 md:p-12 md:pt-24">
             <span className="inline-block h-[136px] w-[136px] text-orange-400">
               <Layers className="h-full w-full" />
             </span>
@@ -192,10 +192,10 @@ export default function ServicesDetails() {
       <section
         ref={addToRefs}
         id="software-development"
-        className="relative flex w-full flex-col bg-[rgba(248,244,239,1)] text-black md:min-h-screen md:flex-row"
+        className="relative flex w-full flex-col bg-[rgba(248,244,239,1)] text-black md:flex-row"
       >
-        <div className="relative mx-auto flex w-full max-w-[1440px] flex-col md:min-h-screen md:flex-row">
-          <div className="sticky-content w-full gap-8 p-6 text-left md:sticky md:top-0 md:h-screen md:w-1/2 md:p-12 md:pt-24">
+        <div className="relative mx-auto flex w-full max-w-[1440px] flex-col md:flex-row">
+          <div className="sticky-content w-full gap-8 p-6 text-left md:sticky md:top-0 md:w-1/2 md:p-12 md:pt-24">
             <span className="inline-block h-[136px] w-[136px] text-orange-400">
               <Laptop className="h-full w-full" />
             </span>
@@ -273,10 +273,10 @@ export default function ServicesDetails() {
       <section
         ref={addToRefs}
         id="audit"
-        className="relative flex w-full flex-col bg-[radial-gradient(111.43%_111.43%_at_50%_50%,#222222_0%,#000000_100%)] md:min-h-screen md:flex-row"
+        className="relative flex w-full flex-col bg-[radial-gradient(111.43%_111.43%_at_50%_50%,#222222_0%,#000000_100%)] md:flex-row"
       >
-        <div className="relative mx-auto flex w-full max-w-[1440px] flex-col md:min-h-screen md:flex-row">
-          <div className="sticky-content w-full gap-8 p-6 text-left md:sticky md:top-0 md:h-screen md:w-1/2 md:p-12 md:pt-24">
+        <div className="relative mx-auto flex w-full max-w-[1440px] flex-col md:flex-row">
+          <div className="sticky-content w-full gap-8 p-6 text-left md:sticky md:top-0 md:w-1/2 md:p-12 md:pt-24">
             <span className="inline-block h-[136px] w-[136px] text-orange-400">
               <Cpu className="h-full w-full" />
             </span>
