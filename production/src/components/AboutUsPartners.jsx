@@ -51,15 +51,15 @@ export default function Partners() {
   return (
     <section
       id="partners"
-      className="relative flex flex-col items-center justify-center gap-10 overflow-hidden bg-[rgba(248,244,239,1)] px-6 pb-16 text-center sm:px-8 md:px-10"
+      className="relative flex flex-col items-center justify-center gap-12 overflow-hidden bg-gradient-to-b from-[rgba(248,244,239,1)] to-white px-6 py-20 text-center sm:px-8 md:px-10 md:py-24 lg:py-32"
     >
-      <div className="object-fit flex h-[350px] w-full items-center justify-center overflow-clip">
+      <div className="object-fit flex h-[350px] w-full items-center justify-center overflow-clip rounded-2xl">
         <ModelViewer url="/triangle.glb" />
       </div>
       <div className="flex w-full flex-col-reverse items-center md:flex-col">
-        <h2 className="mx-auto text-center text-5xl leading-[60px] font-bold text-black uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px]">
+        <h2 className="mx-auto text-center text-5xl leading-[60px] font-black tracking-tight text-gray-900 uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px] animate-fade-in-up">
           Our{" "}
-          <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
+          <span className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent drop-shadow-sm">
             Partners
           </span>
         </h2>
@@ -67,21 +67,21 @@ export default function Partners() {
 
       <div
         ref={containerRef}
-        className="logo-slider relative mx-auto w-full max-w-[1440px] overflow-hidden py-4"
+        className="logo-slider relative mx-auto w-full max-w-[1440px] overflow-hidden py-8"
       >
         <div
           ref={trackRef}
-          className="logo-track flex w-max items-center [&>div>img]:shadow-md"
+          className="logo-track flex w-max items-center"
         >
           <div className="logo-set ml-8 flex items-center gap-8 sm:ml-12 sm:gap-12 md:ml-16 md:gap-16 lg:ml-20 lg:gap-20">
             {partners.map((partner, index) => (
-              <div key={`first-${index}`} className="flex-shrink-0">
+              <div key={`first-${index}`} className="group flex-shrink-0 transition-transform duration-300 hover:scale-110">
                 <Image
                   src={partner.src}
                   alt={partner.alt}
                   width={160}
                   height={160}
-                  className="h-32 w-32 rounded-full border-[1px] border-black object-contain md:h-[200px] md:w-[200px]"
+                  className="h-32 w-32 rounded-full border-2 border-gray-200 object-contain shadow-lg transition-all duration-300 group-hover:border-amber-400 group-hover:shadow-xl md:h-[200px] md:w-[200px]"
                 />
               </div>
             ))}
