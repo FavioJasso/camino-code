@@ -10,7 +10,7 @@ const ModelViewer = dynamic(() => import("@/components/ModelViewer"), {
 
 export default function AboutMissionVision() {
   return (
-    <div className="relative overflow-x-hidden">
+    <div className="relative overflow-x-hidden bg-gradient-to-b from-transparent via-white to-[rgba(248,244,239,0.3)]">
       {/* Mission Section */}
       <div className="relative mx-auto w-full max-w-[1440px]">
         {/* Only Right Model - half off screen */}
@@ -19,15 +19,15 @@ export default function AboutMissionVision() {
         </div>
         <motion.section
           id="mission"
-          initial={{ opacity: 0, x: -20 }}
+          initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 1, ease: "easeOut" }}
           viewport={{ once: true, margin: "-100px" }}
-          className="flex h-auto flex-col items-start justify-center px-6 py-4 text-left sm:px-8 sm:py-20 md:px-16 md:py-24 lg:px-24 xl:px-36"
+          className="relative z-10 flex min-h-[50vh] flex-col items-start justify-center px-8 py-16 text-left sm:px-10 sm:py-24 md:px-16 md:py-32 lg:px-24 lg:py-40 xl:px-36"
         >
-          <h2 className="text-4xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl">
+          <h2 className="text-5xl font-black tracking-tight uppercase sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[10rem] animate-fade-in-up">
             Our{" "}
-            <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
+            <span className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent drop-shadow-sm">
               Mission
             </span>
           </h2>
@@ -36,7 +36,7 @@ export default function AboutMissionVision() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="mt-6 max-w-2xl text-base text-orange-600 sm:text-lg md:text-xl"
+            className="mt-8 max-w-3xl text-lg font-medium leading-relaxed text-gray-700 sm:text-xl md:text-2xl lg:leading-relaxed"
           >
             At Camino Code, our mission is to deliver innovative data science
             and web development solutions that empower businesses to thrive in a
@@ -58,15 +58,15 @@ export default function AboutMissionVision() {
         </div>
         <motion.section
           id="vision"
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: 30 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 1, ease: "easeOut" }}
           viewport={{ once: true, margin: "-100px" }}
-          className="flex h-auto flex-col items-end justify-center px-6 py-4 text-right sm:px-8 sm:py-20 md:px-16 md:py-24 lg:px-24 xl:px-36"
+          className="relative z-10 flex min-h-[50vh] flex-col items-end justify-center px-8 py-16 text-right sm:px-10 sm:py-24 md:px-16 md:py-32 lg:px-24 lg:py-40 xl:px-36"
         >
-          <h2 className="text-4xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl">
+          <h2 className="text-5xl font-black tracking-tight uppercase sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[10rem] animate-fade-in-up">
             Our{" "}
-            <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
+            <span className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent drop-shadow-sm">
               Vision
             </span>
           </h2>
@@ -75,7 +75,7 @@ export default function AboutMissionVision() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="mt-6 max-w-2xl text-base text-orange-600 sm:text-lg md:text-xl"
+            className="mt-8 max-w-3xl text-lg font-medium leading-relaxed text-gray-700 sm:text-xl md:text-2xl lg:leading-relaxed"
           >
             Our vision is to become a global leader in data science and web
             development by setting new standards for innovation, performance,
