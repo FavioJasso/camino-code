@@ -24,7 +24,7 @@ export default function AboutPage() {
         <AboutUsFounder />
         <hr className="mx-auto w-full max-w-[1440px] border-gray-700" />
         <AboutUsOffers />
-        <hr className="mx-auto w-full max-w-[1440px] border-gray-700 mb-10" />
+        <hr className="mx-auto mb-10 w-full max-w-[1440px] border-gray-700" />
         <AboutUsPartners />
         <hr className="mx-auto w-full max-w-[1440px] border-gray-700" />
         <ContactForm />
