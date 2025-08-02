@@ -52,9 +52,9 @@ export default function ServicesSection() {
       </div>
 
       {/* Left Column */}
-      <div className="relative z-10 flex flex-col items-center justify-center gap-10 max-w-[1440px] md:flex-row">
+      <div className="relative z-10 flex max-w-[1440px] flex-col items-center justify-center gap-10 md:flex-row">
         <div className="flex w-full flex-col items-center p-4 text-white md:w-1/2 md:items-start md:px-8 md:py-12 md:text-left">
-          <h2 className="w-full font-bold uppercase text-5xl md:text-[70px] lg:text-[120px] lg:leading-[130px] md:leading-[80px] leading-[60px]">
+          <h2 className="w-full text-5xl leading-[60px] font-bold uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px]">
             Our{" "}
             <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
               Services
@@ -67,7 +67,7 @@ export default function ServicesSection() {
             drive growth.
           </p>
 
-          <div className="w-full h-[300px] object-contain flex items-center justify-center">
+          <div className="flex h-[300px] w-full items-center justify-center object-contain">
             <Spline scene="https://prod.spline.design/hxXzHDWdUo11wqob/scene.splinecode" />
           </div>
         </div>
@@ -86,14 +86,14 @@ export default function ServicesSection() {
                   {service.title}
                 </h3>
                 <div
-                  className={`rounded-full p-2 transition-colors duration-300 `}
+                  className={`rounded-full p-2 transition-colors duration-300`}
                 >
                   {service.icon}
                 </div>
               </div>
 
               <ul
-                className={`mt-4 w-full list-inside list-disc space-y-2 text-left text-sm transition-colors duration-300 sm:text-base `}
+                className={`mt-4 w-full list-inside list-disc space-y-2 text-left text-sm transition-colors duration-300 sm:text-base`}
               >
                 {service.items.map((item, i) => (
                   <li key={i}>{item}</li>
