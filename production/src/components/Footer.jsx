@@ -88,14 +88,14 @@ export default function Footer() {
         </nav>
       </motion.div>
 
-      <div className="w-full max-w-[1440px] mx-auto flex flex-col items-center justify-center">
+      <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center justify-center">
         {/* Divider */}
         <motion.hr
           initial={{ width: 0 }}
           whileInView={{ width: "100%" }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="w-full border-t border-gray-700  mb-2"
+          className="mb-2 w-full border-t border-gray-700"
         />
 
         {/* Bottom Section */}
