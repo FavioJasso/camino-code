@@ -1,16 +1,16 @@
 // app/layout.jsx
-import Head from 'next/head';
-import Script from 'next/script';
-import './globals.css';
-import SmoothScroll from '@/components/SmoothScroll';
+import Head from "next/head";
+import Script from "next/script";
+import "./globals.css";
+import SmoothScroll from "@/components/SmoothScroll";
 
 export const metadata = {
-  generator: 'Next.js',
+  generator: "Next.js",
 };
 
 export default function RootLayout({ children, params }) {
-  const title = params.title || 'Default Title';
-  const description = params.description || 'Default description';
+  const title = params.title || "Default Title";
+  const description = params.description || "Default description";
 
   return (
     <html lang="en">
@@ -22,9 +22,7 @@ export default function RootLayout({ children, params }) {
         <meta name="description" content={description} />
       </Head>
       <body>
-        <SmoothScroll>
-          {children}
-        </SmoothScroll>
+        <SmoothScroll>{children}</SmoothScroll>
         <Script src="https://code.jquery.com/jquery-3.6.0.min.js"></Script>
       </body>
     </html>
