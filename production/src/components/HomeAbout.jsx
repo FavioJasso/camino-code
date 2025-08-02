@@ -8,34 +8,34 @@ export default function AboutSection() {
   return (
     <section
       id="about"
-      className="relative md:h-auto h-[120vh] bg-black px-6 py-16 sm:px-8 sm:py-20 md:gap-12 md:px-10 flex items-center justify-center overflow-hidden rounded-lg w-full max-w-[1440px] mx-auto"
+      className="relative mx-auto flex h-[120vh] w-full items-center justify-center overflow-hidden rounded-lg bg-black px-6 py-16 sm:px-8 sm:py-20 md:h-auto md:gap-12 md:px-10"
     >
-      <div className="relative flex w-full max-w-[1440px] flex-col items-center justify-center gap-8 text-center h-full">
+      <div className="relative flex h-full w-full max-w-[1440px] flex-col items-center justify-center gap-8 text-center">
         {/* Top Left Spline Model */}
-        <div className="absolute top-0 left-10 w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] opacity-70 hover:opacity-100 transition-opacity duration-300 -translate-x-1/4 -translate-y-1/4 hover:scale-110">
+        <div className="absolute top-0 left-10 h-[200px] w-[200px] -translate-x-1/4 -translate-y-1/4 opacity-70 transition-opacity duration-300 hover:scale-110 hover:opacity-100 sm:h-[300px] sm:w-[300px]">
           <Spline
             scene="https://prod.spline.design/hxXzHDWdUo11wqob/scene.splinecode"
-            className="w-full h-full"
+            className="h-full w-full"
           />
         </div>
 
         {/* Bottom Right Spline Model */}
-        <div className="absolute bottom-0 right-10 w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] opacity-70 hover:opacity-100 transition-opacity duration-300 translate-x-1/4 translate-y-1/4 hover:scale-110">
+        <div className="absolute right-10 bottom-0 h-[200px] w-[200px] translate-x-1/4 translate-y-1/4 opacity-70 transition-opacity duration-300 hover:scale-110 hover:opacity-100 sm:h-[300px] sm:w-[300px]">
           <Spline
             scene="https://prod.spline.design/hxXzHDWdUo11wqob/scene.splinecode"
-            className="w-full h-full"
+            className="h-full w-full"
           />
         </div>
 
         {/* Heading */}
-        <h2 className="w-full max-w-[900px] font-bold uppercase text-white text-5xl md:text-[70px] lg:text-[120px] mx-auto lg:leading-[130px] md:leading-[80px] text-center leading-[60px]">
+        <h2 className="mx-auto w-full max-w-[900px] text-center text-5xl leading-[60px] font-bold text-white uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px]">
           Shaping the Future of{" "}
           <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
             Technology
           </span>
         </h2>
 
-        <p className="max-w-md text-xs text-white sm:text-sm md:max-w-lg md:text-base lg:max-w-xl lg:text-lg relative z-10">
+        <p className="relative z-10 max-w-md text-xs text-white sm:text-sm md:max-w-lg md:text-base lg:max-w-xl lg:text-lg">
           At Camino Code, we are passionate about transforming businesses
           through the power of data and technology. Founded with a vision to
           redefine the digital landscape, we specialize in cutting-edge data
@@ -47,7 +47,7 @@ export default function AboutSection() {
         <div className="relative z-10">
           <Link
             href="/contact"
-            className="rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-white hover:opacity-90 flex items-center justify-center gap-1"
+            className="flex items-center justify-center gap-1 rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-white hover:opacity-90"
           >
             Learn More
             <span className="ml-2">
