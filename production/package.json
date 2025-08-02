@@ -14,7 +14,6 @@
     "@react-three/drei": "^10.0.7",
     "@react-three/fiber": "^9.1.2",
     "@splinetool/react-spline": "^4.0.0",
-    "@types/gsap": "^3.0.0",
     "framer-motion": "^12.9.4",
     "gsap": "^3.13.0",
     "lucide-react": "^0.506.0",
@@ -22,7 +21,6 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.56.1",
-    "saas": "^1.0.0",
     "sass": "^1.89.0",
     "three": "^0.176.0"
   },
