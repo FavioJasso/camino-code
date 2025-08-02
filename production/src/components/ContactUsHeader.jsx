@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from "next/image";
 
 const ContactUsHeader = () => {
   return (
@@ -19,18 +19,18 @@ const ContactUsHeader = () => {
       </div>
 
       {/* Header Content */}
-      <h1 className="text-3xl font-bold uppercase leading-tight text-black sm:text-5xl md:text-[4rem] lg:text-[6rem]">
+      <h1 className="text-3xl leading-tight font-bold text-black uppercase sm:text-5xl md:text-[4rem] lg:text-[6rem]">
         <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
           Contact
-        </span>{' '}
+        </span>{" "}
         Us
       </h1>
-      
-      <p className="max-w-xl text-sm  sm:text-base md:text-lg">
-        We'd love to hear from you! Whether you have questions about our services or
-        want to discuss a project, our team is ready to help. Reach out to us
-        through the form below or contact us directly via phone or email. We'll get
-        back to you as soon as possible.
+
+      <p className="max-w-xl text-sm sm:text-base md:text-lg">
+        We'd love to hear from you! Whether you have questions about our
+        services or want to discuss a project, our team is ready to help. Reach
+        out to us through the form below or contact us directly via phone or
+        email. We'll get back to you as soon as possible.
       </p>
     </div>
   );
