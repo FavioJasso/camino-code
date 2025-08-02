@@ -8,18 +8,18 @@ export default function AboutUsFounder() {
   return (
     <section
       id="founder"
-      className="flex h-auto flex-col items-center justify-center gap-8 px-6 py-16 text-center sm:gap-10 sm:px-8 sm:py-20 md:px-10"
+      className="flex min-h-[80vh] flex-col items-center justify-center gap-10 px-8 py-20 text-center sm:gap-12 sm:px-10 sm:py-24 md:gap-14 md:px-12 lg:py-32"
     >
       {/* Animated Heading */}
       <motion.h1
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 1, ease: "easeOut" }}
         viewport={{ once: true }}
-        className="text-4xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
+        className="text-5xl font-black tracking-tight uppercase sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl animate-fade-in-up"
       >
         Our{" "}
-        <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
+        <span className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent drop-shadow-sm">
           Founder
         </span>
       </motion.h1>
@@ -28,9 +28,9 @@ export default function AboutUsFounder() {
       <motion.p
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
+        transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
         viewport={{ once: true }}
-        className="max-w-4xl text-sm text-gray-600 sm:text-base md:text-lg"
+        className="max-w-4xl text-lg font-medium leading-relaxed text-gray-700 sm:text-xl md:text-2xl animate-fade-in-up animation-delay-200"
       >
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam quos
         corrupti sit beatae fugiat in saepe, reiciendis iusto? Illo dolores quia
@@ -42,11 +42,11 @@ export default function AboutUsFounder() {
 
       {/* Founder Image with Animation */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, delay: 0.4 }}
+        transition={{ duration: 1.2, delay: 0.4, ease: "easeOut" }}
         viewport={{ once: true }}
-        className="relative w-full max-w-2xl overflow-hidden rounded-2xl shadow-xl"
+        className="relative w-full max-w-3xl overflow-hidden rounded-3xl shadow-2xl animate-fade-in-up animation-delay-400"
       >
         <Image
           src="/assets/images/partner_1.png"
@@ -56,16 +56,16 @@ export default function AboutUsFounder() {
           className="w-full object-cover"
           quality={90}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent transition-opacity duration-300 hover:opacity-70" />
       </motion.div>
 
       {/* Optional Founder Quote */}
       <motion.blockquote
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.6 }}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
         viewport={{ once: true }}
-        className="mt-6 max-w-2xl text-lg text-gray-700 italic sm:text-xl md:text-2xl"
+        className="mt-8 max-w-3xl text-xl font-medium text-gray-800 italic sm:text-2xl md:text-3xl lg:text-4xl animate-fade-in-up animation-delay-600"
       >
         "Innovation is seeing what everyone has seen and thinking what nobody
         has thought."
