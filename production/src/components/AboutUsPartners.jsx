@@ -51,13 +51,13 @@ export default function Partners() {
   return (
     <section
       id="partners"
-      className="flex flex-col items-center justify-center px-6 pb-16 text-center sm:px-8 md:px-10 gap-10 bg-[rgba(248,244,239,1)] relative overflow-hidden"
+      className="relative flex flex-col items-center justify-center gap-10 overflow-hidden bg-[rgba(248,244,239,1)] px-6 pb-16 text-center sm:px-8 md:px-10"
     >
-      <div className="w-full h-[350px] object-fit flex items-center justify-center overflow-clip">
+      <div className="object-fit flex h-[350px] w-full items-center justify-center overflow-clip">
         <ModelViewer url="/triangle.glb" />
       </div>
-      <div className="w-full flex flex-col-reverse md:flex-col items-center">
-        <h2 className="font-bold uppercase text-black text-5xl md:text-[70px] lg:text-[120px] mx-auto lg:leading-[130px] md:leading-[80px] text-center leading-[60px]">
+      <div className="flex w-full flex-col-reverse items-center md:flex-col">
+        <h2 className="mx-auto text-center text-5xl leading-[60px] font-bold text-black uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px]">
           Our{" "}
           <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
             Partners
@@ -67,13 +67,13 @@ export default function Partners() {
 
       <div
         ref={containerRef}
-        className="logo-slider w-full overflow-hidden py-4 relative max-w-[1440px] mx-auto"
+        className="logo-slider relative mx-auto w-full max-w-[1440px] overflow-hidden py-4"
       >
         <div
           ref={trackRef}
           className="logo-track flex w-max items-center [&>div>img]:shadow-md"
         >
-          <div className="logo-set flex items-center gap-8 sm:gap-12 md:gap-16 lg:gap-20 lg:ml-20 md:ml-16 sm:ml-12 ml-8">
+          <div className="logo-set ml-8 flex items-center gap-8 sm:ml-12 sm:gap-12 md:ml-16 md:gap-16 lg:ml-20 lg:gap-20">
             {partners.map((partner, index) => (
               <div key={`first-${index}`} className="flex-shrink-0">
                 <Image
@@ -81,7 +81,7 @@ export default function Partners() {
                   alt={partner.alt}
                   width={160}
                   height={160}
-                  className="h-32 w-32 object-contain md:h-[200px] md:w-[200px] rounded-full border-[1px] border-black"
+                  className="h-32 w-32 rounded-full border-[1px] border-black object-contain md:h-[200px] md:w-[200px]"
                 />
               </div>
             ))}
