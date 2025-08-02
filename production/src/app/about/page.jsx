@@ -15,19 +15,37 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="mx-auto">
+    <main className="min-h-screen bg-white">
       <NavigationBar />
       <AboutUsHeader />
-      <div className="bg-[rgba(248,244,239,1)]">
-        <AboutUsHero />
-        <hr className="mx-auto w-full max-w-[1440px] border-gray-700" />
-        <AboutUsFounder />
-        <hr className="mx-auto w-full max-w-[1440px] border-gray-700" />
-        <AboutUsOffers />
-        <hr className="mx-auto mb-10 w-full max-w-[1440px] border-gray-700" />
-        <AboutUsPartners />
-        <hr className="mx-auto w-full max-w-[1440px] border-gray-700" />
-        <ContactForm />
+      <div className="bg-gradient-to-b from-[rgba(248,244,239,1)] to-white">
+        <section className="relative">
+          <AboutUsHero />
+        </section>
+        <div className="mx-auto max-w-[1440px] px-8 md:px-12 lg:px-16">
+          <hr className="border-t-2 border-gradient-to-r from-transparent via-gray-300 to-transparent opacity-50" />
+        </div>
+        <section className="relative py-8">
+          <AboutUsFounder />
+        </section>
+        <div className="mx-auto max-w-[1440px] px-8 md:px-12 lg:px-16">
+          <hr className="border-t-2 border-gradient-to-r from-transparent via-gray-300 to-transparent opacity-50" />
+        </div>
+        <section className="relative py-8">
+          <AboutUsOffers />
+        </section>
+        <div className="mx-auto max-w-[1440px] px-8 md:px-12 lg:px-16">
+          <hr className="mb-16 border-t-2 border-gradient-to-r from-transparent via-gray-300 to-transparent opacity-50" />
+        </div>
+        <section className="relative">
+          <AboutUsPartners />
+        </section>
+        <div className="mx-auto max-w-[1440px] px-8 md:px-12 lg:px-16">
+          <hr className="border-t-2 border-gradient-to-r from-transparent via-gray-300 to-transparent opacity-50" />
+        </div>
+        <section className="py-16 md:py-20 lg:py-24">
+          <ContactForm />
+        </section>
       </div>
       <Footer />
     </main>
