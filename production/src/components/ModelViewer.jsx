@@ -13,17 +13,23 @@ function Model({ url }) {
   );
 }
 
-
 const ModelViewer = ({ url, autoRotate = true }) => {
   return (
-    <div className="w-full h-full">
-      <Canvas camera={{ position: [0, 0, 3], fov: 45 }} style={{ width: "100%", height: "100%" }}>
+    <div className="h-full w-full">
+      <Canvas
+        camera={{ position: [0, 0, 3], fov: 45 }}
+        style={{ width: "100%", height: "100%" }}
+      >
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 5, 5]} />
         <Suspense fallback={null}>
           <Model url={url} />
         </Suspense>
-        <OrbitControls enableZoom={false} autoRotate={autoRotate} autoRotateSpeed={5} />
+        <OrbitControls
+          enableZoom={false}
+          autoRotate={autoRotate}
+          autoRotateSpeed={5}
+        />
       </Canvas>
     </div>
   );
