@@ -20,8 +20,7 @@ export default function NavigationBar({ iswhite = false }) {
   return (
     <div
       id="main-head"
-      className="main-head z-10 flex items-center justify-between absolute top-0 left-0 right-0 w-full h-16 md:h-20 
-      transition-all duration-300 ease-in-out border-b-[1px] border-black"
+      className="main-head absolute top-0 right-0 left-0 z-10 flex h-16 w-full items-center justify-between border-b-[1px] border-black transition-all duration-300 ease-in-out md:h-20"
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between p-4">
@@ -36,7 +35,7 @@ export default function NavigationBar({ iswhite = false }) {
             />
           </Link>
 
-          <nav className="hidden md:flex md:items-center md:justify-center md:gap-4 [&>a]:no-underline text-black">
+          <nav className="hidden text-black md:flex md:items-center md:justify-center md:gap-4 [&>a]:no-underline">
             <Link
               href="/"
               className={`${
@@ -71,7 +70,7 @@ export default function NavigationBar({ iswhite = false }) {
             </Link>
             <Link
               href="/contact"
-              className="rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-white hover:opacity-90 flex items-center justify-center gap-1"
+              className="flex items-center justify-center gap-1 rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-white hover:opacity-90"
             >
               Contact
               <span className="ml-2">
@@ -83,7 +82,7 @@ export default function NavigationBar({ iswhite = false }) {
           {/* Mobile Menu Button */}
           <button
             id="menu-toggle"
-            className={`md:hidden text-gray-600 focus:outline-none ${
+            className={`text-gray-600 focus:outline-none md:hidden ${
               iswhite ? "text-white" : "text-black"
             }`}
             onClick={() => setIsMenuOpen(true)}
