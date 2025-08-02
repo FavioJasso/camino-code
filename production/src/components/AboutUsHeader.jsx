@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { motion } from 'framer-motion';
+import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function AboutUsHero() {
   return (
-    <section 
+    <section
       id="about-hero"
-      className="relative flex h-auto flex-col items-center justify-center gap-6 px-6 py-24 text-center sm:gap-8 sm:px-8 sm:py-20 md:h-screen md:gap-[34px] md:px-10"
+      className="relative flex h-auto flex-col items-center justify-center gap-6 px-6 py-24 text-center sm:gap-8 sm:px-8 sm:py-20 md:gap-[34px] md:px-10"
     >
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 -z-10">
@@ -27,11 +27,11 @@ export default function AboutUsHero() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="text-4xl font-bold uppercase text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl 2xl:leading-[6rem] xl:leading-[4rem] lg:leading-[3.5rem] md:leading-[3rem] sm:leading-[2.5rem]"
+        className="text-4xl font-bold text-white uppercase sm:text-5xl sm:leading-[2.5rem] md:text-6xl md:leading-[3rem] lg:text-7xl lg:leading-[3.5rem] xl:text-8xl xl:leading-[4rem] 2xl:text-9xl 2xl:leading-[6rem]"
       >
         <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
           About
-        </span>{' '}
+        </span>{" "}
         Us
       </motion.h1>
 
@@ -42,9 +42,10 @@ export default function AboutUsHero() {
         transition={{ duration: 0.8, delay: 0.2 }}
         className="max-w-2xl text-sm text-white/90 sm:text-base md:text-lg"
       >
-        At Camino Code, we specialize in delivering advanced data science and web
-        development solutions. Our goal is to empower businesses with innovative,
-        scalable, and intelligent platforms that drive growth and efficiency.
+        At Camino Code, we specialize in delivering advanced data science and
+        web development solutions. Our goal is to empower businesses with
+        innovative, scalable, and intelligent platforms that drive growth and
+        efficiency.
       </motion.p>
     </section>
   );
