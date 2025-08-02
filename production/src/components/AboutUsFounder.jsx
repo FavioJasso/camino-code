@@ -3,73 +3,386 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import {
+  Quote,
+  Sparkles,
+  Award,
+  Briefcase,
+  Calendar,
+  ChevronRight,
+  Linkedin,
+  Twitter,
+  Mail,
+  Code2,
+  Cpu,
+  Binary,
+  Zap
+} from "lucide-react";
 
 export default function AboutUsFounder() {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isImageHovered, setIsImageHovered] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const rect = document.getElementById("founder-section")?.getBoundingClientRect();
+      if (rect) {
+        setMousePosition({
+          x: ((e.clientX - rect.left) / rect.width) * 100,
+          y: ((e.clientY - rect.top) / rect.height) * 100,
+        });
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  // Founder achievements/stats
+  const achievements = [
+    { icon: Award, label: "10+ Years Experience", value: "Industry Leader" },
+    { icon: Briefcase, label: "50+ Projects", value: "Successfully Delivered" },
+    { icon: Calendar, label: "Founded 2020", value: "Camino Code" },
+  ];
+
+  // Social links
+  const socialLinks = [
+    { icon: Linkedin, href: "#", label: "LinkedIn" },
+    { icon: Twitter, href: "#", label: "Twitter" },
+    { icon: Mail, href: "#", label: "Email" },
+  ];
+
+  // Floating tech icons
+  const floatingIcons = [
+    { Icon: Code2, position: "top-[15%] left-[10%]", delay: 0, size: "h-6 w-6" },
+    { Icon: Cpu, position: "top-[20%] right-[15%]", delay: 1, size: "h-5 w-5" },
+    { Icon: Binary, position: "bottom-[25%] left-[12%]", delay: 2, size: "h-7 w-7" },
+    { Icon: Zap, position: "bottom-[20%] right-[10%]", delay: 3, size: "h-5 w-5" },
+  ];
+
   return (
     <section
-      id="founder"
-      className="flex min-h-[80vh] flex-col items-center justify-center gap-10 px-8 py-20 text-center sm:gap-12 sm:px-10 sm:py-24 md:gap-14 md:px-12 lg:py-32"
+      id="founder-section"
+      className="relative flex min-h-[90vh] flex-col items-center justify-center gap-10 overflow-hidden bg-gradient-to-b from-black via-gray-950 to-gray-900 px-8 py-20 text-center sm:gap-12 sm:px-10 sm:py-24 md:gap-14 md:px-12 lg:py-32"
     >
-      {/* Animated Heading */}
-      <motion.h1
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        viewport={{ once: true }}
-        className="text-5xl font-black tracking-tight uppercase sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl animate-fade-in-up"
-      >
-        Our{" "}
-        <span className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent drop-shadow-sm">
-          Founder
-        </span>
-      </motion.h1>
-
-      {/* Animated Description */}
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-        viewport={{ once: true }}
-        className="max-w-4xl text-lg font-medium leading-relaxed text-gray-700 sm:text-xl md:text-2xl animate-fade-in-up animation-delay-200"
-      >
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam quos
-        corrupti sit beatae fugiat in saepe, reiciendis iusto? Illo dolores quia
-        veniam animi beatae iure doloribus officia. Libero consectetur, rem
-        molestias natus repellat quos harum fugit deserunt unde fuga culpa
-        repudiandae aut facere impedit adipisci, tempore error dicta sequi?
-        Saepe.
-      </motion.p>
-
-      {/* Founder Image with Animation */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.2, delay: 0.4, ease: "easeOut" }}
-        viewport={{ once: true }}
-        className="relative w-full max-w-3xl overflow-hidden rounded-3xl shadow-2xl animate-fade-in-up animation-delay-400"
-      >
-        <Image
-          src="/assets/images/partner_1.png"
-          alt="Our Founder"
-          width={800}
-          height={600}
-          className="w-full object-cover"
-          quality={90}
+      {/* Futuristic Background Elements */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a1a2e_1px,transparent_1px),linear-gradient(to_bottom,#1a1a2e_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-10" />
+        
+        {/* Gradient Orbs */}
+        <motion.div
+          animate={{
+            x: [0, 50, 0],
+            y: [0, -30, 0],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute -left-20 top-1/4 h-96 w-96 rounded-full bg-gradient-to-r from-purple-600/10 to-pink-600/10 blur-3xl"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent transition-opacity duration-300 hover:opacity-70" />
-      </motion.div>
+        <motion.div
+          animate={{
+            x: [0, -50, 0],
+            y: [0, 30, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute -right-20 bottom-1/4 h-96 w-96 rounded-full bg-gradient-to-r from-cyan-600/10 to-blue-600/10 blur-3xl"
+        />
+      </div>
 
-      {/* Optional Founder Quote */}
-      <motion.blockquote
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.6, ease: "easeOut" }}
+      {/* Dynamic Mouse Gradient */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0 opacity-20 transition-all duration-1000"
+        style={{
+          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(139, 92, 246, 0.15), transparent 40%)`,
+        }}
+      />
+
+      {/* Floating Tech Icons */}
+      {floatingIcons.map((item, index) => (
+        <motion.div
+          key={index}
+          className={`absolute ${item.position} pointer-events-none z-10`}
+          animate={{
+            y: [0, -20, 0],
+            opacity: [0.2, 0.4, 0.2],
+            rotate: [0, 360],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            delay: item.delay,
+            ease: "easeInOut"
+          }}
+        >
+          <item.Icon className={`${item.size} text-purple-400/30`} />
+        </motion.div>
+      ))}
+
+      {/* Main Content Container */}
+      <div className="relative z-20 mx-auto max-w-6xl">
+        {/* Section Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="mb-8 flex justify-center"
+        >
+          <div className="relative">
+            <div className="absolute inset-0 animate-pulse rounded-full bg-purple-500/20 blur-xl" />
+            <div className="relative rounded-full border border-purple-500/30 bg-gray-900/80 px-6 py-3 backdrop-blur-xl">
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-purple-400" />
+                <span className="text-sm font-medium text-purple-300">Leadership & Vision</span>
+                <Sparkles className="h-4 w-4 text-purple-400" />
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Animated Heading */}
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          viewport={{ once: true }}
+          className="relative mb-12 text-5xl font-black tracking-tight uppercase sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl"
+        >
+          {/* Glow Effect */}
+          <motion.div
+            className="absolute inset-0 blur-3xl"
+            animate={{
+              opacity: [0.5, 0.8, 0.5],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+              Our Founder
+            </span>
+          </motion.div>
+          
+          <span className="relative">
+            Our{" "}
+            <span className="inline-block bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+              Founder
+            </span>
+          </span>
+        </motion.h1>
+
+        {/* Founder Card with Image and Info */}
+        <div className="mb-12 grid gap-8 lg:grid-cols-2 lg:gap-12 items-center">
+          {/* Image Section */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="relative group"
+            onMouseEnter={() => setIsImageHovered(true)}
+            onMouseLeave={() => setIsImageHovered(false)}
+          >
+            <div className="relative overflow-hidden rounded-3xl border border-gray-800/50 bg-gradient-to-br from-gray-900/50 to-gray-950/50 p-1">
+              {/* Animated Border Gradient */}
+              <motion.div
+                className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500"
+                animate={{
+                  opacity: isImageHovered ? 0.8 : 0.3,
+                }}
+                transition={{ duration: 0.5 }}
+              />
+              
+              <div className="relative overflow-hidden rounded-3xl bg-gray-950">
+                {/* Glow Effect */}
+                <div className="absolute inset-0 bg-gradient-to-t from-purple-600/20 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                
+                <Image
+                  src="/assets/images/partner_1.png"
+                  alt="Our Founder"
+                  width={600}
+                  height={600}
+                  className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  quality={90}
+                />
+                
+                {/* Overlay Info */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: isImageHovered ? 1 : 0, y: isImageHovered ? 0 : 20 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-6"
+                >
+                  <h3 className="text-2xl font-bold text-white">John Doe</h3>
+                  <p className="text-purple-400">CEO & Founder</p>
+                </motion.div>
+              </div>
+            </div>
+            
+            {/* Floating Elements around Image */}
+            <motion.div
+              className="absolute -top-4 -right-4 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 p-3"
+              animate={{
+                rotate: 360,
+              }}
+              transition={{
+                duration: 20,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+            >
+              <Award className="h-6 w-6 text-white" />
+            </motion.div>
+          </motion.div>
+
+          {/* Info Section */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            viewport={{ once: true }}
+            className="space-y-6"
+          >
+            {/* Bio */}
+            <div className="space-y-4">
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                viewport={{ once: true }}
+                className="text-lg font-medium leading-relaxed text-gray-300 sm:text-xl"
+              >
+                With over a decade of experience in{" "}
+                <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text font-bold text-transparent">
+                  data science
+                </span>{" "}
+                and{" "}
+                <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text font-bold text-transparent">
+                  web development
+                </span>
+                , our founder has been at the forefront of technological innovation. Leading teams across multiple industries, they've delivered transformative solutions that drive business growth and operational excellence.
+              </motion.p>
+            </div>
+
+            {/* Achievements */}
+            <div className="grid gap-4">
+              {achievements.map((achievement, index) => (
+                <motion.div
+                  key={achievement.label}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="group relative overflow-hidden rounded-xl border border-gray-800/50 bg-gray-900/50 p-4 backdrop-blur-sm transition-all duration-300 hover:border-purple-500/30"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 to-pink-600/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="relative flex items-center gap-4">
+                    <div className="rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 p-3">
+                      <achievement.icon className="h-5 w-5 text-purple-400" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-white">{achievement.value}</h4>
+                      <p className="text-sm text-gray-400">{achievement.label}</p>
+                    </div>
+                    <ChevronRight className="ml-auto h-4 w-4 text-gray-600 transition-all duration-300 group-hover:translate-x-1 group-hover:text-purple-400" />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Social Links */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              viewport={{ once: true }}
+              className="flex gap-3"
+            >
+              {socialLinks.map((social) => (
+                <motion.a
+                  key={social.label}
+                  href={social.href}
+                  whileHover={{ y: -3, scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="group relative overflow-hidden rounded-xl border border-gray-800/50 bg-gray-900/50 p-3 backdrop-blur-sm transition-all duration-300 hover:border-purple-500/30"
+                  aria-label={social.label}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <social.icon className="relative z-10 h-5 w-5 text-gray-400 transition-colors duration-300 group-hover:text-white" />
+                </motion.a>
+              ))}
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Quote Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.4 }}
+          viewport={{ once: true }}
+          className="relative mx-auto max-w-4xl"
+        >
+          <div className="relative overflow-hidden rounded-3xl border border-gray-800/50 bg-gradient-to-br from-gray-900/50 to-gray-950/50 p-8 backdrop-blur-xl">
+            {/* Quote Background Pattern */}
+            <div className="absolute inset-0 opacity-5">
+              <Quote className="absolute -left-10 -top-10 h-40 w-40 text-purple-400" />
+              <Quote className="absolute -bottom-10 -right-10 h-40 w-40 rotate-180 text-purple-400" />
+            </div>
+            
+            {/* Animated Gradient Background */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-purple-600/5 via-transparent to-pink-600/5"
+              animate={{
+                x: ["-100%", "100%"],
+              }}
+              transition={{
+                duration: 10,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+            />
+            
+            <blockquote className="relative z-10 text-center">
+              <Quote className="mx-auto mb-4 h-8 w-8 text-purple-400" />
+              <p className="text-xl font-medium italic text-gray-100 sm:text-2xl md:text-3xl lg:text-3xl">
+                "Innovation is seeing what{" "}
+                <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text font-bold text-transparent">
+                  everyone has seen
+                </span>{" "}
+                and thinking what{" "}
+                <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text font-bold text-transparent">
+                  nobody has thought
+                </span>
+                ."
+              </p>
+              <footer className="mt-6">
+                <p className="text-sm text-gray-400">— John Doe, CEO & Founder</p>
+              </footer>
+            </blockquote>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Bottom Gradient Line */}
+      <motion.div
+        initial={{ width: 0 }}
+        whileInView={{ width: "100%" }}
+        transition={{ duration: 1.5, delay: 0.5 }}
         viewport={{ once: true }}
-        className="mt-8 max-w-3xl text-xl font-medium text-gray-800 italic sm:text-2xl md:text-3xl lg:text-4xl animate-fade-in-up animation-delay-600"
-      >
-        "Innovation is seeing what everyone has seen and thinking what nobody
-        has thought."
-      </motion.blockquote>
+        className="absolute bottom-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"
+      />
     </section>
   );
 }
