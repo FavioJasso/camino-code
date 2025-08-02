@@ -46,28 +46,28 @@ export default function WorkShowcase() {
   return (
     <section
       id="work"
-      className="relative w-full flex flex-col items-center justify-center py-16 md:pb-32 px-4 sm:px-6 lg:px-8 overflow-x-hidden bg-[rgba(248,244,239,1)]"
+      className="relative flex w-full flex-col items-center justify-center overflow-x-hidden bg-[rgba(248,244,239,1)] px-4 py-16 sm:px-6 md:pb-32 lg:px-8"
     >
       {/* Full width container */}
-      <div className="w-full max-w-[1800px] mx-auto relative">
+      <div className="relative mx-auto w-full max-w-[1800px]">
         {/* Left Model (clipped 50% on the left) */}
-        <div className="absolute left-0 bottom-0 w-[50vw] h-[350px] -ml-[13vw] z-0 hidden lg:block">
-          <div className="w-full h-full flex items-center justify-end pr-[25vw] overflow-hidden">
+        <div className="absolute bottom-0 left-0 z-0 -ml-[13vw] hidden h-[350px] w-[50vw] lg:block">
+          <div className="flex h-full w-full items-center justify-end overflow-hidden pr-[25vw]">
             <ModelViewer url="/triangle-1.glb" />
           </div>
         </div>
 
         {/* Right Model (clipped 50% on the right) */}
-        <div className="absolute right-0 top-1/4 -translate-y-1/2 w-[50vw] h-[350px] -mr-[13vw] z-0 hidden lg:block">
-          <div className="w-full h-full flex items-center justify-start pl-[25vw] overflow-hidden">
+        <div className="absolute top-1/4 right-0 z-0 -mr-[13vw] hidden h-[350px] w-[50vw] -translate-y-1/2 lg:block">
+          <div className="flex h-full w-full items-center justify-start overflow-hidden pl-[25vw]">
             <ModelViewer url="/triangle-2.glb" />
           </div>
         </div>
 
         {/* Center Content */}
-        <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center justify-center gap-8">
+        <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center justify-center gap-8">
           {/* Heading */}
-          <h2 className="font-bold uppercase text-5xl md:text-[70px] lg:text-[120px] mx-auto lg:leading-[130px] md:leading-[80px] text-center leading-[60px]">
+          <h2 className="mx-auto text-center text-5xl leading-[60px] font-bold uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px]">
             Our{" "}
             <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
               Work
@@ -75,18 +75,18 @@ export default function WorkShowcase() {
           </h2>
 
           {/* Description */}
-          <p className="w-full max-w-2xl text-sm text-gray-600 sm:text-base md:text-lg md:text-left text-center">
+          <p className="w-full max-w-2xl text-center text-sm text-gray-600 sm:text-base md:text-left md:text-lg">
             We take pride in delivering innovative and impactful solutions for
             our clients. Our work reflects our expertise in data science, web
             development, and AI integration, helping businesses achieve
             measurable success.
           </p>
 
-          <div className="relative h-[200px] w-[200px] lg:hidden -mr-[300px]">
+          <div className="relative -mr-[300px] h-[200px] w-[200px] lg:hidden">
             <ModelViewer url="/triangle-1.glb" />
           </div>
           {/* Case Studies Grid */}
-          <div className="relative grid w-full max-w-6xl grid-cols-1 gap-8 sm:grid-cols-2 items-center justify-items-center">
+          <div className="relative grid w-full max-w-6xl grid-cols-1 items-center justify-items-center gap-8 sm:grid-cols-2">
             {caseStudies.map((study, index) => (
               <div
                 key={study.id}
@@ -111,7 +111,7 @@ export default function WorkShowcase() {
                   </div>
 
                   {/* Content */}
-                  <div className=" p-6 text-left transition-all duration-300 group-hover:bg-gray-50">
+                  <div className="p-6 text-left transition-all duration-300 group-hover:bg-gray-50">
                     <h3 className="text-lg font-semibold text-gray-900 transition-colors duration-300 group-hover:text-amber-600 sm:text-xl">
                       {study.title}
                     </h3>
@@ -141,7 +141,7 @@ export default function WorkShowcase() {
             ))}
           </div>
 
-          <div className="relative h-[200px] w-[200px] lg:hidden -ml-[300px]">
+          <div className="relative -ml-[300px] h-[200px] w-[200px] lg:hidden">
             <ModelViewer url="/triangle-2.glb" />
           </div>
         </div>
