@@ -34,43 +34,47 @@ export default function ContactForm() {
   };
 
   return (
-    <section className="mx-auto flex h-auto max-w-[1440px] flex-col items-center justify-center gap-8 px-6 py-16 sm:gap-10 sm:px-8 sm:py-20 md:flex-row md:items-start md:gap-12 md:px-10">
+    <section className="mx-auto flex h-auto max-w-[1440px] flex-col items-center justify-center gap-12 px-8 py-20 sm:gap-14 sm:px-10 sm:py-24 md:flex-row md:items-start md:gap-16 md:px-12 lg:py-32">
       {/* Left Column - Contact Info */}
-      <div className="flex w-full flex-col gap-6 md:w-1/2">
-        <h2 className="text-5xl leading-[60px] font-bold uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px]">
+      <div className="flex w-full flex-col gap-8 md:w-1/2">
+        <h2 className="text-5xl leading-[60px] font-black tracking-tight text-gray-900 uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px] animate-fade-in-up">
           Get in{" "}
-          <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
+          <span className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent drop-shadow-sm">
             Touch
           </span>
         </h2>
 
-        <div className="space-y-4">
+        <div className="space-y-6 animate-fade-in-up animation-delay-200">
+          <p className="text-lg font-medium text-gray-700 md:text-xl lg:text-2xl">
+            Let's create something amazing together
+          </p>
           <a
             href="mailto:some@gmail.com"
-            className="inline-block w-min rounded-lg px-4 py-2 text-sm font-medium text-orange-500 transition-colors hover:bg-black hover:text-white hover:shadow-lg sm:text-base md:text-lg"
+            className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-amber-400 to-red-600 px-6 py-3 text-base font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 sm:text-lg md:text-xl"
           >
             some@gmail.com
+            <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
           </a>
         </div>
       </div>
 
       {/* Right Column - Contact Form */}
-      <div className="flex w-full flex-col gap-6 md:w-1/2">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <div className="flex w-full flex-col gap-6 md:w-1/2 animate-fade-in-up animation-delay-400">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           <div className="flex flex-col gap-6 sm:flex-row">
             <div className="w-full">
               <div
-                className={`flex items-center border-b py-2 ${
+                className={`flex items-center border-b-2 py-3 transition-all duration-300 ${
                   errors.name
                     ? "border-red-500"
-                    : "border-black focus-within:border-red-500 hover:border-red-500"
+                    : "border-gray-300 focus-within:border-amber-500 hover:border-gray-400"
                 }`}
               >
                 <input
                   {...register("name", { required: true })}
                   type="text"
                   placeholder="Full name *"
-                  className="w-full bg-transparent p-4 text-gray-700 outline-none"
+                  className="w-full bg-transparent p-4 text-lg font-medium text-gray-700 placeholder-gray-500 outline-none transition-all duration-300"
                 />
               </div>
               {errors.name && (
@@ -82,10 +86,10 @@ export default function ContactForm() {
 
             <div className="w-full">
               <div
-                className={`flex items-center border-b py-2 ${
+                className={`flex items-center border-b-2 py-3 transition-all duration-300 ${
                   errors.email
                     ? "border-red-500"
-                    : "border-black focus-within:border-red-500 hover:border-red-500"
+                    : "border-gray-300 focus-within:border-amber-500 hover:border-gray-400"
                 }`}
               >
                 <input
@@ -95,7 +99,7 @@ export default function ContactForm() {
                   })}
                   type="email"
                   placeholder="Email *"
-                  className="w-full bg-transparent p-4 text-gray-700 outline-none"
+                  className="w-full bg-transparent p-4 text-lg font-medium text-gray-700 placeholder-gray-500 outline-none transition-all duration-300"
                 />
               </div>
               {errors.email && (
@@ -108,17 +112,17 @@ export default function ContactForm() {
 
           <div className="w-full">
             <div
-              className={`border-b py-2 ${
+              className={`border-b-2 py-3 transition-all duration-300 ${
                 errors.message
                   ? "border-red-500"
-                  : "border-black focus-within:border-red-500 hover:border-red-500"
+                  : "border-gray-300 focus-within:border-amber-500 hover:border-gray-400"
               }`}
             >
               <textarea
                 {...register("message", { required: true })}
                 rows={4}
                 placeholder="Message *"
-                className="w-full bg-transparent p-4 text-gray-700 outline-none"
+                className="w-full bg-transparent p-4 text-lg font-medium text-gray-700 placeholder-gray-500 outline-none transition-all duration-300"
               />
             </div>
             {errors.message && (
@@ -130,10 +134,11 @@ export default function ContactForm() {
 
           <button
             type="submit"
-            className="group flex w-min items-center rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-sm font-medium text-white shadow-lg transition-all hover:shadow-xl sm:text-base md:text-lg"
+            className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-red-600 px-8 py-4 font-semibold text-white shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105"
           >
-            Submit
-            <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            <span className="relative z-10 text-lg">Submit Message</span>
+            <ArrowRight className="relative z-10 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-red-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
           </button>
         </form>
       </div>
