@@ -1,8 +1,8 @@
 // components/AboutUsFounder.tsx
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { motion } from 'framer-motion';
+import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function AboutUsFounder() {
   return (
@@ -18,7 +18,7 @@ export default function AboutUsFounder() {
         viewport={{ once: true }}
         className="text-4xl font-bold uppercase sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
       >
-        Our{' '}
+        Our{" "}
         <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
           Founder
         </span>
@@ -36,7 +36,8 @@ export default function AboutUsFounder() {
         corrupti sit beatae fugiat in saepe, reiciendis iusto? Illo dolores quia
         veniam animi beatae iure doloribus officia. Libero consectetur, rem
         molestias natus repellat quos harum fugit deserunt unde fuga culpa
-        repudiandae aut facere impedit adipisci, tempore error dicta sequi? Saepe.
+        repudiandae aut facere impedit adipisci, tempore error dicta sequi?
+        Saepe.
       </motion.p>
 
       {/* Founder Image with Animation */}
@@ -64,9 +65,10 @@ export default function AboutUsFounder() {
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8, delay: 0.6 }}
         viewport={{ once: true }}
-        className="mt-6 max-w-2xl text-lg italic text-gray-700 sm:text-xl md:text-2xl"
+        className="mt-6 max-w-2xl text-lg text-gray-700 italic sm:text-xl md:text-2xl"
       >
-        "Innovation is seeing what everyone has seen and thinking what nobody has thought."
+        "Innovation is seeing what everyone has seen and thinking what nobody
+        has thought."
       </motion.blockquote>
     </section>
   );
