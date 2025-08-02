@@ -46,7 +46,7 @@ export default function WorkShowcase() {
   return (
     <section
       id="work"
-      className="relative flex w-full flex-col items-center justify-center overflow-x-hidden bg-[rgba(248,244,239,1)] px-4 py-16 sm:px-6 md:pb-32 lg:px-8"
+      className="relative flex w-full flex-col items-center justify-center overflow-x-hidden bg-gradient-to-b from-[rgba(248,244,239,1)] to-white px-8 py-20 sm:px-10 md:py-24 md:pb-32 lg:px-12 lg:py-32"
     >
       {/* Full width container */}
       <div className="relative mx-auto w-full max-w-[1800px]">
@@ -67,15 +67,15 @@ export default function WorkShowcase() {
         {/* Center Content */}
         <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center justify-center gap-8">
           {/* Heading */}
-          <h2 className="mx-auto text-center text-5xl leading-[60px] font-bold uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px]">
+          <h2 className="mx-auto text-center text-5xl leading-[60px] font-black tracking-tight text-gray-900 uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px] animate-fade-in-up">
             Our{" "}
-            <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
+            <span className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent drop-shadow-sm">
               Work
             </span>
           </h2>
 
           {/* Description */}
-          <p className="w-full max-w-2xl text-center text-sm text-gray-600 sm:text-base md:text-left md:text-lg">
+          <p className="w-full max-w-3xl text-center text-base font-medium leading-relaxed text-gray-700 sm:text-lg md:text-xl animate-fade-in-up animation-delay-200">
             We take pride in delivering innovative and impactful solutions for
             our clients. Our work reflects our expertise in data science, web
             development, and AI integration, helping businesses achieve
@@ -86,43 +86,44 @@ export default function WorkShowcase() {
             <ModelViewer url="/triangle-1.glb" />
           </div>
           {/* Case Studies Grid */}
-          <div className="relative grid w-full max-w-6xl grid-cols-1 items-center justify-items-center gap-8 sm:grid-cols-2">
+          <div className="relative grid w-full max-w-6xl grid-cols-1 items-center justify-items-center gap-10 sm:grid-cols-2 animate-fade-in-up animation-delay-400">
             {caseStudies.map((study, index) => (
               <div
                 key={study.id}
-                className={`group relative max-w-[414px] overflow-hidden rounded-3xl transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/20 ${
+                className={`group relative max-w-[500px] overflow-hidden rounded-3xl shadow-xl transition-all duration-500 hover:shadow-2xl hover:shadow-amber-500/30 hover:-translate-y-2 ${
                   index % 2 === 1 ? "sm:translate-y-12" : ""
                 }`}
+                style={{ animationDelay: `${400 + index * 100}ms` }}
               >
                 <Link
                   href={study.href}
                   className="flex flex-col overflow-hidden"
                 >
                   {/* Image with hover effect */}
-                  <div className="relative h-64 overflow-hidden sm:h-80 md:h-96">
+                  <div className="relative h-72 overflow-hidden sm:h-80 md:h-96">
                     <Image
                       src={study.image}
                       alt={study.title}
                       fill
-                      className="object-cover transition-all duration-500 group-hover:scale-110"
+                      className="object-cover transition-all duration-700 group-hover:scale-110"
                       quality={90}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                   </div>
 
                   {/* Content */}
-                  <div className="p-6 text-left transition-all duration-300 group-hover:bg-gray-50">
-                    <h3 className="text-lg font-semibold text-gray-900 transition-colors duration-300 group-hover:text-amber-600 sm:text-xl">
+                  <div className="bg-white p-8 text-left transition-all duration-300 group-hover:bg-gradient-to-b group-hover:from-gray-50 group-hover:to-white">
+                    <h3 className="text-xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-amber-600 sm:text-2xl">
                       {study.title}
                     </h3>
-                    <p className="mt-2 text-sm text-gray-600 sm:text-base">
+                    <p className="mt-3 text-base leading-relaxed text-gray-600 sm:text-lg">
                       {study.description}
                     </p>
-                    <div className="mt-4 flex items-center text-sm font-medium text-amber-600">
+                    <div className="mt-6 flex items-center text-base font-semibold text-amber-600 transition-all duration-300 group-hover:text-red-600">
                       View case study
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                        className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-2"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
