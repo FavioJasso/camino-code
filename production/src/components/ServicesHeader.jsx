@@ -8,10 +8,10 @@ import Image from "next/image";
 
 export default function PageHeader() {
   return (
-    <header className="relative flex h-screen items-center bg-[radial-gradient(111.43%_111.43%_at_50%_50%,#222222_0%,#000000_100%)] text-left overflow-hidden md:flex-row md:justify-between flex-col justify-center">
+    <header className="relative flex flex-col items-center justify-center overflow-hidden bg-[radial-gradient(111.43%_111.43%_at_50%_50%,#222222_0%,#000000_100%)] text-left md:flex-row md:justify-between">
       {/* Content Container */}
-      <div className="flex md:flex-row md:justify-between flex-col justify-center max-w-[1440px] mx-auto">
-        <div className="relative z-10 w-full flex flex-col md:gap-8 gap-4 px-6">
+      <div className="mx-auto flex max-w-[1440px] flex-col justify-center md:flex-row md:justify-between">
+        <div className="relative z-10 flex w-full flex-col gap-4 px-6 md:gap-8">
           {/* Animated Content */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
@@ -19,7 +19,7 @@ export default function PageHeader() {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="w-full"
           >
-            <h1 className="text-4xl font-bold uppercase leading-tight sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white">
+            <h1 className="text-4xl leading-tight font-bold text-white uppercase sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
               <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
                 Code.
               </span>{" "}
@@ -45,7 +45,7 @@ export default function PageHeader() {
           >
             <Link
               href="#"
-              className="inline-flex items-center rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-white hover:opacity-90 gap-2"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-white hover:opacity-90"
             >
               Explore Our Services
               <ArrowRightIcon className="h-4 w-4" />
@@ -53,7 +53,7 @@ export default function PageHeader() {
           </motion.div>
         </div>
 
-        <div className="relative md:w-[498px] md:h-[490px] md:-mr-10 -mr-48 w-[300px] h-[300px] md:mb-0 -mb-20">
+        <div className="relative -mr-48 -mb-20 h-[300px] w-[300px] md:-mr-10 md:mb-0 md:h-[490px] md:w-[498px]">
           <Image
             src={"/assets/Vector-3.png"}
             alt="Decorative Vector"
