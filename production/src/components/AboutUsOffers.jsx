@@ -43,7 +43,7 @@ export default function WhatSetsUsApart() {
   return (
     <section
       // id="what-sets-us-apart"
-      className="relative flex w-full flex-col items-center justify-center overflow-x-hidden bg-[rgba(248,244,239,1)] px-4 py-16 sm:px-6 lg:px-8"
+      className="relative flex w-full flex-col items-center justify-center overflow-x-hidden bg-gradient-to-b from-[rgba(248,244,239,1)] to-white px-8 py-20 sm:px-10 md:py-24 lg:px-12 lg:py-32"
     >
       {/* Full width container */}
       <div className="relative mx-auto h-max w-full max-w-[1800px]">
@@ -64,15 +64,15 @@ export default function WhatSetsUsApart() {
         {/* Center Content */}
         <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center justify-center gap-8">
           {/* Heading */}
-          <h2 className="text-center text-3xl font-bold text-black uppercase sm:text-4xl md:text-[4rem] lg:text-[5rem]">
+          <h2 className="text-center text-4xl font-black tracking-tight text-gray-900 uppercase sm:text-5xl md:text-[4rem] lg:text-[5rem] animate-fade-in-up">
             What Sets Us{" "}
-            <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
+            <span className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent drop-shadow-sm">
               Apart
             </span>
           </h2>
 
           {/* Description */}
-          <p className="max-w-[600px] text-center text-sm text-gray-700 sm:text-base md:text-lg">
+          <p className="max-w-2xl text-center text-base font-medium leading-relaxed text-gray-700 sm:text-lg md:text-xl animate-fade-in-up animation-delay-200">
             At Camino Code, we combine data science and web development to
             create innovative, future-ready solutions. From predictive analytics
             to custom web applications, we help businesses thrive in the digital
@@ -80,13 +80,14 @@ export default function WhatSetsUsApart() {
           </p>
 
           {/* CTA Button */}
-          <div className="mb-8 sm:mb-12">
+          <div className="mb-12 animate-fade-in-up animation-delay-400">
             <Link
               href="#contact"
-              className="group relative rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-sm font-medium text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl sm:px-8 sm:py-4 sm:text-base"
+              className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-red-600 px-8 py-4 font-semibold text-white shadow-xl transition-all duration-300 hover:shadow-2xl hover:scale-105"
             >
-              Get Started
-              <ArrowDown className="ml-2 inline h-4 w-4 transition-transform duration-300 group-hover:translate-y-1" />
+              <span className="relative z-10">Get Started</span>
+              <ArrowDown className="relative z-10 h-5 w-5 transition-transform duration-300 group-hover:translate-y-1" />
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-red-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             </Link>
           </div>
 
@@ -94,26 +95,26 @@ export default function WhatSetsUsApart() {
             <ModelViewer url="/bolb-1.glb" />
           </div>
           {/* Features Grid - Maintaining original card layout */}
-          <ul className="grid w-full max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
-            {features.map((feature) => (
-              <li key={feature.id}>
-                <div className="group relative h-64 w-full overflow-hidden rounded-xl shadow-lg">
+          <ul className="grid w-full max-w-5xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-2 animate-fade-in-up animation-delay-600">
+            {features.map((feature, index) => (
+              <li key={feature.id} style={{ animationDelay: `${600 + index * 100}ms` }}>
+                <div className="group relative h-72 w-full overflow-hidden rounded-2xl shadow-xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
                   <div className="absolute inset-0">
                     <Image
                       src={feature.image}
                       alt={feature.title}
                       fill
-                      className="object-cover transition-all duration-500 group-hover:scale-105 group-hover:blur-[1px]"
+                      className="object-cover transition-all duration-700 group-hover:scale-110 group-hover:blur-sm"
                       quality={90}
                     />
-                    <div className="absolute inset-0 bg-black/40 transition-all duration-300 group-hover:bg-black/60" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/30 transition-all duration-300 group-hover:from-black/80 group-hover:via-black/60" />
                   </div>
-                  <div className="relative z-10 flex h-full flex-col items-center justify-center p-6 text-center text-white">
-                    <div className="mb-4 rounded-full bg-gradient-to-t from-amber-400/20 to-red-600/20 p-4 backdrop-blur-sm">
+                  <div className="relative z-10 flex h-full flex-col items-center justify-center p-8 text-center text-white">
+                    <div className="mb-4 rounded-full bg-gradient-to-br from-amber-400/30 to-red-600/30 p-5 backdrop-blur-md transition-all duration-300 group-hover:from-amber-400/40 group-hover:to-red-600/40 group-hover:scale-110">
                       {feature.icon}
                     </div>
-                    <h3 className="text-xl font-bold">{feature.title}</h3>
-                    <p className="mt-2 text-sm opacity-90">
+                    <h3 className="text-2xl font-bold transition-all duration-300 group-hover:scale-105">{feature.title}</h3>
+                    <p className="mt-3 text-base opacity-90 transition-all duration-300 group-hover:opacity-100">
                       {feature.description}
                     </p>
                   </div>
