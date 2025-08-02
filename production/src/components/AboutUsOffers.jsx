@@ -43,28 +43,28 @@ export default function WhatSetsUsApart() {
   return (
     <section
       // id="what-sets-us-apart"
-      className="relative w-full flex flex-col items-center justify-center py-16 px-4 sm:px-6 lg:px-8 overflow-x-hidden bg-[rgba(248,244,239,1)]"
+      className="relative flex w-full flex-col items-center justify-center overflow-x-hidden bg-[rgba(248,244,239,1)] px-4 py-16 sm:px-6 lg:px-8"
     >
       {/* Full width container */}
-      <div className="w-full max-w-[1800px] mx-auto relative h-max">
+      <div className="relative mx-auto h-max w-full max-w-[1800px]">
         {/* Left Model (clipped 50% on the left) */}
-        <div className="absolute left-0 -bottom-1/3 -translate-y-1/2 w-[50vw] h-[500px] -ml-[15vw] z-0 hidden lg:block">
-          <div className="w-full h-full flex items-center justify-end pr-[25vw] overflow-hidden">
+        <div className="absolute -bottom-1/3 left-0 z-0 -ml-[15vw] hidden h-[500px] w-[50vw] -translate-y-1/2 lg:block">
+          <div className="flex h-full w-full items-center justify-end overflow-hidden pr-[25vw]">
             <ModelViewer url="/bolb-1.glb" />
           </div>
         </div>
 
         {/* Right Model (clipped 50% on the right) */}
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[50vw] h-[500px] -mr-[15vw] z-0 hidden lg:block">
-          <div className="w-full h-full flex items-center justify-start pl-[25vw] overflow-hidden">
+        <div className="absolute top-1/2 right-0 z-0 -mr-[15vw] hidden h-[500px] w-[50vw] -translate-y-1/2 lg:block">
+          <div className="flex h-full w-full items-center justify-start overflow-hidden pl-[25vw]">
             <ModelViewer url="/bolb-2.glb" />
           </div>
         </div>
 
         {/* Center Content */}
-        <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center justify-center gap-8">
+        <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center justify-center gap-8">
           {/* Heading */}
-          <h2 className="text-3xl font-bold uppercase text-black sm:text-4xl md:text-[4rem] lg:text-[5rem] text-center">
+          <h2 className="text-center text-3xl font-bold text-black uppercase sm:text-4xl md:text-[4rem] lg:text-[5rem]">
             What Sets Us{" "}
             <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
               Apart
@@ -72,7 +72,7 @@ export default function WhatSetsUsApart() {
           </h2>
 
           {/* Description */}
-          <p className="max-w-[600px] text-sm sm:text-base md:text-lg text-gray-700 text-center">
+          <p className="max-w-[600px] text-center text-sm text-gray-700 sm:text-base md:text-lg">
             At Camino Code, we combine data science and web development to
             create innovative, future-ready solutions. From predictive analytics
             to custom web applications, we help businesses thrive in the digital
@@ -90,11 +90,11 @@ export default function WhatSetsUsApart() {
             </Link>
           </div>
 
-          <div className="relative h-[200px] w-[200px] lg:hidden -mr-[300px]">
+          <div className="relative -mr-[300px] h-[200px] w-[200px] lg:hidden">
             <ModelViewer url="/bolb-1.glb" />
           </div>
           {/* Features Grid - Maintaining original card layout */}
-          <ul className="grid w-full max-w-5xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+          <ul className="grid w-full max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
             {features.map((feature) => (
               <li key={feature.id}>
                 <div className="group relative h-64 w-full overflow-hidden rounded-xl shadow-lg">
@@ -122,7 +122,7 @@ export default function WhatSetsUsApart() {
             ))}
           </ul>
 
-          <div className="relative h-[200px] w-[200px] lg:hidden -ml-[300px]">
+          <div className="relative -ml-[300px] h-[200px] w-[200px] lg:hidden">
             <ModelViewer url="/bolb-2.glb" />
           </div>
         </div>
