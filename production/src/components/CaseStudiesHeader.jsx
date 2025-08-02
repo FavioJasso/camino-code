@@ -3,7 +3,7 @@ const CaseStudiesHeader = () => {
   return (
     <section
       id="case-studies"
-      className="relative flex h-screen flex-col items-center justify-center gap-8 px-10 py-32 text-center text-black"
+      className="relative flex flex-col items-center justify-center gap-8 px-10 py-32 text-center text-black"
     >
       <Image
         src="/assets/images/casestudies_background.png"
