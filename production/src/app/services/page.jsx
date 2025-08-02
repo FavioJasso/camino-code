@@ -33,9 +33,9 @@ export default function ServicesPage() {
       </div>
       <ServicesDetails />
       <div className="bg-[rgba(248,244,239,1)]">
-        <hr className="mx-auto !pt-20 w-full max-w-[1440px] border-gray-700" />
+        <hr className="mx-auto w-full max-w-[1440px] border-gray-700 !pt-20" />
         <Work />
-        <hr className="mx-auto pt-20 w-full max-w-[1440px] border-gray-700" />
+        <hr className="mx-auto w-full max-w-[1440px] border-gray-700 pt-20" />
         <ContactForm />
       </div>
       <Footer />
