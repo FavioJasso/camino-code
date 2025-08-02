@@ -19,20 +19,30 @@ export const metadata = {
 
 export default function Home() {
   return (
-    <main className="h-max w-full gap-4 overflow-hidden">
+    <main className="min-h-screen w-full overflow-hidden bg-white">
       <NavigationBar />
       <HeroSection />
-      <AboutUsPartners />
-      <div className="bg-[rgba(248,244,239,1)] p-2 md:p-4 lg:p-6 xl:p-8">
+      <section className="relative">
+        <AboutUsPartners />
+      </section>
+      <section className="bg-gradient-to-b from-[rgba(248,244,239,1)] to-[rgba(248,244,239,0.8)] py-16 md:py-20 lg:py-24 xl:py-32">
         <HomeAbout />
-      </div>
-      <AboutUsOffers />
-      <HomeServices />
-      <Work />
-      <Testimonials />
-      <div className="bg-[rgba(248,244,239,1)] p-2 md:p-4 lg:p-6 xl:p-8">
+      </section>
+      <section className="relative">
+        <AboutUsOffers />
+      </section>
+      <section className="bg-gradient-to-br from-gray-50 to-white py-16 md:py-20 lg:py-24">
+        <HomeServices />
+      </section>
+      <section className="relative bg-gradient-to-b from-white to-gray-50 py-16 md:py-20 lg:py-24">
+        <Work />
+      </section>
+      <section className="bg-gradient-to-t from-gray-100 to-white py-16 md:py-20 lg:py-24">
+        <Testimonials />
+      </section>
+      <section className="bg-gradient-to-b from-[rgba(248,244,239,1)] to-[rgba(248,244,239,0.9)] py-16 md:py-20 lg:py-24 xl:py-32">
         <ContactForm />
-      </div>
+      </section>
       <Footer />
     </main>
   );
