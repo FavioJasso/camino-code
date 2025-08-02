@@ -32,7 +32,7 @@ export default function ServicesSection() {
   return (
     <section
       id="services"
-      className="flex h-auto flex-col items-center px-6 py-16 sm:px-8 sm:py-20 md:items-start md:px-10 lg:px-12 max-w-[1440px] mx-auto"
+      className="mx-auto flex h-auto max-w-[1440px] flex-col items-center px-6 py-16 sm:px-8 sm:py-20 md:items-start md:px-10 lg:px-12"
     >
       {/* Section Heading */}
       <motion.h2
@@ -55,7 +55,7 @@ export default function ServicesSection() {
             transition={{ duration: 0.6, delay: index * 0.1 }}
             viewport={{ once: true }}
             whileHover={{ y: -5 }}
-            className="flex flex-col gap-6 rounded-xl bg-[rgba(236,234,232,1)] p-8 "
+            className="flex flex-col gap-6 rounded-xl bg-[rgba(236,234,232,1)] p-8"
           >
             {/* Service Icon */}
             <div className="h-20">{service.icon}</div>
