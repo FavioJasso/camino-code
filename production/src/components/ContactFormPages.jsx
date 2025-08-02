@@ -34,10 +34,10 @@ export default function ContactForm() {
   };
 
   return (
-    <section className="flex h-auto flex-col items-center justify-center gap-8 px-6 py-16 sm:gap-10 sm:px-8 sm:py-20 md:flex-row md:items-start md:gap-12 md:px-10 max-w-[1440px] mx-auto">
+    <section className="mx-auto flex h-auto max-w-[1440px] flex-col items-center justify-center gap-8 px-6 py-16 sm:gap-10 sm:px-8 sm:py-20 md:flex-row md:items-start md:gap-12 md:px-10">
       {/* Left Column - Contact Info */}
       <div className="flex w-full flex-col gap-6 md:w-1/2">
-        <h2 className="font-bold uppercase text-5xl md:text-[70px] lg:text-[120px] lg:leading-[130px] md:leading-[80px] leading-[60px]">
+        <h2 className="text-5xl leading-[60px] font-bold uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px]">
           Get in{" "}
           <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
             Touch
@@ -63,7 +63,7 @@ export default function ContactForm() {
                 className={`flex items-center border-b py-2 ${
                   errors.name
                     ? "border-red-500"
-                    : "border-black hover:border-red-500 focus-within:border-red-500"
+                    : "border-black focus-within:border-red-500 hover:border-red-500"
                 }`}
               >
                 <input
@@ -85,7 +85,7 @@ export default function ContactForm() {
                 className={`flex items-center border-b py-2 ${
                   errors.email
                     ? "border-red-500"
-                    : "border-black hover:border-red-500 focus-within:border-red-500"
+                    : "border-black focus-within:border-red-500 hover:border-red-500"
                 }`}
               >
                 <input
@@ -111,7 +111,7 @@ export default function ContactForm() {
               className={`border-b py-2 ${
                 errors.message
                   ? "border-red-500"
-                  : "border-black hover:border-red-500 focus-within:border-red-500"
+                  : "border-black focus-within:border-red-500 hover:border-red-500"
               }`}
             >
               <textarea
