@@ -44,7 +44,7 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className="mx-auto flex w-full max-w-[1440px] flex-col items-center justify-center px-6 py-16 sm:px-8 sm:py-20 md:px-10"
+      className="flex flex-col items-center px-6 py-16 sm:px-8 sm:py-20 md:px-10 justify-center w-full max-w-[1440px] mx-auto"
     >
       {/* Section Header */}
       <motion.div
@@ -71,14 +71,14 @@ export default function Projects() {
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8, staggerChildren: 0.1 }}
         viewport={{ once: true }}
-        className="relative mx-auto mt-12 grid h-[250vh] w-full max-w-[1440px] grid-cols-1 gap-8 sm:grid-cols-2"
+        className="relative mt-12 grid w-full max-w-[1440px] mx-auto grid-cols-1 sm:grid-cols-2 gap-8 h-[250vh]"
       >
         {caseStudies.map((study, index) => (
           <motion.div
             key={study.id}
             whileHover={{ y: -5 }}
             transition={{ duration: 0.2 }}
-            className={`group w-full max-w-[414px] rounded-lg ${
+            className={`group max-w-[414px] rounded-lg w-full ${
               index % 2 === 1 ? "sm:translate-y-1/2" : ""
             }`}
           >
@@ -92,14 +92,14 @@ export default function Projects() {
                   src={study.image}
                   alt={study.title}
                   fill
-                  className="h-[548px] object-cover transition-all duration-500 group-hover:scale-105"
+                  className="object-cover transition-all duration-500 group-hover:scale-105 h-[548px]"
                   quality={90}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </div>
 
               {/* Content */}
-              <div className="bg-white text-left">
+              <div className="bg-white p-6 text-left">
                 <h3 className="text-lg font-semibold text-gray-900 transition-colors duration-300 group-hover:text-amber-600 sm:text-xl">
                   {study.title}
                 </h3>

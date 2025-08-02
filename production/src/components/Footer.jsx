@@ -31,7 +31,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative flex flex-col items-center gap-10 px-6 py-16 text-center sm:gap-12 sm:px-8 md:px-10">
+    <footer className="relative flex h-auto flex-col items-center justify-between gap-10 overflow-hidden px-6 py-16 text-center sm:gap-12 sm:px-8 sm:py-5 md:px-10">
       {/* Background Image */}
       <div className="absolute inset-0 -z-10">
         <Image
@@ -51,11 +51,11 @@ export default function Footer() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="flex w-full max-w-6xl flex-col items-center gap-10 py-12"
+        className="flex w-full max-w-6xl flex-col items-center gap-10 py-20"
       >
         {/* Logo */}
         <Link href="/" className="group">
-          <div className="relative h-20 w-40 rounded bg-black/80 backdrop-blur-sm">
+          <div className="relative h-20 w-40 rounded-md bg-black/80 p-2 backdrop-blur-sm">
             <Image
               src="/assets/footer-logo.png"
               alt="Camino Code Logo"
@@ -67,7 +67,7 @@ export default function Footer() {
 
         {/* Navigation Links */}
         <nav>
-          <ul className="flex flex-wrap justify-center gap-4 text-sm sm:gap-6 md:text-base">
+          <ul className="flex flex-wrap justify-center gap-4 text-sm sm:gap-6 sm:text-base md:text-lg">
             {footerLinks.map((link, index) => (
               <motion.li
                 key={link.name}
@@ -88,14 +88,14 @@ export default function Footer() {
         </nav>
       </motion.div>
 
-      <div className="mx-auto flex w-full max-w-6xl flex-col items-center">
+      <div className="w-full max-w-[1440px] mx-auto flex flex-col items-center justify-center">
         {/* Divider */}
         <motion.hr
           initial={{ width: 0 }}
           whileInView={{ width: "100%" }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="mb-4 w-full border-t border-gray-700"
+          className="w-full border-t border-gray-700  mb-2"
         />
 
         {/* Bottom Section */}
@@ -104,11 +104,14 @@ export default function Footer() {
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           viewport={{ once: true }}
-          className="flex w-full flex-col items-center gap-4 sm:flex-row sm:justify-between"
+          className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row"
         >
-          <p className="text-xs text-white/60 sm:text-sm">
+          {/* Copyright Text */}
+          <p className="text-xs text-white/60 sm:text-sm md:text-base">
             &copy; {currentYear} Camino Code. All Rights Reserved.
           </p>
+
+          {/* Social Icons */}
           <div className="flex gap-4">
             {socialLinks.map((social) => (
               <motion.a

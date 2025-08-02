@@ -1,5 +1,4 @@
-"use client";
-
+// app/about/page.tsx
 import NavigationBar from "@/components/NavigationBar";
 import ContactForm from "@/components/ContactFormPages";
 import Footer from "@/components/Footer";
@@ -8,21 +7,29 @@ import AboutUsFounder from "@/components/AboutUsFounder";
 import AboutUsHero from "@/components/AboutUsHero";
 import AboutUsOffers from "@/components/AboutUsOffers";
 import AboutUsPartners from "@/components/AboutUsPartners";
-import ClientProviders from "@/components/ClientProviders";
+
+export const metadata = {
+  title: "About Us - Camino Code",
+  description: "Learn more about our company and what we do.",
+};
 
 export default function AboutPage() {
   return (
-    <ClientProviders>
-      <main className="h-max w-full gap-4 overflow-hidden">
-        <NavigationBar />
-        <AboutUsHeader />
+    <main className="mx-auto">
+      <NavigationBar />
+      <AboutUsHeader />
+      <div className="bg-[rgba(248,244,239,1)]">
         <AboutUsHero />
+        <hr className="mx-auto w-full max-w-[1440px] border-gray-700" />
         <AboutUsFounder />
+        <hr className="mx-auto w-full max-w-[1440px] border-gray-700" />
         <AboutUsOffers />
+        <hr className="mx-auto w-full max-w-[1440px] border-gray-700 mb-10" />
         <AboutUsPartners />
+        <hr className="mx-auto w-full max-w-[1440px] border-gray-700" />
         <ContactForm />
-        <Footer />
-      </main>
-    </ClientProviders>
+      </div>
+      <Footer />
+    </main>
   );
 }

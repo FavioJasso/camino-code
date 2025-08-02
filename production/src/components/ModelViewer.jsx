@@ -1,84 +1,32 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, OrbitControls, Environment, Float } from "@react-three/drei";
-import { Suspense, useRef, useEffect } from "react";
-import { Box3, Vector3 } from "three";
+import React, { Suspense } from "react";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, useGLTF, Center } from "@react-three/drei";
 
-function Model({ path, position = [1, 1, 1], autoRotate = true }) {
-  const { scene } = useGLTF(path);
-  const modelRef = useRef();
-
-  useEffect(() => {
-    if (scene) {
-      const box = new Box3().setFromObject(scene);
-      const size = new Vector3();
-      const center = new Vector3();
-      box.getSize(size);
-      box.getCenter(center);
-      console.log("Model size:", size);
-      console.log("Model center:", center);
-      scene.position.sub(center); // recenters model
-    }
-  }, [scene]);
-
-  useFrame((state) => {
-    if (modelRef.current && autoRotate) {
-      modelRef.current.rotation.y += 0.01;
-      modelRef.current.position.y = Math.sin(state.clock.elapsedTime) * 0.1;
-    }
-  });
-
+function Model({ url }) {
+  const { scene } = useGLTF(url);
   return (
-    <Float speed={0.1} rotationIntensity={0.5} floatIntensity={0.5}>
-      <primitive ref={modelRef} object={scene} scale={1} position={position} />
-    </Float>
+    <Center>
+      <primitive object={scene} />
+    </Center>
   );
 }
 
-export function ModelViewer({
-  modelPath,
-  height = "100vh",
-  fogColor = "#000",
-  containerClassName = "",
-}) {
+
+const ModelViewer = ({ url, autoRotate = true }) => {
   return (
-    <div className={containerClassName}>
-      <Canvas
-        camera={{ position: [0, 0, 5], fov: 45 }}
-        gl={{ antialias: true, alpha: true }}
-        style={{ width: "100%", height }}
-      >
+    <div className="w-full h-full">
+      <Canvas camera={{ position: [0, 0, 3], fov: 45 }} style={{ width: "100%", height: "100%" }}>
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[5, 5, 5]} />
         <Suspense fallback={null}>
-          <fog attach="fog" args={[fogColor, 5, 15]} />
-          <ambientLight intensity={0.4} />
-          <directionalLight
-            position={[5, 5, 5]}
-            intensity={1}
-            color="#f59e0b"
-          />
-          <directionalLight
-            position={[-5, -5, -5]}
-            intensity={0.5}
-            color="#ef4444"
-          />
-          <pointLight position={[0, 10, 0]} intensity={0.5} color="#ffffff" />
-          <Model path={modelPath} autoRotate={true} />
-          <OrbitControls
-            enableZoom={false}
-            enablePan={false}
-            autoRotate={true}
-            autoRotateSpeed={2}
-            maxPolarAngle={Math.PI / 2}
-            minPolarAngle={Math.PI / 3}
-          />
-          <Environment preset="sunset" background={false} blur={0.8} />
+          <Model url={url} />
         </Suspense>
+        <OrbitControls enableZoom={false} autoRotate={autoRotate} autoRotateSpeed={5} />
       </Canvas>
     </div>
   );
-}
+};
 
-export default function ModelsShowcase() {
-  return <ModelViewer />;
-}
+export default ModelViewer;
