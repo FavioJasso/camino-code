@@ -18,14 +18,18 @@ const CaseStudiesPage = () => {
         <meta name="description" content={description} />
       </Head>
 
-      <main className="">
+      <main className="min-h-screen bg-white">
         <NavigationBar />
         <CaseStudiesHeader />
-        <Work />
-        <Testimonials />
-        <div className="bg-[rgba(248,244,239,1)]">
+        <section className="relative bg-gradient-to-b from-white to-gray-50 py-16 md:py-20 lg:py-24">
+          <Work />
+        </section>
+        <section className="relative">
+          <Testimonials />
+        </section>
+        <section className="bg-gradient-to-b from-[rgba(248,244,239,1)] to-white py-16 md:py-20 lg:py-24">
           <ContactForm />
-        </div>
+        </section>
         <Footer />
       </main>
     </>
