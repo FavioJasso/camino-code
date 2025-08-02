@@ -1,0 +1,3 @@
+# Ignore all files in app and components directories
+production/src/app/**
+production/src/components/**
