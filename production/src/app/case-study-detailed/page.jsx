@@ -16,11 +16,15 @@ const CaseStudyDetailedPage = () => {
         <meta name="description" content={description} />
       </Head>
 
-      <main className="">
+      <main className="min-h-screen bg-white">
         <NavigationBar />
-        <div className="bg-[rgba(248,244,239,1)]">
-          <CaseStudyDetails />
-          <ContactForm />
+        <div className="bg-gradient-to-b from-[rgba(248,244,239,1)] via-[rgba(252,250,247,1)] to-white">
+          <section className="relative">
+            <CaseStudyDetails />
+          </section>
+          <section className="relative bg-gradient-to-b from-transparent to-white py-16 md:py-20 lg:py-24">
+            <ContactForm />
+          </section>
         </div>
 
         <Footer />
