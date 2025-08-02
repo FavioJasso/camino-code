@@ -42,7 +42,7 @@ export default function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="relative flex h-auto min-h-screen flex-col items-center justify-center gap-8 overflow-hidden px-6 py-16 text-center text-white sm:gap-10 sm:px-8 sm:py-20 md:gap-12 md:px-10"
+      className="relative flex h-min flex-col items-center justify-center gap-8 overflow-hidden px-6 py-16 text-center text-white sm:gap-10 sm:px-8 sm:py-20 md:gap-12 md:px-10"
     >
       {/* Background Image */}
       <div className="absolute inset-0 -z-10">
@@ -58,7 +58,7 @@ export default function Testimonials() {
       </div>
 
       {/* Heading */}
-      <h2 className="font-bold uppercase text-5xl md:text-[70px] lg:text-[120px] mx-auto lg:leading-[130px] md:leading-[80px] text-center leading-[60px]">
+      <h2 className="mx-auto text-center text-5xl leading-[60px] font-bold uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px]">
         What Our{" "}
         <span className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent">
           Clients Say
@@ -93,7 +93,7 @@ export default function Testimonials() {
                 <p className="text-xl font-semibold sm:text-2xl">
                   {testimonial.name}
                 </p>
-                <p className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-lg italic text-transparent sm:text-xl">
+                <p className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-lg text-transparent italic sm:text-xl">
                   {testimonial.role}
                 </p>
               </div>
