@@ -119,30 +119,30 @@ export default function ContactForm() {
   return (
     <section
       id="contact-form"
-      className="relative mx-auto flex min-h-screen flex-col items-center justify-center gap-12 bg-black px-8 py-20 sm:gap-14 sm:px-10 sm:py-24 md:flex-row md:items-start md:gap-16 md:px-12 lg:py-32"
+      className="relative mx-auto flex flex-col items-center justify-center gap-12 bg-white px-8 py-20 sm:gap-14 sm:px-10 sm:py-24 md:flex-row md:items-start md:gap-16 md:px-12 lg:py-32"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
       {/* Futuristic Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-950">
+      <div className="absolute inset-0 bg-gradient-to-t from-amber-400 to-red-600 opacity-5">
         <div className="bg-grid-pattern absolute inset-0 opacity-10"></div>
       </div>
 
       {/* Dynamic Gradient Overlay */}
       <div
-        className="absolute inset-0 opacity-20 transition-all duration-1000"
+        className="absolute inset-0 opacity-10 transition-all duration-1000"
         style={{
-          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(168, 85, 247, 0.15), transparent 50%)`,
+          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(251, 146, 60, 0.15), transparent 50%)`,
         }}
       />
 
       {/* Animated Gradient Orbs */}
-      <div className="animate-float absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 opacity-20 blur-3xl"></div>
-      <div className="animate-float-delayed absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 opacity-20 blur-3xl"></div>
+      <div className="animate-float absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-gradient-to-r from-amber-400 to-red-600 opacity-15 blur-3xl"></div>
+      <div className="animate-float-delayed absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-gradient-to-r from-orange-400 to-red-500 opacity-15 blur-3xl"></div>
 
       {/* Floating Icons */}
-      <Globe className="animate-bounce-slow absolute top-20 right-20 h-8 w-8 text-purple-400/20" />
-      <Zap className="animate-bounce-slow animation-delay-200 absolute bottom-20 left-20 h-6 w-6 text-cyan-400/20" />
+      <Globe className="animate-bounce-slow absolute top-20 right-20 h-8 w-8 text-amber-500/30" />
+      <Zap className="animate-bounce-slow animation-delay-200 absolute bottom-20 left-20 h-6 w-6 text-orange-500/30" />
 
       {/* Particle Effects */}
       <div className="absolute inset-0">
@@ -151,32 +151,32 @@ export default function ContactForm() {
         <div className="particle particle-3"></div>
         <div className="particle particle-4"></div>
       </div>
-      <div className="container flex w-full gap-4 md:w-1/2">
+      <div className="container flex w-full gap-4">
         {/* Left Column - Contact Info */}
         <div className="relative z-10 flex w-full flex-col gap-8 md:w-1/2">
           {/* Badge */}
           <div className="animate-fade-in-down mb-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/20 bg-purple-950/50 px-4 py-2 backdrop-blur-sm">
-              <Sparkles className="h-4 w-4 text-purple-400" />
-              <span className="text-sm font-medium text-purple-200">
+            <div className="inline-flex items-center gap-2 rounded-full border border-orange-400/30 bg-gradient-to-r from-amber-50 to-orange-50 px-4 py-2 backdrop-blur-sm">
+              <Sparkles className="h-4 w-4 text-orange-600" />
+              <span className="text-sm font-medium text-orange-800">
                 Let's Connect
               </span>
             </div>
           </div>
 
           <h2 className="animate-fade-in-up text-5xl leading-[60px] font-black tracking-tight uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px]">
-            <span className="bg-gradient-to-r from-gray-100 to-gray-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent">
               Get in
             </span>{" "}
-            <span className="drop-shadow-glow animate-gradient-x inline-block bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            <span className="drop-shadow-glow animate-gradient-x inline-block bg-gradient-to-t from-amber-400 to-red-600 bg-clip-text text-transparent">
               Touch
             </span>
           </h2>
 
           <div className="animate-fade-in-up animation-delay-200 space-y-6">
-            <p className="text-lg font-medium text-gray-300 md:text-xl lg:text-2xl">
+            <p className="text-lg font-medium text-gray-700 md:text-xl lg:text-2xl">
               Let's create something{" "}
-              <span className="text-purple-400">amazing</span> together
+              <span className="text-orange-600">amazing</span> together
             </p>
 
             {/* Contact Info Cards */}
@@ -185,7 +185,7 @@ export default function ContactForm() {
                 <a
                   key={index}
                   href={info.link}
-                  className={`group animate-fade-in-up relative overflow-hidden rounded-2xl border border-gray-800 bg-gradient-to-br from-gray-900/50 to-gray-950/50 p-6 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-gray-700`}
+                  className={`group animate-fade-in-up relative overflow-hidden rounded-2xl border border-gray-200 bg-gradient-to-br from-white/80 to-gray-50/80 p-6 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-orange-300 hover:shadow-lg`}
                   style={{ animationDelay: `${400 + index * 100}ms` }}
                 >
                   <div
@@ -196,21 +196,21 @@ export default function ContactForm() {
                     <div
                       className={`rounded-xl bg-gradient-to-br ${info.color} p-1`}
                     >
-                      <div className="rounded-xl bg-black/50 p-3 backdrop-blur-md">
-                        <info.icon className="h-6 w-6 text-white" />
+                      <div className="rounded-xl bg-white/80 p-3 backdrop-blur-md shadow-sm">
+                        <info.icon className="h-6 w-6 text-gray-700" />
                       </div>
                     </div>
 
                     <div>
-                      <p className="text-sm text-gray-500">{info.label}</p>
+                      <p className="text-sm text-gray-600">{info.label}</p>
                       <p
-                        className={`text-lg font-semibold text-gray-200 transition-all duration-300 group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:text-transparent ${info.color}`}
+                        className={`text-lg font-semibold text-gray-800 transition-all duration-300 group-hover:bg-gradient-to-r group-hover:bg-clip-text group-hover:text-transparent ${info.color}`}
                       >
                         {info.value}
                       </p>
                     </div>
 
-                    <ArrowRight className="ml-auto h-5 w-5 text-gray-600 transition-all duration-300 group-hover:translate-x-1 group-hover:text-white" />
+                    <ArrowRight className="ml-auto h-5 w-5 text-gray-400 transition-all duration-300 group-hover:translate-x-1 group-hover:text-orange-600" />
                   </div>
                 </a>
               ))}
@@ -220,9 +220,9 @@ export default function ContactForm() {
 
         {/* Right Column - Contact Form */}
         <div className="animate-fade-in-up animation-delay-400 relative z-10 flex w-full flex-col justify-center gap-6 md:w-1/2">
-          <div className="relative rounded-3xl border border-gray-800 bg-gradient-to-br from-gray-900/50 to-gray-950/50 p-8 backdrop-blur-md">
+          <div className="relative rounded-3xl border border-gray-200 bg-gradient-to-br from-white/90 to-gray-50/90 p-8 backdrop-blur-md shadow-xl">
             {/* Form Glow Effect */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-500/10 to-cyan-500/10 opacity-0 transition-opacity duration-500 hover:opacity-100"></div>
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-400/10 to-red-600/10 opacity-0 transition-opacity duration-500 hover:opacity-100"></div>
 
             {/* Success Message */}
             {submitSuccess && (
@@ -244,27 +244,27 @@ export default function ContactForm() {
                 {/* Name Field */}
                 <div className="w-full">
                   <div
-                    className={`group relative overflow-hidden rounded-2xl border bg-black/30 p-1 transition-all duration-300 ${
+                    className={`group relative overflow-hidden rounded-2xl border bg-white/60 p-1 transition-all duration-300 ${
                       errors.name
                         ? "border-red-500"
                         : focusedField === "name"
-                          ? "border-purple-500"
-                          : "border-gray-700 hover:border-gray-600"
+                          ? "border-orange-500"
+                          : "border-gray-300 hover:border-orange-300"
                     }`}
                   >
                     <div
-                      className={`absolute inset-0 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 opacity-0 transition-opacity duration-300 ${focusedField === "name" ? "opacity-100" : ""}`}
+                      className={`absolute inset-0 bg-gradient-to-r from-amber-400/20 to-red-600/20 opacity-0 transition-opacity duration-300 ${focusedField === "name" ? "opacity-100" : ""}`}
                     ></div>
 
                     <div className="relative flex items-center gap-3 px-4 py-3">
                       <User
-                        className={`h-5 w-5 transition-colors duration-300 ${focusedField === "name" ? "text-purple-400" : "text-gray-500"}`}
+                        className={`h-5 w-5 transition-colors duration-300 ${focusedField === "name" ? "text-orange-600" : "text-gray-600"}`}
                       />
                       <input
                         {...register("name", { required: true })}
                         type="text"
                         placeholder="Full name *"
-                        className="w-full bg-transparent text-lg font-medium text-gray-200 placeholder-gray-500 transition-all duration-300 outline-none"
+                        className="w-full bg-transparent text-lg font-medium text-gray-800 placeholder-gray-500 transition-all duration-300 outline-none"
                         onFocus={() => setFocusedField("name")}
                         onBlur={() => setFocusedField(null)}
                       />
@@ -280,21 +280,21 @@ export default function ContactForm() {
                 {/* Email Field */}
                 <div className="w-full">
                   <div
-                    className={`group relative overflow-hidden rounded-2xl border bg-black/30 p-1 transition-all duration-300 ${
+                    className={`group relative overflow-hidden rounded-2xl border bg-white/60 p-1 transition-all duration-300 ${
                       errors.email
                         ? "border-red-500"
                         : focusedField === "email"
-                          ? "border-purple-500"
-                          : "border-gray-700 hover:border-gray-600"
+                          ? "border-orange-500"
+                          : "border-gray-300 hover:border-orange-300"
                     }`}
                   >
                     <div
-                      className={`absolute inset-0 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 opacity-0 transition-opacity duration-300 ${focusedField === "email" ? "opacity-100" : ""}`}
+                      className={`absolute inset-0 bg-gradient-to-r from-amber-400/20 to-red-600/20 opacity-0 transition-opacity duration-300 ${focusedField === "email" ? "opacity-100" : ""}`}
                     ></div>
 
                     <div className="relative flex items-center gap-3 px-4 py-3">
                       <Mail
-                        className={`h-5 w-5 transition-colors duration-300 ${focusedField === "email" ? "text-purple-400" : "text-gray-500"}`}
+                        className={`h-5 w-5 transition-colors duration-300 ${focusedField === "email" ? "text-orange-600" : "text-gray-600"}`}
                       />
                       <input
                         {...register("email", {
@@ -303,7 +303,7 @@ export default function ContactForm() {
                         })}
                         type="email"
                         placeholder="Email *"
-                        className="w-full bg-transparent text-lg font-medium text-gray-200 placeholder-gray-500 transition-all duration-300 outline-none"
+                        className="w-full bg-transparent text-lg font-medium text-gray-800 placeholder-gray-500 transition-all duration-300 outline-none"
                         onFocus={() => setFocusedField("email")}
                         onBlur={() => setFocusedField(null)}
                       />
@@ -320,21 +320,21 @@ export default function ContactForm() {
               {/* Message Field */}
               <div className="w-full">
                 <div
-                  className={`group relative overflow-hidden rounded-2xl border bg-black/30 p-1 transition-all duration-300 ${
+                  className={`group relative overflow-hidden rounded-2xl border bg-white/60 p-1 transition-all duration-300 ${
                     errors.message
                       ? "border-red-500"
                       : focusedField === "message"
-                        ? "border-purple-500"
-                        : "border-gray-700 hover:border-gray-600"
+                        ? "border-orange-500"
+                        : "border-gray-300 hover:border-orange-300"
                   }`}
                 >
                   <div
-                    className={`absolute inset-0 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 opacity-0 transition-opacity duration-300 ${focusedField === "message" ? "opacity-100" : ""}`}
+                    className={`absolute inset-0 bg-gradient-to-r from-amber-400/20 to-red-600/20 opacity-0 transition-opacity duration-300 ${focusedField === "message" ? "opacity-100" : ""}`}
                   ></div>
 
                   <div className="relative flex items-start gap-3 px-4 py-3">
                     <MessageSquare
-                      className={`mt-1 h-5 w-5 transition-colors duration-300 ${focusedField === "message" ? "text-purple-400" : "text-gray-500"}`}
+                      className={`mt-1 h-5 w-5 transition-colors duration-300 ${focusedField === "message" ? "text-orange-600" : "text-gray-600"}`}
                     />
                     <textarea
                       {...register("message", { required: true })}
@@ -360,10 +360,10 @@ export default function ContactForm() {
                 className="group hover:shadow-neon relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-8 py-4 font-semibold text-white shadow-2xl transition-all duration-500 hover:scale-105 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {/* Animated background */}
-                <div className="animate-gradient-x absolute inset-0 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500"></div>
+                <div className="animate-gradient-x absolute inset-0 bg-gradient-to-t from-amber-400 to-red-600"></div>
 
                 {/* Hover effect overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 via-purple-600 to-pink-600 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-amber-500 to-red-700 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
 
                 {/* Content */}
                 <span className="relative z-10 text-lg">
