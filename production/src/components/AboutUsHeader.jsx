@@ -49,14 +49,14 @@ export default function AboutUsHeader() {
   return (
     <section
       id="about-hero"
-      className="relative flex min-h-[80vh] flex-col items-center justify-center gap-8 overflow-hidden bg-gradient-to-b from-gray-900 via-gray-950 to-black px-8 py-32 text-center sm:gap-10 sm:px-10 md:min-h-[90vh] md:gap-12 md:px-12 lg:py-40"
+      className="relative flex min-h-[80vh] flex-col items-center justify-center gap-8 overflow-hidden bg-black px-8 py-32 text-center sm:gap-10 sm:px-10 md:min-h-[90vh] md:gap-12 md:px-12 lg:py-40"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
       {/* Dynamic Background Layers */}
       <div className="absolute inset-0 -z-10">
         {/* Grid Pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a1a2e_1px,transparent_1px),linear-gradient(to_bottom,#1a1a2e_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#331800_1px,transparent_1px),linear-gradient(to_bottom,#331800_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20" />
         
         {/* Animated Gradient Orbs */}
         <motion.div
@@ -69,7 +69,7 @@ export default function AboutUsHeader() {
             repeat: Infinity,
             ease: "linear"
           }}
-          className="absolute -left-40 top-20 h-[600px] w-[600px] rounded-full bg-gradient-to-r from-purple-600/20 to-pink-600/20 blur-3xl"
+          className="absolute -left-40 top-20 h-[600px] w-[600px] rounded-full bg-gradient-to-t from-amber-400/20 to-red-600/20 blur-3xl"
         />
         <motion.div
           animate={{
@@ -81,7 +81,7 @@ export default function AboutUsHeader() {
             repeat: Infinity,
             ease: "linear"
           }}
-          className="absolute -right-40 bottom-20 h-[600px] w-[600px] rounded-full bg-gradient-to-r from-cyan-600/20 to-blue-600/20 blur-3xl"
+          className="absolute -right-40 bottom-20 h-[600px] w-[600px] rounded-full bg-gradient-to-t from-orange-500/20 to-red-500/20 blur-3xl"
         />
         
         {/* Center Gradient */}
@@ -95,7 +95,7 @@ export default function AboutUsHeader() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute left-1/2 top-1/2 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-indigo-600/10 via-purple-600/10 to-pink-600/10 blur-3xl"
+          className="absolute left-1/2 top-1/2 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-amber-400/10 via-orange-500/10 to-red-600/10 blur-3xl"
         />
 
         {/* Background Image with Enhanced Overlay */}
@@ -109,7 +109,7 @@ export default function AboutUsHeader() {
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/80" />
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-transparent to-cyan-900/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-900/20 via-transparent to-red-900/20" />
         </div>
 
         {/* Animated Particles */}
@@ -140,7 +140,7 @@ export default function AboutUsHeader() {
       <div
         className="pointer-events-none absolute inset-0 z-0 opacity-30 transition-all duration-1000"
         style={{
-          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(139, 92, 246, 0.3), transparent 40%)`,
+          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(251, 146, 60, 0.3), transparent 40%)`,
         }}
       />
 
@@ -162,7 +162,7 @@ export default function AboutUsHeader() {
             ease: "easeInOut"
           }}
         >
-          <item.Icon className={`${item.size} text-purple-400/50`} />
+          <item.Icon className={`${item.size} text-orange-500/50`} />
         </motion.div>
       ))}
 
@@ -175,11 +175,11 @@ export default function AboutUsHeader() {
           transition={{ duration: 0.8 }}
           className="relative"
         >
-          <div className="absolute inset-0 animate-pulse rounded-full bg-purple-500/20 blur-xl" />
-          <div className="relative flex items-center gap-2 rounded-full border border-purple-500/30 bg-gray-900/80 px-6 py-3 backdrop-blur-xl">
-            <Sparkles className="h-4 w-4 text-purple-400" />
-            <span className="text-sm font-medium text-purple-300">Innovating Since 2020</span>
-            <Sparkles className="h-4 w-4 text-purple-400" />
+          <div className="absolute inset-0 animate-pulse rounded-full bg-orange-500/20 blur-xl" />
+          <div className="relative flex items-center gap-2 rounded-full border border-orange-500/30 bg-gray-900/80 px-6 py-3 backdrop-blur-xl">
+            <Sparkles className="h-4 w-4 text-orange-400" />
+            <span className="text-sm font-medium text-orange-300">Innovating Since 2020</span>
+            <Sparkles className="h-4 w-4 text-orange-400" />
           </div>
         </motion.div>
 
@@ -201,16 +201,16 @@ export default function AboutUsHeader() {
               ease: "easeInOut"
             }}
           >
-            <div className="text-5xl font-black tracking-tight text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text uppercase sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[10rem]">
+            <div className="text-5xl font-black tracking-tight text-transparent bg-gradient-to-t from-amber-400 to-red-600 bg-clip-text uppercase sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[10rem]">
               About Us
             </div>
           </motion.div>
           
           <div className="relative text-5xl font-black tracking-tight uppercase sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[10rem]">
-            <span className="inline-block bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+            <span className="inline-block bg-gradient-to-t from-amber-400 to-red-600 bg-clip-text text-transparent">
               About
             </span>{" "}
-            <span className="inline-block bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <span className="inline-block bg-gradient-to-t from-orange-400 to-red-500 bg-clip-text text-transparent">
               Us
             </span>
           </div>
@@ -221,7 +221,7 @@ export default function AboutUsHeader() {
           initial={{ width: 0 }}
           animate={{ width: "100%" }}
           transition={{ duration: 1.5, delay: 0.5 }}
-          className="h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent"
+          className="h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent"
         />
 
         {/* Animated Description */}
@@ -233,15 +233,15 @@ export default function AboutUsHeader() {
         >
           <span className="bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 bg-clip-text text-transparent">
             At{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text font-bold text-transparent">
+            <span className="bg-gradient-to-t from-amber-400 to-red-600 bg-clip-text font-bold text-transparent">
               Camino Code
             </span>
             , we specialize in delivering advanced{" "}
-            <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text font-bold text-transparent">
+            <span className="bg-gradient-to-t from-orange-400 to-red-500 bg-clip-text font-bold text-transparent">
               data science
             </span>{" "}
             and{" "}
-            <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text font-bold text-transparent">
+            <span className="bg-gradient-to-t from-amber-400 to-orange-600 bg-clip-text font-bold text-transparent">
               web development
             </span>{" "}
             solutions. Our goal is to empower businesses with innovative, scalable, and intelligent platforms that drive growth and efficiency.
@@ -258,9 +258,9 @@ export default function AboutUsHeader() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-purple-500/25"
+            className="group relative overflow-hidden rounded-xl bg-gradient-to-t from-amber-400 to-red-600 px-8 py-4 font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-orange-500/25"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-700 to-pink-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <div className="absolute inset-0 bg-gradient-to-t from-amber-500 to-red-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             <span className="relative z-10 flex items-center gap-2">
               Our Journey
               <Zap className="h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
@@ -270,9 +270,9 @@ export default function AboutUsHeader() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="group relative overflow-hidden rounded-xl border border-purple-500/30 bg-gray-900/50 px-8 py-4 font-semibold text-white backdrop-blur-xl transition-all duration-300 hover:border-purple-500/50"
+            className="group relative overflow-hidden rounded-xl border border-orange-500/30 bg-gray-900/50 px-8 py-4 font-semibold text-white backdrop-blur-xl transition-all duration-300 hover:border-orange-500/50"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <div className="absolute inset-0 bg-gradient-to-t from-amber-400/10 to-red-600/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             <span className="relative z-10 flex items-center gap-2">
               Meet the Team
               <Network className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
@@ -293,12 +293,12 @@ export default function AboutUsHeader() {
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
           className="relative"
         >
-          <div className="absolute inset-0 animate-pulse rounded-full bg-purple-500/30 blur-md" />
-          <div className="relative h-12 w-7 rounded-full border-2 border-purple-400/50 p-1 backdrop-blur-sm">
+          <div className="absolute inset-0 animate-pulse rounded-full bg-orange-500/30 blur-md" />
+          <div className="relative h-12 w-7 rounded-full border-2 border-orange-400/50 p-1 backdrop-blur-sm">
             <motion.div
               animate={{ y: [0, 16, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className="h-2.5 w-2.5 mx-auto rounded-full bg-gradient-to-b from-purple-400 to-pink-400"
+              className="h-2.5 w-2.5 mx-auto rounded-full bg-gradient-to-t from-amber-400 to-red-600"
             />
           </div>
         </motion.div>
