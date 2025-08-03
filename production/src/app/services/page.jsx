@@ -16,7 +16,7 @@ export const metadata = {
 export default function ServicesPage() {
   return (
     <main className="min-h-screen bg-white">
-      <NavigationBar iswhite={true} />
+      <NavigationBar />
       <ServicesHeader />
       <ServicesList />
       <section className="relative h-screen w-full overflow-hidden">
