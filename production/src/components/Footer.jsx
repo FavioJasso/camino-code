@@ -92,16 +92,16 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative overflow-hidden bg-gradient-to-b from-gray-900 via-gray-950 to-black text-white">
+    <footer className="relative overflow-hidden bg-black text-white">
       {/* Background Design Elements */}
       <div className="pointer-events-none absolute inset-0 z-0">
         {/* Grid Pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a1a1a_1px,transparent_1px),linear-gradient(to_bottom,#1a1a1a_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-20" />
         
         {/* Gradient Orbs */}
-        <div className="absolute -left-40 top-20 h-96 w-96 rounded-full bg-gradient-to-r from-purple-600/10 to-pink-600/10 blur-3xl" />
-        <div className="absolute -right-40 bottom-20 h-96 w-96 rounded-full bg-gradient-to-r from-cyan-600/10 to-blue-600/10 blur-3xl" />
-        <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-indigo-600/5 to-purple-600/5 blur-3xl" />
+        <div className="absolute -left-40 top-20 h-96 w-96 rounded-full bg-gradient-to-t from-amber-400/10 to-red-600/10 blur-3xl" />
+        <div className="absolute -right-40 bottom-20 h-96 w-96 rounded-full bg-gradient-to-t from-orange-500/10 to-red-500/10 blur-3xl" />
+        <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-amber-400/5 to-red-600/5 blur-3xl" />
       </div>
 
       {/* Tech Pattern Overlay */}
@@ -117,8 +117,8 @@ export default function Footer() {
           {/* Logo and Description */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block">
-              <div className="group relative overflow-hidden rounded-2xl border border-gray-800/50 bg-gradient-to-br from-gray-900/90 to-gray-950/90 p-6 backdrop-blur-xl transition-all duration-300 hover:border-purple-500/30 hover:shadow-lg hover:shadow-purple-500/10">
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 to-pink-500/0 transition-all duration-300 group-hover:from-purple-500/10 group-hover:to-pink-500/10" />
+              <div className="group relative overflow-hidden rounded-2xl border border-gray-800/50 bg-gradient-to-br from-gray-900/90 to-black/90 p-6 backdrop-blur-xl transition-all duration-300 hover:border-orange-500/30 hover:shadow-lg hover:shadow-orange-500/10">
+                <div className="absolute inset-0 bg-gradient-to-t from-amber-400/0 to-red-600/0 transition-all duration-300 group-hover:from-amber-400/10 group-hover:to-red-600/10" />
                 <Image
                   src="/assets/logo.svg"
                   alt="Camino Code Logo"
@@ -131,11 +131,11 @@ export default function Footer() {
 
             <p className="mt-6 text-gray-300 leading-relaxed">
               Innovating the future through cutting-edge{" "}
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text font-semibold text-transparent">
+              <span className="bg-gradient-to-t from-amber-400 to-red-600 bg-clip-text font-semibold text-transparent">
                 data science
               </span>{" "}
               and{" "}
-              <span className="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text font-semibold text-transparent">
+              <span className="bg-gradient-to-t from-orange-400 to-red-500 bg-clip-text font-semibold text-transparent">
                 web development
               </span>{" "}
               solutions.
@@ -149,7 +149,7 @@ export default function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative overflow-hidden rounded-xl border border-gray-800/50 bg-gray-900/50 p-3 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-gray-700 hover:bg-gray-800/50 hover:shadow-lg"
+                  className="group relative overflow-hidden rounded-xl border border-gray-800/50 bg-gray-900/50 p-3 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-orange-700/50 hover:bg-gray-800/50 hover:shadow-lg hover:shadow-orange-500/10"
                   aria-label={social.label}
                 >
                   <social.icon className="relative z-10 h-5 w-5 text-gray-400 transition-colors duration-300 group-hover:text-white" />
@@ -162,8 +162,8 @@ export default function Footer() {
           {footerSections.map((section) => (
             <div key={section.title}>
               <div className="mb-6 flex items-center gap-3">
-                <div className="rounded-lg border border-gray-800/50 bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-2.5 backdrop-blur-sm">
-                  <div className="text-purple-400">{section.icon}</div>
+                <div className="rounded-lg border border-gray-800/50 bg-gradient-to-br from-gray-800/50 to-black/50 p-2.5 backdrop-blur-sm">
+                  <div className="text-orange-500">{section.icon}</div>
                 </div>
                 <h3 className="text-lg font-semibold text-gray-100">{section.title}</h3>
               </div>
@@ -179,7 +179,7 @@ export default function Footer() {
                       )}
                       <span className="relative">
                         {link.name}
-                        <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-300 group-hover:w-full" />
+                        <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-gradient-to-t from-amber-400 to-red-600 transition-all duration-300 group-hover:w-full" />
                       </span>
                       {!link.icon && (
                         <ChevronRight className="h-3 w-3 opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100" />
@@ -193,18 +193,18 @@ export default function Footer() {
         </div>
 
         {/* Newsletter Section */}
-        <div className="relative mt-16 overflow-hidden rounded-3xl border border-gray-800/50 bg-gradient-to-br from-gray-900/50 to-gray-950/50 p-8 backdrop-blur-xl">
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 via-transparent to-cyan-600/5" />
+        <div className="relative mt-16 overflow-hidden rounded-3xl border border-gray-800/50 bg-gradient-to-br from-gray-900/50 to-black/50 p-8 backdrop-blur-xl">
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-400/5 via-transparent to-red-600/5" />
           
           {/* Decorative Elements */}
-          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 blur-3xl" />
-          <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 blur-3xl" />
+          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-gradient-to-t from-amber-400/20 to-red-600/20 blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-gradient-to-t from-orange-400/20 to-red-500/20 blur-3xl" />
 
           <div className="relative z-10 flex flex-col items-center gap-6 text-center lg:flex-row lg:justify-between lg:text-left">
             <div>
               <h3 className="mb-2 flex items-center gap-2 text-2xl font-bold text-gray-100">
                 Stay Updated
-                <Sparkles className="h-5 w-5 text-purple-400" />
+                <Sparkles className="h-5 w-5 text-orange-500" />
               </h3>
               <p className="text-gray-400">
                 Get the latest insights and updates from Camino Code
@@ -215,16 +215,16 @@ export default function Footer() {
                 <input
                   type="email"
                   placeholder="Enter your email"
-                  className="w-full rounded-xl border border-gray-700/50 bg-gray-900/50 px-4 py-3 text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-300 focus:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                  className="w-full rounded-xl border border-gray-700/50 bg-gray-900/50 px-4 py-3 text-white placeholder-gray-500 backdrop-blur-sm transition-all duration-300 focus:border-orange-500/50 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
                   required
                 />
               </div>
               <button
                 type="submit"
-                className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/20"
+                className="group relative overflow-hidden rounded-xl bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-500/20"
               >
                 <span className="relative z-10">Subscribe</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-700 to-pink-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-gradient-to-t from-amber-500 to-red-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </button>
             </form>
           </div>
@@ -236,8 +236,8 @@ export default function Footer() {
             <div className="w-full border-t border-gray-800/50"></div>
           </div>
           <div className="relative flex justify-center">
-            <div className="bg-gradient-to-b from-gray-900 via-gray-950 to-black px-4">
-              <Code2 className="h-5 w-5 text-purple-400" />
+            <div className="bg-black px-4">
+              <Code2 className="h-5 w-5 text-orange-500" />
             </div>
           </div>
         </div>
@@ -245,9 +245,9 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="flex items-center gap-2 text-sm text-gray-400">
-            <Binary className="h-4 w-4 text-purple-400" />
+            <Binary className="h-4 w-4 text-orange-500" />
             &copy; {currentYear}{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text font-semibold text-transparent">
+            <span className="bg-gradient-to-t from-amber-400 to-red-600 bg-clip-text font-semibold text-transparent">
               Camino Code
             </span>
             . All Rights Reserved.
@@ -256,7 +256,7 @@ export default function Footer() {
           {/* Back to Top Button */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="group relative overflow-hidden rounded-full border border-gray-700/50 bg-gray-900/50 p-3 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-purple-500/30 hover:bg-gray-800/50 hover:shadow-lg hover:shadow-purple-500/10"
+            className="group relative overflow-hidden rounded-full border border-gray-700/50 bg-gray-900/50 p-3 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-orange-500/30 hover:bg-gray-800/50 hover:shadow-lg hover:shadow-orange-500/10"
             aria-label="Back to top"
           >
             <ArrowUp className="relative z-10 h-5 w-5 text-gray-400 transition-all duration-300 group-hover:text-white" />
