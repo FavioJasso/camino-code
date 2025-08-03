@@ -16,9 +16,9 @@ const services = [
       "Machine Learning Models",
       "Big Data Solutions",
     ],
-    color: "from-cyan-400 to-blue-500",
-    bgGradient: "from-cyan-500/20 to-blue-500/20",
-    glowColor: "cyan",
+    color: "from-amber-400 to-orange-500",
+    bgGradient: "from-amber-500/20 to-orange-500/20",
+    glowColor: "orange",
     floatingIcon: Database,
   },
   {
@@ -30,9 +30,9 @@ const services = [
       "Scalable Architecture",
       "Performance Optimization",
     ],
-    color: "from-purple-400 to-pink-500",
-    bgGradient: "from-purple-500/20 to-pink-500/20",
-    glowColor: "purple",
+    color: "from-orange-400 to-red-500",
+    bgGradient: "from-orange-500/20 to-red-500/20",
+    glowColor: "red",
     floatingIcon: Code2,
   },
   {
@@ -40,8 +40,8 @@ const services = [
     title: "Automated Solutions",
     icon: <Cpu className="h-8 w-8" />,
     items: ["Natural Language Processing", "AI-Driven Insights", "Process Automation"],
-    color: "from-amber-400 to-orange-500",
-    bgGradient: "from-amber-500/20 to-orange-500/20",
+    color: "from-amber-400 to-red-600",
+    bgGradient: "from-amber-500/20 to-red-600/20",
     glowColor: "amber",
     floatingIcon: Zap,
   },
@@ -101,13 +101,13 @@ export default function ServicesSection() {
       <div 
         className="absolute inset-0 opacity-20 transition-all duration-1000 -z-10"
         style={{
-          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(139, 92, 246, 0.15), transparent 50%)`,
+          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(251, 146, 60, 0.15), transparent 50%)`,
         }}
       />
 
       {/* Animated Gradient Orbs */}
-      <div className="absolute top-1/3 -left-20 h-96 w-96 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 opacity-20 blur-3xl animate-float"></div>
-      <div className="absolute bottom-1/3 -right-20 h-96 w-96 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 opacity-20 blur-3xl animate-float-delayed"></div>
+      <div className="absolute top-1/3 -left-20 h-96 w-96 rounded-full bg-gradient-to-t from-amber-400 to-red-600 opacity-20 blur-3xl animate-float"></div>
+      <div className="absolute bottom-1/3 -right-20 h-96 w-96 rounded-full bg-gradient-to-t from-amber-300 to-orange-500 opacity-20 blur-3xl animate-float-delayed"></div>
 
       {/* Floating Elements */}
       {floatingElements.map((element, index) => (
@@ -116,7 +116,7 @@ export default function ServicesSection() {
           className={`absolute ${element.position} opacity-10 animate-bounce-slow`}
           style={{ animationDelay: element.delay }}
         >
-          <element.Icon className={`${element.size} text-purple-400`} />
+          <element.Icon className={`${element.size} text-orange-400`} />
         </div>
       ))}
 
@@ -134,9 +134,9 @@ export default function ServicesSection() {
         <div className="flex w-full flex-col items-center gap-8 p-4 text-white md:w-1/2 md:items-start md:px-8 md:py-12 md:text-left">
           {/* Badge */}
           <div className="animate-fade-in-down">
-            <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/20 bg-purple-950/50 px-4 py-2 backdrop-blur-sm">
-              <Sparkles className="h-4 w-4 text-purple-400" />
-              <span className="text-sm font-medium text-purple-200">Our Expertise</span>
+            <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-gradient-to-t from-amber-950/50 to-orange-950/50 px-4 py-2 backdrop-blur-sm">
+              <Sparkles className="h-4 w-4 text-orange-400" />
+              <span className="text-sm font-medium text-orange-200">Our Expertise</span>
             </div>
           </div>
 
@@ -144,28 +144,28 @@ export default function ServicesSection() {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-300">
               Our
             </span>{" "}
-            <span className="inline-block bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow-glow animate-gradient-x">
+            <span className="inline-block bg-gradient-to-t from-amber-400 to-red-600 bg-clip-text text-transparent drop-shadow-glow animate-gradient-x">
               Services
             </span>
           </h2>
 
           <p className="max-w-lg text-base font-medium leading-relaxed text-gray-300 sm:text-lg md:text-xl animate-fade-in-up animation-delay-200">
-            At <span className="text-cyan-400 font-semibold">Camino Code</span>, we provide cutting-edge solutions in{" "}
-            <span className="text-purple-400 font-semibold">data science</span> and{" "}
-            <span className="text-pink-400 font-semibold">web development</span> to help businesses unlock new opportunities and
+            At <span className="text-orange-400 font-semibold">Camino Code</span>, we provide cutting-edge solutions in{" "}
+            <span className="text-amber-400 font-semibold">data science</span> and{" "}
+            <span className="text-red-500 font-semibold">web development</span> to help businesses unlock new opportunities and
             drive growth.
           </p>
 
           {/* 3D Model Container with Enhanced Styling */}
           <div className="relative flex h-[400px] w-full items-center justify-center animate-fade-in-up animation-delay-400">
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl blur-2xl"></div>
-            <div className="relative h-full w-full rounded-3xl border border-purple-500/20 bg-black/30 p-4 backdrop-blur-sm">
+            <div className="absolute inset-0 bg-gradient-to-t from-amber-400/10 to-red-600/10 rounded-3xl blur-2xl"></div>
+            <div className="relative h-full w-full rounded-3xl border border-orange-500/20 bg-black/30 p-4 backdrop-blur-sm">
               <Spline scene="https://prod.spline.design/hxXzHDWdUo11wqob/scene.splinecode" />
               {/* Corner Decorations */}
-              <div className="absolute top-0 left-0 h-16 w-16 border-l-2 border-t-2 border-cyan-500/30"></div>
-              <div className="absolute top-0 right-0 h-16 w-16 border-r-2 border-t-2 border-purple-500/30"></div>
-              <div className="absolute bottom-0 left-0 h-16 w-16 border-l-2 border-b-2 border-pink-500/30"></div>
-              <div className="absolute bottom-0 right-0 h-16 w-16 border-r-2 border-b-2 border-yellow-500/30"></div>
+              <div className="absolute top-0 left-0 h-16 w-16 border-l-2 border-t-2 border-orange-500/30"></div>
+              <div className="absolute top-0 right-0 h-16 w-16 border-r-2 border-t-2 border-amber-500/30"></div>
+              <div className="absolute bottom-0 left-0 h-16 w-16 border-l-2 border-b-2 border-red-500/30"></div>
+              <div className="absolute bottom-0 right-0 h-16 w-16 border-r-2 border-b-2 border-orange-400/30"></div>
             </div>
           </div>
         </div>
@@ -229,10 +229,10 @@ export default function ServicesSection() {
               className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-full px-8 py-4 font-semibold shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-neon"
             >
               {/* Animated background */}
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 animate-gradient-x"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-amber-400 to-red-600 animate-gradient-x"></div>
               
               {/* Hover effect overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 via-purple-600 to-pink-600 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-amber-500 to-red-700 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
               
               {/* Content */}
               <span className="relative z-10 text-white">See All Services</span>
@@ -241,7 +241,7 @@ export default function ServicesSection() {
 
             <Link
               href="/contact"
-              className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-full border border-gray-700 bg-gray-900/50 px-8 py-4 font-semibold text-gray-300 backdrop-blur-sm transition-all duration-300 hover:border-purple-500/50 hover:text-white"
+              className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-full border border-gray-700 bg-gray-900/50 px-8 py-4 font-semibold text-gray-300 backdrop-blur-sm transition-all duration-300 hover:border-orange-500/50 hover:text-white"
             >
               <span>Get Started</span>
               <Zap className="h-5 w-5 transition-all duration-300 group-hover:rotate-12" />
