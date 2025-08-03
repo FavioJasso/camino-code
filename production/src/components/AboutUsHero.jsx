@@ -45,23 +45,23 @@ export default function AboutMissionVision() {
   }));
 
   return (
-    <div className="relative overflow-x-hidden bg-gradient-to-b from-gray-900 via-gray-950 to-black">
+    <div className="relative overflow-x-hidden bg-white">
       {/* Futuristic Background Elements */}
       <div className="pointer-events-none absolute inset-0 z-0">
         {/* Grid Pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a1a2e_1px,transparent_1px),linear-gradient(to_bottom,#1a1a2e_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-10" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#fbbf24_1px,transparent_1px),linear-gradient(to_bottom,#fbbf24_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-5" />
         
         {/* Animated Gradient Mesh */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-transparent to-cyan-600/20" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-pink-600/10 to-transparent" />
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-400/20 via-transparent to-red-600/20" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-500/10 to-transparent" />
         </div>
 
         {/* Floating Particles */}
         {particles.map((particle) => (
           <motion.div
             key={particle.id}
-            className="absolute rounded-full bg-white/20"
+            className="absolute rounded-full bg-orange-500/20"
             style={{
               width: particle.size,
               height: particle.size,
@@ -86,7 +86,7 @@ export default function AboutMissionVision() {
       <div
         className="pointer-events-none absolute inset-0 z-0 opacity-20 transition-all duration-1000"
         style={{
-          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(139, 92, 246, 0.2), transparent 50%)`,
+          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(251, 146, 60, 0.2), transparent 50%)`,
         }}
       />
 
@@ -102,7 +102,7 @@ export default function AboutMissionVision() {
         >
           {/* Glow Effect for 3D Model */}
           <div className="absolute inset-0 animate-pulse">
-            <div className="absolute inset-0 rounded-full bg-purple-500/10 blur-3xl" />
+            <div className="absolute inset-0 rounded-full bg-orange-500/10 blur-3xl" />
           </div>
           <div className="relative z-10">
             <ModelViewer url="/ring-2.glb" />
@@ -117,7 +117,7 @@ export default function AboutMissionVision() {
             }}
             transition={{ duration: 10, repeat: Infinity }}
           >
-            <Cpu className="h-6 w-6 text-purple-400/40" />
+            <Cpu className="h-6 w-6 text-orange-500/60" />
           </motion.div>
           <motion.div
             className="absolute bottom-10 right-20"
@@ -127,7 +127,7 @@ export default function AboutMissionVision() {
             }}
             transition={{ duration: 8, repeat: Infinity }}
           >
-            <Binary className="h-8 w-8 text-cyan-400/40" />
+            <Binary className="h-8 w-8 text-red-500/60" />
           </motion.div>
         </motion.div>
 
@@ -150,11 +150,11 @@ export default function AboutMissionVision() {
             className="mb-6 flex items-center gap-2"
           >
             <div className="relative">
-              <div className="absolute inset-0 animate-pulse rounded-full bg-purple-500/20 blur-md" />
-              <div className="relative rounded-full border border-purple-500/30 bg-gray-900/80 px-4 py-2 backdrop-blur-xl">
+              <div className="absolute inset-0 animate-pulse rounded-full bg-orange-500/20 blur-md" />
+              <div className="relative rounded-full border border-orange-400/30 bg-gradient-to-r from-amber-50/80 to-orange-50/80 px-4 py-2 backdrop-blur-xl">
                 <div className="flex items-center gap-2">
-                  <Target className="h-4 w-4 text-purple-400" />
-                  <span className="text-sm font-medium text-purple-300">Our Purpose</span>
+                  <Target className="h-4 w-4 text-orange-600" />
+                  <span className="text-sm font-medium text-orange-800">Our Purpose</span>
                 </div>
               </div>
             </div>
@@ -169,14 +169,14 @@ export default function AboutMissionVision() {
               }}
               transition={{ duration: 0.5 }}
             >
-              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-t from-amber-400 to-red-600 bg-clip-text text-transparent">
                 Our Mission
               </span>
             </motion.div>
             
             <span className="relative">
               Our{" "}
-              <span className="inline-block bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
+              <span className="inline-block bg-gradient-to-t from-amber-400 to-red-600 bg-clip-text text-transparent">
                 Mission
               </span>
             </span>
@@ -187,7 +187,7 @@ export default function AboutMissionVision() {
             whileInView={{ width: "300px" }}
             transition={{ duration: 1, delay: 0.3 }}
             viewport={{ once: true }}
-            className="mt-6 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-transparent"
+            className="mt-6 h-1 bg-gradient-to-r from-orange-500 via-red-500 to-transparent"
           />
 
           <motion.p
@@ -195,18 +195,18 @@ export default function AboutMissionVision() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="mt-8 max-w-3xl text-lg font-medium leading-relaxed text-gray-300 sm:text-xl md:text-2xl lg:leading-relaxed"
+            className="mt-8 max-w-3xl text-lg font-medium leading-relaxed text-gray-700 sm:text-xl md:text-2xl lg:leading-relaxed"
           >
             At{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text font-bold text-transparent">
+            <span className="bg-gradient-to-t from-amber-400 to-red-600 bg-clip-text font-bold text-transparent">
               Camino Code
             </span>
             , our mission is to deliver innovative{" "}
-            <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text font-bold text-transparent">
+            <span className="bg-gradient-to-t from-orange-400 to-red-500 bg-clip-text font-bold text-transparent">
               data science
             </span>{" "}
             and{" "}
-            <span className="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text font-bold text-transparent">
+            <span className="bg-gradient-to-t from-amber-400 to-orange-600 bg-clip-text font-bold text-transparent">
               web development
             </span>{" "}
             solutions that empower businesses to thrive in a fast-paced digital world. We aim to combine technical expertise with creative thinking to develop scalable, secure, and high-performing systems. By focusing on user experience, data accuracy, and seamless functionality, we strive to help businesses make informed decisions, automate processes, and improve operational efficiency.
@@ -220,7 +220,7 @@ export default function AboutMissionVision() {
             viewport={{ once: true }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="group mt-8 flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-purple-500/25"
+            className="group mt-8 flex items-center gap-2 rounded-xl bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-orange-500/25"
           >
             Learn More
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -240,7 +240,7 @@ export default function AboutMissionVision() {
         >
           {/* Glow Effect for 3D Model */}
           <div className="absolute inset-0 animate-pulse">
-            <div className="absolute inset-0 rounded-full bg-cyan-500/10 blur-3xl" />
+            <div className="absolute inset-0 rounded-full bg-red-500/10 blur-3xl" />
           </div>
           <div className="relative z-10">
             <ModelViewer url="/ring-1.glb" />
@@ -255,7 +255,7 @@ export default function AboutMissionVision() {
             }}
             transition={{ duration: 12, repeat: Infinity }}
           >
-            <Globe className="h-7 w-7 text-cyan-400/40" />
+            <Globe className="h-7 w-7 text-red-500/60" />
           </motion.div>
           <motion.div
             className="absolute bottom-20 left-10"
@@ -265,7 +265,7 @@ export default function AboutMissionVision() {
             }}
             transition={{ duration: 10, repeat: Infinity }}
           >
-            <Zap className="h-6 w-6 text-purple-400/40" />
+            <Zap className="h-6 w-6 text-orange-500/60" />
           </motion.div>
         </motion.div>
 
@@ -286,11 +286,11 @@ export default function AboutMissionVision() {
             className="mb-6 flex items-center gap-2"
           >
             <div className="relative">
-              <div className="absolute inset-0 animate-pulse rounded-full bg-cyan-500/20 blur-md" />
-              <div className="relative rounded-full border border-cyan-500/30 bg-gray-900/80 px-4 py-2 backdrop-blur-xl">
+              <div className="absolute inset-0 animate-pulse rounded-full bg-red-500/20 blur-md" />
+              <div className="relative rounded-full border border-red-400/30 bg-gradient-to-r from-orange-50/80 to-red-50/80 px-4 py-2 backdrop-blur-xl">
                 <div className="flex items-center gap-2">
-                  <Eye className="h-4 w-4 text-cyan-400" />
-                  <span className="text-sm font-medium text-cyan-300">Our Future</span>
+                  <Eye className="h-4 w-4 text-red-600" />
+                  <span className="text-sm font-medium text-red-800">Our Future</span>
                 </div>
               </div>
             </div>
@@ -309,14 +309,14 @@ export default function AboutMissionVision() {
                 ease: "easeInOut"
               }}
             >
-              <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-t from-amber-400 to-red-600 bg-clip-text text-transparent">
                 Our Vision
               </span>
             </motion.div>
             
             <span className="relative">
               Our{" "}
-              <span className="inline-block bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="inline-block bg-gradient-to-t from-orange-400 to-red-500 bg-clip-text text-transparent">
                 Vision
               </span>
             </span>
@@ -327,7 +327,7 @@ export default function AboutMissionVision() {
             whileInView={{ width: "300px" }}
             transition={{ duration: 1, delay: 0.3 }}
             viewport={{ once: true }}
-            className="mt-6 ml-auto h-1 bg-gradient-to-l from-cyan-500 via-blue-500 to-transparent"
+            className="mt-6 ml-auto h-1 bg-gradient-to-l from-red-500 via-orange-500 to-transparent"
           />
 
           <motion.p
@@ -335,14 +335,14 @@ export default function AboutMissionVision() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="mt-8 max-w-3xl text-lg font-medium leading-relaxed text-gray-300 sm:text-xl md:text-2xl lg:leading-relaxed"
+            className="mt-8 max-w-3xl text-lg font-medium leading-relaxed text-gray-700 sm:text-xl md:text-2xl lg:leading-relaxed"
           >
             Our vision is to become a global leader in{" "}
-            <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text font-bold text-transparent">
+            <span className="bg-gradient-to-t from-orange-400 to-red-500 bg-clip-text font-bold text-transparent">
               data science
             </span>{" "}
             and{" "}
-            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text font-bold text-transparent">
+            <span className="bg-gradient-to-t from-amber-400 to-orange-600 bg-clip-text font-bold text-transparent">
               web development
             </span>{" "}
             by setting new standards for innovation, performance, and customer satisfaction. We envision a future where businesses of all sizes have access to intelligent, scalable, and efficient technological solutions. By staying at the forefront of industry trends and continuously evolving our approach, we aim to create transformative solutions that not only meet today's demands but also anticipate future challenges and opportunities.
@@ -366,11 +366,11 @@ export default function AboutMissionVision() {
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
-                className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent"
+                className="text-3xl font-bold bg-gradient-to-t from-orange-400 to-red-500 bg-clip-text text-transparent"
               >
                 100+
               </motion.div>
-              <div className="text-sm text-gray-400">Projects Delivered</div>
+              <div className="text-sm text-gray-600">Projects Delivered</div>
             </div>
             <div className="text-center">
               <motion.div
@@ -383,11 +383,11 @@ export default function AboutMissionVision() {
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
-                className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
+                className="text-3xl font-bold bg-gradient-to-t from-amber-400 to-orange-600 bg-clip-text text-transparent"
               >
                 50+
               </motion.div>
-              <div className="text-sm text-gray-400">Happy Clients</div>
+              <div className="text-sm text-gray-600">Happy Clients</div>
             </div>
           </motion.div>
         </motion.section>
@@ -401,7 +401,7 @@ export default function AboutMissionVision() {
         transition={{ duration: 2 }}
       >
         <motion.div
-          className="absolute top-1/4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/20 to-transparent"
+          className="absolute top-1/4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/20 to-transparent"
           animate={{
             x: ["-100%", "100%"],
           }}
@@ -412,7 +412,7 @@ export default function AboutMissionVision() {
           }}
         />
         <motion.div
-          className="absolute bottom-1/3 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent"
+          className="absolute bottom-1/3 left-0 right-0 h-px bg-gradient-to-r from-transparent via-red-500/20 to-transparent"
           animate={{
             x: ["100%", "-100%"],
           }}
