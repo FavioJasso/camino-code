@@ -18,7 +18,7 @@ const caseStudies = [
     image: "/assets/images/services_work01.png",
     href: "/case-study-detailed",
     icon: BarChart3,
-    color: "from-cyan-400 to-blue-500",
+    color: "from-amber-400 to-orange-500",
     stats: { metric: "+30%", label: "Retention" },
     tags: ["Analytics", "ML", "Python"],
   },
@@ -30,7 +30,7 @@ const caseStudies = [
     image: "/assets/images/services_work02.png",
     href: "/case-study-detailed",
     icon: TrendingUp,
-    color: "from-purple-400 to-pink-500",
+    color: "from-orange-400 to-red-500",
     stats: { metric: "+150%", label: "Sales" },
     tags: ["React", "Node.js", "AWS"],
   },
@@ -42,7 +42,7 @@ const caseStudies = [
     image: "/assets/images/services_work03.png",
     href: "/case-study-detailed",
     icon: Brain,
-    color: "from-amber-400 to-orange-500",
+    color: "from-amber-400 to-red-600",
     stats: { metric: "-40%", label: "Costs" },
     tags: ["NLP", "AI", "Python"],
   },
@@ -54,7 +54,7 @@ const caseStudies = [
     image: "/assets/images/services_work04.png",
     href: "/case-study-detailed",
     icon: Cloud,
-    color: "from-green-400 to-emerald-500",
+    color: "from-orange-300 to-amber-500",
     stats: { metric: "99.9%", label: "Uptime" },
     tags: ["Cloud", "DevOps", "Docker"],
   },
@@ -92,26 +92,26 @@ export default function WorkShowcase() {
   return (
     <section
       id="work"
-      className="relative flex w-full flex-col items-center justify-center overflow-x-hidden bg-black px-8 py-20 sm:px-10 md:py-24 md:pb-32 lg:px-12 lg:py-32"
+      className="relative flex w-full flex-col items-center justify-center overflow-x-hidden bg-white px-8 py-20 sm:px-10 md:py-24 md:pb-32 lg:px-12 lg:py-32"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
       {/* Futuristic Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-950">
-        <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-white to-amber-50">
+        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
       </div>
 
       {/* Dynamic Gradient Overlay */}
       <div 
         className="absolute inset-0 opacity-20 transition-all duration-1000"
         style={{
-          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(168, 85, 247, 0.15), transparent 50%)`,
+          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(251, 146, 60, 0.15), transparent 50%)`,
         }}
       />
 
       {/* Animated Gradient Orbs */}
-      <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 opacity-20 blur-3xl animate-float"></div>
-      <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 opacity-20 blur-3xl animate-float-delayed"></div>
+      <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-gradient-to-t from-amber-400 to-red-600 opacity-20 blur-3xl animate-float"></div>
+      <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-gradient-to-t from-amber-300 to-orange-500 opacity-20 blur-3xl animate-float-delayed"></div>
 
       {/* Floating Elements */}
       {floatingElements.map((element, index) => (
@@ -120,7 +120,7 @@ export default function WorkShowcase() {
           className={`absolute ${element.position} opacity-10 animate-bounce-slow`}
           style={{ animationDelay: element.delay }}
         >
-          <element.Icon className={`${element.size} text-purple-400`} />
+          <element.Icon className={`${element.size} text-orange-400`} />
         </div>
       ))}
 
@@ -138,7 +138,7 @@ export default function WorkShowcase() {
         <div className="absolute bottom-0 left-0 z-0 -ml-[13vw] hidden h-[350px] w-[50vw] lg:block">
           <div className="flex h-full w-full items-center justify-end overflow-hidden pr-[25vw]">
             <div className="relative h-full w-full">
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-transparent rounded-full blur-3xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-500/10 to-transparent rounded-full blur-3xl"></div>
               <ModelViewer url="/triangle-1.glb" />
             </div>
           </div>
@@ -148,7 +148,7 @@ export default function WorkShowcase() {
         <div className="absolute top-1/4 right-0 z-0 -mr-[13vw] hidden h-[350px] w-[50vw] -translate-y-1/2 lg:block">
           <div className="flex h-full w-full items-center justify-start overflow-hidden pl-[25vw]">
             <div className="relative h-full w-full">
-              <div className="absolute inset-0 bg-gradient-to-l from-purple-500/10 to-transparent rounded-full blur-3xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-l from-amber-500/10 to-transparent rounded-full blur-3xl"></div>
               <ModelViewer url="/triangle-2.glb" />
             </div>
           </div>
@@ -158,35 +158,35 @@ export default function WorkShowcase() {
         <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center justify-center gap-8">
           {/* Badge */}
           <div className="animate-fade-in-down mb-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/20 bg-purple-950/50 px-4 py-2 backdrop-blur-sm">
-              <Award className="h-4 w-4 text-purple-400" />
-              <span className="text-sm font-medium text-purple-200">Portfolio Showcase</span>
+            <div className="inline-flex items-center gap-2 rounded-full border border-orange-200 bg-gradient-to-t from-amber-50 to-orange-50 px-4 py-2 backdrop-blur-sm">
+              <Award className="h-4 w-4 text-orange-600" />
+              <span className="text-sm font-medium text-orange-700">Portfolio Showcase</span>
             </div>
           </div>
 
           {/* Heading */}
           <h2 className="mx-auto text-center text-5xl leading-[60px] font-black tracking-tight uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px] animate-fade-in-up">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-700 to-gray-900">
               Our
             </span>{" "}
-            <span className="inline-block bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow-glow animate-gradient-x">
+            <span className="inline-block bg-gradient-to-t from-amber-400 to-red-600 bg-clip-text text-transparent drop-shadow-glow animate-gradient-x">
               Work
             </span>
           </h2>
 
           {/* Description */}
-          <p className="w-full max-w-3xl text-center text-base font-medium leading-relaxed text-gray-300 sm:text-lg md:text-xl animate-fade-in-up animation-delay-200">
+          <p className="w-full max-w-3xl text-center text-base font-medium leading-relaxed text-gray-600 sm:text-lg md:text-xl animate-fade-in-up animation-delay-200">
             We take pride in delivering innovative and impactful solutions for
             our clients. Our work reflects our expertise in{" "}
-            <span className="text-cyan-400 font-semibold">data science</span>,{" "}
-            <span className="text-purple-400 font-semibold">web development</span>, and{" "}
-            <span className="text-pink-400 font-semibold">AI integration</span>, helping businesses achieve
+            <span className="text-orange-600 font-semibold">data science</span>,{" "}
+            <span className="text-amber-600 font-semibold">web development</span>, and{" "}
+            <span className="text-red-600 font-semibold">AI integration</span>, helping businesses achieve
             measurable success.
           </p>
 
           {/* Mobile 3D Model */}
           <div className="relative -mr-[300px] h-[200px] w-[200px] lg:hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-full blur-2xl"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-amber-400/20 to-red-600/20 rounded-full blur-2xl"></div>
             <ModelViewer url="/triangle-1.glb" />
           </div>
 
@@ -195,7 +195,7 @@ export default function WorkShowcase() {
             {caseStudies.map((study, index) => (
               <div
                 key={study.id}
-                className={`group relative max-w-[500px] overflow-hidden rounded-3xl border border-gray-800 shadow-2xl transition-all duration-500 hover:border-gray-700 hover:shadow-neon hover:-translate-y-2 animate-fade-in-up ${
+                className={`group relative max-w-[500px] overflow-hidden rounded-3xl border border-orange-100 shadow-2xl transition-all duration-500 hover:border-orange-300 hover:shadow-neon hover:-translate-y-2 animate-fade-in-up ${
                   index % 2 === 1 ? "sm:translate-y-12" : ""
                 }`}
                 style={{ animationDelay: `${400 + index * 100}ms` }}
@@ -204,7 +204,7 @@ export default function WorkShowcase() {
               >
                 <Link
                   href={study.href}
-                  className="flex flex-col overflow-hidden bg-gradient-to-br from-gray-900/90 to-gray-950/90"
+                  className="flex flex-col overflow-hidden bg-gradient-to-br from-white to-orange-50/30"
                 >
                   {/* Image with enhanced hover effect */}
                   <div className="relative h-72 overflow-hidden sm:h-80 md:h-96">
@@ -215,24 +215,24 @@ export default function WorkShowcase() {
                       className="object-cover transition-all duration-700 group-hover:scale-110"
                       quality={90}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/60 to-transparent" />
                     
                     {/* Overlay gradient on hover */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${study.color} mix-blend-overlay opacity-0 transition-opacity duration-500 group-hover:opacity-30`} />
                     
                     {/* Stats Overlay */}
                     <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
-                      <div className="rounded-2xl bg-black/50 backdrop-blur-md p-4">
+                      <div className="rounded-2xl bg-white/80 backdrop-blur-md p-4 shadow-lg">
                         <div className={`text-3xl font-bold bg-gradient-to-r ${study.color} bg-clip-text text-transparent`}>
                           {study.stats.metric}
                         </div>
-                        <div className="text-sm text-gray-300">{study.stats.label}</div>
+                        <div className="text-sm text-gray-600">{study.stats.label}</div>
                       </div>
                       
                       {/* Icon */}
                       <div className={`rounded-2xl bg-gradient-to-br ${study.color} p-1`}>
-                        <div className="rounded-2xl bg-black/50 p-3 backdrop-blur-md">
-                          <study.icon className="h-6 w-6 text-white" />
+                        <div className="rounded-2xl bg-white/80 p-3 backdrop-blur-md shadow-lg">
+                          <study.icon className="h-6 w-6 text-gray-700" />
                         </div>
                       </div>
                     </div>
@@ -247,12 +247,12 @@ export default function WorkShowcase() {
                       <h3 className={`text-xl font-bold transition-all duration-300 sm:text-2xl ${
                         hoveredCard === study.id 
                           ? `text-transparent bg-clip-text bg-gradient-to-r ${study.color}` 
-                          : 'text-white'
+                          : 'text-gray-800'
                       }`}>
                         {study.title}
                       </h3>
                       
-                      <p className="mt-3 text-base leading-relaxed text-gray-400 group-hover:text-gray-300 sm:text-lg">
+                      <p className="mt-3 text-base leading-relaxed text-gray-600 group-hover:text-gray-700 sm:text-lg">
                         {study.description}
                       </p>
                       
@@ -261,7 +261,7 @@ export default function WorkShowcase() {
                         {study.tags.map((tag, tagIndex) => (
                           <span 
                             key={tagIndex}
-                            className="rounded-full border border-gray-700 bg-gray-900/50 px-3 py-1 text-xs text-gray-400 transition-all duration-300 group-hover:border-gray-600 group-hover:text-gray-300"
+                            className="rounded-full border border-orange-200 bg-orange-50/50 px-3 py-1 text-xs text-gray-600 transition-all duration-300 group-hover:border-orange-300 group-hover:text-gray-700"
                           >
                             {tag}
                           </span>
@@ -271,7 +271,7 @@ export default function WorkShowcase() {
                       <div className={`mt-6 flex items-center text-base font-semibold transition-all duration-300 ${
                         hoveredCard === study.id 
                           ? `text-transparent bg-clip-text bg-gradient-to-r ${study.color}` 
-                          : 'text-purple-400'
+                          : 'text-orange-600'
                       }`}>
                         View case study
                         <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-2" />
@@ -285,13 +285,13 @@ export default function WorkShowcase() {
 
           {/* Mobile 3D Model 2 */}
           <div className="relative -ml-[300px] h-[200px] w-[200px] lg:hidden">
-            <div className="absolute inset-0 bg-gradient-to-l from-purple-500/20 to-cyan-500/20 rounded-full blur-2xl"></div>
+            <div className="absolute inset-0 bg-gradient-to-l from-orange-400/20 to-amber-500/20 rounded-full blur-2xl"></div>
             <ModelViewer url="/triangle-2.glb" />
           </div>
 
           {/* CTA Section */}
           <div className="mt-12 flex flex-col items-center gap-6 animate-fade-in-up animation-delay-800">
-            <p className="text-lg text-gray-400 text-center">
+            <p className="text-lg text-gray-600 text-center">
               Ready to see how we can transform your business?
             </p>
             <Link
@@ -299,10 +299,10 @@ export default function WorkShowcase() {
               className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-full px-10 py-5 font-semibold shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-neon"
             >
               {/* Animated background */}
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 animate-gradient-x"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-amber-400 to-red-600 animate-gradient-x"></div>
               
               {/* Hover effect overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-600 via-purple-600 to-pink-600 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-amber-500 to-red-700 opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
               
               {/* Content */}
               <span className="relative z-10 text-white text-lg">View All Projects</span>
