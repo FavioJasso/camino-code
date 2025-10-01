@@ -1,0 +1,17 @@
+/* TEAM */
+Company: Camino Code
+Site: caminocode.com
+Twitter: @caminocode
+Location: United States
+
+/* THANKS */
+Framework: Next.js
+Analytics: Vercel Analytics
+Animation: Framer Motion
+3D Graphics: Three.js
+
+/* SITE */
+Last update: 2024
+Standards: HTML5, CSS3, ES6+
+Components: React
+Software: VS Code, Git

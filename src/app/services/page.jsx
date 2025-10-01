@@ -8,10 +8,12 @@ import ServicesDetails from "@/components/ServicesDetails";
 import Footer from "@/components/Footer";
 import Work from "@/components/Work";
 import ClientProviders from "@/components/ClientProviders";
+import StructuredData from "@/components/StructuredData";
 
 export default function ServicesPage() {
   return (
     <ClientProviders>
+      <StructuredData page="services" />
       <main className="h-max w-full gap-4 overflow-hidden">
         <NavigationBar />
         <ServicesHeader />

@@ -4,6 +4,8 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF, OrbitControls, Environment, Float, MeshDistortMaterial } from "@react-three/drei";
 import { Suspense, useRef } from "react";
 import * as THREE from "three";
+import ClientProviders from "@/components/ClientProviders";
+import StructuredData from "@/components/StructuredData";
 
 function Model({ path, position = [0, 0, 0], autoRotate = true }) {
   const { scene } = useGLTF(path);
@@ -37,7 +39,9 @@ const models = [
 
 export default function AllModels() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 p-8">
+    <ClientProviders>
+      <StructuredData page="all-models" />
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 p-8">
       <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-red-600 text-center mb-12">
         3D Model Showcase
       </h1>
@@ -81,5 +85,6 @@ export default function AllModels() {
         ))}
       </div>
     </div>
+    </ClientProviders>
   );
 }

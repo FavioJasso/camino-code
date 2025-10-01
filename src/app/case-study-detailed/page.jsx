@@ -5,10 +5,12 @@ import ContactForm from "@/components/ContactFormPages";
 import CaseStudyDetails from "@/components/CaseStudyDetails";
 import Footer from "@/components/Footer";
 import ClientProviders from "@/components/ClientProviders";
+import StructuredData from "@/components/StructuredData";
 
 const CaseStudyDetailedPage = () => {
   return (
     <ClientProviders>
+      <StructuredData page="case-study-detailed" />
       <main className="h-max w-full gap-4 overflow-hidden">
         <NavigationBar />
         <CaseStudyDetails />

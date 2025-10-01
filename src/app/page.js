@@ -11,10 +11,12 @@ import HomeServices from "../components/HomeServices";
 import Work from "../components/Work";
 import Testimonials from "../components/Testimonials";
 import ClientProviders from "../components/ClientProviders";
+import StructuredData from "../components/StructuredData";
 
 export default function Home() {
   return (
     <ClientProviders>
+      <StructuredData page="home" />
       <main className="h-max w-full gap-4 overflow-hidden">
         <NavigationBar />
         <HeroSection />
