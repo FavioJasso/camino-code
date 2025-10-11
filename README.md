@@ -1,3 +1,12 @@
+#Camino Code  
+
+Camino Code is a Applied AI Systems, Data Science and Product Engineering organization based in New Jersey. 
+
+CaminoCode.com Contributors: 
+Founder & CEO: Favio Jasso
+Software Engineer: John Rey Calesa
+Concept Artist: Ayelén Vázquez De La Rosa
+
 # Next.js Starter Kit: Basics
 
 ```sh
