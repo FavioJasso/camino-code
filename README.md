@@ -1,6 +1,6 @@
 # Camino Code  
 
-Camino Code is a Applied AI Systems, Data Science and Product Engineering organization based in New Jersey. 
+Camino Code is a Applied AI Systems, Data Science and Product Engineering organization based in New Jersey helping businesses build systems that think with you. 
 
 ## CaminoCode.com Contributors: 
 
