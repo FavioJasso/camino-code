@@ -115,7 +115,7 @@ export default function WhatSetsUsApart() {
       }
 
       draw() {
-        ctx.fillStyle = `rgba(59, 130, 246, ${this.opacity})`;
+        ctx.fillStyle = `rgba(251, 191, 36, ${this.opacity})`;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
@@ -201,9 +201,9 @@ export default function WhatSetsUsApart() {
           !isMobile && !prefersReducedMotion
             ? {
                 background: [
-                  "radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%)",
-                  "radial-gradient(circle at 80% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%)",
-                  "radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%)",
+                  "radial-gradient(circle at 20% 50%, rgba(251, 191, 36, 0.15) 0%, transparent 50%)",
+                  "radial-gradient(circle at 80% 50%, rgba(251, 191, 36, 0.15) 0%, transparent 50%)",
+                  "radial-gradient(circle at 20% 50%, rgba(251, 191, 36, 0.15) 0%, transparent 50%)",
                 ],
               }
             : {}
@@ -219,7 +219,7 @@ export default function WhatSetsUsApart() {
       {!isMobile && (
         <>
           <motion.div
-            className="absolute top-1/3 left-20 h-40 w-40 rounded-full bg-gradient-to-r from-blue-400/20 to-purple-600/20 blur-3xl"
+            className="absolute top-1/3 left-20 h-40 w-40 rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 blur-3xl"
             animate={
               !prefersReducedMotion
                 ? {
@@ -236,7 +236,7 @@ export default function WhatSetsUsApart() {
             }}
           />
           <motion.div
-            className="absolute right-20 bottom-1/3 h-48 w-48 rounded-full bg-gradient-to-r from-blue-400/20 to-indigo-500/20 blur-3xl"
+            className="absolute right-20 bottom-1/3 h-48 w-48 rounded-full bg-gradient-to-r from-amber-400/20 to-orange-500/20 blur-3xl"
             animate={
               !prefersReducedMotion
                 ? {
@@ -273,7 +273,7 @@ export default function WhatSetsUsApart() {
               !isMobile
                 ? {
                     scale: 1.05,
-                    textShadow: "0 0 40px rgba(59, 130, 246, 0.3)",
+                    textShadow: "0 0 40px rgba(251, 191, 36, 0.3)",
                     transition: { duration: 0.3 },
                   }
                 : {}
@@ -282,12 +282,12 @@ export default function WhatSetsUsApart() {
             What Sets Us
           </motion.span>
           <motion.span
-            className="block bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent"
+            className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
             whileHover={
               !isMobile
                 ? {
                     scale: 1.05,
-                    textShadow: "0 0 40px rgba(59, 130, 246, 0.8)",
+                    textShadow: "0 0 40px rgba(251, 191, 36, 0.8)",
                     transition: { duration: 0.3 },
                   }
                 : {}
@@ -318,11 +318,11 @@ export default function WhatSetsUsApart() {
         >
           At Camino Code, we combine{" "}
           <motion.span
-            className="font-semibold text-blue-500"
+            className="font-semibold text-orange-500"
             whileHover={
               !isMobile
                 ? {
-                    textShadow: "0 0 20px rgba(59, 130, 246, 0.8)",
+                    textShadow: "0 0 20px rgba(249, 115, 22, 0.8)",
                     scale: 1.05,
                   }
                 : {}
@@ -332,11 +332,11 @@ export default function WhatSetsUsApart() {
           </motion.span>{" "}
           and{" "}
           <motion.span
-            className="font-semibold text-blue-500"
+            className="font-semibold text-orange-500"
             whileHover={
               !isMobile
                 ? {
-                    textShadow: "0 0 20px rgba(59, 130, 246, 0.8)",
+                    textShadow: "0 0 20px rgba(249, 115, 22, 0.8)",
                     scale: 1.05,
                   }
                 : {}
@@ -358,7 +358,7 @@ export default function WhatSetsUsApart() {
         >
           <Link href="/contact">
             <motion.button
-              className="group relative overflow-hidden rounded-full bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl"
+              className="group relative overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-red-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
@@ -378,7 +378,7 @@ export default function WhatSetsUsApart() {
 
               {/* Animated background gradient */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-500"
+                className="absolute inset-0 bg-gradient-to-r from-red-600 to-amber-400"
                 initial={{ x: "100%" }}
                 whileHover={{ x: 0 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
@@ -392,7 +392,7 @@ export default function WhatSetsUsApart() {
                 transition={{ duration: 0.3 }}
                 style={{
                   background:
-                    "radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%)",
+                    "radial-gradient(circle, rgba(251, 191, 36, 0.3) 0%, transparent 70%)",
                   filter: "blur(20px)",
                 }}
               />
@@ -438,24 +438,24 @@ export default function WhatSetsUsApart() {
 
               {/* Hover Overlay */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-purple-600/20 opacity-0 group-hover:opacity-100"
+                className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-red-600/20 opacity-0 group-hover:opacity-100"
                 transition={{ duration: 0.3 }}
               />
 
               {/* Content */}
               <div className="relative z-10 flex h-full flex-col items-center justify-center p-6 text-center text-white">
                 <motion.div
-                  className="mb-4 rounded-full bg-gradient-to-r from-blue-400/20 to-purple-600/20 p-3 backdrop-blur-sm"
+                  className="mb-4 rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 p-3 backdrop-blur-sm"
                   whileHover={!isMobile ? { rotate: 360, scale: 1.1 } : {}}
                   transition={{ duration: 0.5 }}
                 >
                   <motion.div
-                    className="text-blue-400"
+                    className="text-amber-400"
                     whileHover={
                       !isMobile
                         ? {
                             filter:
-                              "drop-shadow(0 0 20px rgba(59, 130, 246, 0.8))",
+                              "drop-shadow(0 0 20px rgba(251, 191, 36, 0.8))",
                           }
                         : {}
                     }

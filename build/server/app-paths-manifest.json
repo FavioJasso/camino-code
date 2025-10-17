@@ -1,4 +1,7 @@
 {
-  "/all-models/page": "app/all-models/page.js",
-  "/page": "app/page.js"
+  "/services/page": "app/services/page.js",
+  "/page": "app/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/case-studies/page": "app/case-studies/page.js",
+  "/about/page": "app/about/page.js"
 }

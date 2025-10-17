@@ -9,51 +9,48 @@ import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 const services = [
   {
     id: 1,
-    title: "Data Science & Analytics",
-    description: "Transform raw data into actionable insights with advanced analytics, machine learning models, and predictive algorithms.",
+    title: "Data Intelligence & Engineering",
+    tagline: "Transform raw data into scalable intelligence.",
+    description: "Building the foundation: collecting, structuring, and analyzing data to power machine learning and automation. This is the bedrock for every solution we offer — turning chaos into clarity.",
     icon: <Database className="h-12 w-12" />,
-    gradient: "from-blue-400 to-purple-600",
-    features: ["Machine Learning", "Predictive Analytics", "Data Visualization", "Big Data Processing"],
+    gradient: "from-amber-400 to-orange-500",
+    features: [
+      "Data Pipeline Design (ETL/ELT, APIs, automation)",
+      "Machine Learning & Predictive Analytics",
+      "Data Visualization & Business Intelligence Dashboards",
+      "Database Architecture (SQL, NoSQL, Warehouse Design)",
+      "Analytics Strategy & Model Deployment"
+    ],
   },
   {
     id: 2,
-    title: "Web Development",
-    description: "Build stunning, high-performance web applications with modern frameworks and cutting-edge technologies.",
-    icon: <Code className="h-12 w-12" />,
-    gradient: "from-amber-400 to-red-600",
-    features: ["React & Next.js", "Full-Stack Solutions", "Progressive Web Apps", "API Development"],
+    title: "Applied AI Systems",
+    tagline: "Bringing intelligence to everyday workflows.",
+    description: "AI as a tool for automation and decision-making across industries. We're not just analyzing — we're building intelligent systems that actually do work.",
+    icon: <Brain className="h-12 w-12" />,
+    gradient: "from-orange-500 to-red-600",
+    features: [
+      "Natural Language Processing (document analysis, chatbots, agents)",
+      "Computer Vision & Intelligent Recognition Systems",
+      "Generative AI Integrations (text, code, visual AI)",
+      "Workflow Automation (RPA, agent orchestration, decision systems)",
+      "Predictive Maintenance & Forecasting"
+    ],
   },
   {
     id: 3,
-    title: "AI Integration",
-    description: "Leverage the power of artificial intelligence to automate processes and enhance decision-making.",
-    icon: <Brain className="h-12 w-12" />,
-    gradient: "from-green-400 to-teal-600",
-    features: ["Natural Language Processing", "Computer Vision", "AI Chatbots", "Intelligent Automation"],
-  },
-  {
-    id: 4,
-    title: "UI/UX Design",
-    description: "Create intuitive and engaging user experiences with research-driven design and modern aesthetics.",
-    icon: <Palette className="h-12 w-12" />,
-    gradient: "from-pink-400 to-purple-600",
-    features: ["User Research", "Wireframing", "Prototyping", "Design Systems"],
-  },
-  {
-    id: 5,
-    title: "Cloud Solutions",
-    description: "Migrate and optimize your infrastructure with scalable cloud architectures and DevOps practices.",
-    icon: <Cloud className="h-12 w-12" />,
-    gradient: "from-orange-400 to-yellow-600",
-    features: ["AWS & Azure", "Kubernetes", "CI/CD Pipelines", "Infrastructure as Code"],
-  },
-  {
-    id: 6,
-    title: "Cybersecurity",
-    description: "Protect your digital assets with comprehensive security audits and robust defense strategies.",
-    icon: <Shield className="h-12 w-12" />,
-    gradient: "from-red-400 to-pink-600",
-    features: ["Security Audits", "Penetration Testing", "Compliance", "Incident Response"],
+    title: "Product Engineering & Experience",
+    tagline: "From prototype to polished product.",
+    description: "Creating modern, AI-powered digital products that delight users and scale effortlessly. This is how we bring AI and data systems to life with technical depth and exceptional user experience.",
+    icon: <Code className="h-12 w-12" />,
+    gradient: "from-red-600 to-amber-400",
+    features: [
+      "Web & App Development (Next.js, Laravel, Go, React)",
+      "AI-Integrated Platforms (chatbots, dashboards, internal tools)",
+      "API Development & Cloud Deployment (AWS, Azure, GCP)",
+      "UI/UX Design & Data Visualization Interfaces",
+      "Performance & Reliability Engineering"
+    ],
   },
 ];
 
@@ -120,12 +117,19 @@ const ServiceCard = ({ service, index }) => {
 
           {/* Title */}
           <motion.h3
-            className="mb-4 text-2xl font-bold text-neutral-900"
+            className="mb-2 text-2xl font-bold text-neutral-900"
             whileHover={!isMobile ? { x: 5 } : {}}
             transition={{ duration: 0.3 }}
           >
             {service.title}
           </motion.h3>
+
+          {/* Tagline */}
+          {service.tagline && (
+            <p className={`mb-4 text-sm font-semibold bg-gradient-to-r ${service.gradient} bg-clip-text text-transparent`}>
+              {service.tagline}
+            </p>
+          )}
 
           {/* Description */}
           <p className="mb-6 text-neutral-700 leading-relaxed">
