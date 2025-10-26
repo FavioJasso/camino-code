@@ -8,7 +8,6 @@ import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 import { ModelViewer } from "@/components/ModelViewer";
 
 // ========== CONSTANTS ==========
-// Partner logos data
 const partners = [
   { src: "/assets/images/partner_1.png", alt: "Partner 1" },
   { src: "/assets/images/partner_2.png", alt: "Partner 2" },
@@ -17,69 +16,39 @@ const partners = [
   { src: "/assets/images/partner_5.png", alt: "Partner 5" },
 ];
 
-// Animation settings
-const SCROLL_DURATION = 20; // seconds
+const SCROLL_DURATION = 25;
 const INTERSECTION_THRESHOLD = 0.1;
-const FADE_DURATION = 0.8;
-
-// Animation configuration for title
-const titleAnimationConfig = {
-  hidden: { opacity: 0, y: 50 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: FADE_DURATION,
-      ease: "easeOut",
-    },
-  },
-};
 
 // ========== MAIN COMPONENT ==========
 export default function Partners() {
-  // References to DOM elements
-  const containerRef = useRef(null); // Container for the scrolling logos
-  const trackRef = useRef(null); // The track that holds the logos
-
-  // Custom hooks for responsive behavior
-  const isMobile = useIsMobile(); // Detects if user is on mobile
-  const prefersReducedMotion = useReducedMotion(); // Checks if user prefers reduced motion
-
-  // Hook to detect when section comes into view
+  const containerRef = useRef(null);
+  const trackRef = useRef(null);
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
   const { ref: sectionRef, hasIntersected } = useIntersectionObserver({
     threshold: INTERSECTION_THRESHOLD,
   });
 
   // ========== INFINITE SCROLL SETUP ==========
   useEffect(() => {
-    // Exit if elements aren't ready
     if (!trackRef.current || !containerRef.current) return;
 
     const track = trackRef.current;
     const container = containerRef.current;
-
-    // Duplicate the logos for seamless scrolling
     const originalContent = track.innerHTML;
     track.innerHTML = originalContent + originalContent;
 
-    // Calculate width for animation
     const trackWidth = track.scrollWidth / 2;
-
-    // Set CSS variables for animation
     container.style.setProperty("--track-width", `${trackWidth}px`);
     container.style.setProperty("--duration", `${SCROLL_DURATION}s`);
 
-    // Reset animation when it completes for infinite loop
     const handleAnimationIteration = () => {
       track.style.transform = "translateX(0)";
-      void track.offsetWidth; // Force browser reflow
+      void track.offsetWidth;
       track.style.transform = `translateX(-${trackWidth}px)`;
     };
 
-    // Add event listener
     track.addEventListener("animationiteration", handleAnimationIteration);
-
-    // Cleanup function
     return () => {
       track.removeEventListener("animationiteration", handleAnimationIteration);
     };
@@ -90,92 +59,127 @@ export default function Partners() {
     <motion.section
       ref={sectionRef}
       id="partners"
-      className="mt-6 flex flex-col items-center justify-center overflow-hidden bg-[rgba(248,244,239,1)] text-center sm:mt-8 md:mt-10"
+      className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50 to-white py-20 md:py-28 lg:py-36"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.6 }}
     >
-      {/* 3D Model Section */}
-      <ModelViewer
-        modelPath="/triangle-1.glb"
-        fogColor="#f8f4ef"
-        containerClassName="w-full pt-10 md:pt-0 lg:pt-0"
-      />
+      {/* 3D Model Background */}
+      <div className="absolute inset-0 z-0 opacity-60">
+        <ModelViewer
+          modelPath="/triangle-1.glb"
+          fogColor="#f8f9fa"
+          containerClassName="w-full h-full"
+        />
+      </div>
 
-      {/* Title Section */}
-      <motion.div
-        className="flex w-full flex-col-reverse items-center md:flex-col"
-        variants={titleAnimationConfig}
-        initial="hidden"
-        animate={hasIntersected ? "visible" : "hidden"}
-      >
-        <h2 className="mx-auto text-5xl leading-[60px] font-bold text-black uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px]">
-          Our{" "}
-          <motion.span
-            className="inline-block bg-gradient-to-r from-amber-400 to-red-600 bg-clip-text text-transparent"
-            whileHover={
-              !isMobile
-                ? {
-                    scale: 1.05,
-                    textShadow: "0 0 30px rgba(245, 158, 11, 0.5)",
-                    transition: { duration: 0.3 },
-                  }
-                : {}
-            }
-          >
-            Partners
-          </motion.span>
-        </h2>
-      </motion.div>
+      {/* Decorative Elements */}
+      <div className="absolute top-0 left-1/4 h-96 w-96 rounded-full bg-gradient-to-br from-amber-100/30 to-transparent blur-3xl" />
+      <div className="absolute right-1/4 bottom-0 h-96 w-96 rounded-full bg-gradient-to-tl from-orange-100/30 to-transparent blur-3xl" />
 
-      {/* Partner Logos Scrolling Section */}
-      <motion.div
-        ref={containerRef}
-        className="logo-slider relative container mx-auto w-full overflow-hidden"
-        initial={{ opacity: 0 }}
-        animate={hasIntersected ? { opacity: 1 } : {}}
-        transition={{ delay: 0.3, duration: 0.8 }}
-      >
-        <div
-          ref={trackRef}
-          className="logo-track flex w-max items-center [&>div>img]:shadow-md"
+      {/* Content Container */}
+      <div className="relative z-10 mx-auto max-w-7xl px-6 md:px-8">
+        {/* Header Section */}
+        <motion.div
+          className="mb-16 text-center md:mb-20 lg:mb-24"
+          initial={{ opacity: 0, y: 30 }}
+          animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          {/* Logo Container */}
-          <div className="logo-set ml-8 flex items-center gap-8 sm:ml-12 sm:gap-12 md:ml-16 md:gap-16 lg:ml-20 lg:gap-20">
-            {partners.map((partner, index) => (
-              <motion.div
-                key={`partner-${index}`}
-                className="flex-shrink-0"
-                whileHover={!isMobile ? { scale: 1.1, rotate: 5 } : {}}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <Image
-                  src={partner.src}
-                  alt={partner.alt}
-                  width={160}
-                  height={160}
-                  className="h-32 w-32 rounded-full border-[1px] border-black object-contain transition-all duration-300 hover:border-amber-400 md:h-[200px] md:w-[200px]"
-                />
-              </motion.div>
-            ))}
+          {/* Main Title */}
+          <h2 className="text-5xl font-black tracking-tighter text-black uppercase sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl">
+            Our{" "}
+            <motion.span
+              className="inline-block bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent"
+              initial={{ opacity: 0, x: -20 }}
+              animate={hasIntersected ? { opacity: 1, x: 0 } : {}}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              whileHover={
+                !isMobile
+                  ? {
+                      scale: 1.05,
+                      transition: { duration: 0.2 },
+                    }
+                  : {}
+              }
+            >
+              Partners
+            </motion.span>
+          </h2>
+        </motion.div>
+
+        {/* Partner Logos Scrolling Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.8, duration: 0.6 }}
+        >
+          <div
+            ref={containerRef}
+            className="logo-slider relative w-full overflow-hidden py-12 md:py-16"
+          >
+            <div ref={trackRef} className="logo-track flex w-max items-center">
+              <div className="logo-set ml-12 flex items-center gap-12 md:ml-16 md:gap-16 lg:ml-20 lg:gap-20">
+                {partners.map((partner, index) => (
+                  <motion.div
+                    key={`partner-${index}`}
+                    className="group flex-shrink-0"
+                    whileHover={
+                      !isMobile
+                        ? {
+                            scale: 1.08,
+                            transition: {
+                              type: "spring",
+                              stiffness: 400,
+                              damping: 10,
+                            },
+                          }
+                        : {}
+                    }
+                  >
+                    <div className="relative">
+                      {/* Glow effect on hover */}
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-400/20 to-orange-400/20 opacity-0 blur-xl transition-opacity duration-300 group-hover:opacity-100" />
+
+                      {/* Logo Container */}
+                      <div className="relative h-24 w-24 overflow-hidden rounded-full bg-white shadow-md transition-all duration-300 group-hover:shadow-2xl md:h-32 md:w-32 lg:h-36 lg:w-36">
+                        <Image
+                          src={partner.src}
+                          alt={partner.alt}
+                          width={200}
+                          height={200}
+                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+
+        {/* Bottom Accent Line */}
+        <motion.div
+          className="mx-auto mt-16 h-1 w-24 rounded-full bg-gradient-to-r from-transparent via-amber-500 to-transparent"
+          initial={{ opacity: 0, scaleX: 0 }}
+          animate={hasIntersected ? { opacity: 1, scaleX: 1 } : {}}
+          transition={{ delay: 1.2, duration: 0.8 }}
+        />
+      </div>
 
       {/* CSS for Infinite Scroll Animation */}
       <style jsx global>{`
-        /* Fade edges for smooth visual */
         .logo-slider {
           mask-image: linear-gradient(
             to right,
             transparent 0%,
-            black 10%,
-            black 90%,
+            black 8%,
+            black 92%,
             transparent 100%
           );
         }
 
-        /* Scrolling animation */
         .logo-track {
           animation: ${prefersReducedMotion
             ? "none"
@@ -183,7 +187,6 @@ export default function Partners() {
           transform: translateX(0);
         }
 
-        /* Keyframes for scroll */
         @keyframes scroll {
           0% {
             transform: translateX(0);
