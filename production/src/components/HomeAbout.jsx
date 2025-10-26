@@ -135,7 +135,7 @@ export default function AboutSection() {
         </div>
 
         {/* Heading */}
-        <h2 className="animate-fade-in-up mx-auto w-full max-w-[1000px] text-center text-5xl leading-[60px] font-black tracking-tight uppercase md:text-[70px] md:leading-[80px] lg:text-[120px] lg:leading-[130px]">
+        <h2 className="animate-fade-in-up mx-auto w-full max-w-[1000px] text-center text-3xl leading-[40px] font-black tracking-tight uppercase md:text-[50px] md:leading-[60px] lg:text-[80px] lg:leading-[90px]">
           <span className="bg-gradient-to-r from-gray-100 to-gray-300 bg-clip-text text-transparent">
             Shaping the Future of
           </span>{" "}
