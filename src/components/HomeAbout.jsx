@@ -131,39 +131,42 @@ export default function AboutSection() {
 
         {/* Heading with split text animation */}
         <motion.h2
-          className="perspective-1000 mx-auto mt-16 w-full max-w-[900px] text-6xl font-black tracking-tighter uppercase sm:mt-20 sm:text-7xl md:mt-24 md:text-8xl lg:text-9xl xl:text-[10rem]"
+          className="perspective-1000 mx-auto mt-16 w-full max-w-[900px] text-center text-6xl font-black tracking-tighter uppercase sm:mt-20 sm:text-7xl md:mt-24 md:text-8xl lg:text-9xl xl:text-[10rem]"
           variants={containerVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
         >
-          {titleWords.map((word, index) => (
-            <motion.span
-              key={index}
-              className={`mr-4 inline-block ${
-                word === "Technology"
-                  ? "bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
-                  : "text-white"
-              }`}
-              custom={index}
-              variants={wordVariants}
-              whileHover={
-                !isMobile
-                  ? word === "Technology"
-                    ? {
-                        scale: 1.05,
-                        textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
-                        transition: { duration: 0.3 },
-                      }
-                    : {
-                        scale: 1.02,
-                        transition: { duration: 0.3 },
-                      }
-                  : {}
-              }
-            >
-              {word}
-            </motion.span>
-          ))}
+          <motion.span
+            className="inline-block text-white"
+            custom={0}
+            variants={wordVariants}
+            whileHover={
+              !isMobile
+                ? {
+                    scale: 1.02,
+                    transition: { duration: 0.3 },
+                  }
+                : {}
+            }
+          >
+            Shaping the Future of
+          </motion.span>{" "}
+          <motion.span
+            className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
+            custom={1}
+            variants={wordVariants}
+            whileHover={
+              !isMobile
+                ? {
+                    scale: 1.05,
+                    textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
+                    transition: { duration: 0.3 },
+                  }
+                : {}
+            }
+          >
+            Technology
+          </motion.span>
         </motion.h2>
 
         {/* Description with fade in animation */}
