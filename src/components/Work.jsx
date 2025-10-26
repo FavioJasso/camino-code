@@ -18,7 +18,7 @@ const caseStudies = [
     description:
       "Developed a predictive analytics model that increased customer retention by 30%.",
     image: "/assets/images/services_work01.png",
-    href: "/case-study-detailed",
+    href: "/case-study/techwave",
     color: "from-blue-400 to-purple-600",
   },
   {
@@ -27,7 +27,7 @@ const caseStudies = [
     description:
       "Built a scalable web application that boosted online sales by 150%.",
     image: "/assets/images/services_work02.png",
-    href: "/case-study-detailed",
+    href: "/case-study/stylehub",
     color: "from-green-400 to-teal-600",
   },
   {
@@ -36,7 +36,7 @@ const caseStudies = [
     description:
       "Implemented NLP solutions reducing customer service costs by 40%.",
     image: "/assets/images/services_work03.png",
-    href: "/case-study-detailed",
+    href: "/case-study/finserve",
     color: "from-orange-400 to-red-600",
   },
   {
@@ -45,7 +45,7 @@ const caseStudies = [
     description:
       "Seamless transition to cloud infrastructure improving system reliability.",
     image: "/assets/images/services_work04.png",
-    href: "/case-study-detailed",
+    href: "/case-study/healthtrack",
     color: "from-pink-400 to-purple-600",
   },
 ];
