@@ -53,11 +53,6 @@ export const metadata = {
       "max-snippet": -1,
     },
   },
-  icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
-    apple: "/favicon.svg",
-  },
   manifest: "/manifest.json",
   alternates: {
     canonical: seoConfig.siteUrl,
