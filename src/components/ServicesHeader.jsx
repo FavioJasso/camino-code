@@ -249,7 +249,7 @@ const ServicesHeader = () => {
           initial={{ opacity: 0, y: isMobile ? 20 : 30, filter: isMobile ? "none" : "blur(10px)" }}
           animate={{ opacity: 1, y: 0, filter: "none" }}
           transition={{ duration: isMobile ? 0.6 : 1, delay: 0.6 }}
-          className="mx-auto mb-12 max-w-3xl px-6 text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl text-balance"
+          className="mx-auto mb-12 max-w-4xl px-6 text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl text-balance"
         >
           Empowering businesses with{" "}
           <motion.span
@@ -259,7 +259,7 @@ const ServicesHeader = () => {
               scale: 1.05,
             } : {}}
           >
-            advanced AI
+            Advanced AI
           </motion.span>
           ,{" "}
           <motion.span
@@ -269,7 +269,7 @@ const ServicesHeader = () => {
               scale: 1.05,
             } : {}}
           >
-            data intelligence
+            Data intelligence
           </motion.span>{" "}
           and{" "}
           <motion.span
@@ -279,7 +279,7 @@ const ServicesHeader = () => {
               scale: 1.05,
             } : {}}
           >
-            product engineering
+            Product engineering
           </motion.span>
           . We transform your vision into reality with cutting-edge solutions that scale.
         </motion.p>
