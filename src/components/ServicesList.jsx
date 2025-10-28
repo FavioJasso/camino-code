@@ -2,16 +2,31 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Code, Brain, Palette, Database, Cloud, Shield } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
 const services = [
   {
     id: 1,
+    title: "Applied AI Systems",
+    tagline: "Bringing intelligence to everyday workflows.",
+    description: "Bringing intelligence to everyday workflows. We design AI-powered systems that automate, optimize, and elevate decision-making across industries. Beyond analysis, we build intelligent solutions that do the work.",
+    icon: <Brain className="h-12 w-12" />,
+    gradient: "from-orange-500 to-red-600",
+    features: [
+      "Natural Language Processing (document analysis, chatbots, agents)",
+      "Computer Vision & Intelligent Recognition Systems",
+      "Generative AI Integrations (text, code, visual AI)",
+      "Workflow Automation (RPA, orchestration, decision systems)",
+      "Predictive Maintenance & Forecasting"
+    ],
+  },
+  {
+    id: 2,
     title: "Data Intelligence & Engineering",
     tagline: "Transform raw data into scalable intelligence.",
-    description: "Building the foundation: collecting, structuring, and analyzing data to power machine learning and automation. This is the bedrock for every solution we offer — turning chaos into clarity.",
+    description: "Transform raw data into scalable intelligence. We build the foundation for machine learning and automation by collecting, structuring, and analyzing data — turning chaos into clarity.",
     icon: <Database className="h-12 w-12" />,
     gradient: "from-amber-400 to-orange-500",
     features: [
@@ -23,25 +38,10 @@ const services = [
     ],
   },
   {
-    id: 2,
-    title: "Applied AI Systems",
-    tagline: "Bringing intelligence to everyday workflows.",
-    description: "AI as a tool for automation and decision-making across industries. We're not just analyzing — we're building intelligent systems that actually do work.",
-    icon: <Brain className="h-12 w-12" />,
-    gradient: "from-orange-500 to-red-600",
-    features: [
-      "Natural Language Processing (document analysis, chatbots, agents)",
-      "Computer Vision & Intelligent Recognition Systems",
-      "Generative AI Integrations (text, code, visual AI)",
-      "Workflow Automation (RPA, agent orchestration, decision systems)",
-      "Predictive Maintenance & Forecasting"
-    ],
-  },
-  {
     id: 3,
-    title: "Product Engineering & Experience",
+    title: "Product Engineering",
     tagline: "From prototype to polished product.",
-    description: "Creating modern, AI-powered digital products that delight users and scale effortlessly. This is how we bring AI and data systems to life with technical depth and exceptional user experience.",
+    description: "From prototype to polished product. We create modern, AI-powered digital products that delight users and scale effortlessly. Our focus: technical depth, performance, and exceptional user experience.",
     icon: <Code className="h-12 w-12" />,
     gradient: "from-red-600 to-amber-400",
     features: [
@@ -58,6 +58,7 @@ const ServiceCard = ({ service, index }) => {
   const cardRef = useRef(null);
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
+  const [isCardHovered, setIsCardHovered] = useState(false);
   const { scrollYProgress } = useScroll({
     target: cardRef,
     offset: ["start end", "end start"],
@@ -68,6 +69,8 @@ const ServiceCard = ({ service, index }) => {
   return (
     <motion.div
       ref={cardRef}
+      onMouseEnter={() => setIsCardHovered(true)}
+      onMouseLeave={() => setIsCardHovered(false)}
       initial={{ opacity: 0, y: isMobile ? 30 : 50, rotateX: isMobile ? 0 : -30 }}
       whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
       transition={{ duration: isMobile ? 0.5 : 0.8, delay: index * (isMobile ? 0.05 : 0.1) }}
@@ -103,12 +106,9 @@ const ServiceCard = ({ service, index }) => {
         <div className="relative z-10">
           {/* Icon container */}
           <motion.div
-            className={`mb-6 inline-flex rounded-2xl bg-gradient-to-r ${service.gradient} p-4`}
-            whileHover={!isMobile ? { 
-              scale: 1.1,
-              rotate: 360,
-              transition: { duration: 0.5 }
-            } : {}}
+            className={`mb-6 inline-flex rounded-2xl bg-gradient-to-r from-amber-600 to-red-600 p-4`}
+            animate={!isMobile && isCardHovered ? { scale: 1.1, rotate: 360 } : { scale: 1, rotate: 0 }}
+            transition={{ duration: 0.5 }}
           >
             <div className="text-white">
               {service.icon}
@@ -118,7 +118,7 @@ const ServiceCard = ({ service, index }) => {
           {/* Title */}
           <motion.h3
             className="mb-2 text-2xl font-bold text-neutral-900"
-            whileHover={!isMobile ? { x: 5 } : {}}
+            animate={!isMobile && isCardHovered ? { x: 5 } : { x: 0 }}
             transition={{ duration: 0.3 }}
           >
             {service.title}
@@ -126,7 +126,7 @@ const ServiceCard = ({ service, index }) => {
 
           {/* Tagline */}
           {service.tagline && (
-            <p className={`mb-4 text-sm font-semibold bg-gradient-to-r ${service.gradient} bg-clip-text text-transparent`}>
+            <p className={`mb-4 text-sm font-semibold bg-gradient-to-r from-amber-600 to-red-600 bg-clip-text text-transparent`}>
               {service.tagline}
             </p>
           )}
@@ -152,9 +152,9 @@ const ServiceCard = ({ service, index }) => {
                 transition={{ delay: 0.3 + idx * 0.1 }}
               >
                 <motion.div
-                  className={`h-1.5 w-1.5 rounded-full bg-gradient-to-r ${service.gradient}`}
-                  animate={!prefersReducedMotion ? { scale: [1, 1.5, 1] } : {}}
-                  transition={{ duration: 2, repeat: Infinity, delay: idx * 0.2 }}
+                  className={`h-2 w-2 rounded-full bg-gradient-to-r from-amber-400 to-red-600`}
+                  animate={!isMobile && isCardHovered ? { scale: 1.3 } : { scale: 1 }}
+                  transition={{ duration: 0.3 }}
                 />
                 <span className="text-sm text-neutral-500">{feature}</span>
               </motion.div>
@@ -170,7 +170,7 @@ const ServiceCard = ({ service, index }) => {
           >
             <motion.a
               href="#"
-              className={`inline-flex items-center gap-2 text-transparent bg-gradient-to-r ${service.gradient} bg-clip-text font-semibold`}
+              className={`inline-flex items-center gap-2 text-transparent bg-gradient-to-r from-amber-600 to-red-600 bg-clip-text font-semibold`}
               whileHover={{ x: 5 }}
               transition={{ duration: 0.3 }}
             >
@@ -188,7 +188,7 @@ const ServiceCard = ({ service, index }) => {
         {/* Corner accent */}
         <motion.div
           className="absolute top-0 right-0 h-32 w-32"
-          whileHover={!isMobile ? { scale: 1.5, rotate: 90 } : {}}
+          animate={!isMobile && isCardHovered ? { scale: 1.5, rotate: 90 } : { scale: 1, rotate: 0 }}
           transition={{ duration: 0.5 }}
         >
           <div className={`h-full w-full bg-gradient-to-br ${service.gradient} opacity-10`} />
@@ -314,7 +314,7 @@ export default function ServicesList() {
             Ready to transform your business with cutting-edge technology?
           </motion.p>
           <motion.button
-            className="group relative overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-red-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl"
+            className="group relative overflow-hidden rounded-full bg-gradient-to-r from-amber-500 to-red-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}

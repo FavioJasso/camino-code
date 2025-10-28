@@ -98,37 +98,33 @@ export default function StructuredData({ page = 'home', customData = null }) {
           '@type': 'Offer',
           itemOffered: {
             '@type': 'Service',
-            name: 'Data Science & Analytics',
-            description: 'Advanced data science, machine learning, and predictive analytics solutions',
+            name: 'Applied AI Systems',
+            description:
+              'AI-powered solutions including natural language processing, computer vision, generative AI, and intelligent automation for business workflows.',
           },
         },
         {
           '@type': 'Offer',
           itemOffered: {
             '@type': 'Service',
-            name: 'Web Development',
-            description: 'Full-stack web development with modern frameworks and technologies',
+            name: 'Data Intelligence & Engineering',
+            description:
+              'Data pipeline design, predictive analytics, visualization dashboards, and scalable database architecture to transform raw data into actionable intelligence.',
           },
         },
         {
           '@type': 'Offer',
           itemOffered: {
             '@type': 'Service',
-            name: 'Cloud Solutions',
-            description: 'Cloud migration, architecture, and optimization services',
-          },
-        },
-        {
-          '@type': 'Offer',
-          itemOffered: {
-            '@type': 'Service',
-            name: 'AI & Machine Learning',
-            description: 'Custom AI solutions and machine learning model development',
+            name: 'Product Engineering',
+            description:
+              'End-to-end product development including web and mobile apps, AI-integrated platforms, UI/UX design, and performance engineering for scalable digital products.',
           },
         },
       ],
     },
   };
+
 
   // BreadcrumbList Schema
   const getBreadcrumbSchema = () => {

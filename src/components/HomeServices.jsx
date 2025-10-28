@@ -1,6 +1,6 @@
 "use client";
 
-import { Layers2, Laptop, Cpu, ArrowRight, Sparkles } from "lucide-react";
+import { Brain, Cpu, Database,  ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Spline from "@splinetool/react-spline";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -12,29 +12,33 @@ import { useIsMobile } from "@/hooks/useIsMobile";
 const services = [
   {
     id: 1,
-    title: "Data Science",
-    icon: <Layers2 className="h-8 w-8" />,
+    title: "Applied AI Systems",
+    icon: <Brain className="h-8 w-8 text-amber-400" />,
     items: [
-      "Predictive Analytics",
-      "Machine Learning Models",
-      "Big Data Solutions",
+      "Natural Language Processing",
+      "Computer Vision & Recognition",
+      "Generative AI Integrations",
     ],
   },
   {
     id: 2,
-    title: "Software Development",
-    icon: <Laptop className="h-8 w-8" />,
+    title: "Data Intelligence & Engineering",
+    icon: <Database className="h-8 w-8 text-amber-400" />,
     items: [
-      "Custom Web Applications",
-      "Scalable Architecture",
-      "Performance Optimization",
+      "Data Pipeline Design (ETL/ELT, APIs)",
+      "Predictive Analytics & Dashboards",
+      "Database Architecture (SQL/NoSQL)",
     ],
   },
   {
     id: 3,
-    title: "Automated Solutions",
-    icon: <Cpu className="h-8 w-8" />,
-    items: ["Natural Language Processing", "AI-Driven Insights"],
+    title: "Product Engineering",
+    icon: <Cpu className="h-8 w-8 text-amber-400" />,
+    items: [
+      "Web & Mobile Development",
+      "AI-Integrated Platforms",
+      "Performance & Reliability Engineering",
+    ],
   },
 ];
 
@@ -364,9 +368,9 @@ export default function ServicesSection() {
                     whileHover={
                       !isMobile
                         ? {
-                            filter:
-                              "drop-shadow(0 0 20px rgba(245, 158, 11, 0.8))",
-                          }
+                          filter:
+                            "drop-shadow(0 0 20px rgba(245, 158, 11, 0.8))",
+                        }
                         : {}
                     }
                   >
