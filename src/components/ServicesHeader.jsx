@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { ArrowDown, Code, Palette, Brain } from "lucide-react";
+import { ArrowDown, Database, Code , Brain } from "lucide-react";
 import Link from "next/link";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
@@ -12,10 +12,23 @@ const ServicesHeader = () => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"]
+  });
   
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, isMobile ? -50 : -150]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, isMobile ? -50 : -150]);
+  
+  // Calculate opacity based on section progress:
+  // - Stay at 1 until 60% of header progress
+  // - Drop to 0.5 at 70% of header progress
+  // - Drop to 0 after 70% of header progress
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.3, 0.6],
+    [1, 0.8, 0]
+  );
 
   // Split text animation
   const titleWords = ["OUR", "SERVICES"];
@@ -106,12 +119,12 @@ const ServicesHeader = () => {
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       particles.forEach((particle) => {
         particle.update();
         particle.draw();
       });
-      
+
       connectParticles();
       requestAnimationFrame(animate);
     };
@@ -120,8 +133,8 @@ const ServicesHeader = () => {
   }, [dimensions, isMobile, prefersReducedMotion]);
 
   const wordVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: isMobile ? 50 : 100,
       rotateX: isMobile ? 0 : -90,
       filter: isMobile ? "none" : "blur(10px)"
@@ -168,7 +181,7 @@ const ServicesHeader = () => {
     <section
       ref={sectionRef}
       id="services"
-      className="relative flex h-[120vh] min-h-[900px] w-full flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-900 via-black to-neutral-900"
+      className="relative flex lg:h-[110vh] h-[120vh] min-h-[900px] w-full flex-col items-center justify-center overflow-visible bg-gradient-to-b from-neutral-900 via-black to-neutral-900"
     >
       {/* Animated particles canvas */}
       {!isMobile && !prefersReducedMotion && (
@@ -198,11 +211,11 @@ const ServicesHeader = () => {
 
       <motion.div
         style={{ y, opacity }}
-        className="relative z-10 flex flex-col items-center justify-center text-center"
+        className="relative z-10 flex flex-col items-center justify-center text-center overflow-visible"
       >
         {/* Main Title with perspective */}
-        <motion.div 
-          className="perspective-1000 mb-8"
+        <motion.div
+          className="perspective-1000 mb-8 overflow-visible"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -213,16 +226,15 @@ const ServicesHeader = () => {
                 key={index}
                 custom={index}
                 variants={wordVariants}
-                className={`block text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] ${
-                  index === 1 
-                    ? "bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent" 
-                    : "text-white"
-                }`}
+                className={`inline-block text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] px-4 ${index === 1
+                  ? "bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
+                  : "text-white"
+                  }`}
                 whileHover={!isMobile ? {
                   scale: 1.05,
-                  textShadow: index === 1 
-                    ? "0 0 50px rgba(245, 158, 11, 0.8)" 
-                    : "0 0 50px rgba(255, 255, 255, 0.8)",
+                  textShadow: index === 1
+                    ? "0 0 50px rgba(245, 158, 11, 0.4)"
+                    : "0 0 50px rgba(255, 255, 255, 0.4)",
                   transition: { duration: 0.3 },
                 } : {}}
               >
@@ -237,52 +249,52 @@ const ServicesHeader = () => {
           initial={{ opacity: 0, y: isMobile ? 20 : 30, filter: isMobile ? "none" : "blur(10px)" }}
           animate={{ opacity: 1, y: 0, filter: "none" }}
           transition={{ duration: isMobile ? 0.6 : 1, delay: 0.6 }}
-          className="mx-auto mb-12 max-w-4xl px-6 text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl"
+          className="mx-auto mb-12 max-w-4xl px-6 text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl text-balance"
         >
           Empowering businesses with{" "}
           <motion.span
-            className="font-semibold text-amber-400"
-            whileHover={!isMobile ? { 
+            className="font-semibold text-amber-400 whitespace-nowrap"
+            whileHover={!isMobile ? {
               textShadow: "0 0 30px rgba(245, 158, 11, 0.8)",
               scale: 1.05,
             } : {}}
           >
-            advanced data science
+            Advanced AI
           </motion.span>
           ,{" "}
           <motion.span
-            className="font-semibold text-amber-400"
-            whileHover={!isMobile ? { 
+            className="font-semibold text-amber-400 whitespace-nowrap"
+            whileHover={!isMobile ? {
               textShadow: "0 0 30px rgba(245, 158, 11, 0.8)",
               scale: 1.05,
             } : {}}
           >
-            web development
-          </motion.span>
-          , and{" "}
+            Data intelligence
+          </motion.span>{" "}
+          and{" "}
           <motion.span
-            className="font-semibold text-amber-400"
-            whileHover={!isMobile ? { 
+            className="font-semibold text-amber-400 whitespace-nowrap"
+            whileHover={!isMobile ? {
               textShadow: "0 0 30px rgba(245, 158, 11, 0.8)",
               scale: 1.05,
             } : {}}
           >
-            AI integration
+            Product engineering
           </motion.span>
-          . Transform your vision into reality with our cutting-edge solutions.
+          . We transform your vision into reality with cutting-edge solutions that scale.
         </motion.p>
 
         {/* Service Icons */}
-        <motion.div 
+        <motion.div
           className="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
         >
           {[
-            { icon: <Code className="h-8 w-8" />, label: "Web Development" },
-            { icon: <Brain className="h-8 w-8" />, label: "AI Solutions" },
-            { icon: <Palette className="h-8 w-8" />, label: "UI/UX Design" },
+            { icon: <Brain className="h-8 w-8" />, label: "Applied AI Systems"},
+            { icon: <Database className="h-8 w-8" />, label: "Data Intelligence & Engineering"},
+            { icon: <Code className="h-8 w-8" />, label: "Product Engineering"},
           ].map((service, index) => (
             <motion.div
               key={index}
@@ -290,9 +302,9 @@ const ServicesHeader = () => {
               variants={iconVariants}
               initial="hidden"
               animate="visible"
-              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm"
-              whileHover={!isMobile ? { 
-                scale: 1.05, 
+              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm max-w-[190px] mx-auto"
+              whileHover={!isMobile ? {
+                scale: 1.05,
                 y: -10,
                 transition: { type: "spring", stiffness: 300 }
               } : {}}
@@ -307,7 +319,7 @@ const ServicesHeader = () => {
                 transition={{ duration: 0.3 }}
               >
                 <div className="mb-4 text-amber-400">{service.icon}</div>
-                <p className="text-sm font-medium text-white/80">{service.label}</p>
+                <p className="text-sm font-medium text-white/80 text-center">{service.label}</p>
               </motion.div>
             </motion.div>
           ))}
@@ -321,7 +333,7 @@ const ServicesHeader = () => {
         >
           <Link href="#services-list">
             <motion.button
-              className="group relative overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-red-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl"
+              className="group relative overflow-hidden rounded-full bg-gradient-to-r from-amber-500 to-red-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
@@ -351,13 +363,13 @@ const ServicesHeader = () => {
 
       {/* Scroll indicator */}
       <motion.div
-        className="absolute bottom-10 left-1/2 z-10 -translate-x-1/2"
+        className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
+        transition={{ delay: 1.8, duration: 0.6 }}
       >
         <motion.div
-          animate={{ y: [0, 12, 0] }}
+          animate={{ y: [0, -12, 0], opacity: [0.6, 0.6, 0.6] }}
           transition={{
             duration: 1.5,
             repeat: Infinity,
@@ -365,12 +377,14 @@ const ServicesHeader = () => {
           }}
           className="flex flex-col items-center"
         >
-          <span className="mb-2 text-sm uppercase tracking-widest text-white/60">
+          <span className="mb-1.5 text-sm uppercase tracking-widest text-white/60">
             Scroll
           </span>
           <ArrowDown className="h-6 w-6 text-amber-400" />
         </motion.div>
       </motion.div>
+
+
 
       {/* Decorative floating elements */}
       {!isMobile && (
