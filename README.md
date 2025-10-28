@@ -6,6 +6,7 @@ Camino Code is a Applied AI Systems, Data Science and Product Engineering organi
 
 <li> Founder & CEO: Favio Jasso
 <li> Software Engineer: John Rey Calesa
+<li> Software Engineer: Sandro Nahuel Ramirez Tokarsky
 <li> Concept Artist: Ayelén Vázquez De La Rosa
 
 # Next.js Starter Kit: Basics
