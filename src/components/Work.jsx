@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   useIntersectionObserver,
   useCursorPosition,
@@ -10,6 +10,7 @@ import {
 import { staggerContainer } from "@/utils/animations";
 import { useState } from "react";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
+import { ArrowBigRightIcon, ArrowBigRightDashIcon } from "lucide-react";
 
 const caseStudies = [
   {
@@ -268,6 +269,7 @@ export default function WorkShowcase() {
   });
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
+  const [isHovered, setIsHovered] = useState(false);
 
   const titleVariants = {
     hidden: { 
@@ -403,31 +405,66 @@ export default function WorkShowcase() {
             transition={{ delay: 0.8, duration: 0.6 }}
           >
             <Link href="/case-study-detailed">
-              <motion.button
-                className="lg:mt-8 group relative overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-red-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            <motion.button
+              className="group lg:mt-8 text-lg font-semibold relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-amber-600 to-red-600 px-8 py-4 text-white"
+              initial="initial"
+              whileHover="hover"
+              whileTap={{ scale: 0.95 }}
+              onHoverStart={() => setIsHovered(true)}
+              onHoverEnd={() => setIsHovered(false)}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              variants={{
+                initial: { scale: 1 },
+                hover: { scale: 1.05 }
+              }}
+            >
+              <span className="relative z-10">View All Projects</span>
+              <motion.span
+                className="relative z-10 ml-2"
+                variants={{
+                  initial: { x: 0 },
+                  hover: {
+                    x: [0, 5, 0],
+                    transition: {
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }
+                  }
+                }}
               >
-                <span className="relative z-10">View All Projects</span>
-                <motion.span
-                  className="relative z-10 ml-2 inline-block"
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
-                  →
-                </motion.span>
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-red-600 to-amber-400"
-                  initial={{ x: "100%" }}
-                  whileHover={{ x: 0 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                />
-              </motion.button>
+                <AnimatePresence mode="wait">
+                  {!isHovered ? (
+                    <motion.div
+                      key="normal"
+                      initial={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ArrowBigRightIcon className="h-5 w-5" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="dash"
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ArrowBigRightDashIcon className="h-5 w-5" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.span>
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-t from-red-600 to-amber-600"
+                variants={{
+                  initial: { y: "100%" },
+                  hover: { y: 0 }
+                }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+              />
+            </motion.button>
             </Link>
           </motion.div>
 

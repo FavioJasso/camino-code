@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Send, Sparkles } from "lucide-react";
+import { ArrowRight, Send, SendHorizontal ,Sparkles } from "lucide-react";
 import { useForm } from "react-hook-form";
 import {
   motion,
@@ -22,6 +22,7 @@ export default function ContactForm() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [isHovered, setIsHovered] = useState(false);
   const sectionRef = useRef(null);
   const formRef = useRef(null);
   const isMobile = useIsMobile();
@@ -412,13 +413,17 @@ export default function ContactForm() {
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className="group relative w-full overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-red-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  custom={4}
-                  variants={inputVariants}
-                  initial="hidden"
-                  animate={hasIntersected ? "visible" : "hidden"}
+                  className="group relative w-full overflow-hidden rounded-full bg-gradient-to-t from-amber-600 to-red-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center"
+                  initial="initial"
+                  whileHover="hover"
+                  whileTap={{ scale: 0.95 }}
+                  onHoverStart={() => setIsHovered(true)}
+                  onHoverEnd={() => setIsHovered(false)}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  variants={{
+                    initial: { scale: 1 },
+                    hover: { scale: 1.05 }
+                  }}
                 >
                   <span className="relative z-10 flex items-center justify-center">
                     {isSubmitting ? (
@@ -438,28 +443,57 @@ export default function ContactForm() {
                       <>
                         Send Message
                         <motion.span
-                          className="ml-2"
-                          animate={{ x: [0, 5, 0] }}
-                          transition={{
-                            duration: 1.5,
-                            repeat: Infinity,
-                            ease: "easeInOut",
+                          className="ml-4 relative z-10"
+                          variants={{
+                            initial: { x: 0 },
+                            hover: {
+                              x: [0, 5, 0],
+                              transition: {
+                                duration: 1.5,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                              }
+                            }
                           }}
                         >
-                          <Send className="h-5 w-5" />
+                          <AnimatePresence mode="wait">
+                            {!isHovered ? (
+                              <motion.div
+                                key="send"
+                                initial={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.5 }}
+                                transition={{ duration: 0.2 }}
+                              >
+                                <Send className="h-5 w-5" />
+                              </motion.div>
+                            ) : (
+                              <motion.div
+                                key="send-horizontal"
+                                initial={{ opacity: 0, scale: 0.5 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.5 }}
+                                transition={{ duration: 0.2 }}
+                              >
+                                <SendHorizontal className="h-5 w-5" />
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </motion.span>
                       </>
                     )}
                   </span>
 
-                  {/* Animated background */}
+                  {/* Animated background con degradado igual al botón 2 */}
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-red-600 to-amber-400"
-                    initial={{ x: "-100%" }}
-                    whileHover={{ x: 0 }}
+                    className="absolute inset-0 bg-gradient-to-t from-red-600 to-amber-600"
+                    variants={{
+                      initial: { y: "100%" },
+                      hover: { y: 0 }
+                    }}
                     transition={{ duration: 0.3, ease: "easeOut" }}
                   />
                 </motion.button>
+
               </form>
 
               {/* Status messages */}
@@ -469,11 +503,10 @@ export default function ContactForm() {
                     initial={{ opacity: 0, y: 20, scale: 0.9 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -20, scale: 0.9 }}
-                    className={`mt-6 rounded-xl p-4 text-center backdrop-blur-sm ${
-                      submitStatus === "success"
+                    className={`mt-6 rounded-xl p-4 text-center backdrop-blur-sm ${submitStatus === "success"
                         ? "bg-green-500/10 text-green-600"
                         : "bg-red-500/10 text-red-600"
-                    }`}
+                      }`}
                   >
                     {submitStatus === "success"
                       ? "✨ Message sent successfully! We'll get back to you soon."

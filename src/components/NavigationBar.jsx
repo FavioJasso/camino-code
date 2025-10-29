@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowBigRightIcon, ArrowBigRightDashIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useScrollAnimation } from "@/hooks/useAnimations";
 
@@ -11,6 +11,7 @@ export default function NavigationBar({ iswhite = false }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { scrollY, scrollDirection } = useScrollAnimation();
   const [isVisible, setIsVisible] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
 
   // Handle navbar visibility based on scroll
   useEffect(() => {
@@ -168,27 +169,62 @@ export default function NavigationBar({ iswhite = false }) {
             >
               <Link href="/contact">
                 <motion.button
-                  className="group relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-6 py-3 text-white"
-                  whileHover={{ scale: 1.05 }}
+                  className="group relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-amber-600 to-red-600 px-6 py-3 text-white"
+                  initial="initial"
+                  whileHover="hover"
                   whileTap={{ scale: 0.95 }}
+                  onHoverStart={() => setIsHovered(true)}
+                  onHoverEnd={() => setIsHovered(false)}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  variants={{
+                    initial: { scale: 1 },
+                    hover: { scale: 1.05 }
+                  }}
                 >
                   <span className="relative z-10">Contact</span>
                   <motion.span
-                    className="relative z-10 ml-2"
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{
-                      duration: 1.5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
+                    className="relative z-10 ml-2 inline-block"
+                    variants={{
+                      initial: { x: 0 },
+                      hover: { 
+                        x: [0, 5, 0],
+                        transition: {
+                          duration: 1.5,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }
+                      }
                     }}
                   >
-                    <ArrowRightIcon className="h-4 w-4" />
+                    <AnimatePresence mode="wait">
+                      {!isHovered ? (
+                        <motion.div
+                          key="normal"
+                          initial={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.5 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <ArrowBigRightIcon className="h-5 w-5" />
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="dash"
+                          initial={{ opacity: 0, scale: 0.5 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.5 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <ArrowBigRightDashIcon className="h-5 w-5" />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </motion.span>
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-t from-red-600 to-amber-400"
-                    initial={{ y: "100%" }}
-                    whileHover={{ y: 0 }}
+                    className="absolute inset-0 bg-gradient-to-t from-red-600 to-amber-600"
+                    variants={{
+                      initial: { y: "100%" },
+                      hover: { y: 0 }
+                    }}
                     transition={{ duration: 0.3, ease: "easeOut" }}
                   />
                 </motion.button>
