@@ -27,8 +27,8 @@ const ServicesHeader = () => {
   // - Drop to 0 after 70% of header progress
   const opacity = useTransform(
     scrollYProgress,
-    [0, 0.3, 0.6],
-    [1, 0.8, 0]
+    [0, 0.3, 0.6, 0.8, 0.85],
+    [1, 0.8, 0.6, 0.4, 0.1]
   );
 
   // Split text animation
@@ -182,7 +182,7 @@ const ServicesHeader = () => {
     <section
       ref={sectionRef}
       id="services"
-      className="relative flex lg:h-[110vh] h-[120vh] min-h-[900px] w-full flex-col items-center justify-center overflow-visible bg-gradient-to-b from-neutral-900 via-black to-neutral-900"
+      className="relative flex lg:h-[110vh] h-[120vh] min-h-[1000px] w-full flex-col items-center justify-center overflow-visible bg-gradient-to-b from-neutral-900 via-black to-neutral-900"
     >
       {/* Animated particles canvas */}
       {!isMobile && !prefersReducedMotion && (
@@ -234,8 +234,8 @@ const ServicesHeader = () => {
                 whileHover={!isMobile ? {
                   scale: 1.05,
                   textShadow: index === 1
-                    ? "0 0 50px rgba(245, 158, 11, 0.4)"
-                    : "0 0 50px rgba(255, 255, 255, 0.4)",
+                    ? "0 0 50px rgba(245, 158, 11, 0.2)"
+                    : "0 0 50px rgba(255, 255, 255, 0.2)",
                   transition: { duration: 0.3 },
                 } : {}}
               >

@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { ArrowDown, Briefcase, Award, Users } from "lucide-react";
+import { ArrowDown, Briefcase, Award, Users, ArrowBigRightIcon, ArrowBigRightDashIcon } from "lucide-react";
 import Link from "next/link";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
@@ -12,10 +12,24 @@ const CaseStudiesHeader = () => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
+  const [isHovered, setIsHovered] = useState(false);
   
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, isMobile ? -50 : -150]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [0, isMobile ? -50 : -150]);
+
+  // Calculate opacity based on section progress:
+  // - Stay at 1 until 60% of header progress
+  // - Drop to 0.5 at 70% of header progress
+  // - Drop to 0 after 70% of header progress
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.3, 0.6, 0.8, 0.85],
+    [1, 0.8, 0.6, 0.4, 0.1]
+  );
 
   // Split text animation
   const titleWords = ["CASE", "STUDIES"];
@@ -168,7 +182,7 @@ const CaseStudiesHeader = () => {
     <section
       ref={sectionRef}
       id="case-studies"
-      className="relative flex h-[120vh] min-h-[900px] w-full flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-900 via-black to-neutral-900"
+      className="relative flex lg:h-[110vh] h-[120vh] min-h-[1000px] w-full flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-900 via-black to-neutral-900"
     >
       {/* Animated particles canvas */}
       {!isMobile && !prefersReducedMotion && (
@@ -202,7 +216,7 @@ const CaseStudiesHeader = () => {
       >
         {/* Main Title with perspective */}
         <motion.div 
-          className="perspective-1000 mb-8"
+          className="perspective-1000 mb-6"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -221,8 +235,8 @@ const CaseStudiesHeader = () => {
                 whileHover={!isMobile ? {
                   scale: 1.05,
                   textShadow: index === 0 
-                    ? "0 0 50px rgba(245, 158, 11, 0.8)" 
-                    : "0 0 50px rgba(255, 255, 255, 0.8)",
+                    ? "0 0 50px rgba(245, 158, 11, 0.2)" 
+                    : "0 0 50px rgba(255, 255, 255, 0.2)",
                   transition: { duration: 0.3 },
                 } : {}}
               >
@@ -237,7 +251,7 @@ const CaseStudiesHeader = () => {
           initial={{ opacity: 0, y: isMobile ? 20 : 30, filter: isMobile ? "none" : "blur(10px)" }}
           animate={{ opacity: 1, y: 0, filter: "none" }}
           transition={{ duration: isMobile ? 0.6 : 1, delay: 0.6 }}
-          className="mx-auto mb-12 max-w-4xl px-6 text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl"
+          className="mx-auto mb-10 max-w-5xl px-6 text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl"
         >
           At{" "}
           <motion.span
@@ -257,7 +271,7 @@ const CaseStudiesHeader = () => {
               scale: 1.05,
             } : {}}
           >
-            data science
+            Data Science
           </motion.span>{" "}
           and{" "}
           <motion.span
@@ -267,14 +281,14 @@ const CaseStudiesHeader = () => {
               scale: 1.05,
             } : {}}
           >
-            web development
+            Web Development
           </motion.span>
           . Our portfolio showcases transformative projects that enhance business efficiency and performance.
         </motion.p>
 
         {/* Stats Cards */}
         <motion.div 
-          className="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8"
+          className="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
@@ -303,12 +317,10 @@ const CaseStudiesHeader = () => {
               />
               <motion.div
                 className="relative z-10 flex flex-col items-center"
-                whileHover={!isMobile ? { scale: 1.1 } : {}}
-                transition={{ duration: 0.3 }}
               >
-                <div className="mb-4 text-amber-400">{stat.icon}</div>
+                <div className="mb-3 text-amber-400">{stat.icon}</div>
                 <motion.p 
-                  className="text-4xl font-bold text-white"
+                  className="text-4xl font-bold text-white "
                   animate={!prefersReducedMotion ? { 
                     scale: [1, 1.1, 1],
                   } : {}}
@@ -320,7 +332,7 @@ const CaseStudiesHeader = () => {
                 >
                   {stat.number}
                 </motion.p>
-                <p className="mt-2 text-sm text-white/60">{stat.label}</p>
+                <p className="mt-1 text-sm text-white/60 max-w-40">{stat.label}</p>
               </motion.div>
             </motion.div>
           ))}
@@ -334,30 +346,66 @@ const CaseStudiesHeader = () => {
         >
           <Link href="#work">
             <motion.button
-              className="group relative overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-red-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl"
-              whileHover={!isMobile ? { scale: 1.05 } : {}}
+              className="group text-lg font-semibold relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-amber-600 to-red-600 px-8 py-4 text-white"
+              initial="initial"
+              whileHover="hover"
               whileTap={{ scale: 0.95 }}
+              onHoverStart={() => setIsHovered(true)}
+              onHoverEnd={() => setIsHovered(false)}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              variants={{
+                initial: { scale: 1 },
+                hover: { scale: 1.05 }
+              }}
             >
               <span className="relative z-10">Explore Our Work</span>
               <motion.span
-                className="relative z-10 ml-2 inline-block"
-                animate={!prefersReducedMotion ? { x: [0, 5, 0] } : {}}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
+                className="relative z-10 ml-2"
+                variants={{
+                  initial: { x: 0 },
+                  hover: {
+                    x: [0, 5, 0],
+                    transition: {
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }
+                  }
                 }}
               >
-                →
+                <AnimatePresence mode="wait">
+                  {!isHovered ? (
+                    <motion.div
+                      key="normal"
+                      initial={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ArrowBigRightIcon className="h-5 w-5" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="dash"
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ArrowBigRightDashIcon className="h-5 w-5" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.span>
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-red-600 to-amber-400"
-                initial={{ x: "100%" }}
-                whileHover={!isMobile ? { x: 0 } : {}}
+                className="absolute inset-0 bg-gradient-to-t from-red-600 to-amber-600"
+                variants={{
+                  initial: { y: "100%" },
+                  hover: { y: 0 }
+                }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
               />
             </motion.button>
+
           </Link>
         </motion.div>
       </motion.div>
