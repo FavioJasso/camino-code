@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { ArrowDown, Database, Code , Brain } from "lucide-react";
+import { ArrowDown, Database, Code, Brain, ArrowBigRightIcon, ArrowBigRightDashIcon } from "lucide-react";
 import Link from "next/link";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
@@ -12,14 +12,15 @@ const ServicesHeader = () => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
+  const [isHovered, setIsHovered] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"]
   });
-  
+
   const y = useTransform(scrollYProgress, [0, 1], [0, isMobile ? -50 : -150]);
-  
+
   // Calculate opacity based on section progress:
   // - Stay at 1 until 60% of header progress
   // - Drop to 0.5 at 70% of header progress
@@ -292,9 +293,9 @@ const ServicesHeader = () => {
           transition={{ delay: 0.8 }}
         >
           {[
-            { icon: <Brain className="h-8 w-8" />, label: "Applied AI Systems"},
-            { icon: <Database className="h-8 w-8" />, label: "Data Intelligence & Engineering"},
-            { icon: <Code className="h-8 w-8" />, label: "Product Engineering"},
+            { icon: <Brain className="h-8 w-8" />, label: "Applied AI Systems" },
+            { icon: <Database className="h-8 w-8" />, label: "Data Intelligence & Engineering" },
+            { icon: <Code className="h-8 w-8" />, label: "Product Engineering" },
           ].map((service, index) => (
             <motion.div
               key={index}
@@ -315,7 +316,6 @@ const ServicesHeader = () => {
               />
               <motion.div
                 className="relative z-10 flex flex-col items-center"
-                whileHover={!isMobile ? { scale: 1.1 } : {}}
                 transition={{ duration: 0.3 }}
               >
                 <div className="mb-4 text-amber-400">{service.icon}</div>
@@ -333,30 +333,66 @@ const ServicesHeader = () => {
         >
           <Link href="#services-list">
             <motion.button
-              className="group relative overflow-hidden rounded-full bg-gradient-to-r from-amber-500 to-red-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl"
-              whileHover={{ scale: 1.05 }}
+              className="group text-lg font-semibold relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-amber-600 to-red-600 px-8 py-4 text-white"
+              initial="initial"
+              whileHover="hover"
               whileTap={{ scale: 0.95 }}
+              onHoverStart={() => setIsHovered(true)}
+              onHoverEnd={() => setIsHovered(false)}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              variants={{
+                initial: { scale: 1 },
+                hover: { scale: 1.05 }
+              }}
             >
               <span className="relative z-10">Explore Our Services</span>
               <motion.span
-                className="relative z-10 ml-2 inline-block"
-                animate={{ x: [0, 5, 0] }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
+                className="relative z-10 ml-2"
+                variants={{
+                  initial: { x: 0 },
+                  hover: {
+                    x: [0, 5, 0],
+                    transition: {
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }
+                  }
                 }}
               >
-                →
+                <AnimatePresence mode="wait">
+                  {!isHovered ? (
+                    <motion.div
+                      key="normal"
+                      initial={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ArrowBigRightIcon className="h-5 w-5" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="dash"
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ArrowBigRightDashIcon className="h-5 w-5" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.span>
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-red-600 to-amber-400"
-                initial={{ x: "100%" }}
-                whileHover={{ x: 0 }}
+                className="absolute inset-0 bg-gradient-to-t from-red-600 to-amber-600"
+                variants={{
+                  initial: { y: "100%" },
+                  hover: { y: 0 }
+                }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
               />
             </motion.button>
+
           </Link>
         </motion.div>
       </motion.div>

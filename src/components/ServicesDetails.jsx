@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 import {
   Laptop,
@@ -13,15 +13,14 @@ import {
   Cloud,
   Paintbrush,
   Globe,
-  Smartphone,
   SearchCheck,
-  FilePlus,
   PanelTop,
   BarChart2,
-  Headphones,
   Database,
   Shield,
   Code,
+  ArrowBigRightIcon,
+  ArrowBigRightDashIcon
 } from "lucide-react";
 
 const servicesSections = [
@@ -29,31 +28,31 @@ const servicesSections = [
     id: "applied-ai",
     title: "Applied AI Systems",
     subtitle: "Transform Workflows with Intelligent Automation",
-    icon: <Brain className="h-full w-full" />,
-    gradient: "from-blue-400 to-purple-600",
+    icon: <Brain className="h-10/12 w-10/12" />,
+    gradient: "from-blue-600 to-purple-600",
     services: [
       {
-        icon: <ClipboardList className="h-full w-full" />,
+        icon: <ClipboardList className="h-10/12 w-10/12" />,
         title: "AI Strategy & Consulting",
         description: "We design tailored AI strategies that align with your business goals, ensuring security, compliance, and measurable ROI.",
       },
       {
-        icon: <LineChart className="h-full w-full" />,
+        icon: <LineChart className="h-10/12 w-10/12" />,
         title: "Natural Language Processing",
         description: "From chatbots to document analysis, we build NLP systems that understand and respond intelligently.",
       },
       {
-        icon: <SearchCheck className="h-full w-full" />,
+        icon: <SearchCheck className="h-10/12 w-10/12" />,
         title: "Computer Vision & Recognition",
         description: "Intelligent recognition systems for images, video, and real-time monitoring.",
       },
       {
-        icon: <Paintbrush className="h-full w-full" />,
+        icon: <Paintbrush className="h-10/12 w-10/12" />,
         title: "Generative AI Integrations",
         description: "Harness the power of text, code, and visual AI to accelerate creativity and productivity.",
       },
       {
-        icon: <BarChart2 className="h-full w-full" />,
+        icon: <BarChart2 className="h-10/12 w-10/12" />,
         title: "Predictive Systems",
         description: "Forecast demand, detect anomalies, and enable predictive maintenance with custom AI models.",
       },
@@ -61,33 +60,33 @@ const servicesSections = [
   },
   {
     id: "data-intelligence",
-    title: "Data Intelligence & Engineering",
+    title: "Data Intelligence",
     subtitle: "Turn Raw Data into Scalable Intelligence",
-    icon: <Database className="h-full w-full" />,
-    gradient: "from-amber-400 to-red-600",
+    icon: <Database className="h-10/12 w-10/12" />,
+    gradient: "from-amber-600 to-red-600",
     services: [
       {
-        icon: <ClipboardList className="h-full w-full" />,
+        icon: <ClipboardList className="h-10/12 w-10/12"  />,
         title: "Data Strategy & Architecture",
         description: "Build secure, compliant, and scalable data ecosystems with clear KPIs that drive growth.",
       },
       {
-        icon: <CloudUpload className="h-full w-full" />,
+        icon: <CloudUpload className="h-10/12 w-10/12"  />,
         title: "Data Engineering",
         description: "Design robust pipelines (ETL/ELT, APIs, automation) to collect, process, and store massive datasets.",
       },
       {
-        icon: <BarChart2 className="h-full w-full" />,
+        icon: <BarChart2 className="h-10/12 w-10/12"  />,
         title: "Analytics & Visualization",
         description: "Transform complexity into clarity with interactive dashboards and advanced analytics.",
       },
       {
-        icon: <Brain className="h-full w-full" />,
+        icon: <Brain className="h-10/12 w-10/12" />,
         title: "Machine Learning & Predictive Analytics",
         description: "Deploy models that automate decision-making and uncover hidden opportunities.",
       },
       {
-        icon: <Cloud className="h-full w-full" />,
+        icon: <Cloud className="h-10/12 w-10/12" />,
         title: "Industry-Specific Solutions",
         description: "Tailored data-driven systems for healthcare, finance, retail, manufacturing, and beyond.",
       },
@@ -97,31 +96,31 @@ const servicesSections = [
     id: "product-engineering",
     title: "Product Engineering",
     subtitle: "Build Digital Products That Scale",
-    icon: <Code className="h-full w-full" />,
-    gradient: "from-green-400 to-teal-600",
+    icon: <Code className="h-10/12 w-10/12" />,
+    gradient: "from-green-600 to-teal-600",
     services: [
       {
-        icon: <Laptop className="h-full w-full" />,
+        icon: <Laptop className="h-10/12 w-10/12"  />,
         title: "Software Strategy & Solutions",
         description: "Architect scalable platforms that adapt to evolving business needs.",
       },
       {
-        icon: <Paintbrush className="h-full w-full" />,
+        icon: <Paintbrush className="h-10/12 w-10/12"  />,
         title: "UI/UX Design",
         description: "Create intuitive, research-driven interfaces that delight users and boost engagement.",
       },
       {
-        icon: <Globe className="h-full w-full" />,
+        icon: <Globe className="h-10/12 w-10/12"  />,
         title: "Web & Mobile Development",
         description: "Build secure, SEO-optimized websites and cross-platform apps with React Native and Flutter.",
       },
       {
-        icon: <PanelTop className="h-full w-full" />,
+        icon: <PanelTop className="h-10/12 w-10/12"  />,
         title: "AI-Integrated Platforms",
         description: "From dashboards to internal tools, we embed AI into products for smarter performance.",
       },
       {
-        icon: <Shield className="h-full w-full" />,
+        icon: <Shield className="h-10/12 w-10/12"  />,
         title: "Performance & Reliability Engineering",
         description: "Ensure seamless scalability, speed, and reliability across all digital products.",
       },
@@ -171,6 +170,7 @@ const ServiceSection = ({ section, index, isActive }) => {
   const sectionRef = useRef(null);
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
+  const [isHovered, setIsHovered] = useState(false);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
@@ -272,29 +272,64 @@ const ServiceSection = ({ section, index, isActive }) => {
             >
               <Link href="/contact">
                 <motion.button
-            className={`group relative overflow-hidden rounded-full bg-gradient-to-r ${section.gradient} px-8 py-4 text-lg font-semibold text-white shadow-2xl`}
-            whileHover={!isMobile ? { scale: 1.05 } : {}}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  className={`group relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t ${section.gradient} px-6 py-3 text-white`}
+                  initial="initial"
+                  whileHover="hover"
+                  whileTap={{ scale: 0.95 }}
+                  onHoverStart={() => setIsHovered(true)}
+                  onHoverEnd={() => setIsHovered(false)}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  variants={{
+                    initial: { scale: 1 },
+                    hover: { scale: 1.05 }
+                  }}
                 >
-            <span className="relative z-10">Let's Talk</span>
-            <motion.span
-              className="relative z-10 ml-2 inline-block"
-              animate={!prefersReducedMotion ? { x: [0, 5, 0] } : {}}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
-              →
-            </motion.span>
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 "
-              initial={{ x: "-100%" }}
-              whileHover={!isMobile ? { x: 0 } : {}}
-              transition={{ duration: 0.3 }}
-            />
+                  <span className="relative z-10">Let's Talk</span>
+                  <motion.span
+                    className="relative z-10 ml-2 inline-block"
+                    variants={{
+                      initial: { x: 0 },
+                      hover: { 
+                        x: [0, 5, 0],
+                        transition: {
+                          duration: 1.5,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }
+                      }
+                    }}
+                  >
+                    <AnimatePresence mode="wait">
+                      {!isHovered ? (
+                        <motion.div
+                          key="normal"
+                          initial={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.5 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <ArrowBigRightIcon className="h-5 w-5" />
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="dash"
+                          initial={{ opacity: 0, scale: 0.5 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.5 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <ArrowBigRightDashIcon className="h-5 w-5" />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.span>
+                  <motion.div
+                    className={`absolute inset-0 bg-gradient-to-b ${section.gradient}`}
+                    variants={{
+                      initial: { y: "100%" },
+                      hover: { y: 0 }
+                    }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                  />
                 </motion.button>
               </Link>
             </motion.div>
@@ -365,12 +400,13 @@ const ServiceCard = ({ service, index, gradient, isActive, textClass, descClass 
         <motion.div
           className={`absolute -inset-1 rounded-3xl bg-gradient-to-r ${gradient} opacity-0 ${isMobile ? 'blur-lg' : 'blur-xl'}`}
           animate={!prefersReducedMotion ? {
-            opacity: isActive ? [0, isMobile ? 0.2 : 0.3, 0] : 0,
+            opacity: isActive ? [0, isMobile ? 0.15 : 0.2, 0] : 0,
           } : {}}
           transition={{
-            duration: 2,
+            duration: 4,
             repeat: isActive && !prefersReducedMotion ? Infinity : 0,
-            delay: index * 0.2,
+            delay: index * 0.8,
+            repeatDelay: 2,
           }}
         />
 
@@ -399,25 +435,6 @@ const ServiceCard = ({ service, index, gradient, isActive, textClass, descClass 
         <p className={`${descClass} leading-relaxed`}>
           {service.description}
         </p>
-
-        {/* Hover indicator */}
-        {!isMobile && (
-          <motion.div
-            className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100"
-            transition={{ duration: 0.3 }}
-          >
-            <motion.div
-              className={`h-8 w-8 rounded-full bg-gradient-to-r ${gradient}`}
-              animate={!prefersReducedMotion ? {
-                scale: [1, 1.2, 1],
-              } : {}}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-              }}
-            />
-          </motion.div>
-        )}
       </motion.div>
     </motion.div>
   );

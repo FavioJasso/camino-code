@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Code, Brain, Palette, Database, Cloud, Shield } from "lucide-react";
+import { Code, Brain, Database } from "lucide-react";
 import { useRef, useState } from "react";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
@@ -107,8 +107,8 @@ const ServiceCard = ({ service, index }) => {
           {/* Icon container */}
           <motion.div
             className={`mb-6 inline-flex rounded-2xl bg-gradient-to-r from-amber-600 to-red-600 p-4`}
-            animate={!isMobile && isCardHovered ? { scale: 1.1, rotate: 360 } : { scale: 1, rotate: 0 }}
-            transition={{ duration: 0.5 }}
+            animate={!isMobile && isCardHovered ? { scale: 1.1 } : { scale: 1 }}
+            transition={{ duration: 1 }}
           >
             <div className="text-white">
               {service.icon}
@@ -313,20 +313,42 @@ export default function ServicesList() {
           >
             Ready to transform your business with cutting-edge technology?
           </motion.p>
-          <motion.button
-            className="group relative overflow-hidden rounded-full bg-gradient-to-r from-amber-500 to-red-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          >
-            <span className="relative z-10">Get Started Today</span>
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-red-600 to-amber-400"
-              initial={{ x: "100%" }}
-              whileHover={{ x: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            />
-          </motion.button>
+            <motion.button
+              className="group relative overflow-hidden rounded-full font-semibold text-lg bg-gradient-to-t from-amber-600 to-red-600 px-8 py-4 text-white"
+              initial="initial"
+              whileHover="hover"
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              variants={{
+                initial: { scale: 1 },
+                hover: { scale: 1.05 }
+              }}
+            >
+              <span className="relative z-10">Get Started Today</span>
+              <motion.span
+                className="relative z-10 ml-2"
+                variants={{
+                  initial: { x: 0 },
+                  hover: {
+                    x: [0, 5, 0],
+                    transition: {
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }
+                  }
+                }}
+              >
+              </motion.span>
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-t from-red-600 to-amber-600"
+                variants={{
+                  initial: { y: "100%" },
+                  hover: { y: 0 }
+                }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+              />
+            </motion.button>
         </motion.div>
       </div>
 
