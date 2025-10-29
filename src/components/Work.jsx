@@ -33,12 +33,12 @@ const caseStudies = [
   },
   {
     id: 3,
-    title: "AI-Powered Chatbot for FinServe",
+    title: "Professional Portfolio Design & Development",
     description:
-      "Implemented NLP solutions reducing customer service costs by 40%.",
-    image: "/assets/images/services_work03.png",
-    href: "/case-study/finserve",
-    color: "from-orange-400 to-red-600",
+      "How we built a clean, modern, and user-focused portfolio website that reflects expertise, clarity, and trust.",
+    image: "/assets/images/danielavila_work.png",
+    href: "/case-study/daniel-avila",
+    color: "from-blue-700 to-blue-400",
   },
   {
     id: 4,
@@ -115,7 +115,16 @@ const CaseStudyCard = ({ study, index }) => {
           transition={{ duration: 0.5 }}
         />
         
-        <div className="relative h-full overflow-hidden rounded-3xl bg-black/80 backdrop-blur-xl">
+        <div className="relative h-full overflow-hidden rounded-3xl backdrop-blur-xl">
+          {/* Background gradient layer */}
+          <motion.div
+            className={`absolute inset-0 bg-gradient-to-br ${study.color}`}
+            animate={{
+              opacity: isHovered ? 1 : 0.5,
+            }}
+            transition={{ duration: 0.5 }}
+          />
+          
           <div className="relative h-80 overflow-hidden sm:h-96 lg:h-[28rem]">
             <motion.div
               className="absolute inset-0"
@@ -184,10 +193,14 @@ const CaseStudyCard = ({ study, index }) => {
                 </motion.h3>
 
                 <motion.p
-                  className="mb-6 text-base text-white/80 sm:text-lg"
-                  initial={{ opacity: 0.8 }}
-                  animate={{ opacity: isHovered ? 1 : 0.8 }}
-                  transition={{ duration: 0.3 }}
+                  className="mb-6 text-base text-white/80 sm:text-lg overflow-hidden"
+                  initial={{ height: 0, opacity: 0, y: 20 }}
+                  animate={{ 
+                    height: isHovered ? "auto" : 0,
+                    opacity: isHovered ? 1 : 0,
+                    y: isHovered ? 0 : 20
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                 >
                   {study.description}
                 </motion.p>
@@ -345,7 +358,7 @@ export default function WorkShowcase() {
                 className="block"
                 whileHover={!isMobile ? {
                   scale: 1.05,
-                  textShadow: "0 0 50px rgba(0, 0, 0, 0.08)",
+                  textShadow: "0 0 50px rgba(0, 0, 0, 0.1)",
                   transition: { duration: 0.3 },
                 } : {}}
               >
@@ -355,7 +368,7 @@ export default function WorkShowcase() {
                 className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
                 whileHover={!isMobile ? {
                   scale: 1.05,
-                  textShadow: "0 0 50px rgba(245, 158, 11, 0.8)",
+                  textShadow: "0 0 50px rgba(245, 158, 11, 0.3)",
                   transition: { duration: 0.3 },
                 } : {}}
               >
