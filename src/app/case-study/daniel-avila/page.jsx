@@ -6,7 +6,8 @@ import Footer from "@/components/Footer";
 import ClientProviders from "@/components/ClientProviders";
 import StructuredData from "@/components/StructuredData";
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import Link from "next/link";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import {
   Star,
@@ -17,6 +18,8 @@ import {
   Smartphone,
   Award,
   ArrowDown,
+  ArrowBigRightIcon,
+  ArrowBigRightDashIcon,
 } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { useIsMobile } from "@/hooks/useIsMobile";
@@ -26,6 +29,7 @@ const DanielAvilaCaseStudy = () => {
   const canvasRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const isMobile = useIsMobile();
+  const [isHovered, setIsHovered] = useState(false);
 
   const { scrollY } = useScroll();
   const heroParallax = useTransform(scrollY, [0, 1000], [0, -200]);
@@ -136,10 +140,10 @@ const DanielAvilaCaseStudy = () => {
       },
     ],
     images: [
-      "/assets/images/case_image01.png",
-      "/assets/images/case_image02.png",
-      "/assets/images/case_image03.png",
-      "/assets/images/case_image04.png",
+      "/assets/images/case_danielavila01.png",
+      "/assets/images/case_danielavila02.png",
+      "/assets/images/case_danielavila03.png",
+      "/assets/images/case_danielavila04.png",
     ],
   };
 
@@ -217,6 +221,77 @@ const DanielAvilaCaseStudy = () => {
               >
                 {caseData.subtitle}
               </motion.p>
+
+              {/* CTA Button */}
+              <motion.div
+                className="flex justify-center mt-8"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, duration: 0.6 }}
+              >
+              <Link href="https://www.danielavila.tech" target="_blank" rel="noopener noreferrer">
+                <motion.button
+                  className="group text-lg font-semibold relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-blue-400 to-blue-600 px-8 py-4 text-white"
+                    initial="initial"
+                    whileHover="hover"
+                    whileTap={{ scale: 0.95 }}
+                    onHoverStart={() => setIsHovered(true)}
+                    onHoverEnd={() => setIsHovered(false)}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    variants={{
+                      initial: { scale: 1 },
+                      hover: { scale: 1.05 }
+                    }}
+                  >
+                    <span className="relative z-10">Visit Daniel's Portfolio</span>
+                    <motion.span
+                      className="relative z-10 ml-2"
+                      variants={{
+                        initial: { x: 0 },
+                        hover: {
+                          x: [0, 5, 0],
+                          transition: {
+                            duration: 1.5,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }
+                        }
+                      }}
+                    >
+                      <AnimatePresence mode="wait">
+                        {!isHovered ? (
+                          <motion.div
+                            key="normal"
+                            initial={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.5 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <ArrowBigRightIcon className="h-5 w-5" />
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key="dash"
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.5 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <ArrowBigRightDashIcon className="h-5 w-5" />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.span>
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-t from-blue-600 to-blue-400"
+                      variants={{
+                        initial: { y: "100%" },
+                        hover: { y: 0 }
+                      }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                    />
+                  </motion.button>
+                </Link>
+              </motion.div>
             </motion.div>
 
             {/* Scroll indicator */}
@@ -594,6 +669,7 @@ const SolutionSection = () => {
 
 const ImplementationSection = ({ isMobile }) => {
   const { ref, hasIntersected } = useIntersectionObserver({ threshold: 0.3 });
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const phases = [
     {
@@ -613,13 +689,13 @@ const ImplementationSection = ({ isMobile }) => {
       title: "Development",
       duration: "1 week",
       description: "Built with NextJS, HTML, CSS and JavaScript/TypeScript. Integrated content, animations, and responsive features.",
-      color: "from-blue-400 to-indigo-600",
+      color: "from-blue-400 to-blue-600",
     },
     {
       title: "Testing & Deployment",
       duration: "1 week",
       description: "Browser and device compatibility checks. Load speed and performance testing. Live launch with hosting, DNS, and SSL setup.",
-      color: "from-indigo-400 to-blue-600",
+      color: "from-blue-400 to-blue-600",
     },
   ];
 
@@ -637,7 +713,7 @@ const ImplementationSection = ({ isMobile }) => {
           </span>
         </motion.h2>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4 items-stretch">
           {phases.map((phase, index) => (
             <motion.div
               key={index}
@@ -646,15 +722,19 @@ const ImplementationSection = ({ isMobile }) => {
               animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: index * 0.1 }}
               viewport={{ once: true }}
+              onHoverStart={() => setHoveredIndex(index)}
+              onHoverEnd={() => setHoveredIndex(null)}
             >
               <motion.div
-                className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm"
+                className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm h-full"
                 whileHover={!isMobile ? { scale: 1.05 } : {}}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <motion.div
                   className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r ${phase.color}`}
-                  whileHover={{ rotate: 360 }}
+                  animate={{
+                    rotate: hoveredIndex === index ? 360 : 0,
+                  }}
                   transition={{ duration: 0.5 }}
                 >
                   <span className="text-xl font-bold text-white">
@@ -667,15 +747,6 @@ const ImplementationSection = ({ isMobile }) => {
                 </h3>
                 <p className="mb-4 text-sm text-blue-400">{phase.duration}</p>
                 <p className="text-white/70">{phase.description}</p>
-
-                {index < phases.length - 1 && (
-                  <motion.div
-                    className="absolute top-1/2 -right-4 hidden h-[2px] w-8 bg-gradient-to-r from-blue-400 to-blue-600 lg:block"
-                    initial={{ scaleX: 0 }}
-                    animate={hasIntersected ? { scaleX: 1 } : {}}
-                    transition={{ delay: 0.5 + index * 0.1 }}
-                  />
-                )}
               </motion.div>
             </motion.div>
           ))}
@@ -711,21 +782,18 @@ const GallerySection = ({ images, isMobile }) => {
           >
             <Image
               src={images[0]}
-              alt="Hero Section with gradient background"
+              alt="ABOUT ME Section"
               fill
               className="object-cover"
               quality={90}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-8">
-              <p className="text-white text-xl font-semibold">Hero Section with gradient background</p>
-            </div>
           </motion.div>
 
           <div className="grid gap-8 md:grid-cols-3">
             {[
-              { img: images[1], title: "Experience/Projects cards" },
-              { img: images[2], title: "Contact form design" },
-              { img: images[3], title: "Certifications section" },
+              { img: images[1]},
+              { img: images[2]},
+              { img: images[3]},
             ].map((item, index) => (
               <motion.div
                 key={index}
@@ -884,33 +952,56 @@ const NextCaseStudy = () => {
           <h3 className="mb-8 text-3xl font-bold text-white sm:text-4xl">
             Cloud Migration for HealthTrack
           </h3>
-          <a href="/case-study/healthtrack">
+          <div className="flex justify-center">
+            <a href="/case-study/healthtrack">
             <motion.button
-              className="group relative overflow-hidden rounded-full bg-gradient-to-r from-blue-400 to-blue-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl"
-              whileHover={{ scale: 1.05 }}
+              className="group text-lg font-semibold relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-blue-400 to-blue-600 px-8 py-4 text-white"
+              initial="initial"
+              whileHover="hover"
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              variants={{
+                initial: { scale: 1 },
+                hover: { scale: 1.05 }
+              }}
             >
               <span className="relative z-10">View Case Study</span>
               <motion.span
-                className="relative z-10 ml-2 inline-block"
-                animate={{ x: [0, 5, 0] }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
+                className="relative z-10 ml-2"
+                variants={{
+                  initial: { x: 0 },
+                  hover: {
+                    x: [0, 5, 0],
+                    transition: {
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }
+                  }
                 }}
               >
-                <ArrowRight className="h-5 w-5" />
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key="normal"
+                    initial={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ArrowBigRightIcon className="h-5 w-5" />
+                  </motion.div>
+                </AnimatePresence>
               </motion.span>
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-400"
-                initial={{ x: "100%" }}
-                whileHover={{ x: 0 }}
+                className="absolute inset-0 bg-gradient-to-t from-blue-600 to-blue-400"
+                variants={{
+                  initial: { y: "100%" },
+                  hover: { y: 0 }
+                }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
               />
             </motion.button>
-          </a>
+            </a>
+          </div>
         </motion.div>
       </div>
     </section>
