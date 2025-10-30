@@ -115,9 +115,9 @@ export default function NavigationBar({ iswhite = false }) {
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
                 <Image
-                  src="/assets/logo.svg"
+                  src="/assets/icon-extend.svg"
                   alt="Company Logo"
-                  className="h-14 w-28 rounded-md object-cover"
+                  className="h-16 w-full object-cover"
                   priority
                   width={112}
                   height={56}

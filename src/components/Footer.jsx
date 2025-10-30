@@ -55,9 +55,9 @@ export default function Footer() {
       >
         {/* Logo */}
         <Link href="/" className="group">
-          <div className="relative h-20 w-40 rounded bg-black/80 backdrop-blur-sm">
+          <div className="relative h-20 w-40 rounded">
             <Image
-              src="/assets/footer-logo.png"
+              src="/assets/icon-extend.svg"
               alt="Camino Code Logo"
               fill
               className="object-contain transition-transform duration-300 group-hover:scale-105"

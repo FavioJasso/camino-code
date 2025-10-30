@@ -9,11 +9,10 @@ import { ModelViewer } from "@/components/ModelViewer";
 
 // ========== CONSTANTS ==========
 const partners = [
-  { src: "/assets/images/partner_1.png", alt: "Partner 1" },
-  { src: "/assets/images/partner_2.png", alt: "Partner 2" },
-  { src: "/assets/images/partner_3.png", alt: "Partner 3" },
-  { src: "/assets/images/partner_4.png", alt: "Partner 4" },
-  { src: "/assets/images/partner_5.png", alt: "Partner 5" },
+  { src: "/assets/images/partner_01.png", alt: "Transparent Energy" },
+  { src: "/assets/images/partner_02.png", alt: "Victoria's Painting" },
+  { src: "/assets/images/partner_03.png", alt: "Daniel Avila" },
+  { src: "/assets/images/partner_04.png", alt: "Coming soon" },
 ];
 
 const SCROLL_DURATION = 25;
@@ -68,8 +67,9 @@ export default function Partners() {
       <div className="absolute inset-0 z-0 opacity-60">
         <ModelViewer
           modelPath="/triangle-1.glb"
+          height="100%"
           fogColor="#f8f9fa"
-          containerClassName="w-full h-full"
+          containerClassName="w-full h-full absolute top-0 left-1/2 transform -translate-x-1/2"
         />
       </div>
 
@@ -110,49 +110,27 @@ export default function Partners() {
 
         {/* Partner Logos Scrolling Section */}
         <motion.div
+          className="mt-20"
           initial={{ opacity: 0, y: 20 }}
           animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.8, duration: 0.6 }}
         >
           <div
             ref={containerRef}
-            className="logo-slider relative w-full overflow-hidden py-12 md:py-16"
+            className="logo-slider relative w-full overflow-hidden py-6 md:py-8"
           >
             <div ref={trackRef} className="logo-track flex w-max items-center">
               <div className="logo-set ml-12 flex items-center gap-12 md:ml-16 md:gap-16 lg:ml-20 lg:gap-20">
                 {partners.map((partner, index) => (
-                  <motion.div
-                    key={`partner-${index}`}
-                    className="group flex-shrink-0"
-                    whileHover={
-                      !isMobile
-                        ? {
-                            scale: 1.08,
-                            transition: {
-                              type: "spring",
-                              stiffness: 400,
-                              damping: 10,
-                            },
-                          }
-                        : {}
-                    }
-                  >
-                    <div className="relative">
-                      {/* Glow effect on hover */}
-                      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-400/20 to-orange-400/20 opacity-0 blur-xl transition-opacity duration-300 group-hover:opacity-100" />
-
-                      {/* Logo Container */}
-                      <div className="relative h-24 w-24 overflow-hidden rounded-full bg-white shadow-md transition-all duration-300 group-hover:shadow-2xl md:h-32 md:w-32 lg:h-36 lg:w-36">
-                        <Image
-                          src={partner.src}
-                          alt={partner.alt}
-                          width={200}
-                          height={200}
-                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-                        />
-                      </div>
-                    </div>
-                  </motion.div>
+                  <div key={`partner-${index}`} className="flex-shrink-0">
+                    <Image
+                      src={partner.src}
+                      alt={partner.alt}
+                      width={120}
+                      height={120}
+                      className="h-20 w-20 object-contain md:h-24 md:w-24 lg:h-28 lg:w-28"
+                    />
+                  </div>
                 ))}
               </div>
             </div>
@@ -161,7 +139,7 @@ export default function Partners() {
 
         {/* Bottom Accent Line */}
         <motion.div
-          className="mx-auto mt-16 h-1 w-24 rounded-full bg-gradient-to-r from-transparent via-amber-500 to-transparent"
+          className="mx-auto mt-2 h-1 w-24 rounded-full bg-gradient-to-r from-transparent via-amber-500 to-transparent"
           initial={{ opacity: 0, scaleX: 0 }}
           animate={hasIntersected ? { opacity: 1, scaleX: 1 } : {}}
           transition={{ delay: 1.2, duration: 0.8 }}
