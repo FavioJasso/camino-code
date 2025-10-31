@@ -137,6 +137,7 @@ const HeroSection = () => {
       {/* Gradient overlay */}
       <motion.div
         className="absolute inset-0 z-[1]"
+        layout={false}
         animate={!isMobile && !prefersReducedMotion ? {
           background: [
             "radial-gradient(circle at 20% 50%, rgba(245, 158, 11, 0.1) 0%, transparent 50%)",

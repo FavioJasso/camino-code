@@ -148,8 +148,12 @@ export default function ServicesDetails() {
       });
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initial call
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (
@@ -196,6 +200,7 @@ const ServiceSection = ({ section, index, isActive }) => {
       id={section.id}
       className={`service-section relative ${minHeightClass} ${bgClass} transition-colors duration-500`}
       style={{ opacity }}
+      layout={false}
     >
       {/* Animated background */}
       <motion.div
@@ -203,6 +208,7 @@ const ServiceSection = ({ section, index, isActive }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: isActive ? (isMobile ? 0.2 : 0.3) : 0.1 }}
         transition={{ duration: isMobile ? 0.3 : 0.5 }}
+        layout={false}
       >
         <div
           className="h-full w-full"
@@ -220,6 +226,7 @@ const ServiceSection = ({ section, index, isActive }) => {
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: isMobile ? 0.5 : 0.8 }}
             viewport={{ once: true }}
+            layout={false}
           >
             {/* Icon with gradient background */}
             <motion.div

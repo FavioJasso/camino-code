@@ -2,7 +2,6 @@
 
 import { Brain, Cpu, Database,  ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
-import Spline from "@splinetool/react-spline";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { staggerContainer } from "@/utils/animations";
@@ -188,6 +187,7 @@ export default function ServicesSection() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
       style={{ backgroundPositionY: backgroundY }}
+      layout={false}
     >
       {/* Animated particles canvas */}
       <canvas
@@ -323,7 +323,7 @@ export default function ServicesSection() {
                 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 to-transparent blur-3xl" />
-                <Spline scene="https://prod.spline.design/hxXzHDWdUo11wqob/scene.splinecode" />
+                <LazySpline scene="https://prod.spline.design/hxXzHDWdUo11wqob/scene.splinecode" />
               </motion.div>
             </motion.div>
           </motion.div>
@@ -441,4 +441,33 @@ export default function ServicesSection() {
       </motion.div>
     </motion.section>
   );
+}
+
+// Lazy-loaded Spline component to reduce main-thread work
+function LazySpline({ scene, className }) {
+  const [SplineComponent, setSplineComponent] = useState(null);
+
+  useEffect(() => {
+    // Delay loading Spline by 4 seconds to prioritize critical content
+    const timer = setTimeout(() => {
+      import("@splinetool/react-spline").then((module) => {
+        setSplineComponent(() => module.default);
+      });
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!SplineComponent) {
+    return (
+      <div className={className}>
+        {/* Placeholder while Spline loads */}
+        <div className="w-full h-full bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg flex items-center justify-center">
+          <div className="text-amber-600 text-sm">Loading 3D visualization...</div>
+        </div>
+      </div>
+    );
+  }
+
+  return <SplineComponent scene={scene} className={className} />;
 }

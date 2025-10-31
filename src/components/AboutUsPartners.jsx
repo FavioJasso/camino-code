@@ -5,7 +5,7 @@ import { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
-import { ModelViewer } from "@/components/ModelViewer";
+import { LazyModelViewer } from "@/components/ModelViewer";
 
 // ========== CONSTANTS ==========
 const partners = [
@@ -35,16 +35,24 @@ export default function Partners() {
     const track = trackRef.current;
     const container = containerRef.current;
     const originalContent = track.innerHTML;
-    track.innerHTML = originalContent + originalContent;
 
-    const trackWidth = track.scrollWidth / 2;
+    // Calculate original width before duplication to avoid reflow
+    const originalWidth = track.getBoundingClientRect().width;
+
+    track.innerHTML = originalContent + originalContent;
+    const trackWidth = originalWidth;
     container.style.setProperty("--track-width", `${trackWidth}px`);
     container.style.setProperty("--duration", `${SCROLL_DURATION}s`);
 
+    // Initialize with transform3d for hardware acceleration
+    track.style.transform = `translate3d(-${trackWidth}px, 0, 0)`;
+
     const handleAnimationIteration = () => {
-      track.style.transform = "translateX(0)";
-      void track.offsetWidth;
-      track.style.transform = `translateX(-${trackWidth}px)`;
+      // Use transform3d to force hardware acceleration and avoid layout recalculation
+      track.style.transform = "translate3d(0, 0, 0)";
+      requestAnimationFrame(() => {
+        track.style.transform = `translate3d(-${trackWidth}px, 0, 0)`;
+      });
     };
 
     track.addEventListener("animationiteration", handleAnimationIteration);
@@ -65,11 +73,12 @@ export default function Partners() {
     >
       {/* 3D Model Background */}
       <div className="absolute inset-0 z-0 opacity-60">
-        <ModelViewer
+        <LazyModelViewer
           modelPath="/triangle-1.glb"
           height="100%"
           fogColor="#f8f9fa"
           containerClassName="w-full h-full absolute top-0 left-1/2 transform -translate-x-1/2"
+          delay={3000} // 3 seconds delay for better LCP
         />
       </div>
 
