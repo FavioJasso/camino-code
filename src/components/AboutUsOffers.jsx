@@ -54,15 +54,16 @@ export default function WhatSetsUsApart() {
     offset: ["start end", "end start"],
   });
 
+  // Simplified transforms for better performance
   const backgroundY = useTransform(
     scrollYProgress,
     [0, 1],
-    ["0%", isMobile ? "50%" : "100%"],
+    ["0%", isMobile ? "30%" : "60%"],
   );
   const textY = useTransform(
     scrollYProgress,
     [0, 1],
-    ["0%", isMobile ? "-10%" : "-20%"],
+    ["0%", isMobile ? "-5%" : "-10%"],
   );
 
   // Update dimensions on resize
@@ -180,10 +181,11 @@ export default function WhatSetsUsApart() {
     <motion.section
       ref={containerRef}
       id="offers"
-      className="relative mx-auto flex min-h-screen items-center justify-center overflow-hidden bg-white py-20"
+      className="relative mx-auto flex min-h-screen items-center justify-center overflow-hidden bg-white py-20 will-change-transform"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
+      layout={false}
     >
       {/* Animated particles canvas */}
       {!isMobile && !prefersReducedMotion && (

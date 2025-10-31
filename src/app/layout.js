@@ -1,6 +1,8 @@
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { seoConfig } from "@/config/seo";
+import { poppins } from "./fonts";
+import NonCriticalStyles from "@/components/NonCriticalStyles";
 
 export const metadata = {
   metadataBase: new URL(seoConfig.siteUrl),
@@ -57,6 +59,13 @@ export const metadata = {
   alternates: {
     canonical: seoConfig.siteUrl,
   },
+  other: {
+    "preconnect": "https://fonts.googleapis.com",
+    "preconnect": "https://fonts.gstatic.com",
+    "preconnect": "https://prod.spline.design",
+    "preconnect": "https://va.vercel-scripts.com",
+    "preconnect": "https://www.gstatic.com",
+  },
   verification: {
     google: seoConfig.googleSiteVerification,
     other: {
@@ -69,9 +78,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang={seoConfig.siteLanguage}>
-      <body className="cursor-none">
+    <html lang={seoConfig.siteLanguage} className={poppins.variable}>
+      <body className="cursor-none font-sans">
         {children}
+        <NonCriticalStyles />
         <Analytics />
       </body>
     </html>

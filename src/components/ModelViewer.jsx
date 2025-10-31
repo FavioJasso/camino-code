@@ -1,83 +1,55 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, OrbitControls, Environment, Float } from "@react-three/drei";
-import { Suspense, useRef, useEffect } from "react";
-import { Box3, Vector3 } from "three";
+import { useEffect, useState } from "react";
 
-function Model({ path, position = [1, 1, 1], autoRotate = true }) {
-  const { scene } = useGLTF(path);
-  const modelRef = useRef();
-
-  useEffect(() => {
-    if (scene) {
-      const box = new Box3().setFromObject(scene);
-      const size = new Vector3();
-      const center = new Vector3();
-      box.getSize(size);
-      box.getCenter(center);
-      console.log("Model size:", size);
-      console.log("Model center:", center);
-      scene.position.sub(center); // recenters model
-    }
-  }, [scene]);
-
-  useFrame((state) => {
-    if (modelRef.current && autoRotate) {
-      modelRef.current.rotation.y += 0.01;
-      modelRef.current.position.y = Math.sin(state.clock.elapsedTime) * 0.1;
-    }
-  });
-
-  return (
-    <Float speed={0.1} rotationIntensity={0.5} floatIntensity={0.5}>
-      <primitive ref={modelRef} object={scene} scale={1} position={position} />
-    </Float>
-  );
-}
-
-export function ModelViewer({
+// Lazy-loaded ModelViewer that defers both 3D library loading and model loading
+export function LazyModelViewer({
   modelPath,
   height = "100vh",
   fogColor = "#000",
   containerClassName = "",
+  delay = 2000, // Delay loading by 2 seconds
 }) {
+  const [ModelViewerComponent, setModelViewerComponent] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [delay]);
+
+  useEffect(() => {
+    if (isLoaded) {
+      // Dynamic import of the heavy 3D libraries
+      import('./ModelViewerCore').then((module) => {
+        setModelViewerComponent(() => module.default);
+      });
+    }
+  }, [isLoaded]);
+
+  if (!isLoaded || !ModelViewerComponent) {
+    return (
+      <div className={containerClassName} style={{ width: "100%", height }}>
+        {/* Placeholder or loading state */}
+      </div>
+    );
+  }
+
   return (
-    <div className={containerClassName}>
-      <Canvas
-        camera={{ position: [0, 0, 5], fov: 45 }}
-        gl={{ antialias: true, alpha: true }}
-        style={{ width: "100%", height }}
-      >
-        <Suspense fallback={null}>
-          <fog attach="fog" args={[fogColor, 5, 15]} />
-          <ambientLight intensity={0.4} />
-          <directionalLight
-            position={[5, 5, 5]}
-            intensity={1}
-            color="#f59e0b"
-          />
-          <directionalLight
-            position={[-5, -5, -5]}
-            intensity={0.5}
-            color="#ef4444"
-          />
-          <pointLight position={[0, 10, 0]} intensity={0.5} color="#ffffff" />
-          <Model path={modelPath} autoRotate={true} />
-          <OrbitControls
-            enableZoom={false}
-            enablePan={false}
-            autoRotate={true}
-            autoRotateSpeed={2}
-            maxPolarAngle={Math.PI / 2}
-            minPolarAngle={Math.PI / 3}
-          />
-          <Environment preset="sunset" background={false} blur={0.8} />
-        </Suspense>
-      </Canvas>
-    </div>
+    <ModelViewerComponent
+      modelPath={modelPath}
+      height={height}
+      fogColor={fogColor}
+      containerClassName={containerClassName}
+    />
   );
 }
+
+// Regular ModelViewer for immediate loading (use LazyModelViewer for performance)
+export { default as ModelViewer } from './ModelViewerCore';
 
 export default function ModelsShowcase() {
   return <ModelViewer />;

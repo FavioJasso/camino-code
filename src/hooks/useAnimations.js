@@ -88,12 +88,20 @@ export const useMagnetic = (strength = 0.3) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const ref = useRef(null);
+  const rectRef = useRef(null);
+
+  // Cache bounding rect to avoid forced reflows
+  const updateRect = useCallback(() => {
+    if (ref.current) {
+      rectRef.current = ref.current.getBoundingClientRect();
+    }
+  }, []);
 
   const handleMouseMove = useCallback(
     (e) => {
-      if (!ref.current) return;
+      if (!ref.current || !rectRef.current) return;
 
-      const rect = ref.current.getBoundingClientRect();
+      const rect = rectRef.current;
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 
@@ -106,6 +114,10 @@ export const useMagnetic = (strength = 0.3) => {
     [x, y, strength],
   );
 
+  const handleMouseEnter = useCallback(() => {
+    updateRect();
+  }, [updateRect]);
+
   const handleMouseLeave = useCallback(() => {
     x.set(0);
     y.set(0);
@@ -115,14 +127,25 @@ export const useMagnetic = (strength = 0.3) => {
     const element = ref.current;
     if (!element) return;
 
+    element.addEventListener("mouseenter", handleMouseEnter);
     element.addEventListener("mousemove", handleMouseMove);
     element.addEventListener("mouseleave", handleMouseLeave);
 
+    // Update rect on resize and scroll to handle layout changes
+    const handleResize = () => updateRect();
+    const handleScroll = () => updateRect();
+
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     return () => {
+      element.removeEventListener("mouseenter", handleMouseEnter);
       element.removeEventListener("mousemove", handleMouseMove);
       element.removeEventListener("mouseleave", handleMouseLeave);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
     };
-  }, [handleMouseMove, handleMouseLeave]);
+  }, [handleMouseEnter, handleMouseMove, handleMouseLeave, updateRect]);
 
   return { ref, x, y };
 };
