@@ -11,14 +11,16 @@ function Model({ path, position = [1, 1, 1], autoRotate = true }) {
 
   useEffect(() => {
     if (scene) {
-      const box = new Box3().setFromObject(scene);
-      const size = new Vector3();
-      const center = new Vector3();
-      box.getSize(size);
-      box.getCenter(center);
-      console.log("Model size:", size);
-      console.log("Model center:", center);
-      scene.position.sub(center); // recenters model
+      try {
+        const box = new Box3().setFromObject(scene);
+        const size = new Vector3();
+        const center = new Vector3();
+        box.getSize(size);
+        box.getCenter(center);
+        scene.position.sub(center); // recenters model
+      } catch (error) {
+        console.warn("Error positioning model:", error);
+      }
     }
   }, [scene]);
 
@@ -46,8 +48,14 @@ export default function ModelViewer({
     <div className={containerClassName}>
       <Canvas
         camera={{ position: [0, 0, 5], fov: 45 }}
-        gl={{ antialias: true, alpha: true }}
+        gl={{ 
+          antialias: true, 
+          alpha: true,
+          failOnWebGL1: false,
+          powerPreference: 'high-performance'
+        }}
         style={{ width: "100%", height }}
+        onError={(error) => console.warn('Canvas error:', error)}
       >
         <Suspense fallback={null}>
           <fog attach="fog" args={[fogColor, 5, 15]} />
