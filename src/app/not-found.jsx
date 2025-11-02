@@ -249,33 +249,26 @@ function NotFoundContent() {
           </motion.p>
 
           <motion.button
-            variants={itemVariants}
             className="group text-lg font-semibold relative flex items-center justify-center gap-4 overflow-hidden rounded-full bg-gradient-to-t from-amber-600 to-red-600 px-8 py-4 text-white"
-            initial="initial"
-            whileHover="hover"
+            initial={{ opacity: 0, y: 20, scale: 1 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onHoverStart={() => setIsHovered(true)}
             onHoverEnd={() => setIsHovered(false)}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            variants={{
-              initial: { scale: 1 },
-              hover: { scale: 1.05 }
-            }}
             onClick={() => window.history.back()}
           >
             <motion.span
               className="relative z-10"
-              variants={{
-                initial: { x: 0 },
-                hover: {
-                  x: [-5, 0, -5],
-                  transition: {
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }
+              animate={isHovered ? {
+                x: [-5, 0, -5],
+                transition: {
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut"
                 }
-              }}
+              } : { x: 0 }}
             >
               <AnimatePresence mode="wait">
                 {!isHovered ? (
@@ -303,10 +296,8 @@ function NotFoundContent() {
             <span className="relative z-10">Go Back</span>
             <motion.div
               className="absolute inset-0 bg-gradient-to-t from-red-600 to-amber-600"
-              variants={{
-                initial: { y: "100%" },
-                hover: { y: 0 }
-              }}
+              initial={{ y: "100%" }}
+              animate={{ y: isHovered ? 0 : "100%" }}
               transition={{ duration: 0.3, ease: "easeOut" }}
             />
           </motion.button>
