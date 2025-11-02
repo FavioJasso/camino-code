@@ -111,43 +111,43 @@ export default function AboutUsFounder() {
       )}
 
       <div className="container relative z-10 mx-auto px-6 sm:px-8 md:px-16 lg:px-24">
-        /* Animated Heading with perspective */
-          <motion.div className="perspective-1000 text-center mb-16">
-            <motion.h1
-              className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl"
-              variants={titleVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
+        {/* Animated Heading with perspective */}
+        <motion.div className="perspective-1000 text-center mb-16">
+          <motion.h1
+            className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl"
+            variants={titleVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+            <motion.span 
+              className="block text-white"
+              whileHover={!isMobile ? {
+                scale: 1.05,
+                textShadow: "0 0 40px rgba(255, 255, 255, 0.8) text-amber-400",
+                transition: { duration: 0.3 },
+              } : {}}
             >
-              <motion.span 
-                className="block text-white"
-                whileHover={!isMobile ? {
-            scale: 1.05,
-            textShadow: "0 0 40px rgba(255, 255, 255, 0.8) text-amber-400",
-            transition: { duration: 0.3 },
-                } : {}}
-              >
-                OUR
-              </motion.span>
-              <motion.span 
-                className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
-                whileHover={!isMobile ? {
-            scale: 1.05,
-            textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
-            transition: { duration: 0.3 },
-                } : {}}
-              >
-                FOUNDER
-              </motion.span>
-            </motion.h1>
-          </motion.div>
+              OUR
+            </motion.span>
+            <motion.span 
+              className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
+              whileHover={!isMobile ? {
+                scale: 1.05,
+                textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
+                transition: { duration: 0.3 },
+              } : {}}
+            >
+              FOUNDER
+            </motion.span>
+          </motion.h1>
+        </motion.div>
 
-          <div className="grid gap-16 lg:grid-cols-2 lg:gap-24 items-center">
-            {/* Founder Image with advanced effects */}
+        <div className="grid gap-16 lg:grid-cols-2 lg:gap-24 items-center">
+          {/* Founder Image with advanced effects */}
           <motion.div
             ref={imageRef}
-            className="relative mx-auto max-w-lg lg:max-w-none"
+            className="relative mx-auto max-w-sm lg:max-w-md user-select-none"
             style={{ scale: imageScale, rotate: imageRotate }}
           >
             <motion.div
@@ -155,14 +155,14 @@ export default function AboutUsFounder() {
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="relative overflow-hidden rounded-3xl"
+              className="relative rounded-full overflow-visible"
             >
               {/* Glow effect */}
               {!isMobile && (
                 <motion.div
-                  className="absolute -inset-4 bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 opacity-30 blur-2xl"
+                  className="absolute -inset-4 bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 opacity-15 blur-2xl"
                   animate={!prefersReducedMotion ? {
-                    opacity: [0.2, 0.4, 0.2],
+                    opacity: [0.1, 0.2, 0.1],
                   } : {}}
                   transition={{
                     duration: 3,
@@ -172,15 +172,16 @@ export default function AboutUsFounder() {
                 />
               )}
               
-              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-400/20 to-red-600/20 p-1">
-                <div className="relative overflow-hidden rounded-3xl">
+              <div className="relative overflow-hidden rounded-full bg-gradient-to-br from-amber-400/20 to-red-600/20 p-1">
+                <div className="relative overflow-hidden rounded-full">
                   <Image
                     src="/assets/images/about_founder.png"
                     alt="Our Founder"
                     width={600}
                     height={700}
-                    className="w-full object-cover"
+                    className="w-full object-cover user-select-none"
                     quality={90}
+                    draggable={false}
                   />
                   <motion.div 
                     className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
@@ -188,9 +189,10 @@ export default function AboutUsFounder() {
                     transition={{ duration: 0.3 }}
                   />
                   
-                  {/* Floating badge */}
+                  {/* Floating badge on top right edge of circle */}
                   <motion.div
-                    className="absolute top-6 right-6 rounded-full bg-gradient-to-r from-amber-400 to-red-600 p-4 shadow-2xl"
+                    className="absolute rounded-full bg-gradient-to-r from-amber-400 to-red-600 p-4 shadow-2xl"
+                    style={{ top: "-8px", right: "-8px" }}
                     animate={!isMobile && !prefersReducedMotion ? {
                       y: [0, -10, 0],
                       rotate: [0, 5, -5, 0],
@@ -222,7 +224,7 @@ export default function AboutUsFounder() {
               className="mb-8"
             >
               <h2 className="text-3xl font-bold text-white sm:text-4xl md:text-5xl">
-                John Doe
+                Favio Jasso
               </h2>
               <p className="mt-2 text-lg text-amber-400 sm:text-xl">
                 Founder & CEO
@@ -237,27 +239,37 @@ export default function AboutUsFounder() {
               viewport={{ once: true }}
               className="text-lg font-light leading-relaxed text-white/80 sm:text-xl"
             >
-              With over 15 years of experience in{" "}
+              With an Award-Winning expertise at the intersection of{" "}
               <motion.span
-                className="font-semibold text-amber-400"
+                className="font-semibold text-amber-400 whitespace-nowrap"
                 whileHover={!isMobile ? { 
                   textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
                   scale: 1.05,
                 } : {}}
               >
-                data science
-              </motion.span>{" "}
-              and{" "}
-              <motion.span
-                className="font-semibold text-amber-400"
-                whileHover={!isMobile ? { 
-                  textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
-                  scale: 1.05,
-                } : {}}
-              >
-                software development
+                AI
               </motion.span>
-              , our founder has led teams at Fortune 500 companies and pioneered innovative solutions that have transformed businesses across industries.
+              , {" "}
+              <motion.span
+                className="font-semibold text-amber-400 whitespace-nowrap"
+                whileHover={!isMobile ? { 
+                  textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+                  scale: 1.05,
+                } : {}}
+              >
+                Data&nbsp;Science
+              </motion.span>
+              , and{" "}
+              <motion.span
+                className="font-semibold text-amber-400 whitespace-nowrap"
+                whileHover={!isMobile ? { 
+                  textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+                  scale: 1.05,
+                } : {}}
+              >
+                Automation
+              </motion.span>
+              , leads CaminoCode with a mission to make intelligent technology accessible for small and mid-sized businesses. From designing scalable data pipelines to architecting AI-first platforms, he has developed solutions that empower organizations to transform their data into actionable insight and measurable growth.
             </motion.p>
 
             {/* Achievement cards */}
@@ -269,8 +281,7 @@ export default function AboutUsFounder() {
               viewport={{ once: true }}
             >
               {[
-                { number: "50+", label: "Projects Delivered", icon: <Rocket className="h-5 w-5" /> },
-                { number: "15+", label: "Years Experience", icon: <Award className="h-5 w-5" /> },
+                { number: "10+", label: "Projects Delivered", icon: <Rocket className="h-5 w-5" /> },
               ].map((stat, index) => (
                 <motion.div
                   key={index}
@@ -279,7 +290,7 @@ export default function AboutUsFounder() {
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
-                  className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-white/5 to-white/10 p-6 backdrop-blur-sm"
+                  className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-white/5 to-white/10 p-4 backdrop-blur-sm"
                   whileHover={!isMobile ? { scale: 1.05, y: -5 } : {}}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
@@ -287,22 +298,57 @@ export default function AboutUsFounder() {
                     className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-red-600/20 opacity-0 group-hover:opacity-100"
                     transition={{ duration: 0.3 }}
                   />
-                  <div className="relative z-10">
-                    <div className="mb-2 text-amber-400">{stat.icon}</div>
-                    <motion.p 
-                      className="text-3xl font-bold text-white"
-                      animate={!isMobile && !prefersReducedMotion ? { 
-                        scale: [1, 1.1, 1],
-                      } : {}}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        repeatDelay: 3,
-                      }}
-                    >
-                      {stat.number}
-                    </motion.p>
-                    <p className="text-sm text-white/60">{stat.label}</p>
+                  <div className="relative z-10 flex flex-col items-center text-center">
+                    <motion.div>
+                      <motion.div
+                        className="mb-2 text-amber-400 flex justify-center"
+                        animate={!isMobile && !prefersReducedMotion ? { 
+                          scaleY: [1, 0.8, 1],
+                          opacity: [1, 0.7, 1],
+                        } : {}}
+                        transition={{
+                          duration: 0.6,
+                          repeat: Infinity,
+                          repeatDelay: 2.5,
+                          ease: "easeInOut",
+                        }}
+                        style={{ originY: 0.5 }}
+                      >
+                        {stat.icon}
+                      </motion.div>
+                      <motion.p 
+                        className="text-3xl font-bold text-white"
+                        animate={!isMobile && !prefersReducedMotion ? { 
+                          scaleY: [1, 0.8, 1],
+                          opacity: [1, 0.7, 1],
+                        } : {}}
+                        transition={{
+                          duration: 0.6,
+                          repeat: Infinity,
+                          repeatDelay: 2.5,
+                          ease: "easeInOut",
+                        }}
+                        style={{ originY: 0.5 }}
+                      >
+                        {stat.number}
+                      </motion.p>
+                      <motion.p 
+                        className="text-sm text-white/60"
+                        animate={!isMobile && !prefersReducedMotion ? { 
+                          scaleY: [1, 0.8, 1],
+                          opacity: [1, 0.7, 1],
+                        } : {}}
+                        transition={{
+                          duration: 0.6,
+                          repeat: Infinity,
+                          repeatDelay: 2.5,
+                          ease: "easeInOut",
+                        }}
+                        style={{ originY: 0.5 }}
+                      >
+                        {stat.label}
+                      </motion.p>
+                    </motion.div>
                   </div>
                 </motion.div>
               ))}
@@ -316,11 +362,41 @@ export default function AboutUsFounder() {
               viewport={{ once: true }}
               className="relative mt-12 rounded-2xl bg-gradient-to-br from-amber-400/10 to-red-600/10 p-8 backdrop-blur-sm"
             >
-              <Quote className="absolute -top-4 -left-4 h-8 w-8 text-amber-400/50" />
+              <motion.div
+                className="absolute -top-4 -left-4"
+                animate={!isMobile && !prefersReducedMotion ? {
+                  y: [0, 12, 0],
+                  scaleY: [1, 0.8, 1],
+                  opacity: [1, 0.7, 1],
+                } : {}}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                style={{ originY: 0.5 }}
+              >
+                <Quote className="h-8 w-8 text-amber-400/50" />
+              </motion.div>
               <p className="text-xl italic text-white/90 sm:text-2xl">
-                "Innovation is seeing what everyone has seen and thinking what nobody has thought."
+                Innovation is seeing what everyone has seen and thinking what nobody has thought
               </p>
-              <Quote className="absolute -bottom-4 -right-4 h-8 w-8 rotate-180 text-amber-400/50" />
+              <motion.div
+                className="absolute -bottom-4 -right-4"
+                animate={!isMobile && !prefersReducedMotion ? {
+                  y: [0, 12, 0],
+                  scaleY: [1, 0.8, 1],
+                  opacity: [1, 0.7, 1],
+                } : {}}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                style={{ originY: 0.5 }}
+              >
+                <Quote className="h-8 w-8 rotate-180 text-amber-400/50" />
+              </motion.div>
             </motion.blockquote>
           </motion.div>
         </div>
