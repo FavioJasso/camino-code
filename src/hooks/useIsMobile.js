@@ -34,3 +34,14 @@ export function useReducedMotion() {
 
   return prefersReducedMotion;
 }
+
+export function useIsFirefox() {
+  const [isFirefox, setIsFirefox] = useState(false);
+
+  useEffect(() => {
+    const userAgent = typeof window !== 'undefined' ? navigator.userAgent : '';
+    setIsFirefox(/Firefox/.test(userAgent));
+  }, []);
+
+  return isFirefox;
+}

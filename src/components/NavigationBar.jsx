@@ -117,7 +117,7 @@ export default function NavigationBar({ iswhite = false }) {
                 <Image
                   src="/assets/icon-extend.svg"
                   alt="Company Logo"
-                  className="h-16 w-full object-cover"
+                  className="h-16 max-md:h-14 w-full object-cover"
                   priority
                   width={112}
                   height={56}
@@ -126,7 +126,7 @@ export default function NavigationBar({ iswhite = false }) {
             </Link>
           </motion.div>
 
-          <nav className="hidden text-black md:flex md:items-center md:justify-center md:gap-6 [&>a]:no-underline">
+          <nav className="hidden text-black md:flex md:items-center md:justify-center lg:gap-6 [&>a]:no-underline">
             {["Home", "About", "Services", "Case Studies"].map(
               (item, index) => (
                 <motion.div

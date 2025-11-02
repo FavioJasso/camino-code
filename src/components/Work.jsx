@@ -9,7 +9,7 @@ import {
 } from "@/hooks/useAnimations";
 import { staggerContainer } from "@/utils/animations";
 import { useState } from "react";
-import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
+import { useIsMobile, useReducedMotion, useIsFirefox } from "@/hooks/useIsMobile";
 import { ArrowBigRightIcon, ArrowBigRightDashIcon } from "lucide-react";
 
 const caseStudies = [
@@ -53,9 +53,10 @@ const caseStudies = [
 
 const CaseStudyCard = ({ study, index }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const { ref: cardRef, position } = useCursorPosition();
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
+  const isFirefox = useIsFirefox();
+  const { ref: cardRef, position } = useCursorPosition(isHovered && !isFirefox);
 
   const cardVariants = {
     hidden: {
@@ -193,12 +194,12 @@ const CaseStudyCard = ({ study, index }) => {
                 </motion.h3>
 
                 <motion.p
-                  className="mb-6 text-base text-white/80 sm:text-lg overflow-hidden"
+                  className={`mb-6 text-base text-white/80 sm:text-lg ${isFirefox ? "" : "overflow-hidden"}`}
                   initial={{ height: 0, opacity: 0, y: 20 }}
                   animate={{ 
-                    height: isHovered ? "auto" : 0,
-                    opacity: isHovered ? 1 : 0,
-                    y: isHovered ? 0 : 20
+                    height: isHovered && !isFirefox ? "auto" : 0,
+                    opacity: isHovered && !isFirefox ? 1 : 0,
+                    y: isHovered && !isFirefox ? 0 : 20
                   }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
                 >
@@ -208,7 +209,7 @@ const CaseStudyCard = ({ study, index }) => {
                 <motion.div
                   className="flex items-center gap-3"
                   animate={{
-                    x: isHovered ? 10 : 0,
+                    x: isHovered && !isFirefox ? 10 : 0,
                   }}
                   transition={{ duration: 0.3 }}
                 >
@@ -218,11 +219,11 @@ const CaseStudyCard = ({ study, index }) => {
                   <motion.div
                     className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-400/20 backdrop-blur-sm"
                     animate={{
-                      scale: isHovered ? [1, 1.2, 1] : 1,
-                      rotate: isHovered ? 360 : 0,
+                      scale: isHovered && !isFirefox ? [1, 1.2, 1] : 1,
+                      rotate: isHovered && !isFirefox ? 360 : 0,
                     }}
                     transition={{
-                      scale: { duration: 0.5, repeat: isHovered ? Infinity : 0 },
+                      scale: { duration: 0.5, repeat: isHovered && !isFirefox ? Infinity : 0 },
                       rotate: { duration: 0.5 },
                     }}
                   >
@@ -248,8 +249,8 @@ const CaseStudyCard = ({ study, index }) => {
             <motion.div
               className="absolute top-0 right-0 h-32 w-32"
               animate={{
-                scale: isHovered ? 1.5 : 1,
-                rotate: isHovered ? 90 : 0,
+                scale: isHovered && !isFirefox ? 1.5 : 1,
+                rotate: isHovered && !isFirefox ? 90 : 0,
               }}
               transition={{ duration: 0.5 }}
             >
@@ -260,8 +261,8 @@ const CaseStudyCard = ({ study, index }) => {
             <motion.div
               className="absolute top-6 left-6 flex h-16 w-16 items-center justify-center rounded-full bg-black/50 backdrop-blur-md"
               animate={{
-                scale: isHovered ? 1.1 : 1,
-                rotate: isHovered ? 360 : 0,
+                scale: isHovered && !isFirefox ? 1.1 : 1,
+                rotate: isHovered && !isFirefox ? 360 : 0,
               }}
               transition={{ duration: 0.5 }}
             >

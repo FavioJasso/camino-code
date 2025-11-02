@@ -268,27 +268,42 @@ export const useDelayedAnimation = (delay = 0) => {
 };
 
 // Hook for cursor position relative to element
-export const useCursorPosition = () => {
+export const useCursorPosition = (isActive = true) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const ref = useRef(null);
+  const rafRef = useRef(null);
 
   useEffect(() => {
+    if (!isActive) return;
+
     const handleMouseMove = (e) => {
       if (!ref.current) return;
 
-      const rect = ref.current.getBoundingClientRect();
-      setPosition({
-        x: ((e.clientX - rect.left) / rect.width) * 2 - 1,
-        y: ((e.clientY - rect.top) / rect.height) * 2 - 1,
+      // Usar requestAnimationFrame para no bloquear scroll
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+
+      rafRef.current = requestAnimationFrame(() => {
+        const rect = ref.current?.getBoundingClientRect();
+        if (!rect) return;
+
+        setPosition({
+          x: ((e.clientX - rect.left) / rect.width) * 2 - 1,
+          y: ((e.clientY - rect.top) / rect.height) * 2 - 1,
+        });
       });
     };
 
-    const element = ref.current;
-    if (element) {
-      element.addEventListener("mousemove", handleMouseMove);
-      return () => element.removeEventListener("mousemove", handleMouseMove);
-    }
-  }, []);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, [isActive]);
 
   return { ref, position };
 };
