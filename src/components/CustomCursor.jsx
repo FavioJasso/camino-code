@@ -14,8 +14,8 @@ export default function CustomCursor() {
 
   useEffect(() => {
     const moveCursor = (e) => {
-      cursorX.set(e.clientX - 16);
-      cursorY.set(e.clientY - 16);
+      cursorX.set(e.clientX - 14);
+      cursorY.set(e.clientY - 14);
     };
 
     const handleMouseOver = (e) => {
@@ -39,7 +39,7 @@ export default function CustomCursor() {
   return (
     <>
       <motion.div
-        className="pointer-events-none fixed top-0 left-0 z-[9999] h-8 w-8 mix-blend-difference"
+        className="pointer-events-none fixed top-0 left-0 z-[9999] h-7 w-7 mix-blend-difference"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
@@ -55,16 +55,33 @@ export default function CustomCursor() {
           }}
           transition={{ type: "spring", stiffness: 500, damping: 28 }}
         />
+        
+        {isPointer && (
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: "radial-gradient(circle, rgba(245, 158, 11, 0.4) 0%, rgba(245, 158, 11, 0.15) 50%, rgba(245, 158, 11, 0) 100%)",
+            }}
+            animate={{
+              scale: [0.3, 1.5, 0.3],
+              opacity: [0.6, 0.9, 0.6],
+            }}
+            transition={{
+              duration: 2.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        )}
       </motion.div>
 
-      {/* Cursor dot */}
       <motion.div
         className="pointer-events-none fixed top-0 left-0 z-[9999] h-1 w-1 mix-blend-difference"
         style={{
           x: cursorX,
           y: cursorY,
-          translateX: "14px",
-          translateY: "14px",
+          translateX: "12px",
+          translateY: "12px",
         }}
       >
         <div className="h-full w-full rounded-full bg-amber-400" />

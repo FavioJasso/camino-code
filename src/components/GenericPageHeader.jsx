@@ -2,18 +2,26 @@
 
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { ArrowDown, Briefcase, Award, Users, ArrowBigRightIcon, ArrowBigRightDashIcon } from "lucide-react";
+import { ArrowDown, ArrowBigRightIcon, ArrowBigRightDashIcon } from "lucide-react";
 import Link from "next/link";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
-const CaseStudiesHeader = () => {
+const GenericPageHeader = ({
+  sectionId,
+  titleWords,
+  description,
+  items,
+  ctaLabel,
+  ctaLink,
+  gradientWordIndex = 1,
+}) => {
   const canvasRef = useRef(null);
   const sectionRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
   const [isHovered, setIsHovered] = useState(false);
-  
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"]
@@ -21,18 +29,11 @@ const CaseStudiesHeader = () => {
 
   const y = useTransform(scrollYProgress, [0, 1], [0, isMobile ? -50 : -150]);
 
-  // Calculate opacity based on section progress:
-  // - Stay at 1 until 60% of header progress
-  // - Drop to 0.5 at 70% of header progress
-  // - Drop to 0 after 70% of header progress
   const opacity = useTransform(
     scrollYProgress,
     [0, 0.3, 0.6, 0.8, 0.85],
     [1, 0.8, 0.6, 0.4, 0.1]
   );
-
-  // Split text animation
-  const titleWords = ["CASE", "STUDIES"];
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -48,7 +49,6 @@ const CaseStudiesHeader = () => {
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
-  // Particle animation effect
   useEffect(() => {
     if (typeof window === "undefined" || isMobile || prefersReducedMotion) return;
 
@@ -60,15 +60,15 @@ const CaseStudiesHeader = () => {
     canvas.height = dimensions.height;
 
     const particles = [];
-    const particleCount = 40;
+    const particleCount = 50;
 
     class Particle {
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
         this.size = Math.random() * 3 + 1;
-        this.speedX = Math.random() * 1 - 0.5;
-        this.speedY = Math.random() * 1 - 0.5;
+        this.speedX = Math.random() * 2 - 1;
+        this.speedY = Math.random() * 2 - 1;
         this.opacity = Math.random() * 0.5 + 0.2;
         this.pulse = Math.random() * 0.02 + 0.01;
       }
@@ -92,12 +92,10 @@ const CaseStudiesHeader = () => {
       }
     }
 
-    // Initialize particles
     for (let i = 0; i < particleCount; i++) {
       particles.push(new Particle());
     }
 
-    // Connect particles (optimized)
     const connectParticles = () => {
       const maxDistance = 100;
       for (let i = 0; i < particles.length; i++) {
@@ -120,12 +118,12 @@ const CaseStudiesHeader = () => {
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       particles.forEach((particle) => {
         particle.update();
         particle.draw();
       });
-      
+
       connectParticles();
       requestAnimationFrame(animate);
     };
@@ -134,8 +132,8 @@ const CaseStudiesHeader = () => {
   }, [dimensions, isMobile, prefersReducedMotion]);
 
   const wordVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: isMobile ? 50 : 100,
       rotateX: isMobile ? 0 : -90,
       filter: isMobile ? "none" : "blur(10px)"
@@ -164,7 +162,7 @@ const CaseStudiesHeader = () => {
     },
   };
 
-  const statsVariants = {
+  const iconVariants = {
     hidden: { opacity: 0, scale: 0.5, y: 50 },
     visible: (i) => ({
       opacity: 1,
@@ -181,10 +179,9 @@ const CaseStudiesHeader = () => {
   return (
     <section
       ref={sectionRef}
-      id="case-studies"
-      className="relative flex lg:h-[110vh] h-[120vh] min-h-[1000px] w-full flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-900 via-black to-neutral-900"
+      id={sectionId}
+      className="relative flex w-full flex-col items-center overflow-visible bg-gradient-to-b from-neutral-900 via-black to-neutral-900"
     >
-      {/* Animated particles canvas */}
       {!isMobile && !prefersReducedMotion && (
         <canvas
           ref={canvasRef}
@@ -193,7 +190,6 @@ const CaseStudiesHeader = () => {
         />
       )}
 
-      {/* Animated gradient overlay */}
       <motion.div
         className="absolute inset-0 z-[1]"
         animate={!isMobile && !prefersReducedMotion ? {
@@ -210,13 +206,13 @@ const CaseStudiesHeader = () => {
         }}
       />
 
+      {/* Main Content Container */}
       <motion.div
         style={{ y, opacity }}
-        className="relative z-10 flex flex-col items-center justify-center text-center"
+        className="relative min-h-[100vh] z-10 flex flex-col items-center justify-center text-center overflow-visible w-full md:pt-24 pt-20"
       >
-        {/* Main Title with perspective */}
-        <motion.div 
-          className="perspective-1000 mb-6"
+        <motion.div
+          className="perspective-1000 mb-8 overflow-visible"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -227,15 +223,14 @@ const CaseStudiesHeader = () => {
                 key={index}
                 custom={index}
                 variants={wordVariants}
-                className={`block text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] ${
-                  index === 0 
-                    ? "bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent" 
-                    : "text-white"
-                }`}
+                className={`inline-block text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] px-4 ${index === gradientWordIndex
+                  ? "bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
+                  : "text-white"
+                  }`}
                 whileHover={!isMobile ? {
                   scale: 1.05,
-                  textShadow: index === 0 
-                    ? "0 0 50px rgba(245, 158, 11, 0.2)" 
+                  textShadow: index === gradientWordIndex
+                    ? "0 0 50px rgba(245, 158, 11, 0.2)"
                     : "0 0 50px rgba(255, 255, 255, 0.2)",
                   transition: { duration: 0.3 },
                 } : {}}
@@ -246,67 +241,31 @@ const CaseStudiesHeader = () => {
           </motion.h1>
         </motion.div>
 
-        {/* Animated Description */}
         <motion.p
           initial={{ opacity: 0, y: isMobile ? 20 : 30, filter: isMobile ? "none" : "blur(10px)" }}
           animate={{ opacity: 1, y: 0, filter: "none" }}
           transition={{ duration: isMobile ? 0.6 : 1, delay: 0.6 }}
-          className="mx-auto mb-10 max-w-5xl px-6 text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl"
+          className="mx-auto mb-12 max-w-4xl px-6 text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl text-balance"
         >
-          At{" "}
-          <motion.span
-            className="font-semibold text-amber-400"
-            whileHover={!isMobile ? { 
-              textShadow: "0 0 30px rgba(245, 158, 11, 0.8)",
-              scale: 1.05,
-            } : {}}
-          >
-            Camino Code
-          </motion.span>
-          , we take pride in delivering high-quality, innovative solutions in{" "}
-          <motion.span
-            className="font-semibold text-amber-400"
-            whileHover={!isMobile ? { 
-              textShadow: "0 0 30px rgba(245, 158, 11, 0.8)",
-              scale: 1.05,
-            } : {}}
-          >
-            Data Science
-          </motion.span>{" "}
-          and{" "}
-          <motion.span
-            className="font-semibold text-amber-400"
-            whileHover={!isMobile ? { 
-              textShadow: "0 0 30px rgba(245, 158, 11, 0.8)",
-              scale: 1.05,
-            } : {}}
-          >
-            Web Development
-          </motion.span>
-          . Our portfolio showcases transformative projects that enhance business efficiency and performance.
+          {description}
         </motion.p>
 
-        {/* Stats Cards */}
-        <motion.div 
-          className="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8"
+        <motion.div
+          className="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
         >
-          {[
-            { icon: <Briefcase className="h-8 w-8" />, number: "50+", label: "Projects Completed" },
-            { icon: <Award className="h-8 w-8" />, number: "98%", label: "Client Satisfaction" },
-            { icon: <Users className="h-8 w-8" />, number: "30+", label: "Happy Clients" },
-          ].map((stat, index) => (
+          {items.map((item, index) => (
             <motion.div
               key={index}
               custom={index}
-              variants={statsVariants}
+              variants={iconVariants}
               initial="hidden"
               animate="visible"
-              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm"
-              whileHover={!isMobile ? { 
-                scale: 1.05, 
+              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm max-w-[190px] mx-auto"
+              whileHover={!isMobile ? {
+                scale: 1.05,
                 y: -10,
                 transition: { type: "spring", stiffness: 300 }
               } : {}}
@@ -317,34 +276,21 @@ const CaseStudiesHeader = () => {
               />
               <motion.div
                 className="relative z-10 flex flex-col items-center"
+                transition={{ duration: 0.3 }}
               >
-                <div className="mb-3 text-amber-400">{stat.icon}</div>
-                <motion.p 
-                  className="text-4xl font-bold text-white "
-                  animate={!prefersReducedMotion ? { 
-                    scale: [1, 1.1, 1],
-                  } : {}}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatDelay: 3,
-                  }}
-                >
-                  {stat.number}
-                </motion.p>
-                <p className="mt-1 text-sm text-white/60 max-w-40">{stat.label}</p>
+                <div className="mb-4 text-amber-400">{item.icon}</div>
+                <p className="text-sm font-medium text-white/80 text-center">{item.label}</p>
               </motion.div>
             </motion.div>
           ))}
         </motion.div>
 
-        {/* CTA Button */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1, duration: 0.6 }}
         >
-          <Link href="#work">
+          <Link href={ctaLink}>
             <motion.button
               className="group text-lg font-semibold relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-amber-600 to-red-600 px-8 py-4 text-white"
               initial="initial"
@@ -358,7 +304,7 @@ const CaseStudiesHeader = () => {
                 hover: { scale: 1.05 }
               }}
             >
-              <span className="relative z-10">Explore Our Work</span>
+              <span className="relative z-10">{ctaLabel}</span>
               <motion.span
                 className="relative z-10 ml-2"
                 variants={{
@@ -405,43 +351,18 @@ const CaseStudiesHeader = () => {
                 transition={{ duration: 0.3, ease: "easeOut" }}
               />
             </motion.button>
-
           </Link>
         </motion.div>
       </motion.div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        className="absolute bottom-10 left-1/2 z-10 -translate-x-1/2"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
-      >
-        <motion.div
-          animate={!prefersReducedMotion ? { y: [0, 12, 0] } : {}}
-          transition={{
-            duration: 1.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="flex flex-col items-center"
-        >
-          <span className="mb-2 text-sm uppercase tracking-widest text-white/60">
-            Scroll
-          </span>
-          <ArrowDown className="h-6 w-6 text-amber-400" />
-        </motion.div>
-      </motion.div>
-
-      {/* Decorative floating elements */}
       {!isMobile && (
         <>
           <motion.div
-            className="absolute left-20 top-1/4 h-40 w-40 rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 blur-2xl"
+            className="absolute left-20 top-1/4 h-40 w-40 rounded-full bg-gradient-to-r from-amber-400/10 to-red-600/10 blur-2xl"
             animate={!prefersReducedMotion ? {
-              x: [0, 60, 0],
-              y: [0, -40, 0],
-              scale: [1, 1.3, 1],
+              x: [0, 30, 0],
+              y: [0, -20, 0],
+              scale: [1, 1.2, 1],
             } : {}}
             transition={{
               duration: 10,
@@ -450,11 +371,11 @@ const CaseStudiesHeader = () => {
             }}
           />
           <motion.div
-            className="absolute bottom-1/4 right-20 h-48 w-48 rounded-full bg-gradient-to-r from-orange-400/20 to-amber-600/20 blur-2xl"
+            className="absolute bottom-1/4 right-20 h-48 w-48 rounded-full bg-gradient-to-r from-orange-400/10 to-amber-600/10 blur-2xl"
             animate={!prefersReducedMotion ? {
-              x: [0, -40, 0],
-              y: [0, 60, 0],
-              scale: [1, 1.4, 1],
+              x: [0, -20, 0],
+              y: [0, 30, 0],
+              scale: [1, 1.3, 1],
             } : {}}
             transition={{
               duration: 12,
@@ -464,8 +385,33 @@ const CaseStudiesHeader = () => {
           />
         </>
       )}
+
+      {/* Scroll Indicator Container */}
+      <div className="relative w-full h-24 flex items-center justify-center">
+        <motion.div
+          className="absolute"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.8, duration: 0.6 }}
+        >
+          <motion.div
+            animate={{ y: [0, -12, 0], opacity: [0.6, 0.6, 0.6] }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="flex flex-col items-center"
+          >
+            <span className="text-sm uppercase tracking-widest text-white/60">
+              Scroll
+            </span>
+            <ArrowDown className="h-6 w-6 text-amber-400" />
+          </motion.div>
+        </motion.div>
+      </div>
     </section>
   );
 };
 
-export default CaseStudiesHeader;
+export default GenericPageHeader;
