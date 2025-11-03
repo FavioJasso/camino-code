@@ -1,7 +1,7 @@
 "use client";
 
 import NavigationBar from "@/components/NavigationBar";
-import GenericPageHeader from "@/components/GenericPageHeader";
+import PageHeader from "@/components/common/Headers";
 import { Mail, Phone, MapPin } from "lucide-react";
 import ContactForm from "@/components/ContactFormPages";
 import Footer from "@/components/Footer";
@@ -18,7 +18,7 @@ const ContactUsHeader = () => {
   const description = "We'd love to hear from you! Whether you have questions about our services or want to discuss your next big project, our team is ready to help transform your ideas into reality.";
 
   return (
-    <GenericPageHeader
+    <PageHeader
       sectionId="contact-header"
       titleWords={["GET IN", "TOUCH"]}
       description={description}

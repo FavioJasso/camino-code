@@ -3,7 +3,7 @@
 import NavigationBar from "@/components/NavigationBar";
 import ContactForm from "@/components/ContactFormPages";
 import Footer from "@/components/Footer";
-import GenericPageHeader from "@/components/GenericPageHeader";
+import PageHeader from "@/components/common/Headers";
 import AboutUsFounder from "@/components/AboutUsFounder";
 import AboutUsHero from "@/components/AboutUsHero";
 import AboutUsOffers from "@/components/AboutUsOffers";
@@ -16,7 +16,7 @@ const AboutUsHeader = () => {
   const description = "At Camino Code, we specialize in delivering advanced data science and web development solutions. Our goal is to empower businesses with innovative, scalable, and intelligent platforms that drive growth and efficiency.";
 
   return (
-    <GenericPageHeader
+    <PageHeader
       sectionId="about-header"
       titleWords={["ABOUT", "US"]}
       description={description}
