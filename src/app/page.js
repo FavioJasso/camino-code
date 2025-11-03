@@ -1,7 +1,7 @@
 "use client";
 
 import NavigationBar from "../components/NavigationBar";
-import GenericPageHeader from "../components/GenericPageHeader";
+import PageHeader from "../components/common/Headers";
 import ContactForm from "../components/ContactFormPages";
 import Footer from "../components/Footer";
 import AboutUsPartners from "../components/AboutUsPartners";
@@ -18,7 +18,7 @@ const Hero = () => {
   const description = "At Camino Code, we combine data science and web development to create innovative, future-ready solutions. From predictive analytics to custom web applications, we help businesses thrive in the digital age.";
 
   return (
-    <GenericPageHeader
+    <PageHeader
       sectionId="hero"
       titleWords={["CODE", "THE FUTURE"]}
       description={description}

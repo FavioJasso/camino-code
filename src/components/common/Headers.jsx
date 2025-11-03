@@ -6,7 +6,7 @@ import { ArrowDown, ArrowBigRightIcon, ArrowBigRightDashIcon } from "lucide-reac
 import Link from "next/link";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
-const GenericPageHeader = ({
+const PageHeader = ({
   sectionId,
   titleWords,
   description,
@@ -206,7 +206,6 @@ const GenericPageHeader = ({
         }}
       />
 
-      {/* Main Content Container */}
       <motion.div
         style={{ y, opacity }}
         className="relative min-h-[100vh] z-10 flex flex-col items-center justify-center text-center overflow-visible w-full md:pt-24 pt-20"
@@ -386,7 +385,6 @@ const GenericPageHeader = ({
         </>
       )}
 
-      {/* Scroll Indicator Container */}
       <div className="relative w-full h-24 flex items-center justify-center">
         <motion.div
           className="absolute"
@@ -406,7 +404,7 @@ const GenericPageHeader = ({
             <span className="text-sm uppercase tracking-widest text-white/60">
               Scroll
             </span>
-            <ArrowDown className="h-6 w-6 text-amber-400" />
+            <ArrowDown className="h-6 w-6 text-blue-400" />
           </motion.div>
         </motion.div>
       </div>
@@ -414,4 +412,6 @@ const GenericPageHeader = ({
   );
 };
 
-export default GenericPageHeader;
+export default PageHeader;
+
+

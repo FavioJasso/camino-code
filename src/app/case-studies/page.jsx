@@ -2,7 +2,7 @@
 
 import NavigationBar from "@/components/NavigationBar";
 import ContactForm from "@/components/ContactFormPages";
-import GenericPageHeader from "@/components/GenericPageHeader";
+import PageHeader from "@/components/common/Headers";
 import { Briefcase, Award, Users } from "lucide-react";
 import Work from "@/components/Work";
 import Testimonials from "@/components/Testimonials";
@@ -20,7 +20,7 @@ const CaseStudiesHeader = () => {
   const description = "At Camino Code, we take pride in delivering high-quality, innovative solutions in Data Science and Web Development. Our portfolio showcases transformative projects that enhance business efficiency and performance.";
 
   return (
-    <GenericPageHeader
+    <PageHeader
       sectionId="case-studies"
       titleWords={["CASE", "STUDIES"]}
       description={description}

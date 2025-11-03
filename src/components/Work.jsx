@@ -24,19 +24,19 @@ const caseStudies = [
   },
   {
     id: 2,
-    title: "E-Commerce Platform for StyleHub",
+    title: "Website Victoria's Painting",
     description:
-      "Built a scalable web application that boosted online sales by 150%.",
-    image: "/assets/images/services_work02.png",
-    href: "/case-study/stylehub",
-    color: "from-green-400 to-teal-600",
+      "Built a professional website that helps homeowners find trusted painting services and connects them with experts.",
+    image: "/assets/images/victorias_work.png",
+    href: "/case-study/victorias-painting",
+    color: "from-blue-400 to-blue-600",
   },
   {
     id: 3,
-    title: "Professional Portfolio Design & Development",
+    title: "Portfolio Daniel Avila",
     description:
       "How we built a clean, modern, and user-focused portfolio website that reflects expertise, clarity, and trust.",
-    image: "/assets/images/danielavila_work.png",
+    image: "/assets/images/case_studies/danielavila_work.webp",
     href: "/case-study/daniel-avila",
     color: "from-blue-700 to-blue-400",
   },
@@ -130,7 +130,7 @@ const CaseStudyCard = ({ study, index }) => {
             <motion.div
               className="absolute inset-0"
               animate={{
-                scale: isHovered ? 1.15 : 1,
+                scale: isHovered ? 1.05 : 1,
                 rotate: isHovered ? 2 : 0,
               }}
               transition={{ duration: 0.8, ease: "easeOut" }}
@@ -184,7 +184,7 @@ const CaseStudyCard = ({ study, index }) => {
                 transition={{ delay: 0.1 }}
               >
                 <motion.h3
-                  className="mb-3 text-2xl font-bold text-white sm:text-3xl lg:text-4xl"
+                  className="mb-1 md:mb-3 text-xl md:text-2xl font-bold text-white sm:text-3xl lg:text-4xl"
                   animate={{
                     y: isHovered ? -5 : 0,
                   }}
@@ -194,7 +194,7 @@ const CaseStudyCard = ({ study, index }) => {
                 </motion.h3>
 
                 <motion.p
-                  className={`mb-6 text-base text-white/80 sm:text-lg ${isFirefox ? "" : "overflow-hidden"}`}
+                  className={`mb-6 text-sm md:text-base text-white/80 sm:text-lg ${isFirefox ? "" : "overflow-hidden"}`}
                   initial={{ height: 0, opacity: 0, y: 20 }}
                   animate={{ 
                     height: isHovered && !isFirefox ? "auto" : 0,
@@ -259,14 +259,14 @@ const CaseStudyCard = ({ study, index }) => {
 
             {/* Number badge */}
             <motion.div
-              className="absolute top-6 left-6 flex h-16 w-16 items-center justify-center rounded-full bg-black/50 backdrop-blur-md"
+              className="absolute top-6 left-6 flex h-12 w-12 items-center justify-center rounded-full bg-black/50 backdrop-blur-md"
               animate={{
                 scale: isHovered && !isFirefox ? 1.1 : 1,
                 rotate: isHovered && !isFirefox ? 360 : 0,
               }}
               transition={{ duration: 0.5 }}
             >
-              <span className="text-2xl font-bold text-amber-400">
+              <span className="text-xl font-bold text-amber-400">
                 {String(index + 1).padStart(2, '0')}
               </span>
             </motion.div>

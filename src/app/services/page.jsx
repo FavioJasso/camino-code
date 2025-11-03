@@ -2,7 +2,7 @@
 
 import NavigationBar from "@/components/NavigationBar";
 import ContactForm from "@/components/ContactFormPages";
-import GenericPageHeader from "@/components/GenericPageHeader";
+import PageHeader from "@/components/common/Headers";
 import { Brain, Database, Code } from "lucide-react";
 import ServicesList from "@/components/ServicesList";
 import ServicesDetails from "@/components/ServicesDetails";
@@ -21,7 +21,7 @@ const ServicesHeader = () => {
   const description = "Empowering businesses with Advanced AI, Data intelligence and Product engineering. We transform your vision into reality with cutting-edge solutions that scale.";
 
   return (
-    <GenericPageHeader
+    <PageHeader
       sectionId="services"
       titleWords={["OUR", "SERVICES"]}
       description={description}
