@@ -27,7 +27,7 @@ const caseStudies = [
     title: "Website Victoria's Painting",
     description:
       "Built a professional website that helps homeowners find trusted painting services and connects them with experts.",
-    image: "/assets/images/victorias_work.webp",
+    image: "/assets/images/case_studies/victorias_work.webp",
     href: "/case-study/victorias-painting",
     color: "from-blue-400 to-blue-600",
   },
