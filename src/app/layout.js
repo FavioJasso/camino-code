@@ -3,6 +3,7 @@ import "./globals.css";
 import { seoConfig } from "@/config/seo";
 import { poppins } from "./fonts";
 import NonCriticalStyles from "@/components/NonCriticalStyles";
+import StructuredData from "@/components/StructuredData";
 
 export const metadata = {
   metadataBase: new URL(seoConfig.siteUrl),
@@ -12,9 +13,11 @@ export const metadata = {
   },
   description: seoConfig.defaultDescription,
   keywords: seoConfig.keywords.default,
-  authors: [{ name: "Camino Code Team" }],
+  authors: [{ name: "Camino Code Team", url: "https://caminocode.com" }],
   creator: "Camino Code",
   publisher: "Camino Code",
+  applicationName: "Camino Code",
+  referrer: "origin-when-cross-origin",
   formatDetection: {
     email: false,
     address: false,
@@ -47,9 +50,11 @@ export const metadata = {
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
+      noimageindex: false,
       "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
@@ -58,27 +63,41 @@ export const metadata = {
   manifest: "/manifest.json",
   alternates: {
     canonical: seoConfig.siteUrl,
+    languages: {
+      "en-US": seoConfig.siteUrl,
+    },
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Camino Code",
+    statusBarStyle: "black-translucent",
   },
   other: {
-    "preconnect": "https://fonts.googleapis.com",
-    "preconnect": "https://fonts.gstatic.com",
-    "preconnect": "https://prod.spline.design",
-    "preconnect": "https://va.vercel-scripts.com",
-    "preconnect": "https://www.gstatic.com",
+    "mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "black-translucent",
+    "apple-mobile-web-app-title": "Camino Code",
+    "theme-color": "#000000",
+    "color-scheme": "dark light",
   },
   verification: {
     google: seoConfig.googleSiteVerification,
+    yandex: seoConfig.yandexVerification,
     other: {
       me: ["contact@caminocode.com"],
       "msvalidate.01": seoConfig.bingSiteVerification,
     },
   },
   category: "technology",
+  classification: "Business",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang={seoConfig.siteLanguage} className={poppins.variable}>
+      <head>
+        <StructuredData />
+      </head>
       <body className="cursor-none font-sans">
         {children}
         <NonCriticalStyles />

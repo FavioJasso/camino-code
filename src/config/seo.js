@@ -11,6 +11,7 @@ export const seoConfig = {
   twitterCardType: 'summary_large_image',
   googleSiteVerification: '', // Add your Google verification code
   bingSiteVerification: '', // Add your Bing verification code
+  yandexVerification: '', // Add your Yandex verification code
 
   // Organization details for structured data
   organization: {
