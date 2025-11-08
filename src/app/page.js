@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import NavigationBar from "../components/NavigationBar";
 import PageHeader from "../components/common/Headers";
 import ContactForm from "../components/ContactFormPages";
@@ -15,7 +16,41 @@ import StructuredData from "../components/StructuredData";
 
 const Hero = () => {
   const items = [];
-  const description = "At Camino Code, we combine data science and web development to create innovative, future-ready solutions. From predictive analytics to custom web applications, we help businesses thrive in the digital age.";
+  const description = (
+    <>
+      At Camino Code, we combine{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        Data science
+      </motion.span>{" "}
+      and{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        Web development
+      </motion.span>{" "}
+      to create{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        Innovative
+      </motion.span>
+      , future-ready solutions. From predictive analytics to custom web applications, we help businesses thrive in the digital age.
+    </>
+  );
 
   return (
     <PageHeader

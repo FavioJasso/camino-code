@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
@@ -22,11 +22,38 @@ const INTERSECTION_THRESHOLD = 0.1;
 export default function Partners() {
   const containerRef = useRef(null);
   const trackRef = useRef(null);
+  const [modelLoaded, setModelLoaded] = useState(false);
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
   const { ref: sectionRef, hasIntersected } = useIntersectionObserver({
     threshold: INTERSECTION_THRESHOLD,
   });
+  const { ref: modelRef, hasIntersected: modelIntersected } = useIntersectionObserver({
+    threshold: 0.2,
+  });
+
+  // ========== MODEL LOAD HANDLER ==========
+  useEffect(() => {
+    if (modelIntersected) {
+      // Esperar a que el modelo se cargue completamente antes de animar
+      // Esto evita el lag en Firefox/Zen
+      const timer = setTimeout(() => {
+        // Usar requestIdleCallback si está disponible (mejor para Firefox)
+        if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+          window.requestIdleCallback(() => {
+            setModelLoaded(true);
+          });
+        } else {
+          // Fallback con requestAnimationFrame
+          requestAnimationFrame(() => {
+            setModelLoaded(true);
+          });
+        }
+      }, 3800); // Aumentado a 3.8s para dar más tiempo de carga
+
+      return () => clearTimeout(timer);
+    }
+  }, [modelIntersected]);
 
   // ========== INFINITE SCROLL SETUP ==========
   useEffect(() => {
@@ -72,14 +99,37 @@ export default function Partners() {
       transition={{ duration: 0.6 }}
     >
       {/* 3D Model Background */}
-      <div className="absolute inset-0 z-0 opacity-60">
-        <LazyModelViewer
-          modelPath="/triangle-1.glb"
-          height="100%"
-          fogColor="#f8f9fa"
-          containerClassName="w-full h-full absolute top-0 left-1/2 transform -translate-x-1/2"
-          delay={3000} // 3 seconds delay for better LCP
-        />
+      <div ref={modelRef} className="absolute inset-0 z-0 opacity-60 pointer-events-none">
+        {modelIntersected && (
+          <motion.div
+            className="w-full h-full will-change-transform"
+            initial={{ opacity: 0, y: -200 }}
+            animate={
+              modelLoaded
+                ? { opacity: 1, y: 0 }
+                : { opacity: 0, y: -200 }
+            }
+            transition={{
+              duration: 1.2,
+              ease: [0.34, 1.56, 0.64, 1], // easeOutBack - efecto de rebote suave
+              opacity: { duration: 0.8, ease: "easeOut" },
+              y: { duration: 1.2 },
+            }}
+            style={{
+              transform: 'translateZ(0)', // Force GPU acceleration
+              backfaceVisibility: 'hidden',
+              perspective: 1000,
+            }}
+          >
+            <LazyModelViewer
+              modelPath="/triangle-1.glb"
+              height="90%"
+              fogColor="#f8f9fa"
+              containerClassName="w-full h-full absolute top-0 left-1/2 transform -translate-x-1/2"
+              delay={3000}
+            />
+          </motion.div>
+        )}
       </div>
 
       {/* Decorative Elements */}
@@ -96,10 +146,25 @@ export default function Partners() {
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
           {/* Main Title */}
-          <h2 className="text-5xl font-black tracking-tighter text-black uppercase sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl">
-            Our{" "}
+          <h2 className="text-5xl font-black tracking-tighter text-black uppercase sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl flex flex-wrap justify-center items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
             <motion.span
-              className="inline-block bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent"
+              className="inline-block whitespace-nowrap"
+              initial={{ opacity: 0, x: -20 }}
+              animate={hasIntersected ? { opacity: 1, x: 0 } : {}}
+              transition={{ delay: 0.2, duration: 0.6 }}
+              whileHover={
+                !isMobile
+                  ? {
+                      scale: 1.05,
+                      transition: { duration: 0.2 },
+                    }
+                  : {}
+              }
+            >
+              Our
+            </motion.span>
+            <motion.span
+              className="inline-block bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent whitespace-nowrap px-1"
               initial={{ opacity: 0, x: -20 }}
               animate={hasIntersected ? { opacity: 1, x: 0 } : {}}
               transition={{ delay: 0.4, duration: 0.6 }}

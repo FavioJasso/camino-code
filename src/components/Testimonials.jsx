@@ -15,21 +15,21 @@ import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 const testimonials = [
   {
     id: 1,
-    name: "Alex Johnson",
-    role: "CEO of TechWave",
-    company: "TechWave Solutions",
+    name: "Juan Porras",
+    role: "Founder",
+    company: "Victoria's Painting",
     quote:
-      "Camino Code transformed our data strategy, giving us valuable insights that boosted efficiency and decision-making.",
+      "His ability to turn my ideas into a modern, functional, and visually appealing design exceeded all my expectations.",
     stars: 5,
     image: "/assets/images/testimonial-1.jpg",
   },
   {
     id: 2,
-    name: "Sarah Chen",
-    role: "CTO of StyleHub",
-    company: "StyleHub Inc.",
+    name: "Daniel Avila",
+    role: "IT Support Professional",
+    company: "danielavila.tech",
     quote:
-      "Their expertise in web development and AI integration helped us scale our platform beyond our expectations.",
+      "They didn't just build me a website, they helped me create an online presence that actually feels like me.",
     stars: 5,
     image: "/assets/images/testimonial-2.jpg",
   },
@@ -269,28 +269,28 @@ export default function Testimonials() {
 
       <div ref={observerRef} className="relative z-10 container mx-auto px-6 sm:px-8">
         {/* Heading with dramatic animation */}
-        <motion.div className="perspective-1000 mb-16 text-center">
-          <motion.h2
-            className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-white"
-            variants={titleVariants}
-            initial="hidden"
-            animate={hasIntersected ? "visible" : "hidden"}
-          >
+        <motion.div
+          className="perspective-1000 mb-16 overflow-visible"
+          variants={titleVariants}
+          initial="hidden"
+          animate={hasIntersected ? "visible" : "hidden"}
+        >
+          <motion.h2 className="flex flex-col items-center justify-center">
             <motion.span
-              className="block text-white"
+              className="inline-block text-white text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl px-4"
               whileHover={!isMobile ? {
                 scale: 1.05,
-                textShadow: "0 0 50px rgba(255, 255, 255, 0.8)",
+                textShadow: "0 0 50px rgba(255, 255, 255, 0.2)",
                 transition: { duration: 0.3 },
               } : {}}
             >
               CLIENT
             </motion.span>
             <motion.span
-              className="block text-orange-400"
+              className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl px-4"
               whileHover={!isMobile ? {
                 scale: 1.05,
-                textShadow: "0 0 50px rgba(245, 158, 11, 0.8)",
+                textShadow: "0 0 50px rgba(245, 158, 11, 0.2)",
                 transition: { duration: 0.3 },
               } : {}}
             >
@@ -457,36 +457,6 @@ export default function Testimonials() {
               )}
             </motion.button>
           ))}
-        </motion.div>
-
-        <motion.div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="flex flex-col items-center"
-          >
-            <span className="mb-2 text-xs uppercase tracking-widest text-white/60">
-              Scroll
-            </span>
-            <motion.div
-              className="h-16 w-[1px] bg-gradient-to-b from-amber-400 to-transparent"
-              animate={{ scaleY: [0, 1, 0] }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-          </motion.div>
         </motion.div>
       </div>
     </motion.section>

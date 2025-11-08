@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import NavigationBar from "@/components/NavigationBar";
 import PageHeader from "@/components/common/Headers";
 import { Mail, Phone, MapPin } from "lucide-react";
@@ -15,7 +16,22 @@ const ContactUsHeader = () => {
     { icon: <MapPin className="h-8 w-8" />, label: "San Francisco, CA" },
   ];
 
-  const description = "We'd love to hear from you! Whether you have questions about our services or want to discuss your next big project, our team is ready to help transform your ideas into reality.";
+  const description = (
+    <>
+      We'd love to hear from you! Whether you have questions about our services
+      or want to discuss your next big project, our team is ready to help{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        transform your ideas into reality
+      </motion.span>
+      .
+    </>
+  );
 
   return (
     <PageHeader

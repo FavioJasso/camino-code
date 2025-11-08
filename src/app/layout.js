@@ -18,6 +18,16 @@ export const metadata = {
   publisher: "Camino Code",
   applicationName: "Camino Code",
   referrer: "origin-when-cross-origin",
+  icons: {
+    icon: [
+      { url: "/icon.png", sizes: "any", type: "image/png" },
+      { url: "/assets/icon.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      { url: "/icon.png", sizes: "any", type: "image/png" },
+    ],
+    shortcut: ["/icon.png"],
+  },
   formatDetection: {
     email: false,
     address: false,

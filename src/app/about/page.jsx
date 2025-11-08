@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import NavigationBar from "@/components/NavigationBar";
 import ContactForm from "@/components/ContactFormPages";
 import Footer from "@/components/Footer";
@@ -13,7 +14,61 @@ import StructuredData from "@/components/StructuredData";
 
 const AboutUsHeader = () => {
   const items = [];
-  const description = "At Camino Code, we specialize in delivering advanced data science and web development solutions. Our goal is to empower businesses with innovative, scalable, and intelligent platforms that drive growth and efficiency.";
+  const description = (
+    <>
+      At Camino Code, we specialize in delivering{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        Advanced Data science
+      </motion.span>{" "}
+      and{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        Web development
+      </motion.span>{" "}
+      solutions. Our goal is to empower businesses with{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        Innovative
+      </motion.span>
+      ,{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        Scalable
+      </motion.span>
+      , and{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        Intelligent platforms
+      </motion.span>{" "}
+      that drive growth and efficiency.
+    </>
+  );
 
   return (
     <PageHeader

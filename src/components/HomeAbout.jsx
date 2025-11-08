@@ -1,16 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
+import { ArrowBigRightIcon, ArrowBigRightDashIcon } from "lucide-react";
 
 export default function AboutSection() {
   const { ref: sectionRef, hasIntersected } = useIntersectionObserver({
     threshold: 0.1,
   });
   const containerRef = useRef(null);
+  const [isHovered, setIsHovered] = useState(false);
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
 
@@ -56,7 +58,7 @@ export default function AboutSection() {
     <motion.section
       ref={sectionRef}
       id="about"
-      className="relative mx-auto flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-900 via-black to-neutral-900 py-20"
+      className="relative mx-auto flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-b from-neutral-900 via-black to-neutral-900 pt-20"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -125,53 +127,54 @@ export default function AboutSection() {
       <motion.div
         ref={containerRef}
         style={{ y, opacity }}
-        className="relative z-10 flex h-full w-full max-w-[1440px] flex-col items-center justify-center gap-8 px-6 text-center"
+        className="relative z-10 flex h-full w-full max-w-[1440px] flex-col items-center justify-center px-6 text-center pt-20 pb-8"
       >
-
-
         {/* Heading with split text animation */}
-        <motion.h2
-          className="perspective-1000 mx-auto mt-16 w-full max-w-[900px] text-center text-6xl font-black tracking-tighter uppercase sm:mt-20 sm:text-7xl md:mt-24 md:text-8xl lg:text-9xl xl:text-[10rem]"
+        <motion.div
+          className="perspective-1000 overflow-visible"
           variants={containerVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
         >
-          <motion.span
-            className="inline-block text-white"
-            custom={0}
-            variants={wordVariants}
-            whileHover={
-              !isMobile
-                ? {
-                    scale: 1.02,
-                    transition: { duration: 0.3 },
-                  }
-                : {}
-            }
-          >
-            Shaping the Future of
-          </motion.span>{" "}
-          <motion.span
-            className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
-            custom={1}
-            variants={wordVariants}
-            whileHover={
-              !isMobile
-                ? {
-                    scale: 1.05,
-                    textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
-                    transition: { duration: 0.3 },
-                  }
-                : {}
-            }
-          >
-            Technology
-          </motion.span>
-        </motion.h2>
+          <motion.h2 className="flex flex-col items-center justify-center">
+            <motion.span
+              className="inline-block text-white text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] px-4"
+              custom={0}
+              variants={wordVariants}
+              whileHover={
+                !isMobile
+                  ? {
+                      scale: 1.02,
+                      textShadow: "0 0 50px rgba(255, 255, 255, 0.2)",
+                      transition: { duration: 0.3 },
+                    }
+                  : {}
+              }
+            >
+              Shaping the Future of
+            </motion.span>
+            <motion.span
+              className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] px-4"
+              custom={1}
+              variants={wordVariants}
+              whileHover={
+                !isMobile
+                  ? {
+                      scale: 1.05,
+                      textShadow: "0 0 50px rgba(245, 158, 11, 0.2)",
+                      transition: { duration: 0.3 },
+                    }
+                  : {}
+              }
+            >
+              Technology
+            </motion.span>
+          </motion.h2>
+        </motion.div>
 
         {/* Description with fade in animation */}
         <motion.p
-          className="relative z-10 mx-auto mb-8 max-w-3xl text-lg leading-relaxed font-light text-white/80 sm:text-xl md:text-2xl"
+          className="relative z-10 mx-auto mt-8 mb-8 max-w-3xl text-lg leading-relaxed font-light text-white/80 sm:text-xl md:text-2xl"
           initial={{
             opacity: 0,
             y: isMobile ? 20 : 30,
@@ -191,7 +194,7 @@ export default function AboutSection() {
           At Camino Code, we are passionate about transforming businesses
           through the power of{" "}
           <motion.span
-            className="font-semibold text-amber-400"
+            className="font-semibold text-amber-400 whitespace-nowrap"
             whileHover={
               !isMobile
                 ? {
@@ -201,12 +204,12 @@ export default function AboutSection() {
                 : {}
             }
           >
-            data and technology
+            Data and technology
           </motion.span>
           . Founded with a vision to redefine the digital landscape, we
           specialize in{" "}
           <motion.span
-            className="font-semibold text-amber-400"
+            className="font-semibold text-amber-400 whitespace-nowrap"
             whileHover={
               !isMobile
                 ? {
@@ -216,7 +219,7 @@ export default function AboutSection() {
                 : {}
             }
           >
-            cutting-edge solutions
+            Cutting-edge solutions
           </motion.span>{" "}
           designed to drive innovation and growth.
         </motion.p>
@@ -232,43 +235,63 @@ export default function AboutSection() {
         >
           <Link href="/contact">
             <motion.button
-              className="group relative overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-red-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl"
-              whileHover={{ scale: 1.05 }}
+              className="group text-lg font-semibold relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-amber-600 to-red-600 px-8 py-4 text-white"
+              initial="initial"
+              whileHover="hover"
               whileTap={{ scale: 0.95 }}
+              onHoverStart={() => setIsHovered(true)}
+              onHoverEnd={() => setIsHovered(false)}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              variants={{
+                initial: { scale: 1 },
+                hover: { scale: 1.05 }
+              }}
             >
               <span className="relative z-10">Learn More</span>
               <motion.span
-                className="relative z-10 ml-2 inline-block"
-                animate={{ x: [0, 5, 0] }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
+                className="relative z-10 ml-2"
+                variants={{
+                  initial: { x: 0 },
+                  hover: {
+                    x: [0, 5, 0],
+                    transition: {
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }
+                  }
                 }}
               >
-                →
+                <AnimatePresence mode="wait">
+                  {!isHovered ? (
+                    <motion.div
+                      key="normal"
+                      initial={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ArrowBigRightIcon className="h-5 w-5" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="dash"
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ArrowBigRightDashIcon className="h-5 w-5" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.span>
-
-              {/* Animated background gradient */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-red-600 to-amber-400"
-                initial={{ x: "100%" }}
-                whileHover={{ x: 0 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-              />
-
-              {/* Glow effect */}
-              <motion.div
-                className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100"
-                initial={{ scale: 0.8 }}
-                whileHover={{ scale: 1.2 }}
-                transition={{ duration: 0.3 }}
-                style={{
-                  background:
-                    "radial-gradient(circle, rgba(245, 158, 11, 0.3) 0%, transparent 70%)",
-                  filter: "blur(20px)",
+                className="absolute inset-0 bg-gradient-to-t from-red-600 to-amber-600"
+                variants={{
+                  initial: { y: "100%" },
+                  hover: { y: 0 }
                 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
               />
             </motion.button>
           </Link>
