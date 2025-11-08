@@ -33,10 +33,10 @@ export const seoConfig = {
     },
     address: {
       addressCountry: 'US',
-      addressLocality: 'Your City',
-      addressRegion: 'Your State',
-      postalCode: 'XXXXX',
-      streetAddress: 'Your Street Address'
+      addressLocality: 'Newark',
+      addressRegion: 'NJ',
+      postalCode: '07102',
+      streetAddress: 'Newark, New Jersey'
     }
   },
 
