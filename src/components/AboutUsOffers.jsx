@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { Sparkles, Users, Puzzle, Scaling } from "lucide-react";
+import { Sparkles, Users, Puzzle, Scaling, ArrowBigRightIcon, ArrowBigRightDashIcon } from "lucide-react";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { useRef, useEffect, useState } from "react";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
@@ -43,6 +43,8 @@ export default function WhatSetsUsApart() {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  const [hoveredCard, setHoveredCard] = useState(null);
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
   const { ref: sectionRef, hasIntersected } = useIntersectionObserver({
@@ -175,6 +177,15 @@ export default function WhatSetsUsApart() {
         ease: "easeOut",
       },
     }),
+    hover: {
+      y: -5,
+      scale: 1.02,
+    },
+  };
+
+  const iconVariants = {
+    initial: { rotate: 0, scale: 1 },
+    hover: { rotate: 360, scale: 1.1 },
   };
 
   return (
@@ -263,45 +274,48 @@ export default function WhatSetsUsApart() {
         style={{ y: textY }}
       >
         {/* Title */}
-        <motion.h2
-          className="perspective-1000 mx-auto mt-16 w-full max-w-[900px] text-6xl font-black tracking-tighter uppercase sm:mt-20 sm:text-7xl md:mt-24 md:text-8xl lg:text-9xl xl:text-[10rem]"
+        <motion.div
+          className="perspective-1000 mb-8 overflow-visible"
           variants={titleVariants}
           initial="hidden"
           animate={hasIntersected ? "visible" : "hidden"}
         >
-          <motion.span
-            className="block text-gray-900"
-            whileHover={
-              !isMobile
-                ? {
-                    scale: 1.05,
-                    textShadow: "0 0 40px rgba(251, 191, 36, 0.3)",
-                    transition: { duration: 0.3 },
-                  }
-                : {}
-            }
-          >
-            What Sets Us
-          </motion.span>
-          <motion.span
-            className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
-            whileHover={
-              !isMobile
-                ? {
-                    scale: 1.05,
-                    textShadow: "0 0 40px rgba(251, 191, 36, 0.8)",
-                    transition: { duration: 0.3 },
-                  }
-                : {}
-            }
-          >
-            Apart
-          </motion.span>
-        </motion.h2>
+          <motion.h2 className="flex flex-col items-center justify-center gap-6">
+            <motion.span
+              className="inline-block text-gray-900 text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] px-4"
+              style={{ wordSpacing: '0.1em' }}
+              whileHover={
+                !isMobile
+                  ? {
+                      scale: 1.05,
+                      textShadow: "0 0 50px rgba(251, 191, 36, 0.3)",
+                      transition: { duration: 0.3 },
+                    }
+                  : {}
+              }
+            >
+              What Sets Us
+            </motion.span>
+            <motion.span
+              className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] px-4"
+              whileHover={
+                !isMobile
+                  ? {
+                      scale: 1.05,
+                      textShadow: "0 0 50px rgba(251, 191, 36, 0.2)",
+                      transition: { duration: 0.3 },
+                    }
+                  : {}
+              }
+            >
+              Apart
+            </motion.span>
+          </motion.h2>
+        </motion.div>
 
         {/* Description */}
         <motion.p
-          className="relative z-10 mx-auto mb-8 max-w-3xl text-lg leading-relaxed font-light text-gray-700 sm:text-xl md:text-2xl"
+          className="relative z-10 mx-auto mb-8 max-w-3xl text-lg leading-relaxed font-light text-gray-700 sm:text-xl md:text-2xl text-balance"
           initial={{
             opacity: 0,
             y: isMobile ? 20 : 30,
@@ -320,7 +334,7 @@ export default function WhatSetsUsApart() {
         >
           At Camino Code, we combine{" "}
           <motion.span
-            className="font-semibold text-orange-500"
+            className="font-semibold text-orange-500 whitespace-nowrap"
             whileHover={
               !isMobile
                 ? {
@@ -330,11 +344,11 @@ export default function WhatSetsUsApart() {
                 : {}
             }
           >
-            data science
+            Data science
           </motion.span>{" "}
           and{" "}
           <motion.span
-            className="font-semibold text-orange-500"
+            className="font-semibold text-orange-500 whitespace-nowrap"
             whileHover={
               !isMobile
                 ? {
@@ -344,7 +358,7 @@ export default function WhatSetsUsApart() {
                 : {}
             }
           >
-            web development
+            Web development
           </motion.span>{" "}
           to create innovative, future-ready solutions that drive business
           transformation.
@@ -360,43 +374,63 @@ export default function WhatSetsUsApart() {
         >
           <Link href="/contact">
             <motion.button
-              className="group relative overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-red-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl"
-              whileHover={{ scale: 1.05 }}
+              className="group text-lg font-semibold relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-amber-600 to-red-600 px-8 py-4 text-white"
+              initial="initial"
+              whileHover="hover"
               whileTap={{ scale: 0.95 }}
+              onHoverStart={() => setIsHovered(true)}
+              onHoverEnd={() => setIsHovered(false)}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              variants={{
+                initial: { scale: 1 },
+                hover: { scale: 1.05 }
+              }}
             >
               <span className="relative z-10">Get Started</span>
               <motion.span
-                className="relative z-10 ml-2 inline-block"
-                animate={{ x: [0, 5, 0] }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
+                className="relative z-10 ml-2"
+                variants={{
+                  initial: { x: 0 },
+                  hover: {
+                    x: [0, 5, 0],
+                    transition: {
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }
+                  }
                 }}
               >
-                →
+                <AnimatePresence mode="wait">
+                  {!isHovered ? (
+                    <motion.div
+                      key="normal"
+                      initial={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ArrowBigRightIcon className="h-5 w-5" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="dash"
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.5 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ArrowBigRightDashIcon className="h-5 w-5" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.span>
-
-              {/* Animated background gradient */}
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-red-600 to-amber-400"
-                initial={{ x: "100%" }}
-                whileHover={{ x: 0 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-              />
-
-              {/* Glow effect */}
-              <motion.div
-                className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100"
-                initial={{ scale: 0.8 }}
-                whileHover={{ scale: 1.2 }}
-                transition={{ duration: 0.3 }}
-                style={{
-                  background:
-                    "radial-gradient(circle, rgba(251, 191, 36, 0.3) 0%, transparent 70%)",
-                  filter: "blur(20px)",
+                className="absolute inset-0 bg-gradient-to-t from-red-600 to-amber-600"
+                variants={{
+                  initial: { y: "100%" },
+                  hover: { y: 0 }
                 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
               />
             </motion.button>
           </Link>
@@ -415,7 +449,9 @@ export default function WhatSetsUsApart() {
               variants={cardVariants}
               initial="hidden"
               animate={hasIntersected ? "visible" : "hidden"}
-              whileHover={!isMobile ? { y: -5, scale: 1.02 } : {}}
+              whileHover={!isMobile ? "hover" : undefined}
+              onHoverStart={() => setHoveredCard(feature.id)}
+              onHoverEnd={() => setHoveredCard(null)}
               transition={{ type: "spring", stiffness: 300 }}
               className="group relative h-64 w-full overflow-hidden rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
@@ -448,19 +484,21 @@ export default function WhatSetsUsApart() {
               <div className="relative z-10 flex h-full flex-col items-center justify-center p-6 text-center text-white">
                 <motion.div
                   className="mb-4 rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 p-3 backdrop-blur-sm"
-                  whileHover={!isMobile ? { rotate: 360, scale: 1.1 } : {}}
+                  animate={
+                    !isMobile && hoveredCard === feature.id
+                      ? { rotate: 360, scale: 1.1 }
+                      : { rotate: 0, scale: 1 }
+                  }
                   transition={{ duration: 0.5 }}
                 >
                   <motion.div
                     className="text-amber-400"
-                    whileHover={
-                      !isMobile
-                        ? {
-                            filter:
-                              "drop-shadow(0 0 20px rgba(251, 191, 36, 0.8))",
-                          }
-                        : {}
+                    animate={
+                      hoveredCard === feature.id
+                        ? { filter: "drop-shadow(0 0 20px rgba(251, 191, 36, 0.8))" }
+                        : { filter: "drop-shadow(0 0 0px rgba(251, 191, 36, 0))" }
                     }
+                    transition={{ duration: 0.3 }}
                   >
                     {feature.icon}
                   </motion.div>

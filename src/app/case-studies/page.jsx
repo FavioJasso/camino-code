@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import NavigationBar from "@/components/NavigationBar";
 import ContactForm from "@/components/ContactFormPages";
 import PageHeader from "@/components/common/Headers";
@@ -17,7 +18,51 @@ const CaseStudiesHeader = () => {
     { icon: <Users className="h-8 w-8" />, label: "30+ Happy Clients" },
   ];
 
-  const description = "At Camino Code, we take pride in delivering high-quality, innovative solutions in Data Science and Web Development. Our portfolio showcases transformative projects that enhance business efficiency and performance.";
+  const description = (
+    <>
+      At Camino Code, we take pride in delivering{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        High-quality
+      </motion.span>
+      ,{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        Innovative solutions
+      </motion.span>{" "}
+      in{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        Data Science
+      </motion.span>{" "}
+      and{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        Web Development
+      </motion.span>
+      . Our portfolio showcases transformative projects that enhance business efficiency and performance.
+    </>
+  );
 
   return (
     <PageHeader

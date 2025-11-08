@@ -1,8 +1,8 @@
 "use client";
 
-import { Brain, Cpu, Database,  ArrowRight, Sparkles } from "lucide-react";
+import { Brain, Cpu, Database, ArrowBigRightIcon, ArrowBigRightDashIcon, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { staggerContainer } from "@/utils/animations";
 import { useRef, useEffect, useState } from "react";
@@ -48,6 +48,8 @@ export default function ServicesSection() {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  const [hoveredCard, setHoveredCard] = useState(null);
   const isMobile = useIsMobile();
 
   const { scrollYProgress } = useScroll({
@@ -253,30 +255,30 @@ export default function ServicesSection() {
           initial="initial"
           animate={hasIntersected ? "animate" : "initial"}
         >
-          <motion.div className="perspective-1000">
-            <motion.h2
-              className="text-5xl leading-tight font-black tracking-tighter uppercase md:text-[70px] lg:text-[120px]"
-              variants={titleVariants}
-              initial="hidden"
-              animate={hasIntersected ? "visible" : "hidden"}
-            >
+          <motion.div
+            className="perspective-1000 mb-8 overflow-visible"
+            variants={titleVariants}
+            initial="hidden"
+            animate={hasIntersected ? "visible" : "hidden"}
+          >
+            <motion.h2 className="flex flex-col items-center md:items-start justify-center">
               <motion.span
-                className="block"
-                whileHover={{
+                className="inline-block text-white text-5xl font-black uppercase tracking-tighter md:text-[70px] lg:text-[120px] px-4"
+                whileHover={!isMobile ? {
                   scale: 1.05,
-                  textShadow: "0 0 40px rgba(255, 255, 255, 0.8)",
+                  textShadow: "0 0 50px rgba(255, 255, 255, 0.2)",
                   transition: { duration: 0.3 },
-                }}
+                } : {}}
               >
                 Our
               </motion.span>
               <motion.span
-                className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
-                whileHover={{
+                className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent text-5xl font-black uppercase tracking-tighter md:text-[70px] lg:text-[120px] px-4"
+                whileHover={!isMobile ? {
                   scale: 1.05,
-                  textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
+                  textShadow: "0 0 50px rgba(245, 158, 11, 0.2)",
                   transition: { duration: 0.3 },
-                }}
+                } : {}}
               >
                 Services
               </motion.span>
@@ -284,7 +286,7 @@ export default function ServicesSection() {
           </motion.div>
 
           <motion.p
-            className="mt-6 max-w-md text-lg leading-relaxed font-light text-white/80 md:text-xl"
+            className="mt-6 max-w-md text-lg leading-relaxed font-light text-white/80 md:text-xl text-balance"
             initial={{ opacity: 0, y: 50, filter: "blur(5px)" }}
             animate={
               hasIntersected ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}
@@ -293,25 +295,25 @@ export default function ServicesSection() {
           >
             At Camino Code, we provide{" "}
             <motion.span
-              className="font-semibold text-amber-400"
-              whileHover={{
+              className="font-semibold text-amber-400 whitespace-nowrap"
+              whileHover={!isMobile ? {
                 textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
                 scale: 1.05,
-              }}
+              } : {}}
             >
-              cutting-edge solutions
+              Cutting-edge solutions
             </motion.span>{" "}
             in data science and web development to help businesses unlock new
             opportunities and drive growth.
           </motion.p>
 
           <motion.div
-            className="mt-8 flex h-full w-full items-center justify-center"
+            className="mt-16 flex h-full w-full items-center justify-center"
             initial={{ opacity: 0, scale: 0.8, rotate: -180 }}
             animate={hasIntersected ? { opacity: 1, scale: 1, rotate: 0 } : {}}
             transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
           >
-            <motion.div animate={floatingAnimation}>
+            <motion.div animate={floatingAnimation} className="w-[300px] h-[300px] md:w-[350px] md:h-[350px]">
               <motion.div
                 animate={{
                   rotate: 360,
@@ -321,9 +323,10 @@ export default function ServicesSection() {
                   rotate: { duration: 20, repeat: Infinity, ease: "linear" },
                   scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
                 }}
+                className="w-full h-full"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 to-transparent blur-3xl" />
-                <LazySpline scene="https://prod.spline.design/hxXzHDWdUo11wqob/scene.splinecode" />
+                <LazySpline scene="https://prod.spline.design/hxXzHDWdUo11wqob/scene.splinecode" className="w-full h-full" />
               </motion.div>
             </motion.div>
           </motion.div>
@@ -348,6 +351,8 @@ export default function ServicesSection() {
                 y: -5,
                 transition: { type: "spring", stiffness: 300 },
               }}
+              onHoverStart={() => setHoveredCard(service.id)}
+              onHoverEnd={() => setHoveredCard(null)}
               className="group relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-white/10 p-6 backdrop-blur-md"
             >
               <motion.div
@@ -360,19 +365,21 @@ export default function ServicesSection() {
                 </h3>
                 <motion.div
                   className="rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 p-3 backdrop-blur-sm"
-                  whileHover={!isMobile ? { rotate: 360, scale: 1.1 } : {}}
+                  animate={
+                    !isMobile && hoveredCard === service.id
+                      ? { rotate: 360, scale: 1.1 }
+                      : { rotate: 0, scale: 1 }
+                  }
                   transition={{ duration: 0.5 }}
                 >
                   <motion.div
                     className="text-amber-400"
-                    whileHover={
-                      !isMobile
-                        ? {
-                          filter:
-                            "drop-shadow(0 0 20px rgba(245, 158, 11, 0.8))",
-                        }
-                        : {}
+                    animate={
+                      hoveredCard === service.id
+                        ? { filter: "drop-shadow(0 0 20px rgba(245, 158, 11, 0.8))" }
+                        : { filter: "drop-shadow(0 0 0px rgba(245, 158, 11, 0))" }
                     }
+                    transition={{ duration: 0.3 }}
                   >
                     {service.icon}
                   </motion.div>
@@ -411,27 +418,62 @@ export default function ServicesSection() {
           >
             <Link href="/services">
               <motion.button
-                className="group relative overflow-hidden rounded-full bg-gradient-to-r from-amber-400 to-red-600 px-8 py-4 text-lg font-semibold text-white shadow-2xl"
-                whileHover={{ scale: 1.05 }}
+                className="group text-lg font-semibold relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-amber-600 to-red-600 px-8 py-4 text-white"
+                initial="initial"
+                whileHover="hover"
                 whileTap={{ scale: 0.95 }}
+                onHoverStart={() => setIsHovered(true)}
+                onHoverEnd={() => setIsHovered(false)}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                variants={{
+                  initial: { scale: 1 },
+                  hover: { scale: 1.05 }
+                }}
               >
                 <span className="relative z-10">Explore All Services</span>
                 <motion.span
-                  className="relative z-10 ml-2 inline-block"
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
+                  className="relative z-10 ml-2"
+                  variants={{
+                    initial: { x: 0 },
+                    hover: {
+                      x: [0, 5, 0],
+                      transition: {
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }
+                    }
                   }}
                 >
-                  <ArrowRight className="h-5 w-5" />
+                  <AnimatePresence mode="wait">
+                    {!isHovered ? (
+                      <motion.div
+                        key="normal"
+                        initial={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.5 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <ArrowBigRightIcon className="h-5 w-5" />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="dash"
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.5 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <ArrowBigRightDashIcon className="h-5 w-5" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </motion.span>
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-red-600 to-amber-400"
-                  initial={{ x: "100%" }}
-                  whileHover={{ x: 0 }}
+                  className="absolute inset-0 bg-gradient-to-t from-red-600 to-amber-600"
+                  variants={{
+                    initial: { y: "100%" },
+                    hover: { y: 0 }
+                  }}
                   transition={{ duration: 0.3, ease: "easeOut" }}
                 />
               </motion.button>
@@ -448,12 +490,12 @@ function LazySpline({ scene, className }) {
   const [SplineComponent, setSplineComponent] = useState(null);
 
   useEffect(() => {
-    // Delay loading Spline by 4 seconds to prioritize critical content
+    // Delay loading Spline by 1 second to prioritize critical content
     const timer = setTimeout(() => {
       import("@splinetool/react-spline").then((module) => {
         setSplineComponent(() => module.default);
       });
-    }, 4000);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -461,9 +503,8 @@ function LazySpline({ scene, className }) {
   if (!SplineComponent) {
     return (
       <div className={className}>
-        {/* Placeholder while Spline loads */}
-        <div className="w-full h-full bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg flex items-center justify-center">
-          <div className="text-amber-600 text-sm">Loading 3D visualization...</div>
+        {/* Placeholder while Spline loads - invisible to avoid flashing */}
+        <div className="w-full h-full opacity-0">
         </div>
       </div>
     );

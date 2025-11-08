@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import NavigationBar from "@/components/NavigationBar";
 import ContactForm from "@/components/ContactFormPages";
 import PageHeader from "@/components/common/Headers";
@@ -18,7 +19,41 @@ const ServicesHeader = () => {
     { icon: <Code className="h-8 w-8" />, label: "Product Engineering" },
   ];
 
-  const description = "Empowering businesses with Advanced AI, Data intelligence and Product engineering. We transform your vision into reality with cutting-edge solutions that scale.";
+  const description = (
+    <>
+      Empowering businesses with{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        Advanced AI
+      </motion.span>
+      ,{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        Data intelligence
+      </motion.span>{" "}
+      and{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        Product engineering
+      </motion.span>
+      . We transform your vision into reality with cutting-edge solutions that scale.
+    </>
+  );
 
   return (
     <PageHeader

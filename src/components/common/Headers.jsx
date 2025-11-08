@@ -244,9 +244,9 @@ const PageHeader = ({
           initial={{ opacity: 0, y: isMobile ? 20 : 30, filter: isMobile ? "none" : "blur(10px)" }}
           animate={{ opacity: 1, y: 0, filter: "none" }}
           transition={{ duration: isMobile ? 0.6 : 1, delay: 0.6 }}
-          className="mx-auto mb-12 max-w-4xl px-6 text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl text-balance"
+          className="mx-auto mb-12 max-w-5xl px-6 text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl text-balance"
         >
-          {description}
+          {typeof description === 'string' ? description : description}
         </motion.p>
 
         <motion.div
@@ -404,7 +404,7 @@ const PageHeader = ({
             <span className="text-sm uppercase tracking-widest text-white/60">
               Scroll
             </span>
-            <ArrowDown className="h-6 w-6 text-blue-400" />
+            <ArrowDown className="h-6 w-6 text-amber-600" />
           </motion.div>
         </motion.div>
       </div>
