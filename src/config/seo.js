@@ -104,7 +104,7 @@ export const pageMetadata = {
   },
   about: {
     title: 'About Us - Innovation Through Technology',
-    description: 'Learn about Camino Code\'s mission to revolutionize businesses through data-driven insights and exceptional web development. Meet our team of experts.',
+    description: 'At Camino Code, we build AI-powered platforms and use them to deliver Applied AI services. Our clients benefit from proprietary technology that\'s continuously improving through real-world application.',
     keywords: seoConfig.keywords.about,
     ogImage: '/og-images/about.jpg'
   },

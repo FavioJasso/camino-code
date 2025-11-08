@@ -16,7 +16,7 @@ const AboutUsHeader = () => {
   const items = [];
   const description = (
     <>
-      At Camino Code, we specialize in delivering{" "}
+      At Camino Code, we build{" "}
       <motion.span
         className="font-semibold text-amber-400 whitespace-nowrap"
         whileHover={{
@@ -24,9 +24,9 @@ const AboutUsHeader = () => {
           scale: 1.05,
         }}
       >
-        Advanced Data science
+        AI-powered platforms
       </motion.span>{" "}
-      and{" "}
+      and use them to deliver{" "}
       <motion.span
         className="font-semibold text-amber-400 whitespace-nowrap"
         whileHover={{
@@ -34,19 +34,9 @@ const AboutUsHeader = () => {
           scale: 1.05,
         }}
       >
-        Web development
-      </motion.span>{" "}
-      solutions. Our goal is to empower businesses with{" "}
-      <motion.span
-        className="font-semibold text-amber-400 whitespace-nowrap"
-        whileHover={{
-          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
-          scale: 1.05,
-        }}
-      >
-        Innovative
+        Applied AI services
       </motion.span>
-      ,{" "}
+      . Our clients benefit from{" "}
       <motion.span
         className="font-semibold text-amber-400 whitespace-nowrap"
         whileHover={{
@@ -54,19 +44,29 @@ const AboutUsHeader = () => {
           scale: 1.05,
         }}
       >
-        Scalable
-      </motion.span>
-      , and{" "}
-      <motion.span
-        className="font-semibold text-amber-400 whitespace-nowrap"
-        whileHover={{
-          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
-          scale: 1.05,
-        }}
-      >
-        Intelligent platforms
+        proprietary technology
       </motion.span>{" "}
-      that drive growth and efficiency.
+      that's{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        continuously improving
+      </motion.span>{" "}
+      through real-world application. We're not reselling tools—we're{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        creating them
+      </motion.span>
+      .
     </>
   );
 
