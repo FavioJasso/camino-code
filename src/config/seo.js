@@ -1,8 +1,8 @@
 // SEO Configuration for Camino Code
 export const seoConfig = {
-  defaultTitle: 'Camino Code - Code the Future | Data Science & Web Development',
+  defaultTitle: 'Camino Code - Code the Future | Applied AI Services',
   titleTemplate: '%s | Camino Code',
-  defaultDescription: 'Camino Code combines cutting-edge data science and web development to create innovative, future-ready digital solutions for businesses worldwide.',
+  defaultDescription: 'Camino Code builds AI-powered platforms and delivers Applied AI services. We create proprietary technology that continuously improves through real-world application for businesses worldwide.',
   siteUrl: 'https://caminocode.com',
   siteName: 'Camino Code',
   siteLanguage: 'en',
@@ -48,39 +48,39 @@ export const seoConfig = {
   // Keywords for different sections
   keywords: {
     default: [
-      'data science',
-      'web development',
-      'machine learning',
+      'applied AI',
       'artificial intelligence',
-      'custom software',
-      'digital transformation',
-      'analytics',
+      'machine learning',
+      'AI automation',
+      'data intelligence',
+      'intelligent systems',
+      'AI platforms',
       'business intelligence',
-      'full stack development',
-      'cloud solutions'
+      'predictive analytics',
+      'AI-powered solutions'
     ],
     services: [
-      'data analytics services',
-      'web application development',
-      'API development',
-      'database design',
-      'cloud migration',
-      'AI solutions',
+      'applied AI services',
+      'AI automation',
+      'intelligent systems',
+      'data engineering',
+      'machine learning models',
+      'AI integration',
       'predictive analytics',
       'business automation',
-      'custom CRM',
-      'e-commerce development'
+      'AI platforms',
+      'computer vision'
     ],
     about: [
-      'tech company',
+      'AI company',
       'innovation',
-      'digital agency',
-      'software consultancy',
+      'AI services',
+      'AI consultancy',
       'technology partners',
-      'expert developers',
+      'AI engineers',
       'data scientists',
-      'agile development',
-      'tech solutions'
+      'product development',
+      'AI solutions'
     ],
     contact: [
       'hire developers',
@@ -97,44 +97,44 @@ export const seoConfig = {
 // Individual page metadata
 export const pageMetadata = {
   home: {
-    title: 'Camino Code - Code the Future | Data Science & Web Development',
-    description: 'Transform your business with cutting-edge data science and web development solutions. We create innovative, scalable, and future-ready digital products.',
+    title: 'Camino Code - Code the Future | Applied AI Services',
+    description: 'At Camino Code, we build AI-powered platforms and use them to deliver Applied AI services. Our clients benefit from proprietary technology that\'s continuously improving through real-world application.',
     keywords: seoConfig.keywords.default,
     ogImage: '/og-images/home.jpg'
   },
   about: {
     title: 'About Us - Innovation Through Technology',
-    description: 'At Camino Code, we build AI-powered platforms and use them to deliver Applied AI services. Our clients benefit from proprietary technology that\'s continuously improving through real-world application.',
+    description: 'Learn about Camino Code\'s mission to revolutionize businesses through AI-powered platforms and applied intelligence solutions. Meet our team of AI experts and data scientists.',
     keywords: seoConfig.keywords.about,
     ogImage: '/og-images/about.jpg'
   },
   services: {
-    title: 'Our Services - Data Science & Web Development Solutions',
-    description: 'Explore our comprehensive range of services including data analytics, machine learning, custom web development, and digital transformation solutions.',
+    title: 'Our Services - Applied AI & Intelligent Systems',
+    description: 'Explore our comprehensive range of Applied AI services including intelligent automation, machine learning, data engineering, and AI-powered platform development.',
     keywords: seoConfig.keywords.services,
     ogImage: '/og-images/services.jpg'
   },
   caseStudies: {
     title: 'Case Studies - Success Stories & Client Projects',
-    description: 'Discover how we\'ve helped businesses achieve remarkable results through innovative data science and web development solutions. Real results, real impact.',
+    description: 'Discover how we\'ve helped businesses achieve remarkable results through innovative Applied AI and intelligent automation solutions. Real results, real impact.',
     keywords: [...seoConfig.keywords.default, 'portfolio', 'case studies', 'success stories', 'client projects'],
     ogImage: '/og-images/case-studies.jpg'
   },
   caseStudyDetailed: {
     title: 'E-commerce Analytics Platform Case Study',
-    description: 'Deep dive into how we increased customer retention by 30% through predictive analytics and custom web solutions for a leading e-commerce platform.',
+    description: 'Deep dive into how we increased customer retention by 30% through predictive analytics and AI-powered solutions for a leading e-commerce platform.',
     keywords: ['case study', 'e-commerce', 'predictive analytics', 'customer retention', 'data visualization'],
     ogImage: '/og-images/case-study-detail.jpg'
   },
   contact: {
     title: 'Contact Us - Get Started with Your Project',
-    description: 'Ready to transform your business? Get in touch with our team for a free consultation on data science and web development solutions.',
+    description: 'Ready to transform your business? Get in touch with our team for a free consultation on Applied AI services and intelligent automation solutions.',
     keywords: seoConfig.keywords.contact,
     ogImage: '/og-images/contact.jpg'
   },
   allModels: {
     title: '3D Models Showcase - Interactive Visualizations',
-    description: 'Explore our collection of interactive 3D models and visualizations showcasing our technical capabilities in web-based 3D rendering.',
+    description: 'Explore our collection of interactive 3D models and visualizations showcasing our technical capabilities in AI-powered interactive experiences.',
     keywords: ['3D models', 'WebGL', 'Three.js', 'interactive', 'visualization', '3D rendering'],
     ogImage: '/og-images/models.jpg'
   }

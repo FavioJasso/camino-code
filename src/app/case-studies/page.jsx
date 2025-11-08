@@ -38,7 +38,7 @@ const CaseStudiesHeader = () => {
           scale: 1.05,
         }}
       >
-        Innovative solutions
+        Innovative AI solutions
       </motion.span>{" "}
       in{" "}
       <motion.span
@@ -48,7 +48,7 @@ const CaseStudiesHeader = () => {
           scale: 1.05,
         }}
       >
-        Data Science
+        Applied AI
       </motion.span>{" "}
       and{" "}
       <motion.span
@@ -58,7 +58,7 @@ const CaseStudiesHeader = () => {
           scale: 1.05,
         }}
       >
-        Web Development
+        Intelligent Automation
       </motion.span>
       . Our portfolio showcases transformative projects that enhance business efficiency and performance.
     </>

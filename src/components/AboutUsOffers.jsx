@@ -344,7 +344,7 @@ export default function WhatSetsUsApart() {
                 : {}
             }
           >
-            Data science
+            Applied AI
           </motion.span>{" "}
           and{" "}
           <motion.span
@@ -358,9 +358,9 @@ export default function WhatSetsUsApart() {
                 : {}
             }
           >
-            Web development
+            Intelligent automation
           </motion.span>{" "}
-          to create innovative, future-ready solutions that drive business
+          to create innovative, AI-powered solutions that drive business
           transformation.
         </motion.p>
         {/* Button */}

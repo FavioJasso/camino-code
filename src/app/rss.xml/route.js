@@ -5,14 +5,14 @@ export async function GET() {
   const feedItems = [
     {
       title: 'Welcome to Camino Code',
-      description: 'Discover how we combine data science and web development to create innovative solutions',
+      description: 'Discover how we build AI-powered platforms and deliver Applied AI services',
       link: baseUrl,
       pubDate: new Date('2024-01-01').toUTCString(),
       guid: `${baseUrl}/post-1`
     },
     {
-      title: 'Our Data Science Services',
-      description: 'Explore our comprehensive data analytics, machine learning, and AI solutions',
+      title: 'Our Applied AI Services',
+      description: 'Explore our comprehensive Applied AI, intelligent automation, and machine learning solutions',
       link: `${baseUrl}/services`,
       pubDate: new Date('2024-01-15').toUTCString(),
       guid: `${baseUrl}/post-2`
@@ -33,7 +33,7 @@ export async function GET() {
      xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Camino Code Blog</title>
-    <description>Latest updates from Camino Code - Data Science & Web Development</description>
+    <description>Latest updates from Camino Code - Applied AI Services</description>
     <link>${baseUrl}</link>
     <language>en</language>
     <lastBuildDate>${currentDate}</lastBuildDate>
@@ -42,8 +42,8 @@ export async function GET() {
     <managingEditor>contact@caminocode.com (Camino Code Team)</managingEditor>
     <webMaster>tech@caminocode.com (Camino Code Tech Team)</webMaster>
     <category>Technology</category>
-    <category>Data Science</category>
-    <category>Web Development</category>
+    <category>Applied AI</category>
+    <category>Artificial Intelligence</category>
     <ttl>60</ttl>
     <image>
       <url>${baseUrl}/assets/logo.svg</url>

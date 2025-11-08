@@ -172,7 +172,7 @@ export default function StructuredData({ page = 'home', customData = null }) {
         name: 'What services does Camino Code offer?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Camino Code offers comprehensive data science, machine learning, web development, cloud solutions, and digital transformation services to help businesses innovate and grow.',
+          text: 'Camino Code offers comprehensive Applied AI services, intelligent automation, machine learning, data engineering, and AI-powered platform development to help businesses innovate and grow.',
         },
       },
       {
@@ -180,7 +180,7 @@ export default function StructuredData({ page = 'home', customData = null }) {
         name: 'How long does a typical project take?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Project timelines vary based on scope and complexity. Simple web applications can be delivered in 4-8 weeks, while complex data science projects may take 3-6 months.',
+          text: 'Project timelines vary based on scope and complexity. Simple AI integrations can be delivered in 4-8 weeks, while complex AI platform projects may take 3-6 months.',
         },
       },
       {
@@ -196,7 +196,7 @@ export default function StructuredData({ page = 'home', customData = null }) {
         name: 'What technologies do you specialize in?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'We specialize in Python for data science, React/Next.js for web development, cloud platforms (AWS, GCP, Azure), and various AI/ML frameworks including TensorFlow and PyTorch.',
+          text: 'We specialize in Python for AI development, machine learning frameworks (TensorFlow, PyTorch), cloud platforms (AWS, GCP, Azure), and modern AI platforms including LangChain, OpenAI, and custom model deployment.',
         },
       },
     ],

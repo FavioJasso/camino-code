@@ -18,7 +18,7 @@ const Hero = () => {
   const items = [];
   const description = (
     <>
-      At Camino Code, we combine{" "}
+      At Camino Code, we build{" "}
       <motion.span
         className="font-semibold text-amber-400 whitespace-nowrap"
         whileHover={{
@@ -26,9 +26,9 @@ const Hero = () => {
           scale: 1.05,
         }}
       >
-        Data science
+        AI-powered platforms
       </motion.span>{" "}
-      and{" "}
+      and use them to deliver{" "}
       <motion.span
         className="font-semibold text-amber-400 whitespace-nowrap"
         whileHover={{
@@ -36,19 +36,39 @@ const Hero = () => {
           scale: 1.05,
         }}
       >
-        Web development
-      </motion.span>{" "}
-      to create{" "}
-      <motion.span
-        className="font-semibold text-amber-400 whitespace-nowrap"
-        whileHover={{
-          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
-          scale: 1.05,
-        }}
-      >
-        Innovative
+        Applied AI services
       </motion.span>
-      , future-ready solutions. From predictive analytics to custom web applications, we help businesses thrive in the digital age.
+      . Our clients benefit from{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        proprietary technology
+      </motion.span>{" "}
+      that's{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        continuously improving
+      </motion.span>{" "}
+      through real-world application. We're not reselling tools—we're{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        creating them
+      </motion.span>
+      .
     </>
   );
 

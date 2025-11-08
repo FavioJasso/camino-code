@@ -301,9 +301,9 @@ export default function ServicesSection() {
                 scale: 1.05,
               } : {}}
             >
-              Cutting-edge solutions
+              Cutting-edge AI solutions
             </motion.span>{" "}
-            in data science and web development to help businesses unlock new
+            and intelligent automation to help businesses unlock new
             opportunities and drive growth.
           </motion.p>
 

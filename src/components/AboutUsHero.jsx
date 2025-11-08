@@ -150,7 +150,7 @@ export default function AboutMissionVision() {
                 scale: 1.05,
               } : {}}
             >
-              innovative data science
+              innovative Applied AI
             </motion.span>{" "}
             and{" "}
             <motion.span
@@ -160,9 +160,9 @@ export default function AboutMissionVision() {
                 scale: 1.05,
               } : {}}
             >
-              web development solutions
+              intelligent automation solutions
             </motion.span>{" "}
-            that empower businesses to thrive in a fast-paced digital world. We combine technical expertise with creative thinking to develop scalable, secure, and high-performing systems.
+            that empower businesses to thrive in a fast-paced digital world. We combine technical expertise with AI innovation to develop scalable, intelligent, and high-performing systems.
           </motion.p>
 
           {/* Animated feature cards */}
@@ -270,7 +270,7 @@ export default function AboutMissionVision() {
             >
               global leader
             </motion.span>{" "}
-            in data science and web development by setting new standards for innovation, performance, and customer satisfaction. We envision a future where businesses of all sizes have access to intelligent, scalable, and efficient technological solutions.
+            in Applied AI and intelligent automation by setting new standards for innovation, performance, and customer satisfaction. We envision a future where businesses of all sizes have access to intelligent, scalable, and efficient AI-powered solutions.
           </motion.p>
 
           {/* Animated sparkles */}

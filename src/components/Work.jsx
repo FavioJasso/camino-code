@@ -392,9 +392,9 @@ export default function WorkShowcase() {
                 scale: 1.05,
               } : {}}
             >
-              innovative solutions
+              innovative AI solutions
             </motion.span>{" "}
-            that drive measurable success. Our portfolio showcases transformative projects in data science, web development, and AI integration.
+            that drive measurable success. Our portfolio showcases transformative projects in Applied AI, intelligent automation, and data engineering.
           </motion.p>
 
           {/* Mobile Models removed */}
