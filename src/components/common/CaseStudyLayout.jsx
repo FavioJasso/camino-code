@@ -30,9 +30,9 @@ const CaseStudyLayout = ({
   ctaLabel = "Visit Website",
   ctaLink,
   colorScheme = {
-    primary: "59, 130, 246",
-    gradient: "from-blue-400 to-blue-600",
-    gradientReverse: "from-blue-600 to-blue-400",
+    primary: "245, 158, 11",
+    gradient: "from-amber-400 to-red-600",
+    gradientReverse: "from-red-600 to-amber-400",
   }
 }) => {
   const containerRef = useRef(null);

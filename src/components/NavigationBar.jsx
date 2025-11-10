@@ -110,14 +110,30 @@ export default function NavigationBar({ iswhite = false }) {
           >
             <Link href="/">
               <motion.div
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ 
+                  scale: 1.08,
+                  rotate: [0, -2, 2, -2, 0],
+                  transition: {
+                    scale: { type: "spring", stiffness: 300, damping: 15 },
+                    rotate: { duration: 0.5, ease: "easeInOut" }
+                  }
+                }}
                 whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                className="relative"
               >
+                <motion.div
+                  className="absolute inset-0 rounded-lg bg-gradient-to-r from-amber-400/40 to-red-600/40 blur-xl"
+                  initial={{ opacity: 0, scale: 1 }}
+                  whileHover={{
+                    opacity: 0.8,
+                    scale: 1.2
+                  }}
+                  transition={{ duration: 0.4 }}
+                />
                 <Image
                   src="/assets/icon-extend.svg"
                   alt="Company Logo"
-                  className="h-16 max-md:h-14 w-full object-cover"
+                  className="relative h-16 max-md:h-14 w-full object-cover"
                   priority
                   width={112}
                   height={56}
@@ -134,8 +150,8 @@ export default function NavigationBar({ iswhite = false }) {
                   variants={linkVariants}
                   initial="initial"
                   animate="animate"
-                  whileHover="hover"
                   transition={{ delay: index * 0.1 }}
+                  className="relative"
                 >
                   <Link
                     href={
@@ -143,20 +159,42 @@ export default function NavigationBar({ iswhite = false }) {
                         ? "/"
                         : `/${item.toLowerCase().replace(" ", "-")}`
                     }
-                    className={`relative flex items-center justify-center px-4 py-2 text-lg font-medium transition-all duration-300 hover:text-orange-600 ${
-                      scrollY > 50
-                        ? "text-gray-800"
-                        : iswhite
-                        ? "text-white"
-                        : "text-gray-800"
-                    }`}
+                    className="block group"
                   >
-                    <span className="relative z-10">{item}</span>
-                    <motion.span
-                      className="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-amber-400 to-red-600"
-                      whileHover={{ width: "100%" }}
-                      transition={{ duration: 0.3, ease: "easeOut" }}
-                    />
+                    <motion.div
+                      className={`relative flex items-center justify-center px-4 py-2 text-lg font-medium ${
+                        scrollY > 50
+                          ? "text-gray-800"
+                          : iswhite
+                          ? "text-white"
+                          : "text-gray-800"
+                      }`}
+                      whileHover={{
+                        y: -3
+                      }}
+                      transition={{ 
+                        type: "tween",
+                        duration: 0.15,
+                        ease: "easeOut"
+                      }}
+                    >
+                      {/* Texto con color naranja al hover */}
+                      <span 
+                        className="relative z-10 transition-colors duration-500 ease-out group-hover:text-orange-500"
+                      >
+                        {item}
+                      </span>
+                      
+                      {/* Línea inferior animada */}
+                      <motion.span
+                        className="absolute bottom-1 left-1/2 h-[2px] bg-orange-500"
+                        initial={{ width: 0, x: "-50%" }}
+                        whileHover={{ 
+                          width: "80%",
+                          transition: { duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }
+                        }}
+                      />
+                    </motion.div>
                   </Link>
                 </motion.div>
               ),
@@ -181,7 +219,7 @@ export default function NavigationBar({ iswhite = false }) {
                     hover: { scale: 1.05 }
                   }}
                 >
-                  <span className="relative z-10">Contact</span>
+                  <span className="relative z-10 font-semibold">Contact</span>
                   <motion.span
                     className="relative z-10 ml-2 inline-block"
                     variants={{

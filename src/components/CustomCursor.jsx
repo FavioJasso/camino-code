@@ -72,7 +72,7 @@ export default function CustomCursor() {
             scale: isPointer ? 1.5 : 1,
             backgroundColor: isPointer
               ? "rgba(245, 158, 11, 0.1)"
-              : "transparent",
+              : "rgba(245, 158, 11, 0)",
           }}
           transition={{ type: "spring", stiffness: 500, damping: 28 }}
         />

@@ -24,9 +24,9 @@ const HealthTrackCaseStudy = () => {
       "Seamless transition to cloud infrastructure improving system reliability",
     heroImage: "/assets/images/services_work04.png",
     colorScheme: {
-      primary: "251, 146, 60",
-      gradient: "from-orange-400 to-red-600",
-      gradientReverse: "from-red-600 to-orange-400",
+      primary: "245, 158, 11",
+      gradient: "from-amber-400 to-red-600",
+      gradientReverse: "from-red-600 to-amber-400",
     },
     stats: [
       {
