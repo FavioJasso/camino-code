@@ -5,6 +5,7 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 
 export default function CustomCursor() {
   const [isPointer, setIsPointer] = useState(false);
+  const [isMobile, setIsMobile] = useState(true);
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
@@ -13,6 +14,23 @@ export default function CustomCursor() {
   const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
+    // Don't render custom cursor on mobile/touch devices
+    const checkMobile = () => {
+      setIsMobile(
+        'ontouchstart' in window || 
+        navigator.maxTouchPoints > 0 ||
+        window.innerWidth < 768
+      );
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
     const moveCursor = (e) => {
       cursorX.set(e.clientX - 14);
       cursorY.set(e.clientY - 14);
@@ -34,7 +52,10 @@ export default function CustomCursor() {
       window.removeEventListener("mousemove", moveCursor);
       window.removeEventListener("mouseover", handleMouseOver);
     };
-  }, [cursorX, cursorY]);
+  }, [cursorX, cursorY, isMobile]);
+
+  // Don't render cursor on mobile
+  if (isMobile) return null;
 
   return (
     <>

@@ -60,7 +60,7 @@ const PageHeader = ({
     canvas.height = dimensions.height;
 
     const particles = [];
-    const particleCount = 50;
+    const particleCount = 30; // Reduced from 50 to 30 for better performance
 
     class Particle {
       constructor() {

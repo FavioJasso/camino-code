@@ -4,6 +4,7 @@ import { seoConfig } from "@/config/seo";
 import { poppins } from "./fonts";
 import NonCriticalStyles from "@/components/NonCriticalStyles";
 import StructuredData from "@/components/StructuredData";
+import PreloadResources from "@/components/PreloadResources";
 
 export const metadata = {
   metadataBase: new URL(seoConfig.siteUrl),
@@ -106,6 +107,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang={seoConfig.siteLanguage} className={poppins.variable}>
       <head>
+        <PreloadResources />
         <StructuredData />
       </head>
       <body className="cursor-none font-sans">
