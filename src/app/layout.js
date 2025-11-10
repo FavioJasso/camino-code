@@ -43,7 +43,7 @@ export const metadata = {
         url: seoConfig.defaultOgImage,
         width: seoConfig.ogImageWidth,
         height: seoConfig.ogImageHeight,
-        alt: "Camino Code - Applied AI Services",
+        alt: "Camino Code - AI-Powered Platforms & Applied AI Services",
       },
     ],
     locale: seoConfig.siteLocale,

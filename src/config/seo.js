@@ -1,8 +1,8 @@
 // SEO Configuration for Camino Code
 export const seoConfig = {
-  defaultTitle: 'Camino Code - Code the Future | Applied AI Services',
+  defaultTitle: 'Camino Code - Code the Future | AI-Powered Platforms & Applied AI',
   titleTemplate: '%s | Camino Code',
-  defaultDescription: 'Camino Code builds AI-powered platforms and delivers Applied AI services. We create proprietary technology that continuously improves through real-world application for businesses worldwide.',
+  defaultDescription: 'At Camino Code, we build AI-powered platforms and use them to deliver Applied AI services. Our clients benefit from proprietary technology that\'s continuously improving through real-world application. We\'re not reselling tools—we\'re creating them.',
   siteUrl: 'https://caminocode.com',
   siteName: 'Camino Code',
   siteLanguage: 'en',
@@ -48,48 +48,50 @@ export const seoConfig = {
   // Keywords for different sections
   keywords: {
     default: [
+      'AI-powered platforms',
       'applied AI',
+      'proprietary technology',
+      'intelligent automation',
       'artificial intelligence',
       'machine learning',
-      'AI automation',
-      'data intelligence',
-      'intelligent systems',
+      'continuously improving AI',
       'AI platforms',
-      'business intelligence',
-      'predictive analytics',
-      'AI-powered solutions'
+      'data intelligence',
+      'intelligent systems'
     ],
     services: [
       'applied AI services',
-      'AI automation',
-      'intelligent systems',
-      'data engineering',
-      'machine learning models',
+      'advanced AI',
+      'intelligent automation',
+      'AI-powered platforms',
+      'data intelligence',
+      'product engineering',
+      'machine learning',
       'AI integration',
-      'predictive analytics',
-      'business automation',
-      'AI platforms',
-      'computer vision'
+      'intelligent systems',
+      'scalable AI solutions'
     ],
     about: [
       'AI company',
-      'innovation',
-      'AI services',
-      'AI consultancy',
-      'technology partners',
+      'applied AI',
+      'intelligent automation',
+      'AI-powered platforms',
+      'scalable solutions',
+      'intelligent platforms',
+      'technology innovation',
       'AI engineers',
       'data scientists',
-      'product development',
-      'AI solutions'
+      'proprietary technology'
     ],
     contact: [
-      'hire developers',
+      'AI consultation',
+      'applied AI services',
       'contact',
       'get quote',
-      'consultation',
       'project inquiry',
       'partnership',
-      'collaboration'
+      'collaboration',
+      'transform ideas'
     ]
   }
 };
@@ -97,45 +99,45 @@ export const seoConfig = {
 // Individual page metadata
 export const pageMetadata = {
   home: {
-    title: 'Camino Code - Code the Future | Applied AI Services',
-    description: 'At Camino Code, we build AI-powered platforms and use them to deliver Applied AI services. Our clients benefit from proprietary technology that\'s continuously improving through real-world application.',
+    title: 'Camino Code - Code the Future | AI-Powered Platforms & Applied AI',
+    description: 'At Camino Code, we build AI-powered platforms and use them to deliver Applied AI services. Our clients benefit from proprietary technology that\'s continuously improving through real-world application. We\'re not reselling tools—we\'re creating them.',
     keywords: seoConfig.keywords.default,
     ogImage: '/og-images/home.jpg'
   },
   about: {
-    title: 'About Us - Innovation Through Technology',
-    description: 'Learn about Camino Code\'s mission to revolutionize businesses through AI-powered platforms and applied intelligence solutions. Meet our team of AI experts and data scientists.',
+    title: 'About Us - Applied AI & Intelligent Automation',
+    description: 'At Camino Code, we specialize in delivering Applied AI and Intelligent automation solutions. Our goal is to empower businesses with AI-powered, Scalable, and Intelligent platforms that drive growth and efficiency.',
     keywords: seoConfig.keywords.about,
     ogImage: '/og-images/about.jpg'
   },
   services: {
-    title: 'Our Services - Applied AI & Intelligent Systems',
-    description: 'Explore our comprehensive range of Applied AI services including intelligent automation, machine learning, data engineering, and AI-powered platform development.',
+    title: 'Our Services - Advanced AI, Data Intelligence & Product Engineering',
+    description: 'Empowering businesses with Advanced AI, Data intelligence and Product engineering. We transform your vision into reality with cutting-edge solutions that scale.',
     keywords: seoConfig.keywords.services,
     ogImage: '/og-images/services.jpg'
   },
   caseStudies: {
-    title: 'Case Studies - Success Stories & Client Projects',
-    description: 'Discover how we\'ve helped businesses achieve remarkable results through innovative Applied AI and intelligent automation solutions. Real results, real impact.',
-    keywords: [...seoConfig.keywords.default, 'portfolio', 'case studies', 'success stories', 'client projects'],
+    title: 'Case Studies - High-Quality, Innovative AI Solutions',
+    description: 'At Camino Code, we take pride in delivering High-quality, Innovative solutions in Data Science and Web Development. Our portfolio showcases transformative projects that enhance business efficiency and performance.',
+    keywords: [...seoConfig.keywords.default, 'portfolio', 'case studies', 'success stories', 'client projects', 'data science', 'web development'],
     ogImage: '/og-images/case-studies.jpg'
   },
   caseStudyDetailed: {
     title: 'E-commerce Analytics Platform Case Study',
     description: 'Deep dive into how we increased customer retention by 30% through predictive analytics and AI-powered solutions for a leading e-commerce platform.',
-    keywords: ['case study', 'e-commerce', 'predictive analytics', 'customer retention', 'data visualization'],
+    keywords: ['case study', 'e-commerce', 'predictive analytics', 'customer retention', 'data visualization', 'AI-powered platforms'],
     ogImage: '/og-images/case-study-detail.jpg'
   },
   contact: {
-    title: 'Contact Us - Get Started with Your Project',
-    description: 'Ready to transform your business? Get in touch with our team for a free consultation on Applied AI services and intelligent automation solutions.',
+    title: 'Contact Us - Transform Your Ideas Into Reality',
+    description: 'We\'d love to hear from you! Whether you have questions about our services or want to discuss your next big project, our team is ready to help transform your ideas into reality with Applied AI and intelligent automation.',
     keywords: seoConfig.keywords.contact,
     ogImage: '/og-images/contact.jpg'
   },
   allModels: {
-    title: '3D Models Showcase - Interactive Visualizations',
-    description: 'Explore our collection of interactive 3D models and visualizations showcasing our technical capabilities in AI-powered interactive experiences.',
-    keywords: ['3D models', 'WebGL', 'Three.js', 'interactive', 'visualization', '3D rendering'],
+    title: '3D Models Showcase - Interactive AI-Powered Visualizations',
+    description: 'Explore our collection of interactive 3D models and visualizations showcasing our technical capabilities in AI-powered interactive experiences and intelligent systems.',
+    keywords: ['3D models', 'WebGL', 'Three.js', 'interactive', 'visualization', '3D rendering', 'AI-powered'],
     ogImage: '/og-images/models.jpg'
   }
 };
