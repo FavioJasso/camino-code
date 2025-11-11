@@ -50,6 +50,21 @@ export default function WhatSetsUsApart() {
   const { ref: sectionRef, hasIntersected } = useIntersectionObserver({
     threshold: 0.1,
   });
+  const [hoveredWord, setHoveredWord] = useState(null);
+  const hoverTimeoutRef = useRef(null);
+
+  const handleWordHoverStart = (index) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    setHoveredWord(index);
+  };
+
+  const handleWordHoverEnd = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHoveredWord(null);
+    }, 400);
+  };
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -80,7 +95,10 @@ export default function WhatSetsUsApart() {
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
 
-    return () => window.removeEventListener("resize", updateDimensions);
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    };
   }, []);
 
   // Particle animation effect
@@ -284,29 +302,39 @@ export default function WhatSetsUsApart() {
             <motion.span
               className="inline-block text-gray-900 text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] px-4"
               style={{ wordSpacing: '0.1em' }}
-              whileHover={
-                !isMobile
+              animate={
+                hoveredWord === 0 && !isMobile && !prefersReducedMotion
                   ? {
                       scale: 1.05,
-                      textShadow: "0 0 50px rgba(251, 191, 36, 0.3)",
-                      transition: { duration: 0.3 },
+                      textShadow: "0 0 0px rgba(0, 0, 0, 0)",
                     }
-                  : {}
+                  : {
+                      scale: 1,
+                      textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                    }
               }
+              transition={{ type: "spring", stiffness: 80, damping: 25 }}
+              onHoverStart={() => handleWordHoverStart(0)}
+              onHoverEnd={handleWordHoverEnd}
             >
               What Sets Us
             </motion.span>
             <motion.span
               className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] px-4"
-              whileHover={
-                !isMobile
+              animate={
+                hoveredWord === 1 && !isMobile && !prefersReducedMotion
                   ? {
                       scale: 1.05,
-                      textShadow: "0 0 50px rgba(251, 191, 36, 0.2)",
-                      transition: { duration: 0.3 },
+                      textShadow: "0 0 50px rgba(245, 158, 11, 0.2)",
                     }
-                  : {}
+                  : {
+                      scale: 1,
+                      textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                    }
               }
+              transition={{ type: "spring", stiffness: 80, damping: 25 }}
+              onHoverStart={() => handleWordHoverStart(1)}
+              onHoverEnd={handleWordHoverEnd}
             >
               Apart
             </motion.span>

@@ -133,7 +133,7 @@ export default function NavigationBar({ iswhite = false }) {
                 <Image
                   src="/assets/icon-extend.svg"
                   alt="Company Logo"
-                  className="relative h-16 max-md:h-14 w-full object-cover"
+                  className="relative h-16 max-md:h-12 w-full object-cover"
                   priority
                   width={112}
                   height={56}
@@ -273,67 +273,44 @@ export default function NavigationBar({ iswhite = false }) {
           {/* Mobile Menu Button */}
           <motion.button
             id="menu-toggle"
-            className={`relative h-8 w-8 focus:outline-none md:hidden ${
-              iswhite ? "text-white" : "text-black"
+            className={`relative h-8 w-8 focus:outline-none md:hidden z-[60] ${
+              isMenuOpen ? "text-gray-800" : iswhite ? "text-white" : "text-black"
             }`}
-            onClick={() => setIsMenuOpen(true)}
-            aria-label="Open menu"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
           >
             <motion.span
-              className="absolute left-0 h-0.5 w-full bg-current"
-              style={{ top: "25%" }}
-              animate={isMenuOpen ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+              className="absolute left-0 top-1/2 h-0.5 w-full bg-current -translate-y-1/2"
+              animate={isMenuOpen ? { rotate: 45 } : { rotate: 0, y: -8 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
             />
             <motion.span
-              className="absolute left-0 h-0.5 w-full bg-current"
-              style={{ top: "50%" }}
+              className="absolute left-0 top-1/2 h-0.5 w-full bg-current -translate-y-1/2"
               animate={isMenuOpen ? { opacity: 0 } : { opacity: 1 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
             />
             <motion.span
-              className="absolute left-0 h-0.5 w-full bg-current"
-              style={{ top: "75%" }}
+              className="absolute left-0 top-1/2 h-0.5 w-full bg-current -translate-y-1/2"
               animate={
-                isMenuOpen ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }
+                isMenuOpen ? { rotate: -45 } : { rotate: 0, y: 8 }
               }
+              transition={{ duration: 0.3, ease: "easeInOut" }}
             />
           </motion.button>
 
-          {/* Mobile Fullscreen Menu */}
+          {/* Mobile Menu Below Navbar */}
           <AnimatePresence>
             {isMenuOpen && (
               <motion.div
                 id="nav-links"
-                className="fixed top-0 right-0 z-50 h-screen w-full bg-gradient-to-br from-white to-gray-50 md:hidden"
+                className="fixed top-16 md:top-20 right-0 z-50 h-[calc(100vh-4rem)] md:h-[calc(100vh-5rem)] w-full bg-gradient-to-br from-white to-gray-50 md:hidden"
                 variants={menuVariants}
                 initial="closed"
                 animate="open"
                 exit="closed"
               >
-                <motion.button
-                  id="menu-close"
-                  className="absolute top-6 right-6 flex h-12 w-12 items-center justify-center text-gray-600 focus:outline-none"
-                  onClick={() => setIsMenuOpen(false)}
-                  aria-label="Close menu"
-                  whileHover={{ scale: 1.1, rotate: 90 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <svg
-                    className="h-8 w-8"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </motion.button>
-
                 <div className="flex h-full flex-col items-center justify-center">
                   <div className="flex flex-col gap-8 text-center">
                     {[

@@ -8,6 +8,16 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
 
+  // Webpack configuration to prevent multiple Three.js instances
+  webpack: (config, { isServer }) => {
+    // Ensure single Three.js instance across all imports
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      three: 'three',
+    };
+    return config;
+  },
+
   // Remove console logs in production and optimize transforms
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? {

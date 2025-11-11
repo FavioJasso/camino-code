@@ -31,6 +31,22 @@ export default function Partners() {
   const { ref: modelRef, hasIntersected: modelIntersected } = useIntersectionObserver({
     threshold: 0.2,
   });
+  const [hoveredWord, setHoveredWord] = useState(null);
+  const hoverTimeoutRef = useRef(null);
+
+  // ========== HOVER HANDLERS ==========
+  const handleWordHoverStart = (index) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    setHoveredWord(index);
+  };
+
+  const handleWordHoverEnd = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHoveredWord(null);
+    }, 400);
+  };
 
   // ========== MODEL LOAD HANDLER ==========
   useEffect(() => {
@@ -85,6 +101,7 @@ export default function Partners() {
     track.addEventListener("animationiteration", handleAnimationIteration);
     return () => {
       track.removeEventListener("animationiteration", handleAnimationIteration);
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
     };
   }, []);
 
@@ -150,32 +167,40 @@ export default function Partners() {
             <motion.span
               className="inline-block whitespace-nowrap"
               initial={{ opacity: 0, x: -20 }}
-              animate={hasIntersected ? { opacity: 1, x: 0 } : {}}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              whileHover={
-                !isMobile
-                  ? {
-                      scale: 1.05,
-                      transition: { duration: 0.2 },
-                    }
+              animate={
+                hasIntersected
+                  ? hoveredWord === 0 && !isMobile && !prefersReducedMotion
+                    ? { opacity: 1, x: 0, scale: 1.05, textShadow: "0 0 0px rgba(0, 0, 0, 0)" }
+                    : { opacity: 1, x: 0, scale: 1, textShadow: "0 0 0px rgba(0, 0, 0, 0)" }
                   : {}
               }
+              transition={{ 
+                delay: hasIntersected ? 0.2 : 0, 
+                duration: 0.6,
+                scale: { type: "spring", stiffness: 80, damping: 25 }
+              }}
+              onHoverStart={() => handleWordHoverStart(0)}
+              onHoverEnd={handleWordHoverEnd}
             >
               Our
             </motion.span>
             <motion.span
               className="inline-block bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent whitespace-nowrap px-1"
               initial={{ opacity: 0, x: -20 }}
-              animate={hasIntersected ? { opacity: 1, x: 0 } : {}}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              whileHover={
-                !isMobile
-                  ? {
-                      scale: 1.05,
-                      transition: { duration: 0.2 },
-                    }
+              animate={
+                hasIntersected
+                  ? hoveredWord === 1 && !isMobile && !prefersReducedMotion
+                    ? { opacity: 1, x: 0, scale: 1.05, textShadow: "0 0 50px rgba(245, 158, 11, 0.2)" }
+                    : { opacity: 1, x: 0, scale: 1, textShadow: "0 0 0px rgba(0, 0, 0, 0)" }
                   : {}
               }
+              transition={{ 
+                delay: hasIntersected ? 0.4 : 0, 
+                duration: 0.6,
+                scale: { type: "spring", stiffness: 80, damping: 25 }
+              }}
+              onHoverStart={() => handleWordHoverStart(1)}
+              onHoverEnd={handleWordHoverEnd}
             >
               Partners
             </motion.span>

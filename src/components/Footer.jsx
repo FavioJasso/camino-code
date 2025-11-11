@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Instagram, Linkedin } from "lucide-react";
+import { Linkedin } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Footer() {
@@ -18,20 +18,20 @@ export default function Footer() {
   ];
 
   const socialLinks = [
+    // {
+    //   icon: <Instagram className="h-7 w-7" />,
+    //   href: "https://instagram.com",
+    //   label: "Instagram",
+    // },
     {
-      icon: <Instagram className="h-5 w-5" />,
-      href: "https://instagram.com",
-      label: "Instagram",
-    },
-    {
-      icon: <Linkedin className="h-5 w-5" />,
-      href: "https://linkedin.com",
+      icon: <Linkedin className="h-7 w-7" />,
+      href: "https://www.linkedin.com/company/caminocode",
       label: "LinkedIn",
     },
   ];
 
   return (
-    <footer className="relative flex flex-col items-center gap-10 px-6 py-16 text-center sm:gap-12 sm:px-8 md:px-10">
+    <footer className="relative flex flex-col items-center gap-6 px-6 py-12 text-center sm:gap-8 sm:px-8 md:px-10">
       {/* Background Image */}
       <div className="absolute inset-0 -z-10">
         <Image
@@ -51,18 +51,38 @@ export default function Footer() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="flex w-full max-w-6xl flex-col items-center gap-10 py-12"
+        className="flex w-full max-w-6xl flex-col items-center gap-8 py-8"
       >
         {/* Logo */}
-        <Link href="/" className="group">
-          <div className="relative h-20 w-40 rounded">
+        <Link href="/">
+          <motion.div
+            whileHover={{ 
+              scale: 1.08,
+              rotate: [0, -2, 2, -2, 0],
+              transition: {
+                scale: { type: "spring", stiffness: 300, damping: 15 },
+                rotate: { duration: 0.5, ease: "easeInOut" }
+              }
+            }}
+            whileTap={{ scale: 0.95 }}
+            className="relative h-20 w-40"
+          >
+            <motion.div
+              className="absolute inset-0 rounded-lg bg-gradient-to-r from-amber-400/40 to-red-600/40 blur-xl"
+              initial={{ opacity: 0, scale: 1 }}
+              whileHover={{
+                opacity: 0.8,
+                scale: 1.2
+              }}
+              transition={{ duration: 0.4 }}
+            />
             <Image
               src="/assets/icon-extend.svg"
               alt="Camino Code Logo"
               fill
-              className="object-contain transition-transform duration-300 group-hover:scale-105"
+              className="relative object-contain"
             />
-          </div>
+          </motion.div>
         </Link>
 
         {/* Navigation Links */}
@@ -76,12 +96,17 @@ export default function Footer() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Link
-                  href={link.href}
-                  className="text-white/80 transition-colors hover:text-white hover:underline"
+                <motion.div
+                  whileHover={{ y: -3 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 >
-                  {link.name}
-                </Link>
+                  <Link
+                    href={link.href}
+                    className="text-white/80 transition-colors hover:text-amber-400 hover:underline"
+                  >
+                    {link.name}
+                  </Link>
+                </motion.div>
               </motion.li>
             ))}
           </ul>

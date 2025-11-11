@@ -4,18 +4,34 @@ import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import NavigationBar from "../components/NavigationBar";
 import PageHeader from "../components/common/Headers";
-import AboutUsPartners from "../components/AboutUsPartners";
-import HomeAbout from "../components/HomeAbout";
-import AboutUsOffers from "../components/AboutUsOffers";
 import ClientProviders from "../components/ClientProviders";
 import StructuredData from "../components/StructuredData";
 
-// Lazy load components that are far below the fold
-const HomeServices = dynamic(() => import("../components/HomeServices"));
-const Work = dynamic(() => import("../components/Work"));
-const Testimonials = dynamic(() => import("../components/Testimonials"));
-const ContactForm = dynamic(() => import("../components/ContactFormPages"));
-const Footer = dynamic(() => import("../components/Footer"));
+// Lazy load ALL components below the fold for better LCP
+const AboutUsPartners = dynamic(() => import("../components/AboutUsPartners"), {
+  loading: () => <div className="min-h-[200px]" />
+});
+const HomeAbout = dynamic(() => import("../components/HomeAbout"), {
+  loading: () => <div className="min-h-[400px]" />
+});
+const AboutUsOffers = dynamic(() => import("../components/AboutUsOffers"), {
+  loading: () => <div className="min-h-[400px]" />
+});
+const HomeServices = dynamic(() => import("../components/HomeServices"), {
+  loading: () => <div className="min-h-[500px]" />
+});
+const Work = dynamic(() => import("../components/Work"), {
+  loading: () => <div className="min-h-[500px]" />
+});
+const Testimonials = dynamic(() => import("../components/Testimonials"), {
+  loading: () => <div className="min-h-[400px]" />
+});
+const ContactForm = dynamic(() => import("../components/ContactFormPages"), {
+  loading: () => <div className="min-h-[400px]" />
+});
+const Footer = dynamic(() => import("../components/Footer"), {
+  loading: () => <div className="min-h-[200px]" />
+});
 
 const Hero = () => {
   const items = [];
