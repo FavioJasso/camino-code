@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Code, Brain, Database } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
@@ -205,6 +205,27 @@ export default function ServicesList() {
   const { ref: observerRef, hasIntersected } = useIntersectionObserver({
     threshold: 0.1,
   });
+  const [hoveredWord, setHoveredWord] = useState(null);
+  const hoverTimeoutRef = useRef(null);
+
+  const handleWordHoverStart = (index) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    setHoveredWord(index);
+  };
+
+  const handleWordHoverEnd = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHoveredWord(null);
+    }, 400);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    };
+  }, []);
 
   const titleVariants = {
     hidden: { 
@@ -270,21 +291,39 @@ export default function ServicesList() {
           >
             <motion.span 
               className="block"
-              whileHover={!isMobile ? {
-                scale: 1.05,
-                textShadow: "0 0 40px rgba(0,0,0,0.2)",
-                transition: { duration: 0.3 },
-              } : {}}
+              animate={
+                hoveredWord === 0 && !isMobile
+                  ? {
+                      scale: 1.05,
+                      textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                    }
+                  : {
+                      scale: 1,
+                      textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                    }
+              }
+              transition={{ type: "spring", stiffness: 80, damping: 25 }}
+              onHoverStart={() => handleWordHoverStart(0)}
+              onHoverEnd={handleWordHoverEnd}
             >
               WHAT WE
             </motion.span>
             <motion.span
               className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
-              whileHover={!isMobile ? {
-                scale: 1.05,
-                textShadow: "0 0 40px rgba(245, 158, 11, 0.5)",
-                transition: { duration: 0.3 },
-              } : {}}
+              animate={
+                hoveredWord === 1 && !isMobile
+                  ? {
+                      scale: 1.05,
+                      textShadow: "0 0 50px rgba(245, 158, 11, 0.2)",
+                    }
+                  : {
+                      scale: 1,
+                      textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                    }
+              }
+              transition={{ type: "spring", stiffness: 80, damping: 25 }}
+              onHoverStart={() => handleWordHoverStart(1)}
+              onHoverEnd={handleWordHoverEnd}
             >
               OFFER
             </motion.span>

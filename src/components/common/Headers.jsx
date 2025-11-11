@@ -21,6 +21,10 @@ const PageHeader = ({
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
   const [isHovered, setIsHovered] = useState(false);
+  const [hoveredWord, setHoveredWord] = useState(null);
+  const [hoveredCard, setHoveredCard] = useState(null);
+  const hoverTimeoutRef = useRef(null);
+  const cardHoverTimeoutRef = useRef(null);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -35,6 +39,32 @@ const PageHeader = ({
     [1, 0.8, 0.6, 0.4, 0.1]
   );
 
+  const handleWordHoverStart = (index) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    setHoveredWord(index);
+  };
+
+  const handleWordHoverEnd = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHoveredWord(null);
+    }, 400);
+  };
+
+  const handleCardHoverStart = (index) => {
+    if (cardHoverTimeoutRef.current) {
+      clearTimeout(cardHoverTimeoutRef.current);
+    }
+    setHoveredCard(index);
+  };
+
+  const handleCardHoverEnd = () => {
+    cardHoverTimeoutRef.current = setTimeout(() => {
+      setHoveredCard(null);
+    }, 400);
+  };
+
   useEffect(() => {
     const updateDimensions = () => {
       setDimensions({
@@ -46,7 +76,11 @@ const PageHeader = ({
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
 
-    return () => window.removeEventListener("resize", updateDimensions);
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+      if (cardHoverTimeoutRef.current) clearTimeout(cardHoverTimeoutRef.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -134,7 +168,7 @@ const PageHeader = ({
   const wordVariants = {
     hidden: {
       opacity: 0,
-      y: isMobile ? 50 : 100,
+      y: isMobile ? 20 : 100,
       rotateX: isMobile ? 0 : -90,
       filter: isMobile ? "none" : "blur(10px)"
     },
@@ -144,8 +178,8 @@ const PageHeader = ({
       rotateX: 0,
       filter: "none",
       transition: {
-        duration: isMobile ? 0.5 : 0.8,
-        delay: i * (isMobile ? 0.1 : 0.2),
+        duration: isMobile ? 0.3 : 0.8,
+        delay: i * (isMobile ? 0.05 : 0.2),
         ease: [0.215, 0.61, 0.355, 1.0],
       },
     }),
@@ -226,13 +260,18 @@ const PageHeader = ({
                   ? "bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
                   : "text-white"
                   }`}
-                whileHover={!isMobile ? {
+                animate={!isMobile && !prefersReducedMotion && hoveredWord === index ? {
                   scale: 1.05,
                   textShadow: index === gradientWordIndex
                     ? "0 0 50px rgba(245, 158, 11, 0.2)"
-                    : "0 0 50px rgba(255, 255, 255, 0.2)",
-                  transition: { duration: 0.3 },
-                } : {}}
+                    : "0 0 0px rgba(0, 0, 0, 0)",
+                } : {
+                  scale: 1,
+                  textShadow: "0 0 0px rgba(0, 0, 0, 0)"
+                }}
+                transition={{ type: "spring", stiffness: 80, damping: 25 }}
+                onHoverStart={() => handleWordHoverStart(index)}
+                onHoverEnd={handleWordHoverEnd}
               >
                 {word}
               </motion.span>
@@ -241,9 +280,9 @@ const PageHeader = ({
         </motion.div>
 
         <motion.p
-          initial={{ opacity: 0, y: isMobile ? 20 : 30, filter: isMobile ? "none" : "blur(10px)" }}
+          initial={{ opacity: 0, y: isMobile ? 10 : 30, filter: isMobile ? "none" : "blur(10px)" }}
           animate={{ opacity: 1, y: 0, filter: "none" }}
-          transition={{ duration: isMobile ? 0.6 : 1, delay: 0.6 }}
+          transition={{ duration: isMobile ? 0.4 : 1, delay: isMobile ? 0.2 : 0.6 }}
           className="mx-auto mb-12 max-w-5xl px-6 text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl text-balance"
         >
           {typeof description === 'string' ? description : description}
@@ -261,21 +300,25 @@ const PageHeader = ({
               custom={index}
               variants={iconVariants}
               initial="hidden"
-              animate="visible"
-              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm max-w-[190px] mx-auto"
-              whileHover={!isMobile ? {
+              animate={hoveredCard === index && !isMobile && !prefersReducedMotion ? {
                 scale: 1.05,
                 y: -10,
-                transition: { type: "spring", stiffness: 300 }
-              } : {}}
+              } : {
+                scale: 1,
+                y: 0,
+              }}
+              transition={{ type: "spring", stiffness: 80, damping: 20 }}
+              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm max-w-[190px] mx-auto"
+              onHoverStart={() => handleCardHoverStart(index)}
+              onHoverEnd={handleCardHoverEnd}
             >
               <motion.div
-                className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-red-600/20 opacity-0 group-hover:opacity-100"
-                transition={{ duration: 0.3 }}
+                className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-red-600/20"
+                animate={{ opacity: hoveredCard === index ? 1 : 0 }}
+                transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
               />
               <motion.div
                 className="relative z-10 flex flex-col items-center"
-                transition={{ duration: 0.3 }}
               >
                 <div className="mb-4 text-amber-400">{item.icon}</div>
                 <p className="text-sm font-medium text-white/80 text-center">{item.label}</p>

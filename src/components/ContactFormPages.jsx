@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Send, SendHorizontal ,Sparkles } from "lucide-react";
+import { ArrowRight, Send, SendHorizontal } from "lucide-react";
 import { useForm } from "react-hook-form";
 import {
   motion,
@@ -8,7 +8,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
@@ -26,6 +26,27 @@ export default function ContactForm() {
   const sectionRef = useRef(null);
   const formRef = useRef(null);
   const isMobile = useIsMobile();
+  const [hoveredWord, setHoveredWord] = useState(null);
+  const hoverTimeoutRef = useRef(null);
+
+  const handleWordHoverStart = (index) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    setHoveredWord(index);
+  };
+
+  const handleWordHoverEnd = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHoveredWord(null);
+    }, 400);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    };
+  }, []);
 
   const { ref: observerRef, hasIntersected } = useIntersectionObserver({
     threshold: 0.1,
@@ -134,21 +155,39 @@ export default function ContactForm() {
           >
             <motion.span
               className="block"
-              whileHover={{
-                scale: 1.05,
-                textShadow: "0 0 40px rgba(0,0,0,0.15)",
-                transition: { duration: 0.3 },
-              }}
+              animate={
+                hoveredWord === 0 && !isMobile
+                  ? {
+                      scale: 1.05,
+                      textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                    }
+                  : {
+                      scale: 1,
+                      textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                    }
+              }
+              transition={{ type: "spring", stiffness: 80, damping: 25 }}
+              onHoverStart={() => handleWordHoverStart(0)}
+              onHoverEnd={handleWordHoverEnd}
             >
               LET'S
             </motion.span>
             <motion.span
               className="block bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent"
-              whileHover={{
-                scale: 1.05,
-                textShadow: "0 0 40px rgba(245, 158, 11, 0.4)",
-                transition: { duration: 0.3 },
-              }}
+              animate={
+                hoveredWord === 1 && !isMobile
+                  ? {
+                      scale: 1.05,
+                      textShadow: "0 0 50px rgba(245, 158, 11, 0.2)",
+                    }
+                  : {
+                      scale: 1,
+                      textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                    }
+              }
+              transition={{ type: "spring", stiffness: 80, damping: 25 }}
+              onHoverStart={() => handleWordHoverStart(1)}
+              onHoverEnd={handleWordHoverEnd}
             >
               CONNECT
             </motion.span>
@@ -164,11 +203,9 @@ export default function ContactForm() {
             animate={hasIntersected ? { opacity: 1 } : {}}
             transition={{ duration: 0.8 }}
           >
-            {/* 3D Model removed */}
-
             {/* Contact Info */}
             <motion.div
-              className="mt-8 space-y-6"
+              className="space-y-6"
               initial={{ opacity: 0, y: 20 }}
               animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.4 }}
@@ -178,27 +215,117 @@ export default function ContactForm() {
                 and let's start building something amazing together.
               </p>
 
-              <div className="flex flex-col gap-4">
+              <div className="space-y-3">
+                {/* Email Card */}
                 <motion.a
                   href="mailto:hello@caminocode.com"
-                  className="group flex items-center gap-3 text-neutral-600 hover:text-amber-500"
-                  whileHover={!isMobile ? { x: 10 } : {}}
+                  className="group relative block overflow-hidden rounded-lg bg-white border border-neutral-200 p-4 hover:border-amber-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                  whileHover={!isMobile ? { scale: 1.02 } : {}}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <span className="text-lg">hello@caminocode.com</span>
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-br from-amber-400/5 to-red-600/5 opacity-0 group-hover:opacity-100"
+                    transition={{ duration: 0.3 }}
+                  />
+                  <div className="relative z-10 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-medium text-neutral-500 mb-0.5">Email</p>
+                      <p className="text-sm font-semibold text-neutral-900 group-hover:text-amber-600 transition-colors">
+                        hello@caminocode.com
+                      </p>
+                    </div>
+                    <motion.div
+                      animate={{ x: 0 }}
+                      whileHover={{ x: 5 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      <ArrowRight className="h-4 w-4 text-neutral-400 group-hover:text-amber-500 transition-colors" />
+                    </motion.div>
+                  </div>
                 </motion.a>
 
+                {/* Phone Card */}
                 <motion.a
                   href="tel:+15551234567"
-                  className="group flex items-center gap-3 text-neutral-600 hover:text-amber-500"
-                  whileHover={!isMobile ? { x: 10 } : {}}
+                  className="group relative block overflow-hidden rounded-lg bg-white border border-neutral-200 p-4 hover:border-amber-400 transition-all duration-300 shadow-sm hover:shadow-md"
+                  whileHover={!isMobile ? { scale: 1.02 } : {}}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <span className="text-lg">+1 (555) 123-4567</span>
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-br from-amber-400/5 to-red-600/5 opacity-0 group-hover:opacity-100"
+                    transition={{ duration: 0.3 }}
+                  />
+                  <div className="relative z-10 flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-medium text-neutral-500 mb-0.5">Phone</p>
+                      <p className="text-sm font-semibold text-neutral-900 group-hover:text-amber-600 transition-colors">
+                        +1 (555) 123-4567
+                      </p>
+                    </div>
+                    <motion.div
+                      animate={{ x: 0 }}
+                      whileHover={{ x: 5 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      <ArrowRight className="h-4 w-4 text-neutral-400 group-hover:text-amber-500 transition-colors" />
+                    </motion.div>
+                  </div>
                 </motion.a>
               </div>
+            </motion.div>
+
+            {/* Desktop Only - Feature Cards */}
+            <motion.div
+              className="mt-12 space-y-4 hidden lg:block"
+              initial={{ opacity: 0, y: 20 }}
+              animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.6 }}
+            >
+              {[
+                {
+                  icon: "🎯",
+                  title: "Tailored Solutions",
+                  description: "Custom strategies designed for your goals"
+                },
+                {
+                  icon: "🚀",
+                  title: "Expert Team",
+                  description: "AI specialists ready to bring your vision to life"
+                }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  className="group relative overflow-hidden rounded-xl bg-white border border-neutral-200 p-6 shadow-sm hover:shadow-md transition-all duration-300"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={hasIntersected ? { opacity: 1, x: 0 } : {}}
+                  transition={{ delay: 0.6 + index * 0.1 }}
+                  whileHover={!isMobile ? { scale: 1.02, x: 5 } : {}}
+                >
+                  {/* Gradient overlay on hover */}
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-br from-amber-400/5 to-red-600/5 opacity-0 group-hover:opacity-100"
+                    transition={{ duration: 0.3 }}
+                  />
+                  
+                  <div className="relative z-10 flex items-start gap-4">
+                    <motion.div
+                      className="text-3xl"
+                      whileHover={{ scale: 1.2, rotate: 10 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                    >
+                      {item.icon}
+                    </motion.div>
+                    <div>
+                      <h3 className="font-semibold text-neutral-900 mb-1">
+                        {item.title}
+                      </h3>
+                      <p className="text-sm text-neutral-600">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
             </motion.div>
           </motion.div>
 
@@ -211,7 +338,7 @@ export default function ContactForm() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <motion.div
-              className="relative overflow-hidden rounded-3xl border border-neutral-200 bg-gradient-to-br from-neutral-100 to-white p-8 backdrop-blur-sm sm:p-12"
+              className="relative overflow-hidden rounded-3xl border border-neutral-200 bg-white p-8 sm:p-12"
               whileHover={{ scale: 1.01 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
@@ -227,21 +354,6 @@ export default function ContactForm() {
                   ease: "easeInOut",
                 }}
               />
-
-              {/* Sparkles animation */}
-              <motion.div
-                className="absolute top-4 right-4"
-                animate={{
-                  rotate: 360,
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-                  scale: { duration: 2, repeat: Infinity },
-                }}
-              >
-                <Sparkles className="h-8 w-8 text-amber-400/30" />
-              </motion.div>
 
               <form
                 onSubmit={handleSubmit(onSubmit)}

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 import { ArrowBigRightIcon, ArrowBigRightDashIcon } from "lucide-react";
 
@@ -15,12 +15,27 @@ export default function AboutSection() {
   const [isHovered, setIsHovered] = useState(false);
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
+  const [hoveredWord, setHoveredWord] = useState(null);
+  const hoverTimeoutRef = useRef(null);
 
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, isMobile ? -50 : -100]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0.8]);
 
   const titleWords = "Shaping the Future of Technology".split(" ");
+
+  const handleWordHoverStart = (index) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    setHoveredWord(index);
+  };
+
+  const handleWordHoverEnd = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHoveredWord(null);
+    }, 400);
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -53,6 +68,12 @@ export default function AboutSection() {
     }),
   };
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    };
+  }, []);
 
   return (
     <motion.section
@@ -139,33 +160,46 @@ export default function AboutSection() {
           <motion.h2 className="flex flex-col items-center justify-center">
             <motion.span
               className="inline-block text-white text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] px-4"
-              custom={0}
-              variants={wordVariants}
-              whileHover={
-                !isMobile
-                  ? {
-                      scale: 1.02,
-                      textShadow: "0 0 50px rgba(255, 255, 255, 0.2)",
-                      transition: { duration: 0.3 },
-                    }
+              initial={{ opacity: 0, y: isMobile ? 50 : 100, rotateX: isMobile ? 0 : -90, filter: isMobile ? "none" : "blur(10px)" }}
+              animate={
+                hasIntersected
+                  ? hoveredWord === 0 && !isMobile && !prefersReducedMotion
+                    ? { opacity: 1, y: 0, rotateX: 0, filter: "none", scale: 1.02 }
+                    : { opacity: 1, y: 0, rotateX: 0, filter: "none", scale: 1 }
                   : {}
               }
+              transition={{ 
+                opacity: { duration: isMobile ? 0.5 : 0.8, delay: 0 * (isMobile ? 0.05 : 0.1), ease: [0.215, 0.61, 0.355, 1.0] },
+                y: { duration: isMobile ? 0.5 : 0.8, delay: 0 * (isMobile ? 0.05 : 0.1), ease: [0.215, 0.61, 0.355, 1.0] },
+                rotateX: { duration: isMobile ? 0.5 : 0.8, delay: 0 * (isMobile ? 0.05 : 0.1), ease: [0.215, 0.61, 0.355, 1.0] },
+                filter: { duration: isMobile ? 0.5 : 0.8, delay: 0 * (isMobile ? 0.05 : 0.1), ease: [0.215, 0.61, 0.355, 1.0] },
+                scale: { type: "spring", stiffness: 80, damping: 25 }
+              }}
+              onHoverStart={() => handleWordHoverStart(0)}
+              onHoverEnd={handleWordHoverEnd}
             >
               Shaping the Future of
             </motion.span>
             <motion.span
               className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent text-6xl font-black uppercase tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] px-4"
-              custom={1}
-              variants={wordVariants}
-              whileHover={
-                !isMobile
-                  ? {
-                      scale: 1.05,
-                      textShadow: "0 0 50px rgba(245, 158, 11, 0.2)",
-                      transition: { duration: 0.3 },
-                    }
+              initial={{ opacity: 0, y: isMobile ? 50 : 100, rotateX: isMobile ? 0 : -90, filter: isMobile ? "none" : "blur(10px)" }}
+              animate={
+                hasIntersected
+                  ? hoveredWord === 1 && !isMobile && !prefersReducedMotion
+                    ? { opacity: 1, y: 0, rotateX: 0, filter: "none", scale: 1.05, textShadow: "0 0 50px rgba(245, 158, 11, 0.2)" }
+                    : { opacity: 1, y: 0, rotateX: 0, filter: "none", scale: 1, textShadow: "0 0 0px rgba(0, 0, 0, 0)" }
                   : {}
               }
+              transition={{ 
+                opacity: { duration: isMobile ? 0.5 : 0.8, delay: 1 * (isMobile ? 0.05 : 0.1), ease: [0.215, 0.61, 0.355, 1.0] },
+                y: { duration: isMobile ? 0.5 : 0.8, delay: 1 * (isMobile ? 0.05 : 0.1), ease: [0.215, 0.61, 0.355, 1.0] },
+                rotateX: { duration: isMobile ? 0.5 : 0.8, delay: 1 * (isMobile ? 0.05 : 0.1), ease: [0.215, 0.61, 0.355, 1.0] },
+                filter: { duration: isMobile ? 0.5 : 0.8, delay: 1 * (isMobile ? 0.05 : 0.1), ease: [0.215, 0.61, 0.355, 1.0] },
+                scale: { type: "spring", stiffness: 80, damping: 25 },
+                textShadow: { duration: 0.3 }
+              }}
+              onHoverStart={() => handleWordHoverStart(1)}
+              onHoverEnd={handleWordHoverEnd}
             >
               Technology
             </motion.span>

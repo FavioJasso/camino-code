@@ -52,6 +52,21 @@ export default function Testimonials() {
   const canvasRef = useRef(null);
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
+  const [hoveredWord, setHoveredWord] = useState(null);
+  const hoverTimeoutRef = useRef(null);
+
+  const handleWordHoverStart = (index) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    setHoveredWord(index);
+  };
+
+  const handleWordHoverEnd = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHoveredWord(null);
+    }, 400);
+  };
 
   const { ref: observerRef, hasIntersected } = useIntersectionObserver({
     threshold: 0.3,
@@ -139,7 +154,10 @@ export default function Testimonials() {
       setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
     }, 5000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    };
   }, [isAutoPlaying]);
 
   const testimonial = testimonials[currentTestimonial];
@@ -278,21 +296,39 @@ export default function Testimonials() {
           <motion.h2 className="flex flex-col items-center justify-center">
             <motion.span
               className="inline-block text-white text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl px-4"
-              whileHover={!isMobile ? {
-                scale: 1.05,
-                textShadow: "0 0 50px rgba(255, 255, 255, 0.2)",
-                transition: { duration: 0.3 },
-              } : {}}
+              animate={
+                hoveredWord === 0 && !isMobile
+                  ? {
+                      scale: 1.05,
+                      textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                    }
+                  : {
+                      scale: 1,
+                      textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                    }
+              }
+              transition={{ type: "spring", stiffness: 80, damping: 25 }}
+              onHoverStart={() => handleWordHoverStart(0)}
+              onHoverEnd={handleWordHoverEnd}
             >
               CLIENT
             </motion.span>
             <motion.span
               className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl px-4"
-              whileHover={!isMobile ? {
-                scale: 1.05,
-                textShadow: "0 0 50px rgba(245, 158, 11, 0.2)",
-                transition: { duration: 0.3 },
-              } : {}}
+              animate={
+                hoveredWord === 1 && !isMobile
+                  ? {
+                      scale: 1.05,
+                      textShadow: "0 0 50px rgba(245, 158, 11, 0.2)",
+                    }
+                  : {
+                      scale: 1,
+                      textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                    }
+              }
+              transition={{ type: "spring", stiffness: 80, damping: 25 }}
+              onHoverStart={() => handleWordHoverStart(1)}
+              onHoverEnd={handleWordHoverEnd}
             >
               TESTIMONIALS
             </motion.span>

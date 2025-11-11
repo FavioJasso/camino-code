@@ -51,6 +51,21 @@ export default function ServicesSection() {
   const [isHovered, setIsHovered] = useState(false);
   const [hoveredCard, setHoveredCard] = useState(null);
   const isMobile = useIsMobile();
+  const [hoveredWord, setHoveredWord] = useState(null);
+  const hoverTimeoutRef = useRef(null);
+
+  const handleWordHoverStart = (index) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    setHoveredWord(index);
+  };
+
+  const handleWordHoverEnd = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHoveredWord(null);
+    }, 400);
+  };
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -118,7 +133,10 @@ export default function ServicesSection() {
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
 
-    return () => window.removeEventListener("resize", updateDimensions);
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    };
   }, []);
 
   // Particle animation effect
@@ -264,21 +282,39 @@ export default function ServicesSection() {
             <motion.h2 className="flex flex-col items-center md:items-start justify-center">
               <motion.span
                 className="inline-block text-white text-5xl font-black uppercase tracking-tighter md:text-[70px] lg:text-[120px] px-4"
-                whileHover={!isMobile ? {
-                  scale: 1.05,
-                  textShadow: "0 0 50px rgba(255, 255, 255, 0.2)",
-                  transition: { duration: 0.3 },
-                } : {}}
+                animate={
+                  hoveredWord === 0 && !isMobile
+                    ? {
+                        scale: 1.05,
+                        textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                      }
+                    : {
+                        scale: 1,
+                        textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                      }
+                }
+                transition={{ type: "spring", stiffness: 80, damping: 25 }}
+                onHoverStart={() => handleWordHoverStart(0)}
+                onHoverEnd={handleWordHoverEnd}
               >
                 Our
               </motion.span>
               <motion.span
                 className="inline-block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent text-5xl font-black uppercase tracking-tighter md:text-[70px] lg:text-[120px] px-4"
-                whileHover={!isMobile ? {
-                  scale: 1.05,
-                  textShadow: "0 0 50px rgba(245, 158, 11, 0.2)",
-                  transition: { duration: 0.3 },
-                } : {}}
+                animate={
+                  hoveredWord === 1 && !isMobile
+                    ? {
+                        scale: 1.05,
+                        textShadow: "0 0 50px rgba(245, 158, 11, 0.2)",
+                      }
+                    : {
+                        scale: 1,
+                        textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                      }
+                }
+                transition={{ type: "spring", stiffness: 80, damping: 25 }}
+                onHoverStart={() => handleWordHoverStart(1)}
+                onHoverEnd={handleWordHoverEnd}
               >
                 Services
               </motion.span>

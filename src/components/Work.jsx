@@ -8,7 +8,7 @@ import {
   useCursorPosition,
 } from "@/hooks/useAnimations";
 import { staggerContainer } from "@/utils/animations";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useIsMobile, useReducedMotion, useIsFirefox } from "@/hooks/useIsMobile";
 import { ArrowBigRightIcon, ArrowBigRightDashIcon } from "lucide-react";
 
@@ -284,6 +284,27 @@ export default function WorkShowcase() {
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
   const [isHovered, setIsHovered] = useState(false);
+  const [hoveredWord, setHoveredWord] = useState(null);
+  const hoverTimeoutRef = useRef(null);
+
+  const handleWordHoverStart = (index) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    setHoveredWord(index);
+  };
+
+  const handleWordHoverEnd = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHoveredWord(null);
+    }, 400);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    };
+  }, []);
 
   const titleVariants = {
     hidden: { 
@@ -357,21 +378,39 @@ export default function WorkShowcase() {
             >
               <motion.span 
                 className="block"
-                whileHover={!isMobile ? {
-                  scale: 1.05,
-                  textShadow: "0 0 50px rgba(0, 0, 0, 0.1)",
-                  transition: { duration: 0.3 },
-                } : {}}
+                animate={
+                  hoveredWord === 0 && !isMobile
+                    ? {
+                        scale: 1.05,
+                        textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                      }
+                    : {
+                        scale: 1,
+                        textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                      }
+                }
+                transition={{ type: "spring", stiffness: 80, damping: 25 }}
+                onHoverStart={() => handleWordHoverStart(0)}
+                onHoverEnd={handleWordHoverEnd}
               >
                 OUR
               </motion.span>
               <motion.span
                 className="block bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 bg-clip-text text-transparent"
-                whileHover={!isMobile ? {
-                  scale: 1.05,
-                  textShadow: "0 0 50px rgba(245, 158, 11, 0.3)",
-                  transition: { duration: 0.3 },
-                } : {}}
+                animate={
+                  hoveredWord === 1 && !isMobile
+                    ? {
+                        scale: 1.05,
+                        textShadow: "0 0 50px rgba(245, 158, 11, 0.2)",
+                      }
+                    : {
+                        scale: 1,
+                        textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                      }
+                }
+                transition={{ type: "spring", stiffness: 80, damping: 25 }}
+                onHoverStart={() => handleWordHoverStart(1)}
+                onHoverEnd={handleWordHoverEnd}
               >
                 WORK
               </motion.span>

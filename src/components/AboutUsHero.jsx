@@ -1,14 +1,50 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
-import { Sparkles, Target, Eye } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 
 export default function AboutMissionVision() {
   const containerRef = useRef(null);
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
+  const [hoveredWord, setHoveredWord] = useState(null);
+  const [hoveredCard, setHoveredCard] = useState(null);
+  const hoverTimeoutRef = useRef(null);
+  const cardHoverTimeoutRef = useRef(null);
+
+  const handleWordHoverStart = (index) => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    setHoveredWord(index);
+  };
+
+  const handleWordHoverEnd = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHoveredWord(null);
+    }, 400);
+  };
+
+  const handleCardHoverStart = (index) => {
+    if (cardHoverTimeoutRef.current) {
+      clearTimeout(cardHoverTimeoutRef.current);
+    }
+    setHoveredCard(index);
+  };
+
+  const handleCardHoverEnd = () => {
+    cardHoverTimeoutRef.current = setTimeout(() => {
+      setHoveredCard(null);
+    }, 400);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+      if (cardHoverTimeoutRef.current) clearTimeout(cardHoverTimeoutRef.current);
+    };
+  }, []);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
@@ -36,29 +72,38 @@ export default function AboutMissionVision() {
     },
   };
 
-  const paragraphVariants = {
-    hidden: { 
-      opacity: 0, 
-      y: isMobile ? 30 : 50,
-      filter: isMobile ? "none" : "blur(5px)"
+  const missionVisionCards = [
+    {
+      title: "Mission",
+      icon: "🎯",
+      description: "At Camino Code, our mission is to deliver innovative Applied AI and intelligent automation solutions that empower businesses to thrive in a fast-paced digital world. We combine technical expertise with AI innovation to develop scalable, intelligent, and high-performing systems."
     },
-    visible: {
-      opacity: 1,
-      y: 0,
-      filter: "none",
-      transition: {
-        duration: isMobile ? 0.5 : 0.8,
-        delay: isMobile ? 0.2 : 0.3,
-        ease: "easeOut",
-      },
-    },
-  };
+    {
+      title: "Vision",
+      icon: "🔭",
+      description: "Our vision is to become a global leader in Applied AI and intelligent automation by setting new standards for innovation, performance, and customer satisfaction. We envision a future where businesses of all sizes have access to intelligent, scalable, and efficient AI-powered solutions."
+    }
+  ];
 
+  const valueCards = [
+    {
+      emoji: "🚀",
+      title: "Innovation First"
+    },
+    {
+      emoji: "🔒",
+      title: "Secure Systems"
+    },
+    {
+      emoji: "📈",
+      title: "Scalable Growth"
+    }
+  ];
 
   return (
     <motion.div 
       ref={containerRef}
-      className="relative min-h-screen overflow-hidden bg-white"
+      className="relative min-h-screen overflow-hidden bg-white py-24 sm:py-32"
       style={{ backgroundPositionY: backgroundY }}
     >
       {/* Animated background gradient */}
@@ -78,212 +123,212 @@ export default function AboutMissionVision() {
         }}
       />
 
-      {/* Mission Section */}
-      <div className="relative min-h-screen flex items-center">
-        {/* Decorative Model removed */}
-
-        <motion.section
-          id="mission"
-          className="container relative z-10 mx-auto px-6 py-24 sm:px-8 md:px-16 lg:px-24"
-          style={{ y: textY }}
-        >
-          <motion.div 
-            className="flex items-center gap-4 mb-8"
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <motion.div
-              className="rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 p-4 backdrop-blur-sm"
-              whileHover={!isMobile ? { scale: 1.1, rotate: 180 } : {}}
-              transition={{ duration: 0.5 }}
-            >
-              <Target className="h-8 w-8 text-amber-500" />
-            </motion.div>
-            <span className="text-sm font-medium uppercase tracking-widest text-amber-600">Our Purpose</span>
-          </motion.div>
-
-          <motion.div className="perspective-1000">
-            <motion.h2 
-              className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-gray-900"
-              variants={titleVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
-              <motion.span 
-                className="block"
-                whileHover={!isMobile ? {
-                  scale: 1.05,
-                  textShadow: "0 0 40px rgba(0,0,0,0.15)",
-                  transition: { duration: 0.3 },
-                } : {}}
-              >
-                OUR
-              </motion.span>
-              <motion.span 
-                className="block bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent"
-                whileHover={!isMobile ? {
-                  scale: 1.05,
-                  textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
-                  transition: { duration: 0.3 },
-                } : {}}
-              >
-                MISSION
-              </motion.span>
-            </motion.h2>
-          </motion.div>
-
-          <motion.p
-            variants={paragraphVariants}
+      <div className="container relative z-10 mx-auto px-6 sm:px-8 md:px-16 lg:px-24">
+        {/* Centered Title */}
+        <motion.div className="perspective-1000 mb-8 text-center">
+          <motion.h2 
+            className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-gray-900"
+            variants={titleVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="mt-8 max-w-3xl text-lg font-light leading-relaxed text-gray-700 sm:text-xl md:text-2xl"
           >
-            At Camino Code, our mission is to deliver{" "}
-            <motion.span
-              className="font-semibold text-amber-600"
-              whileHover={!isMobile ? { 
-                textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
-                scale: 1.05,
-              } : {}}
+            <motion.span 
+              className="block"
+              animate={
+                hoveredWord === 0 && !isMobile
+                  ? {
+                      scale: 1.05,
+                      textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                    }
+                  : {
+                      scale: 1,
+                      textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                    }
+              }
+              transition={{ type: "spring", stiffness: 80, damping: 25 }}
+              onHoverStart={() => handleWordHoverStart(0)}
+              onHoverEnd={handleWordHoverEnd}
             >
-              innovative Applied AI
-            </motion.span>{" "}
-            and{" "}
-            <motion.span
-              className="font-semibold text-amber-600"
-              whileHover={!isMobile ? { 
-                textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
-                scale: 1.05,
-              } : {}}
+              WHO WE
+            </motion.span>
+            <motion.span 
+              className="block bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent"
+              animate={
+                hoveredWord === 1 && !isMobile
+                  ? {
+                      scale: 1.05,
+                      textShadow: "0 0 50px rgba(245, 158, 11, 0.2)",
+                    }
+                  : {
+                      scale: 1,
+                      textShadow: "0 0 0px rgba(0, 0, 0, 0)",
+                    }
+              }
+              transition={{ type: "spring", stiffness: 80, damping: 25 }}
+              onHoverStart={() => handleWordHoverStart(1)}
+              onHoverEnd={handleWordHoverEnd}
             >
-              intelligent automation solutions
-            </motion.span>{" "}
-            that empower businesses to thrive in a fast-paced digital world. We combine technical expertise with AI innovation to develop scalable, intelligent, and high-performing systems.
-          </motion.p>
+              ARE
+            </motion.span>
+          </motion.h2>
+        </motion.div>
 
-          {/* Animated feature cards */}
-          <motion.div 
-            className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-3xl"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
-          >
-            {[
-              { icon: "🚀", text: "Innovation First" },
-              { icon: "🔒", text: "Secure Systems" },
-              { icon: "📈", text: "Scalable Growth" },
-            ].map((item, index) => (
+        {/* Mission & Vision Cards */}
+        <div className="grid gap-8 md:grid-cols-2 max-w-6xl mx-auto mb-16">
+          {missionVisionCards.map((card, index) => (
+            <motion.div
+              key={index}
+              custom={index}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ 
+                duration: 0.6, 
+                delay: index * 0.15,
+                ease: "easeOut" 
+              }}
+              viewport={{ once: true }}
+              className="relative overflow-hidden rounded-2xl bg-white border-2 border-gray-200/80 shadow-xl p-8"
+              animate={
+                hoveredCard === index && !isMobile
+                  ? {
+                      scale: 1.03,
+                      y: -8,
+                    }
+                  : {
+                      scale: 1,
+                      y: 0,
+                    }
+              }
+              onHoverStart={() => handleCardHoverStart(index)}
+              onHoverEnd={handleCardHoverEnd}
+            >
+              {/* Subtle gradient overlay on hover */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-br from-amber-400/5 to-red-600/5 opacity-0"
+                animate={{ opacity: hoveredCard === index ? 1 : 0 }}
+                transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+              />
+
+              <div className="relative z-10">
+                {/* Icon & Title */}
+                <div className="flex items-center gap-4 mb-6">
+                  <motion.div
+                    className="text-5xl"
+                    animate={
+                      hoveredCard === index && !isMobile && !prefersReducedMotion
+                        ? {
+                            rotate: [0, -10, 10, 0],
+                            scale: [1, 1.15, 1],
+                          }
+                        : {}
+                    }
+                    transition={{ 
+                      duration: 0.5,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    {card.icon}
+                  </motion.div>
+                  <h3 className="text-3xl font-bold bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent">
+                    {card.title}
+                  </h3>
+                </div>
+
+                {/* Description */}
+                <p className="text-base leading-relaxed text-gray-700">
+                  {card.description}
+                </p>
+              </div>
+
+              {/* Decorative corner */}
+              <motion.div
+                className="absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-gradient-to-br from-amber-400/10 to-red-600/10 blur-2xl"
+                animate={
+                  hoveredCard === index && !isMobile && !prefersReducedMotion
+                    ? {
+                        scale: [1, 1.3, 1],
+                        opacity: [0.1, 0.2, 0.1],
+                      }
+                    : {}
+                }
+                transition={{ 
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Values Cards */}
+        <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto">
+          {valueCards.map((card, index) => {
+            const cardIndex = index + 2; // Offset para no conflictuar con mission/vision
+            return (
               <motion.div
                 key={index}
-                className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-amber-100/40 to-white/80 p-6 backdrop-blur-sm border border-amber-100"
-                whileHover={!isMobile ? { scale: 1.05, y: -5 } : {}}
-                transition={{ type: "spring", stiffness: 300 }}
+                custom={index}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.6, 
+                  delay: index * 0.1,
+                  ease: "easeOut" 
+                }}
+                viewport={{ once: true }}
+                className="relative overflow-hidden rounded-2xl bg-white border-2 border-gray-200/80 shadow-xl p-8"
+                animate={
+                  hoveredCard === cardIndex && !isMobile
+                    ? {
+                        scale: 1.05,
+                        y: -10,
+                      }
+                    : {
+                        scale: 1,
+                        y: 0,
+                      }
+                }
+                onHoverStart={() => handleCardHoverStart(cardIndex)}
+                onHoverEnd={handleCardHoverEnd}
               >
+                {/* Subtle overlay on hover */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-amber-400/10 to-red-600/10 opacity-0 group-hover:opacity-100"
-                  transition={{ duration: 0.3 }}
+                  className="absolute inset-0 bg-gradient-to-br from-amber-400/5 to-red-600/5 opacity-0"
+                  animate={{ opacity: hoveredCard === cardIndex ? 1 : 0 }}
+                  transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
                 />
-                <span className="text-3xl">{item.icon}</span>
-                <p className="mt-2 font-medium text-gray-900">{item.text}</p>
+
+                <div className="relative z-10 flex flex-col items-center text-center">
+                  {/* Emoji */}
+                  <motion.div
+                    className="mb-4 text-5xl"
+                    animate={
+                      hoveredCard === cardIndex && !isMobile && !prefersReducedMotion
+                        ? {
+                            scale: [1, 1.2, 1],
+                            rotate: [0, -10, 10, 0],
+                          }
+                        : {}
+                    }
+                    transition={{ 
+                      duration: 0.5,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    {card.emoji}
+                  </motion.div>
+
+                  {/* Title */}
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    {card.title}
+                  </h3>
+                </div>
               </motion.div>
-            ))}
-          </motion.div>
-        </motion.section>
-      </div>
-
-      {/* Vision Section */}
-      <div className="relative min-h-screen flex items-center">
-        {/* Decorative Model removed */}
-
-        <motion.section
-          id="vision"
-          className="container relative z-10 mx-auto px-6 py-24 text-right sm:px-8 md:px-16 lg:px-24"
-          style={{ y: textY }}
-        >
-          <motion.div 
-            className="flex items-center justify-end gap-4 mb-8"
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <span className="text-sm font-medium uppercase tracking-widest text-amber-600">Our Future</span>
-            <motion.div
-              className="rounded-full bg-gradient-to-r from-amber-400/20 to-red-600/20 p-4 backdrop-blur-sm"
-              whileHover={!isMobile ? { scale: 1.1, rotate: -180 } : {}}
-              transition={{ duration: 0.5 }}
-            >
-              <Eye className="h-8 w-8 text-amber-500" />
-            </motion.div>
-          </motion.div>
-
-          <motion.div className="perspective-1000">
-            <motion.h2 
-              className="text-5xl font-black uppercase tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl text-gray-900"
-              variants={titleVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
-              <motion.span 
-                className="block"
-                whileHover={!isMobile ? {
-                  scale: 1.05,
-                  textShadow: "0 0 40px rgba(0,0,0,0.15)",
-                  transition: { duration: 0.3 },
-                } : {}}
-              >
-                OUR
-              </motion.span>
-              <motion.span 
-                className="block bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 bg-clip-text text-transparent"
-                whileHover={!isMobile ? {
-                  scale: 1.05,
-                  textShadow: "0 0 40px rgba(245, 158, 11, 0.8)",
-                  transition: { duration: 0.3 },
-                } : {}}
-              >
-                VISION
-              </motion.span>
-            </motion.h2>
-          </motion.div>
-
-          <motion.p
-            variants={paragraphVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="mt-8 ml-auto max-w-3xl text-lg font-light leading-relaxed text-gray-700 sm:text-xl md:text-2xl"
-          >
-            Our vision is to become a{" "}
-            <motion.span
-              className="font-semibold text-amber-600"
-              whileHover={!isMobile ? { 
-                textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
-                scale: 1.05,
-              } : {}}
-            >
-              global leader
-            </motion.span>{" "}
-            in Applied AI and intelligent automation by setting new standards for innovation, performance, and customer satisfaction. We envision a future where businesses of all sizes have access to intelligent, scalable, and efficient AI-powered solutions.
-          </motion.p>
-
-          {/* Animated sparkles */}
-          <motion.div
-            className="mt-12 flex justify-end"
-            initial={{ opacity: 0, scale: 0 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <Sparkles className="h-12 w-12 text-amber-500" />
-          </motion.div>
-        </motion.section>
+            );
+          })}
+        </div>
       </div>
     </motion.div>
   );
