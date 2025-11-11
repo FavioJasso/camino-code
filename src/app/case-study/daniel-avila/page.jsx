@@ -26,9 +26,9 @@ const DanielAvilaCaseStudy = () => {
     ctaLabel: "Visit Daniel's Portfolio",
     ctaLink: "https://www.danielavila.tech",
     colorScheme: {
-      primary: "57, 112, 235",
-      gradient: "from-blue-400 to-blue-600",
-      gradientReverse: "from-blue-600 to-blue-400",
+      primary: "245, 158, 11",
+      gradient: "from-amber-400 to-red-600",
+      gradientReverse: "from-red-600 to-amber-400",
     },
     stats: [
       {

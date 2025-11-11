@@ -40,7 +40,7 @@ export default function Footer() {
           fill
           className="object-cover"
           quality={90}
-          priority
+          loading="lazy"
         />
         <div className="absolute inset-0 bg-black/80" />
       </div>

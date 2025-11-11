@@ -245,12 +245,12 @@ export default function ServicesSection() {
 
       <motion.div
         ref={sectionRef}
-        className="relative z-10 container flex flex-col items-center gap-10 px-6 py-24 md:flex-row"
-        style={{ y: textY }}
+        className="relative z-10 container flex flex-col items-center justify-center gap-10 px-6 py-20 min-h-screen md:min-h-0 md:py-24 md:flex-row"
+        style={isMobile ? {} : { y: textY }}
       >
         {/* Left Column */}
         <motion.div
-          className="flex w-full flex-col items-center text-white md:w-1/2 md:items-start md:px-8 md:py-12 md:text-left"
+          className="flex w-full flex-col items-center text-center text-white md:w-1/2 md:items-start md:px-8 md:py-12 md:text-left"
           variants={staggerContainer}
           initial="initial"
           animate={hasIntersected ? "animate" : "initial"}
@@ -307,29 +307,32 @@ export default function ServicesSection() {
             opportunities and drive growth.
           </motion.p>
 
-          <motion.div
-            className="mt-16 flex h-full w-full items-center justify-center"
-            initial={{ opacity: 0, scale: 0.8, rotate: -180 }}
-            animate={hasIntersected ? { opacity: 1, scale: 1, rotate: 0 } : {}}
-            transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
-          >
-            <motion.div animate={floatingAnimation} className="w-[300px] h-[300px] md:w-[350px] md:h-[350px]">
-              <motion.div
-                animate={{
-                  rotate: 360,
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{
-                  rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-                  scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-                }}
-                className="w-full h-full"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 to-transparent blur-3xl" />
-                <LazySpline scene="https://prod.spline.design/hxXzHDWdUo11wqob/scene.splinecode" className="w-full h-full" />
+          {/* 3D Object - Hidden on mobile */}
+          {!isMobile && (
+            <motion.div
+              className="mt-16 flex h-full w-full items-center justify-center"
+              initial={{ opacity: 0, scale: 0.8, rotate: -180 }}
+              animate={hasIntersected ? { opacity: 1, scale: 1, rotate: 0 } : {}}
+              transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
+            >
+              <motion.div animate={floatingAnimation} className="w-[300px] h-[300px] md:w-[350px] md:h-[350px]">
+                <motion.div
+                  animate={{
+                    rotate: 360,
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{
+                    rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+                    scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+                  }}
+                  className="w-full h-full"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-amber-400/10 to-transparent blur-3xl" />
+                  <LazySpline scene="https://prod.spline.design/hxXzHDWdUo11wqob/scene.splinecode" className="w-full h-full" />
+                </motion.div>
               </motion.div>
             </motion.div>
-          </motion.div>
+          )}
         </motion.div>
 
         {/* Right Column - Services Cards */}

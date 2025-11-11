@@ -8,12 +8,15 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
 
-  // Remove console logs in production
+  // Remove console logs in production and optimize transforms
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error', 'warn'],
     } : false,
   },
+
+  // Modern browser target - avoid unnecessary polyfills
+  transpilePackages: [],
 
   // Image optimization
   images: {
@@ -26,7 +29,13 @@ const nextConfig = {
   // Experimental features for performance
   experimental: {
     scrollRestoration: true,
-    optimizePackageImports: ['lucide-react', 'framer-motion'],
+    optimizePackageImports: [
+      'lucide-react',
+      'framer-motion',
+      '@react-three/fiber',
+      '@react-three/drei',
+      'gsap',
+    ],
   },
 
   // Headers for performance and caching
