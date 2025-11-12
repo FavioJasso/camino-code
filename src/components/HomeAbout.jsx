@@ -18,9 +18,12 @@ export default function AboutSection() {
   const [hoveredWord, setHoveredWord] = useState(null);
   const hoverTimeoutRef = useRef(null);
 
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, isMobile ? -50 : -100]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0.8]);
+  const { scrollY } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+  const y = useTransform(scrollY, [0, 1], [0, isMobile ? -50 : -100]);
+  const opacity = useTransform(scrollY, [0, 0.5], [1, 0.8]);
 
   const titleWords = "Shaping the Future of Technology".split(" ");
 

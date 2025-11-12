@@ -22,7 +22,7 @@ const HealthTrackCaseStudy = () => {
     title: "Cloud Infrastructure Transformation",
     subtitle:
       "Seamless transition to cloud infrastructure improving system reliability",
-    heroImage: "/assets/images/services_work04.png",
+    heroImage: "/assets/images/services_work04.webp",
     colorScheme: {
       primary: "245, 158, 11",
       gradient: "from-amber-400 to-red-600",
@@ -102,10 +102,10 @@ const HealthTrackCaseStudy = () => {
       },
     ],
     images: [
-      "/assets/images/case_image01.png",
-      "/assets/images/case_image02.png",
-      "/assets/images/case_image03.png",
-      "/assets/images/case_image04.png",
+      "/assets/images/case_image01.webp",
+      "/assets/images/case_image02.webp",
+      "/assets/images/case_image03.webp",
+      "/assets/images/case_image04.webp",
     ],
     testimonial: {
       quotes: [

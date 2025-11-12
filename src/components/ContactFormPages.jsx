@@ -218,7 +218,7 @@ export default function ContactForm() {
               <div className="space-y-3">
                 {/* Email Card */}
                 <motion.a
-                  href="mailto:hello@caminocode.com"
+                  href="mailto:faviojasso@gmail.com"
                   className="group relative block overflow-hidden rounded-lg bg-white border border-neutral-200 p-4 hover:border-amber-400 transition-all duration-300 shadow-sm hover:shadow-md"
                   whileHover={!isMobile ? { scale: 1.02 } : {}}
                   transition={{ type: "spring", stiffness: 300 }}
@@ -231,7 +231,7 @@ export default function ContactForm() {
                     <div>
                       <p className="text-xs font-medium text-neutral-500 mb-0.5">Email</p>
                       <p className="text-sm font-semibold text-neutral-900 group-hover:text-amber-600 transition-colors">
-                        hello@caminocode.com
+                        faviojasso@gmail.com
                       </p>
                     </div>
                     <motion.div
@@ -246,7 +246,7 @@ export default function ContactForm() {
 
                 {/* Phone Card */}
                 <motion.a
-                  href="tel:+15551234567"
+                  href="tel:19732342073"
                   className="group relative block overflow-hidden rounded-lg bg-white border border-neutral-200 p-4 hover:border-amber-400 transition-all duration-300 shadow-sm hover:shadow-md"
                   whileHover={!isMobile ? { scale: 1.02 } : {}}
                   transition={{ type: "spring", stiffness: 300 }}
@@ -259,7 +259,7 @@ export default function ContactForm() {
                     <div>
                       <p className="text-xs font-medium text-neutral-500 mb-0.5">Phone</p>
                       <p className="text-sm font-semibold text-neutral-900 group-hover:text-amber-600 transition-colors">
-                        +1 (555) 123-4567
+                        +1 973-234-2073
                       </p>
                     </div>
                     <motion.div

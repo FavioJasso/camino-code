@@ -22,7 +22,6 @@ const DanielAvilaCaseStudy = () => {
     title: "Professional Portfolio Design & Development",
     subtitle:
       "How we built a clean, modern, and user-focused portfolio website that reflects expertise, clarity, and trust.",
-    heroImage: "/assets/images/case_studies/danielavila_case.png",
     ctaLabel: "Visit Daniel's Portfolio",
     ctaLink: "https://www.danielavila.tech",
     colorScheme: {
@@ -105,10 +104,10 @@ const DanielAvilaCaseStudy = () => {
       },
     ],
     images: [
-      "/assets/images/case_studies/danielavila_gallery01.png",
-      "/assets/images/case_studies/danielavila_gallery02.png",
-      "/assets/images/case_studies/danielavila_gallery03.png",
-      "/assets/images/case_studies/danielavila_gallery04.png",
+      "/assets/images/case_studies/danielavila_gallery01.webp",
+      "/assets/images/case_studies/danielavila_gallery02.webp",
+      "/assets/images/case_studies/danielavila_gallery03.webp",
+      "/assets/images/case_studies/danielavila_gallery04.webp",
     ],
     testimonial: {
       quotes: [
@@ -130,8 +129,8 @@ const DanielAvilaCaseStudy = () => {
       link: "/case-study/victorias-painting",
     },
     nextCaseStudy: {
-      title: "Cloud Migration for HealthTrack",
-      link: "/case-study/healthtrack",
+      title: "TechWave Solutions",
+      link: "/case-study/techwave",
     },
   };
 

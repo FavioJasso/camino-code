@@ -22,7 +22,6 @@ const VictoriasPaintingCaseStudy = () => {
     title: "Professional Painting Business Website Design & Development",
     subtitle:
       "How we built a clean, modern website that helps homeowners find trusted painting services and connects them with experts.",
-    heroImage: "/assets/images/case_studies/victorias_case.png",
     colorScheme: {
       primary: "245, 158, 11",
       gradient: "from-amber-400 to-red-600",
@@ -104,10 +103,10 @@ const VictoriasPaintingCaseStudy = () => {
       },
     ],
     images: [
-      "/assets/images/case_image01.png",
-      "/assets/images/case_image02.png",
-      "/assets/images/case_image03.png",
-      "/assets/images/case_image04.png",
+      "/assets/images/case_studies/victorias_gallery01.webp",
+      "/assets/images/case_studies/victorias_gallery02.webp",
+      "/assets/images/case_studies/victorias_gallery03.webp",
+      "/assets/images/case_studies/victorias_gallery04.webp",
     ],
     testimonial: {
       quotes: [
@@ -129,11 +128,11 @@ const VictoriasPaintingCaseStudy = () => {
       "Increased customer inquiries and bookings through website",
     ],
     nextCaseStudy: {
-      title: "Professional Portfolio Design & Development",
+      title: "Daniel Avila Portfolio",
       link: "/case-study/daniel-avila",
     },
     prevCaseStudy: {
-      title: "TechWave: AI-Powered Business Solutions",
+      title: "TechWave Solutions",
       link: "/case-study/techwave",
     },
     websiteUrl: "https://www.victoriaspainting.com",

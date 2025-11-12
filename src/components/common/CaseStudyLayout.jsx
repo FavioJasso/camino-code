@@ -42,9 +42,12 @@ const CaseStudyLayout = ({
   const prefersReducedMotion = useReducedMotion();
   const [isHovered, setIsHovered] = useState(false);
 
-  const { scrollY } = useScroll();
-  const heroParallax = useTransform(scrollY, [0, 1000], [0, isMobile ? -50 : -200]);
-  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0]);
+  const { scrollY } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+  const heroParallax = useTransform(scrollY, [0, 1], [0, isMobile ? -50 : -200]);
+  const heroOpacity = useTransform(scrollY, [0, 0.5], [1, 0]);
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -153,6 +156,7 @@ const CaseStudyLayout = ({
       
       <ImplementationSection 
         phases={phases} 
+        images={images}
         colorScheme={colorScheme}
         isMobile={isMobile}
       />
@@ -605,13 +609,70 @@ const SolutionSection = ({ solutions, visual, colorScheme }) => {
   );
 };
 
-const ImplementationSection = ({ phases, colorScheme, isMobile }) => {
+const ImplementationSection = ({ phases, images, colorScheme, isMobile }) => {
   const { ref, hasIntersected } = useIntersectionObserver({ threshold: 0.3 });
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [hoveredImage, setHoveredImage] = useState(null);
 
   return (
     <section ref={ref} className="relative bg-black py-24">
       <div className="container mx-auto px-6">
+        {/* Gallery Section */}
+        {images && images.length > 0 && (
+          <motion.div
+            className="mb-20"
+            initial={{ opacity: 0, y: 30 }}
+            animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <motion.h3
+              className="mb-16 text-center text-4xl font-black uppercase sm:text-5xl md:text-6xl lg:text-7xl"
+              initial={{ opacity: 0, y: 20 }}
+              animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <span className={`bg-gradient-to-r ${colorScheme.gradient} bg-clip-text text-transparent`}>
+                Gallery
+              </span>
+            </motion.h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-6xl mx-auto">
+              {images.slice(0, 4).map((image, index) => (
+                <motion.div
+                  key={index}
+                  className="relative overflow-hidden rounded-xl aspect-[4/3] bg-white/5"
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: index * 0.1, duration: 0.6 }}
+                  viewport={{ once: true }}
+                  onHoverStart={() => setHoveredImage(index)}
+                  onHoverEnd={() => setHoveredImage(null)}
+                  whileHover={!isMobile ? { scale: 1.02 } : {}}
+                >
+                  <motion.div
+                    className="absolute inset-0"
+                    animate={{
+                      scale: hoveredImage === index ? 1.05 : 1,
+                    }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    <Image
+                      src={image}
+                      alt={`Gallery image ${index + 1}`}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover"
+                      quality={90}
+                    />
+                  </motion.div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
         <motion.h2
           className="mb-16 text-center text-4xl font-black uppercase sm:text-5xl md:text-6xl lg:text-7xl"
           initial={{ opacity: 0, y: 50 }}

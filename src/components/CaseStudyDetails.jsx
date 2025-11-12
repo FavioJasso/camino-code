@@ -21,9 +21,12 @@ const CaseStudyDetails = () => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const isMobile = useIsMobile();
 
-  const { scrollY } = useScroll();
-  const heroParallax = useTransform(scrollY, [0, 1000], [0, -200]);
-  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0]);
+  const { scrollY } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+  const heroParallax = useTransform(scrollY, [0, 1], [0, -200]);
+  const heroOpacity = useTransform(scrollY, [0, 0.5], [1, 0]);
 
   // Particle animation setup
   useEffect(() => {
@@ -107,7 +110,7 @@ const CaseStudyDetails = () => {
     title: "Data-Driven Transformation",
     subtitle:
       "How we increased customer retention by 30% through predictive analytics",
-    heroImage: "/assets/images/services_work01.png",
+    heroImage: "/assets/images/services_work01.webp",
     stats: [
       {
         value: "30%",
@@ -131,10 +134,10 @@ const CaseStudyDetails = () => {
       },
     ],
     images: [
-      "/assets/images/case_image01.png",
-      "/assets/images/case_image02.png",
-      "/assets/images/case_image03.png",
-      "/assets/images/case_image04.png",
+      "/assets/images/case_image01.webp",
+      "/assets/images/case_image02.webp",
+      "/assets/images/case_image03.webp",
+      "/assets/images/case_image04.webp",
     ],
   };
 

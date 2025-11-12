@@ -15,6 +15,17 @@ const nextConfig = {
       ...config.resolve.alias,
       three: 'three',
     };
+    
+    // Suppress known warnings that can't be fixed due to third-party libraries
+    if (!isServer) {
+      config.ignoreWarnings = config.ignoreWarnings || [];
+      config.ignoreWarnings.push(
+        // Spline bundles its own Three.js, causing multiple instance warnings
+        { module: /node_modules\/@splinetool/ },
+        /Multiple instances of Three\.js/
+      );
+    }
+    
     return config;
   },
 

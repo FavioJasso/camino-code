@@ -214,7 +214,7 @@ export default function AboutUsFounder() {
               <div className="relative overflow-hidden rounded-full bg-gradient-to-br from-amber-400/20 to-red-600/20 p-1">
                 <div className="relative overflow-hidden rounded-full">
                   <Image
-                    src="/assets/images/about_founder.png"
+                    src="/assets/images/about_founder.webp"
                     alt="Our Founder"
                     width={600}
                     height={700}

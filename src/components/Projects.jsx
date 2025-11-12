@@ -11,7 +11,7 @@ const caseStudies = [
     title: "Data-Driven Insights for TechWave",
     description:
       "Developed a predictive analytics model that increased customer retention by 30%.",
-    image: "/assets/images/services_work01.png",
+    image: "/assets/images/services_work01.webp",
     href: "/case-studies/techwave",
   },
   {
@@ -19,7 +19,7 @@ const caseStudies = [
     title: "E-Commerce Platform for StyleHub",
     description:
       "Built a scalable web application that boosted online sales by 150%.",
-    image: "/assets/images/services_work02.png",
+    image: "/assets/images/services_work02.webp",
     href: "/case-studies/stylehub",
   },
   {
@@ -27,7 +27,7 @@ const caseStudies = [
     title: "AI-Powered Chatbot for FinServe",
     description:
       "Implemented NLP solutions reducing customer service costs by 40%.",
-    image: "/assets/images/services_work03.png",
+    image: "/assets/images/services_work03.webp",
     href: "/case-studies/finserve",
   },
   {
@@ -35,7 +35,7 @@ const caseStudies = [
     title: "Cloud Migration for HealthTrack",
     description:
       "Seamless transition to cloud infrastructure improving system reliability.",
-    image: "/assets/images/services_work04.png",
+    image: "/assets/images/services_work04.webp",
     href: "/case-studies/healthtrack",
   },
 ];
@@ -121,7 +121,7 @@ export default function Projects() {
         className="flex w-full justify-center"
       >
         <Link
-          href="/case-studies"
+          href="/case-study/techwave"
           className="rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-8 py-3 text-sm font-medium text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl sm:text-base"
         >
           View All Projects
