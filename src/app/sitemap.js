@@ -31,7 +31,7 @@ export default function sitemap() {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/case-study/techwave`,
+      url: `${baseUrl}/case-study/transparent-energy`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.7,

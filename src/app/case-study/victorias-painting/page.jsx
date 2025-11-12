@@ -132,8 +132,8 @@ const VictoriasPaintingCaseStudy = () => {
       link: "/case-study/daniel-avila",
     },
     prevCaseStudy: {
-      title: "TechWave Solutions",
-      link: "/case-study/techwave",
+      title: "Transparent Energy",
+      link: "/case-study/transparent-energy",
     },
     websiteUrl: "https://www.victoriaspainting.com",
   };

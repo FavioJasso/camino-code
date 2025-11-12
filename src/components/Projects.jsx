@@ -8,11 +8,11 @@ import { motion } from "framer-motion";
 const caseStudies = [
   {
     id: 1,
-    title: "Data-Driven Insights for TechWave",
+    title: "Data Automation for Transparent Energy",
     description:
-      "Developed a predictive analytics model that increased customer retention by 30%.",
-    image: "/assets/images/services_work01.webp",
-    href: "/case-studies/techwave",
+      "Automated reconciliation system saving $65,000+ annually in analyst time.",
+    image: "/assets/images/case_studies/transparent_work.webp",
+    href: "/case-study/transparent-energy",
   },
   {
     id: 2,
@@ -121,7 +121,7 @@ export default function Projects() {
         className="flex w-full justify-center"
       >
         <Link
-          href="/case-study/techwave"
+          href="/case-study/transparent-energy"
           className="rounded-full bg-gradient-to-t from-amber-400 to-red-600 px-8 py-3 text-sm font-medium text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl sm:text-base"
         >
           View All Projects
