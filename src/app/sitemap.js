@@ -31,7 +31,19 @@ export default function sitemap() {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/case-study-detailed`,
+      url: `${baseUrl}/case-study/techwave`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/case-study/victorias-painting`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/case-study/daniel-avila`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.7,

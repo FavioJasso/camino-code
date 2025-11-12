@@ -17,7 +17,7 @@ export const seoConfig = {
   organization: {
     name: 'Camino Code',
     url: 'https://caminocode.com',
-    logo: 'https://caminocode.com/assets/logo.svg',
+    logo: 'https://caminocode.com/favicon.ico',
     sameAs: [
       'https://www.linkedin.com/company/caminocode',
       'https://www.instagram.com/caminocode',

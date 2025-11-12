@@ -22,7 +22,7 @@ const TechWaveCaseStudy = () => {
     title: "Data-Driven Transformation",
     subtitle:
       "How we increased customer retention by 30% through predictive analytics",
-    heroImage: "/assets/images/services_work01.png",
+    heroImage: "/assets/images/services_work01.webp",
     colorScheme: {
       primary: "245, 158, 11",
       gradient: "from-amber-400 to-red-600",
@@ -102,10 +102,10 @@ const TechWaveCaseStudy = () => {
       },
     ],
     images: [
-      "/assets/images/case_image01.png",
-      "/assets/images/case_image02.png",
-      "/assets/images/case_image03.png",
-      "/assets/images/case_image04.png",
+      "/assets/images/case_image01.webp",
+      "/assets/images/case_image02.webp",
+      "/assets/images/case_image03.webp",
+      "/assets/images/case_image04.webp",
     ],
     testimonial: {
       quotes: [
@@ -125,8 +125,8 @@ const TechWaveCaseStudy = () => {
       link: "/case-study/victorias-painting",
     },
     prevCaseStudy: {
-      title: "E-Commerce Platform for StyleHub",
-      link: "/case-study/stylehub",
+      title: "Daniel Avila Portfolio",
+      link: "/case-study/daniel-avila",
     },
   };
 

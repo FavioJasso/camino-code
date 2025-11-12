@@ -20,9 +20,9 @@ export const metadata = {
   applicationName: "Camino Code",
   referrer: "origin-when-cross-origin",
   icons: {
-    icon: "/assets/icon.png",
-    apple: "/assets/icon.png",
-    shortcut: "/assets/icon.png",
+    icon: "/favicon.ico",
+    apple: "/favicon.ico",
+    shortcut: "/favicon.ico",
   },
   formatDetection: {
     email: false,

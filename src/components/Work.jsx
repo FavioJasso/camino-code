@@ -15,10 +15,10 @@ import { ArrowBigRightIcon, ArrowBigRightDashIcon } from "lucide-react";
 const caseStudies = [
   {
     id: 1,
-    title: "Data-Driven Insights for TechWave",
+    title: "Insights for TechWave",
     description:
       "Developed a predictive analytics model that increased customer retention by 30%.",
-    image: "/assets/images/services_work01.png",
+    image: "/assets/images/services_work01.webp",
     href: "/case-study/techwave",
     color: "from-blue-400 to-purple-600",
   },
@@ -39,15 +39,6 @@ const caseStudies = [
     image: "/assets/images/case_studies/danielavila_work.webp",
     href: "/case-study/daniel-avila",
     color: "from-blue-700 to-blue-400",
-  },
-  {
-    id: 4,
-    title: "Cloud Migration for HealthTrack",
-    description:
-      "Seamless transition to cloud infrastructure improving system reliability.",
-    image: "/assets/images/services_work04.png",
-    href: "/case-study/healthtrack",
-    color: "from-pink-400 to-purple-600",
   },
 ];
 
@@ -87,9 +78,7 @@ const CaseStudyCard = ({ study, index }) => {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
-      className={`group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm transition-all duration-500 ${
-        index % 2 === 1 ? "lg:translate-y-16" : ""
-      }`}
+      className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm transition-all duration-500"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       whileHover={!isMobile ? { 
@@ -116,159 +105,70 @@ const CaseStudyCard = ({ study, index }) => {
           transition={{ duration: 0.5 }}
         />
         
-        <div className="relative h-full overflow-hidden rounded-3xl backdrop-blur-xl">
-          {/* Background gradient layer */}
-          <motion.div
-            className={`absolute inset-0 bg-gradient-to-br ${study.color}`}
-            animate={{
-              opacity: isHovered ? 1 : 0.5,
-            }}
-            transition={{ duration: 0.5 }}
-          />
-          
-          <div className="relative h-80 overflow-hidden sm:h-96 lg:h-[28rem]">
-            <motion.div
-              className="absolute inset-0"
-              animate={{
-                scale: isHovered ? 1.05 : 1,
-                rotate: isHovered ? 2 : 0,
-              }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            >
-              <Image
-                src={study.image}
-                alt={study.title}
-                fill
-                className="object-cover"
-                quality={90}
-              />
-            </motion.div>
-
-            {/* Advanced gradient overlay */}
-            <motion.div
-              className="absolute inset-0"
-              initial={{ opacity: 0.3 }}
-              animate={{ opacity: isHovered ? 0.8 : 0.3 }}
-              transition={{ duration: 0.5 }}
-              style={{
-                background: `linear-gradient(135deg, ${study.color.split(' ')[1]} 0%, transparent 50%, ${study.color.split(' ')[3]} 100%)`,
-                mixBlendMode: "multiply",
-              }}
+        <div className="relative h-full overflow-hidden rounded-3xl backdrop-blur-xl bg-white border-2 border-gray-200">
+          {/* Image Section */}
+          <div className="relative h-64 overflow-hidden sm:h-72 md:h-72 lg:h-64 rounded-t-3xl">
+            <Image
+              src={study.image}
+              alt={study.title}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover"
+              quality={90}
             />
+          </div>
 
-            {/* Animated particles overlay */}
-            {!isMobile && (
-              <motion.div
-                className="absolute inset-0"
-                animate={{
-                  backgroundPosition: isHovered && !prefersReducedMotion ? ["0% 0%", "100% 100%"] : "0% 0%",
-                }}
-                transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-                style={{
-                  backgroundImage: "radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 1px)",
-                  backgroundSize: "30px 30px",
-                }}
-              />
-            )}
-
-            {/* Content overlay */}
-            <motion.div
-              className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/50 to-transparent p-8"
-              initial={{ opacity: 0.8 }}
-              animate={{ opacity: isHovered ? 1 : 0.8 }}
+          {/* Content Section - Below Image */}
+          <div className="relative p-6 bg-white rounded-b-3xl">
+            <motion.h3
+              className="mb-3 text-xl md:text-2xl font-bold text-gray-900"
+              animate={{
+                y: isHovered ? -3 : 0,
+              }}
               transition={{ duration: 0.3 }}
             >
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.1 }}
-              >
-                <motion.h3
-                  className="mb-1 md:mb-3 text-xl md:text-2xl font-bold text-white sm:text-3xl lg:text-4xl"
-                  animate={{
-                    y: isHovered ? -5 : 0,
-                  }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {study.title}
-                </motion.h3>
+              {study.title}
+            </motion.h3>
 
-                <motion.p
-                  className={`mb-6 text-sm md:text-base text-white/80 sm:text-lg ${isFirefox ? "" : "overflow-hidden"}`}
-                  initial={{ height: 0, opacity: 0, y: 20 }}
-                  animate={{ 
-                    height: isHovered && !isFirefox ? "auto" : 0,
-                    opacity: isHovered && !isFirefox ? 1 : 0,
-                    y: isHovered && !isFirefox ? 0 : 20
-                  }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                >
-                  {study.description}
-                </motion.p>
-
-                <motion.div
-                  className="flex items-center gap-3"
-                  animate={{
-                    x: isHovered && !isFirefox ? 10 : 0,
-                  }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <span className="text-lg font-semibold text-amber-400">
-                    View Case Study
-                  </span>
-                  <motion.div
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-400/20 backdrop-blur-sm"
-                    animate={{
-                      scale: isHovered && !isFirefox ? [1, 1.2, 1] : 1,
-                      rotate: isHovered && !isFirefox ? 360 : 0,
-                    }}
-                    transition={{
-                      scale: { duration: 0.5, repeat: isHovered && !isFirefox ? Infinity : 0 },
-                      rotate: { duration: 0.5 },
-                    }}
-                  >
-                    <svg
-                      className="h-5 w-5 text-amber-400"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                      />
-                    </svg>
-                  </motion.div>
-                </motion.div>
-              </motion.div>
-            </motion.div>
-
-            {/* Corner accent */}
-            <motion.div
-              className="absolute top-0 right-0 h-32 w-32"
-              animate={{
-                scale: isHovered && !isFirefox ? 1.5 : 1,
-                rotate: isHovered && !isFirefox ? 90 : 0,
-              }}
-              transition={{ duration: 0.5 }}
+            <motion.p
+              className="mb-6 text-sm md:text-base text-gray-600 leading-relaxed"
             >
-              <div className="h-full w-full bg-gradient-to-br from-amber-400/30 to-transparent" />
-            </motion.div>
+              {study.description}
+            </motion.p>
 
-            {/* Number badge */}
             <motion.div
-              className="absolute top-6 left-6 flex h-12 w-12 items-center justify-center rounded-full bg-black/50 backdrop-blur-md"
+              className="flex items-center gap-3"
               animate={{
-                scale: isHovered && !isFirefox ? 1.1 : 1,
-                rotate: isHovered && !isFirefox ? 360 : 0,
+                x: isHovered && !isFirefox ? 5 : 0,
               }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.3 }}
             >
-              <span className="text-xl font-bold text-amber-400">
-                {String(index + 1).padStart(2, '0')}
+              <span className="text-base font-semibold text-orange-500">
+                View Case Study
               </span>
+              <motion.div
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500"
+                animate={{
+                  scale: isHovered && !isFirefox ? [1, 1.1, 1] : 1,
+                }}
+                transition={{
+                  scale: { duration: 0.5, repeat: isHovered && !isFirefox ? Infinity : 0 },
+                }}
+              >
+                <svg
+                  className="h-4 w-4 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </motion.div>
             </motion.div>
           </div>
         </div>
@@ -440,7 +340,7 @@ export default function WorkShowcase() {
 
           {/* Case Studies Grid with enhanced stagger animation */}
           <motion.div
-            className="grid w-full max-w-7xl grid-cols-1 gap-8 md:gap-12 lg:grid-cols-2"
+            className="grid w-full max-w-7xl grid-cols-1 gap-8 md:grid-cols-2 md:gap-8 lg:grid-cols-3 lg:gap-10"
             variants={staggerContainer}
             initial="initial"
             animate={hasIntersected ? "animate" : "initial"}
@@ -457,7 +357,7 @@ export default function WorkShowcase() {
             animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.8, duration: 0.6 }}
           >
-            <Link href="/case-study-detailed">
+            <Link href="/case-study/techwave">
             <motion.button
               className="group lg:mt-8 text-lg font-semibold relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-amber-600 to-red-600 px-8 py-4 text-white"
               initial="initial"

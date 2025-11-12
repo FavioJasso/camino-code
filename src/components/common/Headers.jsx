@@ -300,6 +300,8 @@ const PageHeader = ({
               custom={index}
               variants={iconVariants}
               initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
               animate={hoveredCard === index && !isMobile && !prefersReducedMotion ? {
                 scale: 1.05,
                 y: -10,
@@ -308,7 +310,7 @@ const PageHeader = ({
                 y: 0,
               }}
               transition={{ type: "spring", stiffness: 80, damping: 20 }}
-              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm max-w-[190px] mx-auto"
+              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/5 to-white/10 p-8 backdrop-blur-sm w-[190px] mx-auto"
               onHoverStart={() => handleCardHoverStart(index)}
               onHoverEnd={handleCardHoverEnd}
             >

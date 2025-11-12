@@ -11,8 +11,8 @@ import StructuredData from "@/components/StructuredData";
 
 const ContactUsHeader = () => {
   const items = [
-    { icon: <Mail className="h-8 w-8" />, label: "Email: hello@caminocode.com" },
-    { icon: <Phone className="h-8 w-8" />, label: "Phone: +1 (555) 123-4567" },
+    { icon: <Mail className="h-8 w-8" />, label: "faviojasso@gmail.com" },
+    { icon: <Phone className="h-8 w-8" />, label: "+1 973-234-2073" },
     { icon: <MapPin className="h-8 w-8" />, label: "Newark, NJ" },
   ];
 

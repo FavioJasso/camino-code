@@ -14,28 +14,28 @@ const features = [
     title: "Innovation at the Core",
     description: "Cutting-edge solutions that drive business transformation",
     icon: <Sparkles className="h-8 w-8" />,
-    image: "/assets/images/offers_bg01.png",
+    image: "/assets/images/offers_bg01.webp",
   },
   {
     id: 2,
     title: "Client-Centric Approach",
     description: "Tailored strategies focused on your business goals",
     icon: <Users className="h-8 w-8" />,
-    image: "/assets/images/offers_bg02.png",
+    image: "/assets/images/offers_bg02.webp",
   },
   {
     id: 3,
     title: "Seamless Integration",
     description: "Effortless compatibility with your existing systems",
     icon: <Puzzle className="h-8 w-8" />,
-    image: "/assets/images/offers_bg03.png",
+    image: "/assets/images/offers_bg03.webp",
   },
   {
     id: 4,
     title: "Scalable Solutions",
     description: "Future-proof technology that grows with your business",
     icon: <Scaling className="h-8 w-8" />,
-    image: "/assets/images/offers_bg04.png",
+    image: "/assets/images/offers_bg04.webp",
   },
 ];
 
@@ -489,6 +489,7 @@ export default function WhatSetsUsApart() {
                   src={feature.image}
                   alt={feature.title}
                   fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   className="object-cover transition-all duration-700 group-hover:scale-110"
                   quality={90}
                 />
