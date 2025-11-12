@@ -15,11 +15,11 @@ import { ArrowBigRightIcon, ArrowBigRightDashIcon } from "lucide-react";
 const caseStudies = [
   {
     id: 1,
-    title: "Insights for TechWave",
+    title: "Data Automation for Transparent Energy",
     description:
-      "Developed a predictive analytics model that increased customer retention by 30%.",
-    image: "/assets/images/services_work01.webp",
-    href: "/case-study/techwave",
+      "Automated reconciliation system saving $65,000+ annually in analyst time.",
+    image: "/assets/images/case_studies/transparent_work.webp",
+    href: "/case-study/transparent-energy",
     color: "from-blue-400 to-purple-600",
   },
   {
@@ -108,67 +108,67 @@ const CaseStudyCard = ({ study, index }) => {
         <div className="relative h-full overflow-hidden rounded-3xl backdrop-blur-xl bg-white border-2 border-gray-200">
           {/* Image Section */}
           <div className="relative h-64 overflow-hidden sm:h-72 md:h-72 lg:h-64 rounded-t-3xl">
-            <Image
-              src={study.image}
-              alt={study.title}
-              fill
+              <Image
+                src={study.image}
+                alt={study.title}
+                fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-cover"
-              quality={90}
-            />
+                className="object-cover"
+                quality={90}
+              />
           </div>
 
           {/* Content Section - Below Image */}
           <div className="relative p-6 bg-white rounded-b-3xl">
-            <motion.h3
+                <motion.h3
               className="mb-3 text-xl md:text-2xl font-bold text-gray-900"
-              animate={{
+                  animate={{
                 y: isHovered ? -3 : 0,
-              }}
-              transition={{ duration: 0.3 }}
-            >
-              {study.title}
-            </motion.h3>
-
-            <motion.p
-              className="mb-6 text-sm md:text-base text-gray-600 leading-relaxed"
-            >
-              {study.description}
-            </motion.p>
-
-            <motion.div
-              className="flex items-center gap-3"
-              animate={{
-                x: isHovered && !isFirefox ? 5 : 0,
-              }}
-              transition={{ duration: 0.3 }}
-            >
-              <span className="text-base font-semibold text-orange-500">
-                View Case Study
-              </span>
-              <motion.div
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500"
-                animate={{
-                  scale: isHovered && !isFirefox ? [1, 1.1, 1] : 1,
-                }}
-                transition={{
-                  scale: { duration: 0.5, repeat: isHovered && !isFirefox ? Infinity : 0 },
-                }}
-              >
-                <svg
-                  className="h-4 w-4 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                  }}
+                  transition={{ duration: 0.3 }}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 8l4 4m0 0l-4 4m4-4H3"
-                  />
-                </svg>
-              </motion.div>
+                  {study.title}
+                </motion.h3>
+
+                <motion.p
+              className="mb-6 text-sm md:text-base text-gray-600 leading-relaxed"
+                >
+                  {study.description}
+                </motion.p>
+
+                <motion.div
+                  className="flex items-center gap-3"
+                  animate={{
+                x: isHovered && !isFirefox ? 5 : 0,
+                  }}
+                  transition={{ duration: 0.3 }}
+                >
+              <span className="text-base font-semibold text-orange-500">
+                    View Case Study
+                  </span>
+                  <motion.div
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500"
+                    animate={{
+                  scale: isHovered && !isFirefox ? [1, 1.1, 1] : 1,
+                    }}
+                    transition={{
+                      scale: { duration: 0.5, repeat: isHovered && !isFirefox ? Infinity : 0 },
+                    }}
+                  >
+                    <svg
+                  className="h-4 w-4 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                      />
+                    </svg>
+                  </motion.div>
             </motion.div>
           </div>
         </div>
@@ -281,7 +281,7 @@ export default function WorkShowcase() {
                 animate={
                   hoveredWord === 0 && !isMobile
                     ? {
-                        scale: 1.05,
+                  scale: 1.05,
                         textShadow: "0 0 0px rgba(0, 0, 0, 0)",
                       }
                     : {
@@ -300,7 +300,7 @@ export default function WorkShowcase() {
                 animate={
                   hoveredWord === 1 && !isMobile
                     ? {
-                        scale: 1.05,
+                  scale: 1.05,
                         textShadow: "0 0 50px rgba(245, 158, 11, 0.2)",
                       }
                     : {
@@ -357,7 +357,7 @@ export default function WorkShowcase() {
             animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.8, duration: 0.6 }}
           >
-            <Link href="/case-study/techwave">
+            <Link href="/case-study/transparent-energy">
             <motion.button
               className="group lg:mt-8 text-lg font-semibold relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-amber-600 to-red-600 px-8 py-4 text-white"
               initial="initial"

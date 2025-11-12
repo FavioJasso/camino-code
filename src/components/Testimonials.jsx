@@ -299,7 +299,7 @@ export default function Testimonials() {
               animate={
                 hoveredWord === 0 && !isMobile
                   ? {
-                      scale: 1.05,
+                scale: 1.05,
                       textShadow: "0 0 0px rgba(0, 0, 0, 0)",
                     }
                   : {
@@ -318,8 +318,8 @@ export default function Testimonials() {
               animate={
                 hoveredWord === 1 && !isMobile
                   ? {
-                      scale: 1.05,
-                      textShadow: "0 0 50px rgba(245, 158, 11, 0.2)",
+                scale: 1.05,
+                textShadow: "0 0 50px rgba(245, 158, 11, 0.2)",
                     }
                   : {
                       scale: 1,

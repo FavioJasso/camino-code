@@ -114,13 +114,13 @@ export default function Footer() {
                 <motion.div
                   whileHover={{ y: -3 }}
                   transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <Link
-                    href={link.href}
+              >
+                <Link
+                  href={link.href}
                     className="text-white/80 transition-colors hover:text-amber-400 hover:underline"
-                  >
-                    {link.name}
-                  </Link>
+                >
+                  {link.name}
+                </Link>
                 </motion.div>
               </motion.li>
             ))}

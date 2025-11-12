@@ -129,8 +129,8 @@ const DanielAvilaCaseStudy = () => {
       link: "/case-study/victorias-painting",
     },
     nextCaseStudy: {
-      title: "TechWave Solutions",
-      link: "/case-study/techwave",
+      title: "Transparent Energy",
+      link: "/case-study/transparent-energy",
     },
   };
 
