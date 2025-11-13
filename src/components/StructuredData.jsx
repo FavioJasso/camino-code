@@ -144,7 +144,6 @@ export default function StructuredData({ page = 'home', customData = null }) {
         'case-studies': 'Case Studies',
         'case-study-detailed': 'Case Study Detail',
         contact: 'Contact',
-        'all-models': '3D Models',
       };
 
       breadcrumbItems.push({

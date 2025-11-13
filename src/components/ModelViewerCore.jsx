@@ -44,25 +44,22 @@ export default function ModelViewer({
   fogColor = "#000",
   containerClassName = "",
 }) {
-  // Detectar Firefox/Zen para optimizaciones específicas
-  const isFirefox = typeof navigator !== 'undefined' && /firefox|fxios/i.test(navigator.userAgent);
-  
   return (
     <div className={containerClassName}>
       <Canvas
         camera={{ position: [0, 0, 5], fov: 45 }}
         gl={{ 
-          antialias: !isFirefox, // Desactivar antialiasing en Firefox para mejor rendimiento
+          antialias: true,
           alpha: true,
           failOnWebGL1: false,
-          powerPreference: isFirefox ? 'default' : 'high-performance', // Usar 'default' en Firefox
-          stencil: false, // Desactivar stencil buffer (no lo necesitamos)
+          powerPreference: 'high-performance',
+          stencil: false,
           depth: true,
         }}
         style={{ width: "100%", height }}
         onError={(error) => console.warn('Canvas error:', error)}
-        dpr={isFirefox ? [1, 1.5] : [1, 2]} // Limitar DPR en Firefox
-        performance={{ min: 0.5 }} // Reducir calidad si el FPS baja
+        dpr={[1, 2]}
+        performance={{ min: 0.5 }}
       >
         <Suspense fallback={null}>
           <fog attach="fog" args={[fogColor, 5, 15]} />
