@@ -1,13 +1,13 @@
 {
-  "name": "Camino Code - Code the Future",
+  "name": "Camino Code - AI-Powered Platforms & Applied AI",
   "short_name": "Camino Code",
-  "description": "Transform your business with cutting-edge data science and web development solutions",
+  "description": "We build AI-powered platforms and deliver Applied AI services. Our clients benefit from proprietary technology that's continuously improving through real-world application.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#ffffff",
+  "background_color": "#000000",
   "theme_color": "#f59e0b",
-  "categories": ["business", "technology", "developer"],
+  "categories": ["business", "technology", "artificial-intelligence", "productivity"],
   "lang": "en-US",
   "dir": "ltr",
   "icons": [
@@ -36,30 +36,37 @@
       "sizes": "1920x1080",
       "type": "image/jpeg",
       "platform": "wide",
-      "label": "Desktop view of Camino Code"
+      "label": "Camino Code - AI-Powered Platforms Dashboard"
     },
     {
       "src": "/screenshot-mobile.jpg",
       "sizes": "750x1334",
       "type": "image/jpeg",
       "platform": "narrow",
-      "label": "Mobile view of Camino Code"
+      "label": "Camino Code - Applied AI Services on Mobile"
     }
   ],
   "related_applications": [],
   "prefer_related_applications": false,
   "shortcuts": [
     {
-      "name": "Services",
+      "name": "Applied AI Services",
       "short_name": "Services",
-      "description": "View our services",
+      "description": "Explore our AI-powered solutions",
       "url": "/services",
       "icons": [{ "src": "/assets/icon.png", "sizes": "192x192" }]
     },
     {
-      "name": "Contact",
+      "name": "Case Studies",
+      "short_name": "Work",
+      "description": "See our AI implementations",
+      "url": "/case-study",
+      "icons": [{ "src": "/assets/icon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Contact Us",
       "short_name": "Contact",
-      "description": "Get in touch",
+      "description": "Transform your ideas into reality",
       "url": "/contact",
       "icons": [{ "src": "/assets/icon.png", "sizes": "192x192" }]
     }

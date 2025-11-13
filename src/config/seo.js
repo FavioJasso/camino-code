@@ -41,7 +41,7 @@ export const seoConfig = {
   },
 
   // Default Open Graph images
-  defaultOgImage: 'https://caminocode.com/og-image.jpg',
+  defaultOgImage: 'https://caminocode.com/og-images/og-image.png',
   ogImageWidth: 1200,
   ogImageHeight: 630,
 

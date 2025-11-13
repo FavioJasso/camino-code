@@ -536,21 +536,37 @@ export default function ServicesSection() {
 // Lazy-loaded Spline component to reduce main-thread work
 function LazySpline({ scene, className }) {
   const [SplineComponent, setSplineComponent] = useState(null);
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
 
   useEffect(() => {
-    // Delay loading Spline by 1 second to prioritize critical content
+    // Check if mobile
+    const checkMobile = () => {
+      setIsMobileDevice(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    // Don't load Spline on mobile to save performance
+    if (window.innerWidth < 768) {
+      return () => window.removeEventListener('resize', checkMobile);
+    }
+
+    // Delay loading Spline by 3 seconds on desktop to prioritize LCP
     const timer = setTimeout(() => {
       import("@splinetool/react-spline").then((module) => {
         setSplineComponent(() => module.default);
       }).catch(error => {
         console.warn('Failed to load Spline:', error);
       });
-    }, 1000);
+    }, 3000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
-  if (!SplineComponent) {
+  if (isMobileDevice || !SplineComponent) {
     return (
       <div className={className}>
         {/* Placeholder while Spline loads - invisible to avoid flashing */}

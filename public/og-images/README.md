@@ -1,28 +1,46 @@
 # Open Graph Images
 
-This directory should contain Open Graph images for social media sharing. Create the following images at 1200x630px resolution:
+Esta carpeta debe contener las imágenes de Open Graph para compartir en redes sociales.
 
-## Required Images:
-1. **home.jpg** - Homepage OG image showcasing Camino Code brand
-2. **about.jpg** - About page OG image highlighting team/company
-3. **services.jpg** - Services page OG image showing service offerings
-4. **case-studies.jpg** - Case studies portfolio OG image
-5. **case-study-detail.jpg** - Individual case study OG image
-6. **contact.jpg** - Contact page OG image with CTA
-7. **models.jpg** - 3D models showcase OG image
+## Imágenes Requeridas
 
-## Main OG Image:
-- **/og-image.jpg** - Default fallback OG image (place in public root)
+### Formato Recomendado:
+- **Tamaño:** 1200x630px
+- **Formato:** JPG o PNG
+- **Peso:** < 300KB para mejor rendimiento
 
-## Specifications:
-- **Dimensions**: 1200x630 pixels
-- **Format**: JPG (optimized for web)
-- **File size**: Keep under 200KB for fast loading
-- **Content**: Include Camino Code logo, relevant visuals, and tagline
+### Imágenes Necesarias:
 
-## Design Guidelines:
-- Use consistent branding colors (amber/orange theme)
-- Include the Camino Code logo
-- Add relevant text overlays for context
-- Ensure text is readable at small sizes
-- Keep important content within safe zones (avoid edges)
+1. **home.jpg** - Imagen principal del sitio
+   - Debe incluir: Logo de Camino Code + "AI-Powered Platforms & Applied AI"
+   - Fondo: Negro con elementos en naranja/amber
+   
+2. **about.jpg** - Imagen de la página About
+   - Puede incluir: Equipo, valores, o logo con descripción
+   
+3. **services.jpg** - Imagen de servicios
+   - Debe mostrar: "Applied AI Services"
+   
+4. **case-studies.jpg** - Imagen del portfolio
+   - Puede mostrar: Collage de proyectos o logo con "Case Studies"
+   
+5. **contact.jpg** - Imagen de contacto
+   - Puede mostrar: "Transform Your Ideas Into Reality"
+
+## Uso Temporal
+
+Mientras no existan estas imágenes específicas, el sitio usa:
+- `/assets/icon.png` (512x512) como fallback
+
+## Herramientas Recomendadas para Crear OG Images:
+
+- **Canva** - https://www.canva.com (plantillas gratuitas)
+- **Figma** - https://www.figma.com (diseño profesional)
+- **OG Image Generator** - https://og-playground.vercel.app/ (generador online)
+
+## Verificación:
+
+Después de crear las imágenes, prueba cómo se ven en:
+- Facebook Debugger: https://developers.facebook.com/tools/debug/
+- LinkedIn Post Inspector: https://www.linkedin.com/post-inspector/
+- Twitter Card Validator: https://cards-dev.twitter.com/validator

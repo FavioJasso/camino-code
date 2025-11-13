@@ -23,6 +23,7 @@ const PageHeader = ({
   const [isHovered, setIsHovered] = useState(false);
   const [hoveredWord, setHoveredWord] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [canvasReady, setCanvasReady] = useState(false);
   const hoverTimeoutRef = useRef(null);
   const cardHoverTimeoutRef = useRef(null);
 
@@ -76,15 +77,21 @@ const PageHeader = ({
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
 
+    // Delay canvas initialization to prioritize LCP
+    const canvasTimer = setTimeout(() => {
+      setCanvasReady(true);
+    }, isMobile ? 500 : 300);
+
     return () => {
       window.removeEventListener("resize", updateDimensions);
+      clearTimeout(canvasTimer);
       if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
       if (cardHoverTimeoutRef.current) clearTimeout(cardHoverTimeoutRef.current);
     };
-  }, []);
+  }, [isMobile]);
 
   useEffect(() => {
-    if (typeof window === "undefined" || isMobile || prefersReducedMotion) return;
+    if (typeof window === "undefined" || isMobile || prefersReducedMotion || !canvasReady) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -163,12 +170,12 @@ const PageHeader = ({
     };
 
     animate();
-  }, [dimensions, isMobile, prefersReducedMotion]);
+  }, [dimensions, isMobile, prefersReducedMotion, canvasReady]);
 
   const wordVariants = {
     hidden: {
       opacity: 0,
-      y: isMobile ? 20 : 100,
+      y: isMobile ? 10 : 100,
       rotateX: isMobile ? 0 : -90,
       filter: isMobile ? "none" : "blur(10px)"
     },
@@ -178,8 +185,8 @@ const PageHeader = ({
       rotateX: 0,
       filter: "none",
       transition: {
-        duration: isMobile ? 0.3 : 0.8,
-        delay: i * (isMobile ? 0.05 : 0.2),
+        duration: isMobile ? 0.2 : 0.6,
+        delay: i * (isMobile ? 0.02 : 0.1),
         ease: [0.215, 0.61, 0.355, 1.0],
       },
     }),
@@ -203,8 +210,8 @@ const PageHeader = ({
       scale: 1,
       y: 0,
       transition: {
-        duration: 0.6,
-        delay: 0.8 + i * 0.1,
+        duration: isMobile ? 0.3 : 0.5,
+        delay: isMobile ? 0.1 + i * 0.05 : 0.3 + i * 0.08,
         ease: "easeOut",
       },
     }),
@@ -280,9 +287,9 @@ const PageHeader = ({
         </motion.div>
 
         <motion.p
-          initial={{ opacity: 0, y: isMobile ? 10 : 30, filter: isMobile ? "none" : "blur(10px)" }}
+          initial={{ opacity: 0, y: isMobile ? 5 : 20, filter: "none" }}
           animate={{ opacity: 1, y: 0, filter: "none" }}
-          transition={{ duration: isMobile ? 0.4 : 1, delay: isMobile ? 0.2 : 0.6 }}
+          transition={{ duration: isMobile ? 0.2 : 0.5, delay: isMobile ? 0.05 : 0.2 }}
           className="mx-auto mb-12 max-w-5xl px-6 text-lg font-light leading-relaxed text-white/80 sm:text-xl md:text-2xl text-balance"
         >
           {typeof description === 'string' ? description : description}
@@ -292,7 +299,7 @@ const PageHeader = ({
           className="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
+          transition={{ delay: isMobile ? 0.15 : 0.4 }}
         >
           {items.map((item, index) => (
             <motion.div
@@ -332,7 +339,7 @@ const PageHeader = ({
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.6 }}
+          transition={{ delay: isMobile ? 0.2 : 0.5, duration: isMobile ? 0.3 : 0.5 }}
         >
           <Link href={ctaLink}>
             <motion.button
@@ -435,7 +442,7 @@ const PageHeader = ({
           className="absolute"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.8, duration: 0.6 }}
+          transition={{ delay: isMobile ? 0.3 : 0.8, duration: isMobile ? 0.3 : 0.5 }}
         >
           <motion.div
             animate={{ y: [0, -12, 0], opacity: [0.6, 0.6, 0.6] }}
