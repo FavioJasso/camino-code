@@ -18,9 +18,9 @@ export async function GET() {
       guid: `${baseUrl}/post-2`
     },
     {
-      title: 'Case Study: E-commerce Analytics Platform',
-      description: 'Learn how we increased customer retention by 30% through predictive analytics',
-      link: `${baseUrl}/case-study-detailed`,
+      title: 'Case Study: Transparent Energy - Data Automation',
+      description: 'How we automated reconciliation and saved $65,000+ annually for a leading energy brokerage firm',
+      link: `${baseUrl}/case-study/transparent-energy`,
       pubDate: new Date('2024-02-01').toUTCString(),
       guid: `${baseUrl}/post-3`
     }

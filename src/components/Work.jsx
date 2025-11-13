@@ -7,10 +7,19 @@ import {
   useIntersectionObserver,
   useCursorPosition,
 } from "@/hooks/useAnimations";
-import { staggerContainer } from "@/utils/animations";
 import { useState, useEffect, useRef } from "react";
 import { useIsMobile, useReducedMotion, useIsFirefox } from "@/hooks/useIsMobile";
 import { ArrowBigRightIcon, ArrowBigRightDashIcon } from "lucide-react";
+
+const staggerContainer = {
+  initial: {},
+  animate: {
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.3,
+    },
+  },
+};
 
 const caseStudies = [
   {

@@ -2,171 +2,61 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 export default function SmoothScroll({ children }) {
   const pathname = usePathname();
   const scrollContainerRef = useRef(null);
 
   useEffect(() => {
-    // Only run on client side
+    // Smooth scroll to top on route change
     if (typeof window !== "undefined") {
-      // Import GSAP dynamically
-      import("gsap").then(({ default: gsap }) => {
-        import("gsap/ScrollTrigger").then(({ default: ScrollTrigger }) => {
-          gsap.registerPlugin(ScrollTrigger);
-
-          // Smooth scroll to top on route change
-          const scrollToTop = () => {
-            window.scrollTo({
-              top: 0,
-              behavior: "smooth",
-            });
-          };
-          scrollToTop();
-
-          // Update ScrollTrigger on route change
-          ScrollTrigger.refresh();
-
-          // Add parallax effect to elements with data-speed attribute
-          const parallaxElements = document.querySelectorAll("[data-speed]");
-          parallaxElements.forEach((element) => {
-            const speed = parseFloat(element.getAttribute("data-speed"));
-            gsap.to(element, {
-              y: (i, el) => -ScrollTrigger.maxScroll(window) * speed,
-              ease: "none",
-              scrollTrigger: {
-                start: 0,
-                end: "max",
-                invalidateOnRefresh: true,
-                scrub: true,
-              },
-            });
-          });
-
-          // Add fade in animation to elements with data-fade attribute
-          const fadeElements = document.querySelectorAll("[data-fade]");
-          fadeElements.forEach((element) => {
-            gsap.fromTo(
-              element,
-              {
-                opacity: 0,
-                y: 50,
-              },
-              {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                ease: "power3.out",
-                scrollTrigger: {
-                  trigger: element,
-                  start: "top 80%",
-                  end: "bottom 20%",
-                  toggleActions: "play none none reverse",
-                },
-              },
-            );
-          });
-
-          // Add scale animation to elements with data-scale attribute
-          const scaleElements = document.querySelectorAll("[data-scale]");
-          scaleElements.forEach((element) => {
-            gsap.fromTo(
-              element,
-              {
-                scale: 0.8,
-                opacity: 0,
-              },
-              {
-                scale: 1,
-                opacity: 1,
-                duration: 1,
-                ease: "power3.out",
-                scrollTrigger: {
-                  trigger: element,
-                  start: "top 80%",
-                  toggleActions: "play none none reverse",
-                },
-              },
-            );
-          });
-
-          // Add text reveal animation
-          const textRevealElements =
-            document.querySelectorAll("[data-text-reveal]");
-          textRevealElements.forEach((element) => {
-            const text = element.textContent;
-            element.innerHTML = "";
-
-            // Split text into spans
-            text.split("").forEach((char, index) => {
-              const span = document.createElement("span");
-              span.textContent = char === " " ? "\u00A0" : char;
-              span.style.display = "inline-block";
-              span.style.opacity = "0";
-              span.style.transform = "translateY(100%)";
-              element.appendChild(span);
-            });
-
-            // Animate spans
-            gsap.to(element.children, {
-              opacity: 1,
-              y: 0,
-              duration: 0.5,
-              stagger: 0.02,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: element,
-                start: "top 80%",
-                toggleActions: "play none none reverse",
-              },
-            });
-          });
-
-          // Cleanup function
-          return () => {
-            ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-          };
-        });
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
       });
-
-      // Add smooth scroll behavior to all anchor links
-      const handleAnchorClick = (e) => {
-        const target = e.target.closest('a[href^="#"]');
-        if (target) {
-          e.preventDefault();
-          const id = target.getAttribute("href");
-          const element = document.querySelector(id);
-          if (element) {
-            element.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
-          }
-        }
-      };
-
-      document.addEventListener("click", handleAnchorClick);
-      return () => document.removeEventListener("click", handleAnchorClick);
     }
   }, [pathname]);
 
-  // Add smooth scrollbar styles
+  // Add smooth scroll behavior to all anchor links
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      // Add custom scrollbar behavior
-      let isScrolling;
-      const handleScroll = () => {
-        document.body.classList.add("is-scrolling");
+    if (typeof window === "undefined") return;
 
-        window.clearTimeout(isScrolling);
-        isScrolling = setTimeout(() => {
-          document.body.classList.remove("is-scrolling");
-        }, 100);
-      };
+    const handleAnchorClick = (e) => {
+      const target = e.target.closest('a[href^="#"]');
+      if (target) {
+        e.preventDefault();
+        const id = target.getAttribute("href");
+        const element = document.querySelector(id);
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
+      }
+    };
 
-      window.addEventListener("scroll", handleScroll, { passive: true });
-      return () => window.removeEventListener("scroll", handleScroll);
-    }
+    document.addEventListener("click", handleAnchorClick);
+    return () => document.removeEventListener("click", handleAnchorClick);
+  }, []);
+
+  // Add smooth scrollbar styles and scrolling state
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    let isScrolling;
+    const handleScroll = () => {
+      document.body.classList.add("is-scrolling");
+
+      window.clearTimeout(isScrolling);
+      isScrolling = setTimeout(() => {
+        document.body.classList.remove("is-scrolling");
+      }, 100);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -183,6 +73,8 @@ export default function SmoothScroll({ children }) {
           }}
           ref={(el) => {
             if (el && typeof window !== "undefined") {
+              let ticking = false;
+              
               const updateProgress = () => {
                 const scrollTop =
                   window.pageYOffset || document.documentElement.scrollTop;
@@ -190,9 +82,17 @@ export default function SmoothScroll({ children }) {
                   document.documentElement.scrollHeight - window.innerHeight;
                 const progress = (scrollTop / scrollHeight) * 100;
                 el.style.width = `${progress}%`;
+                ticking = false;
               };
 
-              window.addEventListener("scroll", updateProgress, {
+              const requestTick = () => {
+                if (!ticking) {
+                  requestAnimationFrame(updateProgress);
+                  ticking = true;
+                }
+              };
+
+              window.addEventListener("scroll", requestTick, {
                 passive: true,
               });
               updateProgress();

@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
+import OptimizedImage from "@/components/common/OptimizedImage";
 
 const CaseStudyLayout = ({
   client,
@@ -658,13 +659,12 @@ const ImplementationSection = ({ phases, images, colorScheme, isMobile }) => {
                     }}
                     transition={{ duration: 0.6 }}
                   >
-                    <Image
+                    <OptimizedImage
                       src={image}
                       alt={`Gallery image ${index + 1}`}
-                      fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      quality={85}
                       className="object-cover"
-                      quality={90}
                     />
                   </motion.div>
                 </motion.div>

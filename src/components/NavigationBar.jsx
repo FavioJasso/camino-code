@@ -162,7 +162,7 @@ export default function NavigationBar({ iswhite = false }) {
                     className="block group"
                   >
                     <motion.div
-                      className={`relative flex items-center justify-center px-4 py-2 text-lg font-medium ${
+                      className={`relative flex items-center justify-center px-4 py-2 text-lg font-semibold ${
                         scrollY > 50
                           ? "text-gray-800"
                           : iswhite
@@ -334,7 +334,7 @@ export default function NavigationBar({ iswhite = false }) {
                               ? "/"
                               : `/${item.toLowerCase().replace(" ", "-")}`
                           }
-                          className="block text-3xl font-medium text-gray-800 transition-all duration-300 hover:bg-gradient-to-r hover:from-amber-400 hover:to-red-600 hover:bg-clip-text hover:text-transparent"
+                          className="block text-3xl font-semibold text-gray-800 transition-all duration-300 hover:bg-gradient-to-r hover:from-amber-400 hover:to-red-600 hover:bg-clip-text hover:text-transparent"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           {item}

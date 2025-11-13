@@ -4,9 +4,18 @@ import { Brain, Cpu, Database, ArrowBigRightIcon, ArrowBigRightDashIcon, Sparkle
 import Link from "next/link";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
-import { staggerContainer } from "@/utils/animations";
 import { useRef, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/useIsMobile";
+
+const staggerContainer = {
+  initial: {},
+  animate: {
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.3,
+    },
+  },
+};
 
 const services = [
   {
@@ -533,6 +542,8 @@ function LazySpline({ scene, className }) {
     const timer = setTimeout(() => {
       import("@splinetool/react-spline").then((module) => {
         setSplineComponent(() => module.default);
+      }).catch(error => {
+        console.warn('Failed to load Spline:', error);
       });
     }, 1000);
 

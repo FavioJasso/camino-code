@@ -50,21 +50,17 @@ export default function Partners() {
   // ========== MODEL LOAD HANDLER ==========
   useEffect(() => {
     if (modelIntersected) {
-      // Esperar a que el modelo se cargue completamente antes de animar
-      // Esto evita el lag en Firefox/Zen
       const timer = setTimeout(() => {
-        // Usar requestIdleCallback si está disponible (mejor para Firefox)
         if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
           window.requestIdleCallback(() => {
             setModelLoaded(true);
           });
         } else {
-          // Fallback con requestAnimationFrame
           requestAnimationFrame(() => {
             setModelLoaded(true);
           });
         }
-      }, 3800); // Aumentado a 3.8s para dar más tiempo de carga
+      }, 3800);
 
       return () => clearTimeout(timer);
     }
@@ -127,18 +123,18 @@ export default function Partners() {
             }
             transition={{
               duration: 1.2,
-              ease: [0.34, 1.56, 0.64, 1], // easeOutBack - efecto de rebote suave
+              ease: [0.34, 1.56, 0.64, 1],
               opacity: { duration: 0.8, ease: "easeOut" },
               y: { duration: 1.2 },
             }}
             style={{
-              transform: 'translateZ(0)', // Force GPU acceleration
+              transform: 'translateZ(0)',
               backfaceVisibility: 'hidden',
               perspective: 1000,
             }}
           >
             <LazyModelViewer
-              modelPath="/triangle-1.glb"
+              modelPath="/triangle.glb"
               height="90%"
               fogColor="#f8f9fa"
               containerClassName="w-full h-full absolute top-0 left-1/2 transform -translate-x-1/2"

@@ -54,12 +54,6 @@ export default function sitemap() {
       changeFrequency: 'yearly',
       priority: 0.8,
     },
-    {
-      url: `${baseUrl}/all-models`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    },
   ];
 
   return routes;
