@@ -36,8 +36,10 @@
     "typescript": "5.8.3"
   },
   "browserslist": [
-    "defaults",
-    "not IE 11",
-    "maintained node versions"
+    "chrome >= 92",
+    "edge >= 92",
+    "firefox >= 90",
+    "safari >= 15.4",
+    "ios_saf >= 15.4"
   ]
 }
