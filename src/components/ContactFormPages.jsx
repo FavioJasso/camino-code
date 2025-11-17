@@ -62,11 +62,28 @@ export default function ContactForm() {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response = await fetch('https://api-send-mail-teal.vercel.app/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_name: data.name,
+          user_email: data.email,
+          subject: data.subject,
+          message: data.message,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send email');
+      }
+
       setSubmitStatus("success");
       reset();
       setTimeout(() => setSubmitStatus(null), 3000);
-    } catch {
+    } catch (error) {
+      console.error('Error sending email:', error);
       setSubmitStatus("error");
       setTimeout(() => setSubmitStatus(null), 3000);
     } finally {
