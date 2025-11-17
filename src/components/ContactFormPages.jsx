@@ -218,7 +218,7 @@ export default function ContactForm() {
               <div className="space-y-3">
                 {/* Email Card */}
                 <motion.a
-                  href="mailto:faviojasso@gmail.com"
+                  href="mailto:contact@caminocode.com"
                   className="group relative block overflow-hidden rounded-lg bg-white border border-neutral-200 p-4 hover:border-amber-400 transition-all duration-300 shadow-sm hover:shadow-md"
                   whileHover={!isMobile ? { scale: 1.02 } : {}}
                   transition={{ type: "spring", stiffness: 300 }}
@@ -231,7 +231,7 @@ export default function ContactForm() {
                     <div>
                       <p className="text-xs font-medium text-neutral-500 mb-0.5">Email</p>
                       <p className="text-sm font-semibold text-neutral-900 group-hover:text-amber-600 transition-colors">
-                        faviojasso@gmail.com
+                        contact@caminocode.com
                       </p>
                     </div>
                     <motion.div

@@ -15,7 +15,7 @@ export default function PreloadResources() {
         href="/assets/icon-extend.svg" 
         as="image" 
         type="image/svg+xml"
-        fetchpriority="high"
+        fetchPriority="high"
       />
     </>
   );
