@@ -20,14 +20,12 @@ export const seoConfig = {
     logo: 'https://caminocode.com/favicon.ico',
     sameAs: [
       'https://www.linkedin.com/company/caminocode',
-      'https://www.instagram.com/caminocode',
-      'https://twitter.com/caminocode',
-      'https://github.com/caminocode'
+
     ],
     contactPoint: {
       telephone: '+1-XXX-XXX-XXXX',
       contactType: 'customer service',
-      email: 'contact@caminocode.com',
+      email: 'info@caminocode.com',
       areaServed: 'Worldwide',
       availableLanguage: ['English']
     },

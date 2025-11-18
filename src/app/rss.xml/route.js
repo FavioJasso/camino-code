@@ -39,8 +39,8 @@ export async function GET() {
     <lastBuildDate>${currentDate}</lastBuildDate>
     <atom:link href="${baseUrl}/rss.xml" rel="self" type="application/rss+xml"/>
     <copyright>Copyright ${new Date().getFullYear()} Camino Code</copyright>
-    <managingEditor>contact@caminocode.com (Camino Code Team)</managingEditor>
-    <webMaster>tech@caminocode.com (Camino Code Tech Team)</webMaster>
+    <managingEditor>info@caminocode.com (Camino Code Team)</managingEditor>
+    <webMaster>info@caminocode.com (Camino Code Tech Team)</webMaster>
     <category>Technology</category>
     <category>Applied AI</category>
     <category>Artificial Intelligence</category>

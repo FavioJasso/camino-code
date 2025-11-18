@@ -95,7 +95,7 @@ export const metadata = {
     google: seoConfig.googleSiteVerification,
     yandex: seoConfig.yandexVerification,
     other: {
-      me: ["contact@caminocode.com"],
+      me: ["info@caminocode.com"],
       "msvalidate.01": seoConfig.bingSiteVerification,
     },
   },

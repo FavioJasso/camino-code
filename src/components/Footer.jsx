@@ -354,7 +354,7 @@ export default function Footer() {
                   </p>
                   <div className="mt-4 space-y-2">
                     <p className="font-semibold text-amber-600">Camino Code</p>
-                    <p>Email: <a href="mailto:faviojasso@gmail.com" className="text-amber-600 hover:underline">faviojasso@gmail.com</a></p>
+                    <p>Email: <a href="mailto:contact@caminocode.com" className="text-amber-600 hover:underline">contact@caminocode.com</a></p>
                   </div>
                 </section>
               </div>
