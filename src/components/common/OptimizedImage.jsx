@@ -13,7 +13,7 @@ export default function OptimizedImage({
   quality = 85,
   priority = false,
   className = "",
-  containerClassName = "",
+  containerClassName = "w-full h-full",
   showOverlay = false,
   onLoad,
 }) {
@@ -25,7 +25,7 @@ export default function OptimizedImage({
   };
 
   return (
-    <div className={`relative w-full h-full ${containerClassName}`}>
+    <div className={`relative ${containerClassName}`}>
       {/* Skeleton Loader */}
       {isLoading && <ImageSkeleton />}
 

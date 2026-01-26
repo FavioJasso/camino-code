@@ -6,13 +6,7 @@ import { motion } from "framer-motion";
 import { useIntersectionObserver } from "@/hooks/useAnimations";
 import { useIsMobile, useReducedMotion } from "@/hooks/useIsMobile";
 import { LazyModelViewer } from "@/components/ModelViewer";
-
-// ========== CONSTANTS ==========
-const partners = [
-  { src: "/assets/images/partner_01.webp", alt: "Transparent Energy" },
-  { src: "/assets/images/partner_02.webp", alt: "Victoria's Painting" },
-  { src: "/assets/images/partner_03.webp", alt: "Daniel Avila" },
-];
+import partners from "@/config/partners.generated.json";
 
 const SCROLL_DURATION = 25;
 const INTERSECTION_THRESHOLD = 0.1;

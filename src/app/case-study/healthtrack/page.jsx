@@ -121,12 +121,12 @@ const HealthTrackCaseStudy = () => {
       "100% HIPAA compliant with advanced security measures",
     ],
     prevCaseStudy: {
-      title: "Professional Portfolio for Daniel Avila",
-      link: "/case-study/daniel-avila",
+      title: "Transparent Energy",
+      link: "/case-study/transparent-energy",
     },
     nextCaseStudy: {
-      title: "Professional Portfolio for Daniel Avila",
-      link: "/case-study/daniel-avila",
+      title: "Victoria's Painting",
+      link: "/case-study/victorias-painting",
     },
   };
 

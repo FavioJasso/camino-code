@@ -124,8 +124,8 @@ const TransparentEnergyCaseStudy = () => {
       "Enhanced data transparency and decision-making speed"
     ],
     prevCaseStudy: {
-      title: "Daniel Avila Portfolio",
-      link: "/case-study/daniel-avila"
+      title: "ReMatter",
+      link: "/case-study/rematter-us"
     },
     nextCaseStudy: {
       title: "Victoria's Painting",

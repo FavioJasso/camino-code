@@ -24,6 +24,16 @@ const staggerContainer = {
 const caseStudies = [
   {
     id: 1,
+    title: "Website ReMatter",
+    description:
+      "Transforming municipal waste into clean electricity and construction materials through intelligent AI-driven optimization.",
+    image: "/assets/images/case_studies/rematter_work.webp",
+    href: "/case-study/rematter-us",
+    color: "from-amber-400 to-red-600",
+    clientLabel: "ReMatter",
+  },
+  {
+    id: 2,
     title: "Data Automation for Transparent Energy",
     description:
       "Automated reconciliation system saving $65,000+ annually in analyst time.",
@@ -32,22 +42,13 @@ const caseStudies = [
     color: "from-blue-400 to-purple-600",
   },
   {
-    id: 2,
+    id: 3,
     title: "Website Victoria's Painting",
     description:
       "Built a professional website that helps homeowners find trusted painting services and connects them with experts.",
     image: "/assets/images/case_studies/victorias_work.webp",
     href: "/case-study/victorias-painting",
     color: "from-blue-400 to-blue-600",
-  },
-  {
-    id: 3,
-    title: "Portfolio Daniel Avila",
-    description:
-      "How we built a clean, modern, and user-focused portfolio website that reflects expertise, clarity, and trust.",
-    image: "/assets/images/case_studies/danielavila_work.webp",
-    href: "/case-study/daniel-avila",
-    color: "from-blue-700 to-blue-400",
   },
 ];
 
@@ -117,14 +118,24 @@ const CaseStudyCard = ({ study, index }) => {
         <div className="relative h-full overflow-hidden rounded-3xl backdrop-blur-xl bg-white border-2 border-gray-200">
           {/* Image Section */}
           <div className="relative h-64 overflow-hidden sm:h-72 md:h-72 lg:h-64 rounded-t-3xl">
+            {study.image ? (
               <Image
                 src={study.image}
                 alt={study.title}
                 fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className="object-cover"
                 quality={90}
               />
+            ) : (
+              <div
+                className={`flex h-full w-full items-center justify-center bg-gradient-to-br ${study.color}`}
+              >
+                <span className="px-6 text-center text-3xl font-black uppercase tracking-tight text-white drop-shadow-sm">
+                  {study.clientLabel ?? "Case Study"}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Content Section - Below Image */}
@@ -366,7 +377,7 @@ export default function WorkShowcase() {
             animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.8, duration: 0.6 }}
           >
-            <Link href="/case-study/transparent-energy">
+            <Link href="/case-studies">
             <motion.button
               className="group lg:mt-8 text-lg font-semibold relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-amber-600 to-red-600 px-8 py-4 text-white"
               initial="initial"

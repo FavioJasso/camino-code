@@ -43,7 +43,7 @@ export default function sitemap() {
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/case-study/daniel-avila`,
+      url: `${baseUrl}/case-study/rematter-us`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.7,

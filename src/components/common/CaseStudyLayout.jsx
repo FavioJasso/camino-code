@@ -24,6 +24,16 @@ const CaseStudyLayout = ({
   solutionVisual,
   phases,
   images,
+  galleryAspectClass = "aspect-[4/3]",
+  galleryGridClassName = "grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-6xl mx-auto",
+  galleryItemOverflowClassName = "overflow-hidden",
+  galleryHoverScale = 1.02,
+  galleryContentHoverScale = 1.05,
+  galleryFrameClassName = "",
+  galleryImageShadowClassName = "",
+  galleryImageClassName = "object-cover",
+  galleryImageContainerClassName = "",
+  galleryItemClassName = "bg-white/5",
   testimonial,
   results,
   nextCaseStudy,
@@ -160,6 +170,16 @@ const CaseStudyLayout = ({
         images={images}
         colorScheme={colorScheme}
         isMobile={isMobile}
+        galleryAspectClass={galleryAspectClass}
+        galleryGridClassName={galleryGridClassName}
+        galleryItemOverflowClassName={galleryItemOverflowClassName}
+        galleryHoverScale={galleryHoverScale}
+        galleryContentHoverScale={galleryContentHoverScale}
+        galleryFrameClassName={galleryFrameClassName}
+        galleryImageShadowClassName={galleryImageShadowClassName}
+        galleryImageClassName={galleryImageClassName}
+        galleryImageContainerClassName={galleryImageContainerClassName}
+        galleryItemClassName={galleryItemClassName}
       />
       
       <ResultsSection 
@@ -610,7 +630,22 @@ const SolutionSection = ({ solutions, visual, colorScheme }) => {
   );
 };
 
-const ImplementationSection = ({ phases, images, colorScheme, isMobile }) => {
+const ImplementationSection = ({
+  phases,
+  images,
+  colorScheme,
+  isMobile,
+  galleryAspectClass,
+  galleryGridClassName,
+  galleryItemOverflowClassName,
+  galleryHoverScale,
+  galleryContentHoverScale,
+  galleryFrameClassName,
+  galleryImageShadowClassName,
+  galleryImageClassName,
+  galleryImageContainerClassName,
+  galleryItemClassName,
+}) => {
   const { ref, hasIntersected } = useIntersectionObserver({ threshold: 0.3 });
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [hoveredImage, setHoveredImage] = useState(null);
@@ -639,33 +674,60 @@ const ImplementationSection = ({ phases, images, colorScheme, isMobile }) => {
               </span>
             </motion.h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-6xl mx-auto">
+            <div className={galleryGridClassName}>
               {images.slice(0, 4).map((image, index) => (
                 <motion.div
                   key={index}
-                  className="relative overflow-hidden rounded-xl aspect-[4/3] bg-white/5"
+                  className={`relative ${galleryItemOverflowClassName} rounded-xl ${galleryAspectClass} ${galleryItemClassName}`}
                   initial={{ opacity: 0, y: 50 }}
                   animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
                   transition={{ delay: index * 0.1, duration: 0.6 }}
                   viewport={{ once: true }}
                   onHoverStart={() => setHoveredImage(index)}
                   onHoverEnd={() => setHoveredImage(null)}
-                  whileHover={!isMobile ? { scale: 1.02 } : {}}
+                  whileHover={
+                    !isMobile
+                      ? { scale: galleryHoverScale, transition: { duration: 0.18, ease: "easeOut" } }
+                      : {}
+                  }
                 >
                   <motion.div
                     className="absolute inset-0"
                     animate={{
-                      scale: hoveredImage === index ? 1.05 : 1,
+                      scale: hoveredImage === index ? galleryContentHoverScale : 1,
                     }}
                     transition={{ duration: 0.6 }}
                   >
-                    <OptimizedImage
-                      src={image}
-                      alt={`Gallery image ${index + 1}`}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      quality={85}
-                      className="object-cover"
-                    />
+                    <div className={`relative flex h-full w-full items-center justify-center ${galleryFrameClassName}`}>
+                      {(galleryImageShadowClassName || galleryImageContainerClassName) ? (
+                        <div className={`relative ${galleryImageContainerClassName || "h-full w-full"}`}>
+                          {galleryImageShadowClassName ? (
+                            <div
+                              aria-hidden="true"
+                              className={`pointer-events-none absolute left-1/2 -translate-x-1/2 ${galleryImageShadowClassName}`}
+                            />
+                          ) : null}
+                          <div className="relative h-full w-full overflow-hidden">
+                            <OptimizedImage
+                              src={image}
+                              alt={`Gallery image ${index + 1}`}
+                              sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                              quality={85}
+                              className={galleryImageClassName}
+                              containerClassName="h-full w-full"
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <OptimizedImage
+                          src={image}
+                          alt={`Gallery image ${index + 1}`}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          quality={85}
+                          className={galleryImageClassName}
+                        />
+                      )}
+                    </div>
                   </motion.div>
                 </motion.div>
               ))}
