@@ -13,14 +13,14 @@ import StructuredData from "@/components/StructuredData";
 
 const CaseStudiesHeader = () => {
   const items = [
-    { icon: <Briefcase className="h-8 w-8" />, label: "50+ Projects Completed" },
-    { icon: <Award className="h-8 w-8" />, label: "98% Client Satisfaction" },
-    { icon: <Users className="h-8 w-8" />, label: "30+ Happy Clients" },
+    { icon: <Briefcase className="h-8 w-8" />, label: "Early-Stage Focus" },
+    { icon: <Award className="h-8 w-8" />, label: "Prototypes & Discovery" },
+    { icon: <Users className="h-8 w-8" />, label: "Ideas in the Pipeline" },
   ];
 
   const description = (
     <>
-      At Camino Code, we take pride in delivering{" "}
+      Ideas we've helped take from concept to testable reality. Early-stage work,{" "}
       <motion.span
         className="font-semibold text-amber-400 whitespace-nowrap"
         whileHover={{
@@ -28,27 +28,7 @@ const CaseStudiesHeader = () => {
           scale: 1.05,
         }}
       >
-        High-quality
-      </motion.span>
-      ,{" "}
-      <motion.span
-        className="font-semibold text-amber-400 whitespace-nowrap"
-        whileHover={{
-          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
-          scale: 1.05,
-        }}
-      >
-        Innovative AI solutions
-      </motion.span>{" "}
-      in{" "}
-      <motion.span
-        className="font-semibold text-amber-400 whitespace-nowrap"
-        whileHover={{
-          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
-          scale: 1.05,
-        }}
-      >
-        Applied AI
+        I-Corps collaborations
       </motion.span>{" "}
       and{" "}
       <motion.span
@@ -58,9 +38,19 @@ const CaseStudiesHeader = () => {
           scale: 1.05,
         }}
       >
-        Intelligent Automation
-      </motion.span>
-      . Our portfolio showcases transformative projects that enhance business efficiency and performance.
+        proof-of-concepts
+      </motion.span>{" "}
+      where{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        technical execution
+      </motion.span>{" "}
+      made the difference before traditional funding.
     </>
   );
 
@@ -70,7 +60,7 @@ const CaseStudiesHeader = () => {
       titleWords={["CASE", "STUDIES"]}
       description={description}
       items={items}
-      ctaLabel="Explore Our Work"
+      ctaLabel="See the Work"
       ctaLink="#work"
       gradientWordIndex={0}
     />

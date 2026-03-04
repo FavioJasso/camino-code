@@ -16,7 +16,7 @@ const AboutUsHeader = () => {
   const items = [];
   const description = (
     <>
-      At Camino Code, we specialize in delivering{" "}
+      We're a{" "}
       <motion.span
         className="font-semibold text-amber-400 whitespace-nowrap"
         whileHover={{
@@ -24,29 +24,9 @@ const AboutUsHeader = () => {
           scale: 1.05,
         }}
       >
-        Applied AI
-      </motion.span>{" "}
-      and{" "}
-      <motion.span
-        className="font-semibold text-amber-400 whitespace-nowrap"
-        whileHover={{
-          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
-          scale: 1.05,
-        }}
-      >
-        Intelligent automation
-      </motion.span>{" "}
-      solutions. Our goal is to empower businesses with{" "}
-      <motion.span
-        className="font-semibold text-amber-400 whitespace-nowrap"
-        whileHover={{
-          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
-          scale: 1.05,
-        }}
-      >
-        AI-powered
+        Technology & Product Development Studio
       </motion.span>
-      ,{" "}
+      . Rather than just building on request, we help early ideas get enough{" "}
       <motion.span
         className="font-semibold text-amber-400 whitespace-nowrap"
         whileHover={{
@@ -54,19 +34,19 @@ const AboutUsHeader = () => {
           scale: 1.05,
         }}
       >
-        Scalable
-      </motion.span>
-      , and{" "}
-      <motion.span
-        className="font-semibold text-amber-400 whitespace-nowrap"
-        whileHover={{
-          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
-          scale: 1.05,
-        }}
-      >
-        Intelligent platforms
+        technical attention
       </motion.span>{" "}
-      that drive growth and efficiency.
+      to be properly tested. We focus on feasibility, prototypes, and discovery so that the{" "}
+      <motion.span
+        className="font-semibold text-amber-400 whitespace-nowrap"
+        whileHover={{
+          textShadow: "0 0 20px rgba(245, 158, 11, 0.8)",
+          scale: 1.05,
+        }}
+      >
+        ideas that deserve to exist
+      </motion.span>{" "}
+      can prove it.
     </>
   );
 

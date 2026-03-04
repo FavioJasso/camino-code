@@ -343,7 +343,7 @@ export default function WorkShowcase() {
             animate={hasIntersected ? { opacity: 1, y: 0, filter: "none" } : {}}
             transition={{ duration: isMobile ? 0.5 : 0.8, delay: 0.3 }}
           >
-            We take pride in delivering{" "}
+            Ideas we've helped take from concept to testable reality. Early-stage work,{" "}
             <motion.span
               className="font-semibold text-amber-400"
               whileHover={!isMobile ? { 
@@ -351,9 +351,9 @@ export default function WorkShowcase() {
                 scale: 1.05,
               } : {}}
             >
-              innovative AI solutions
+              proof-of-concepts
             </motion.span>{" "}
-            that drive measurable success. Our portfolio showcases transformative projects in Applied AI, intelligent automation, and data engineering.
+            and collaborations where technical execution made the difference before traditional funding.
           </motion.p>
 
           {/* Mobile Models removed */}

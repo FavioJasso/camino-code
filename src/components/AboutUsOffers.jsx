@@ -360,7 +360,7 @@ export default function WhatSetsUsApart() {
           }
           transition={{ duration: isMobile ? 0.6 : 1, delay: 0.8 }}
         >
-          At Camino Code, we combine{" "}
+          We give early ideas the{" "}
           <motion.span
             className="font-semibold text-orange-500 whitespace-nowrap"
             whileHover={
@@ -372,24 +372,9 @@ export default function WhatSetsUsApart() {
                 : {}
             }
           >
-            Applied AI
+            technical attention
           </motion.span>{" "}
-          and{" "}
-          <motion.span
-            className="font-semibold text-orange-500 whitespace-nowrap"
-            whileHover={
-              !isMobile
-                ? {
-                    textShadow: "0 0 20px rgba(249, 115, 22, 0.8)",
-                    scale: 1.05,
-                  }
-                : {}
-            }
-          >
-            Intelligent automation
-          </motion.span>{" "}
-          to create innovative, AI-powered solutions that drive business
-          transformation.
+          they need so they can be properly tested and evaluated before they scale.
         </motion.p>
         {/* Button */}
         <motion.div

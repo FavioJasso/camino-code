@@ -1,18 +1,26 @@
 [
   {
     "src": "/assets/images/partner_01.webp",
-    "alt": "Transparent Energy"
+    "alt": "Partner 01"
   },
   {
     "src": "/assets/images/partner_02.webp",
-    "alt": "Victoria's Painting"
+    "alt": "Partner 02"
   },
   {
     "src": "/assets/images/partner_03.webp",
-    "alt": "Daniel Avila"
+    "alt": "Partner 03"
   },
   {
     "src": "/assets/images/partner_04.webp",
     "alt": "Partner 04"
+  },
+  {
+    "src": "/assets/images/partner_05.webp",
+    "alt": "Partner 05"
+  },
+  {
+    "src": "/assets/images/partner_06.webp",
+    "alt": "Partner 06"
   }
 ]
