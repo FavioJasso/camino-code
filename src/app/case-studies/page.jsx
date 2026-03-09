@@ -1,15 +1,23 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import NavigationBar from "@/components/NavigationBar";
 import ContactForm from "@/components/ContactFormPages";
 import PageHeader from "@/components/common/Headers";
 import { Briefcase, Award, Users } from "lucide-react";
-import Work from "@/components/Work";
-import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 import ClientProviders from "@/components/ClientProviders";
 import StructuredData from "@/components/StructuredData";
+
+const Work = dynamic(() => import("@/components/Work"), {
+  ssr: false,
+  loading: () => <div className="min-h-[400px]" aria-hidden />,
+});
+const Testimonials = dynamic(() => import("@/components/Testimonials"), {
+  ssr: false,
+  loading: () => <div className="min-h-[300px]" aria-hidden />,
+});
 
 const CaseStudiesHeader = () => {
   const items = [
