@@ -128,8 +128,8 @@ const VictoriasPaintingCaseStudy = () => {
       "Increased customer inquiries and bookings through website",
     ],
     nextCaseStudy: {
-      title: "Daniel Avila Portfolio",
-      link: "/case-study/daniel-avila",
+      title: "ReMatter",
+      link: "/case-study/rematter-us",
     },
     prevCaseStudy: {
       title: "Transparent Energy",

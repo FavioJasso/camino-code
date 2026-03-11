@@ -21,7 +21,7 @@ const ServicesHeader = () => {
 
   const description = (
     <>
-      Empowering businesses with{" "}
+      We collaborate on{" "}
       <motion.span
         className="font-semibold text-amber-400 whitespace-nowrap"
         whileHover={{
@@ -29,7 +29,7 @@ const ServicesHeader = () => {
           scale: 1.05,
         }}
       >
-        Advanced AI
+        technical feasibility
       </motion.span>
       ,{" "}
       <motion.span
@@ -39,7 +39,7 @@ const ServicesHeader = () => {
           scale: 1.05,
         }}
       >
-        Data intelligence
+        proof-of-concept builds
       </motion.span>{" "}
       and{" "}
       <motion.span
@@ -49,9 +49,9 @@ const ServicesHeader = () => {
           scale: 1.05,
         }}
       >
-        Product engineering
+        product discovery
       </motion.span>
-      . We transform your vision into reality with cutting-edge solutions that scale.
+      . So your idea gets far enough to be meaningfully evaluated.
     </>
   );
 
@@ -61,7 +61,7 @@ const ServicesHeader = () => {
       titleWords={["OUR", "SERVICES"]}
       description={description}
       items={items}
-      ctaLabel="Explore Our Services"
+      ctaLabel="How We Can Help"
       ctaLink="#services-list"
       gradientWordIndex={1}
     />

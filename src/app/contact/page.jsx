@@ -18,8 +18,7 @@ const ContactUsHeader = () => {
 
   const description = (
     <>
-      We'd love to hear from you! Whether you have questions about our services
-      or want to discuss your next big project, our team is ready to help{" "}
+      Have an idea you want to test? Tell us about it. We're here to see if we can help you get it far enough to be{" "}
       <motion.span
         className="font-semibold text-amber-400 whitespace-nowrap"
         whileHover={{
@@ -27,7 +26,7 @@ const ContactUsHeader = () => {
           scale: 1.05,
         }}
       >
-        transform your ideas into reality
+        properly evaluated
       </motion.span>
       .
     </>

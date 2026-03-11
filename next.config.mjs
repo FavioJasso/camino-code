@@ -2,6 +2,11 @@
 const nextConfig = {
   distDir: "build",
 
+  // Disable ESLint during builds (run separately in development/CI)
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   // Performance optimizations
   compress: true,
   poweredByHeader: false,

@@ -76,27 +76,27 @@ export default function AboutMissionVision() {
     {
       title: "Mission",
       icon: "🎯",
-      description: "At Camino Code, our mission is to deliver innovative Applied AI and intelligent automation solutions that empower businesses to thrive in a fast-paced digital world. We combine technical expertise with AI innovation to develop scalable, intelligent, and high-performing systems."
+      description: "Our mission is to lower the barrier for early-stage ideas. We direct time, engineering, and infrastructure so that concepts get enough technical attention to be properly tested. We focus on feasibility, prototypes, and product discovery so ideas can be meaningfully evaluated before they need to scale."
     },
     {
       title: "Vision",
       icon: "🔭",
-      description: "Our vision is to become a global leader in Applied AI and intelligent automation by setting new standards for innovation, performance, and customer satisfaction. We envision a future where businesses of all sizes have access to intelligent, scalable, and efficient AI-powered solutions."
+      description: "We envision Camino Code as a place where early ideas can be explored seriously enough to determine whether they deserve to exist. Not consulting on request: a platform for experimentation and early product development, where technical execution helps ideas move from concept to reality."
     }
   ];
 
   const valueCards = [
     {
       emoji: "🚀",
-      title: "Innovation First"
+      title: "Technical Execution"
     },
     {
-      emoji: "🔒",
-      title: "Secure Systems"
+      emoji: "🔬",
+      title: "Feasibility & Discovery"
     },
     {
       emoji: "📈",
-      title: "Scalable Growth"
+      title: "Evaluate Then Scale"
     }
   ];
 
