@@ -24,6 +24,16 @@ const staggerContainer = {
 const caseStudies = [
   {
     id: 1,
+    title: "Prepify",
+    description:
+      "Fresh prepared meals near NJIT. Low-cost, convenient meal prep service with local pickup—nutritious options designed for students and busy professionals.",
+    image: "/assets/images/case_studies/prepify_work.webp",
+    href: "/case-study/prepify",
+    color: "from-emerald-500 to-teal-600",
+    clientLabel: "Prepify",
+  },
+  {
+    id: 2,
     title: "Website ReMatter",
     description:
       "Transforming municipal waste into clean electricity and construction materials through intelligent AI-driven optimization.",
@@ -33,22 +43,24 @@ const caseStudies = [
     clientLabel: "ReMatter",
   },
   {
-    id: 2,
-    title: "Data Automation for Transparent Energy",
+    id: 3,
+    title: "AnatomyQuest",
     description:
-      "Automated reconciliation system saving $65,000+ annually in analyst time.",
-    image: "/assets/images/case_studies/transparent_work.webp",
-    href: "/case-study/transparent-energy",
-    color: "from-blue-400 to-purple-600",
+      "Free, interactive anatomy resource that helps you understand why each structure exists—so you remember it for life. Community-driven and open source.",
+    image: "/assets/images/case_studies/anatomyquest_work.webp",
+    href: "/case-study/anatomy-quest",
+    color: "from-blue-400 to-indigo-600",
+    clientLabel: "AnatomyQuest",
   },
   {
-    id: 3,
-    title: "Website Victoria's Painting",
+    id: 4,
+    title: "NJIT Student Life Connect",
     description:
-      "Built a professional website that helps homeowners find trusted painting services and connects them with experts.",
-    image: "/assets/images/case_studies/victorias_work.webp",
-    href: "/case-study/victorias-painting",
-    color: "from-blue-400 to-blue-600",
+      "One-stop platform for everything NJIT: find friends, join clubs, stay updated on athletics, events, and campus resources.",
+    image: "/assets/images/case_studies/studentlife_work.webp",
+    href: "/case-study/student-life",
+    color: "from-rose-500 to-red-600",
+    clientLabel: "Student Life",
   },
 ];
 
@@ -88,110 +100,93 @@ const CaseStudyCard = ({ study, index }) => {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
-      className="group relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm transition-all duration-500"
+      className="group relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      whileHover={!isMobile ? { 
-        scale: 1.02,
-        transition: { duration: 0.3 }
-      } : {}}
       style={{
         transform: !isMobile && isHovered
-          ? `perspective(1000px) rotateX(${position.y * 8}deg) rotateY(${
-              position.x * 8
-            }deg)`
+          ? `perspective(1000px) rotateX(${position.y * 4}deg) rotateY(${position.x * 4}deg)`
           : "perspective(1000px) rotateX(0deg) rotateY(0deg)",
         transformStyle: "preserve-3d",
-        transition: "transform 0.15s ease-out",
+        transition: "transform 0.25s ease-out",
       }}
     >
       <Link href={study.href} className="relative block h-full">
-        {/* Card glow effect */}
         <motion.div
-          className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-500 to-red-600 opacity-0 blur-xl"
+          className="relative h-full overflow-hidden rounded-2xl bg-white transition-shadow duration-300"
           animate={{
-            opacity: isHovered ? 0.6 : 0,
+            y: !isMobile && isHovered ? -8 : 0,
+            boxShadow: isHovered
+              ? "0 25px 50px -12px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.04)"
+              : "0 4px 20px -4px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.03)",
           }}
-          transition={{ duration: 0.5 }}
-        />
-        
-        <div className="relative h-full overflow-hidden rounded-3xl backdrop-blur-xl bg-white border-2 border-gray-200">
-          {/* Image Section */}
-          <div className="relative h-64 overflow-hidden sm:h-72 md:h-72 lg:h-64 rounded-t-3xl">
+          transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+        >
+          {/* Image */}
+          <div className="relative aspect-[4/3] overflow-hidden">
             {study.image ? (
-              <Image
-                src={study.image}
-                alt={study.title}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-cover"
-                quality={90}
-              />
+              <>
+                <motion.div
+                  className="absolute inset-0"
+                  animate={{ scale: isHovered ? 1.04 : 1 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                >
+                  <Image
+                    src={study.image}
+                    alt={study.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover"
+                    quality={90}
+                  />
+                </motion.div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden />
+              </>
             ) : (
-              <div
-                className={`flex h-full w-full items-center justify-center bg-gradient-to-br ${study.color}`}
-              >
-                <span className="px-6 text-center text-3xl font-black uppercase tracking-tight text-white drop-shadow-sm">
+              <div className={`flex h-full w-full items-center justify-center bg-gradient-to-br ${study.color}`}>
+                <span className="px-6 text-center text-2xl font-black uppercase tracking-tight text-white/90">
                   {study.clientLabel ?? "Case Study"}
                 </span>
               </div>
             )}
           </div>
 
-          {/* Content Section - Below Image */}
-          <div className="relative p-6 bg-white rounded-b-3xl">
-                <motion.h3
-              className="mb-3 text-xl md:text-2xl font-bold text-gray-900"
-                  animate={{
-                y: isHovered ? -3 : 0,
-                  }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {study.title}
-                </motion.h3>
-
-                <motion.p
-              className="mb-6 text-sm md:text-base text-gray-600 leading-relaxed"
-                >
-                  {study.description}
-                </motion.p>
-
-                <motion.div
-                  className="flex items-center gap-3"
-                  animate={{
-                x: isHovered && !isFirefox ? 5 : 0,
-                  }}
-                  transition={{ duration: 0.3 }}
-                >
-              <span className="text-base font-semibold text-orange-500">
-                    View Case Study
-                  </span>
-                  <motion.div
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500"
-                    animate={{
-                  scale: isHovered && !isFirefox ? [1, 1.1, 1] : 1,
-                    }}
-                    transition={{
-                      scale: { duration: 0.5, repeat: isHovered && !isFirefox ? Infinity : 0 },
-                    }}
-                  >
-                    <svg
-                  className="h-4 w-4 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                      />
-                    </svg>
-                  </motion.div>
+          {/* Content */}
+          <div className="relative p-5">
+            <motion.div
+              className="mb-2 h-0.5 w-8 rounded-full bg-orange-500"
+              animate={{ width: isHovered ? 40 : 32 }}
+              transition={{ duration: 0.25 }}
+              aria-hidden
+            />
+            <motion.h3
+              className="mb-1.5 text-lg font-semibold tracking-tight text-neutral-900 sm:text-xl"
+              animate={{ y: isHovered ? -1 : 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {study.title}
+            </motion.h3>
+            <p className="mb-4 text-sm leading-relaxed text-neutral-500 line-clamp-3">
+              {study.description}
+            </p>
+            <motion.div
+              className="flex items-center gap-2 text-orange-500"
+              animate={{ x: isHovered && !isFirefox ? 4 : 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              <span className="text-sm font-medium">View Case Study</span>
+              <motion.span
+                className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-orange-500/10"
+                animate={{ scale: isHovered && !isFirefox ? 1.1 : 1 }}
+                transition={{ duration: 0.25 }}
+              >
+                <svg className="h-4 w-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </motion.span>
             </motion.div>
           </div>
-        </div>
+        </motion.div>
       </Link>
     </motion.div>
   );
@@ -356,11 +351,9 @@ export default function WorkShowcase() {
             and collaborations where technical execution made the difference before traditional funding.
           </motion.p>
 
-          {/* Mobile Models removed */}
-
-          {/* Case Studies Grid with enhanced stagger animation */}
+          {/* Case Studies Grid: 4 filas en móvil, 2×2 en pantallas grandes */}
           <motion.div
-            className="grid w-full max-w-7xl grid-cols-1 gap-8 md:grid-cols-2 md:gap-8 lg:grid-cols-3 lg:gap-10"
+            className="grid w-full max-w-6xl grid-cols-1 gap-6 sm:gap-7 md:grid-cols-2 md:gap-6 lg:gap-8"
             variants={staggerContainer}
             initial="initial"
             animate={hasIntersected ? "animate" : "initial"}
@@ -377,7 +370,7 @@ export default function WorkShowcase() {
             animate={hasIntersected ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.8, duration: 0.6 }}
           >
-            <Link href="/case-studies">
+            <Link href="/case-study/prepify">
             <motion.button
               className="group lg:mt-8 text-lg font-semibold relative flex items-center justify-center gap-1 overflow-hidden rounded-full bg-gradient-to-t from-amber-600 to-red-600 px-8 py-4 text-white"
               initial="initial"

@@ -117,12 +117,12 @@ const ReMatterCaseStudy = () => {
       "A consistent platform experience that scales with growth",
     ],
     prevCaseStudy: {
-      title: "Victoria's Painting",
-      link: "/case-study/victorias-painting",
+      title: "Prepify",
+      link: "/case-study/prepify",
     },
     nextCaseStudy: {
-      title: "Transparent Energy",
-      link: "/case-study/transparent-energy",
+      title: "AnatomyQuest",
+      link: "/case-study/anatomy-quest",
     },
   };
 
