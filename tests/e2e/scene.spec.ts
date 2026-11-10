@@ -110,3 +110,23 @@ test("context loss falls back to the still, restore fades the scene back in", as
   await page.evaluate(() => (window as unknown as { __loseExt: WEBGL_lose_context }).__loseExt.restoreContext());
   await expect(scene).toHaveClass(/\bis-live\b/, { timeout: 10_000 });
 });
+
+test("leaving the home page by a header link tears the scene down and frees its WebGL context", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("#scene")).toHaveClass(/\bis-live\b/, { timeout: 10_000 });
+  // keep the scene's own context, then go client-side to /work
+  await page.evaluate(() => {
+    const canvas = document.getElementById("gl") as HTMLCanvasElement;
+    (window as unknown as { __sceneGl: WebGL2RenderingContext }).__sceneGl = canvas.getContext("webgl2")!;
+  });
+  await page.locator("header").getByRole("link", { name: "Work" }).click();
+  await expect(page).toHaveURL(/\/work$/);
+  await expect(page.locator("h1")).toHaveText(/Work/);
+  // same document (client-side navigation), so the kept context is still reachable
+  const state = await page.evaluate(() => {
+    const w = window as unknown as { __sceneGl?: WebGL2RenderingContext };
+    return { survived: !!w.__sceneGl, lost: w.__sceneGl?.isContextLost() };
+  });
+  expect(state).toEqual({ survived: true, lost: true });
+  await expect(page.locator("#scene")).toHaveCount(0);
+});

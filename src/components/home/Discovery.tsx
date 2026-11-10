@@ -1,12 +1,6 @@
 import Link from "next/link";
+import { stages } from "@/content/approach";
 import { site } from "@/content/site";
-
-const stages = [
-  { name: "Scout", line: "We sit down with you and map the technology and data you already have." },
-  { name: "Route", line: "You get a one-page summary: what to fix first, what to leave alone." },
-  { name: "Build", line: "We build in stages you can see working." },
-  { name: "Hand over", line: "We hand over the system with documentation your team can work from." },
-];
 
 export function Discovery() {
   return (
