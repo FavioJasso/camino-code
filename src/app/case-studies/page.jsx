@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import NavigationBar from "@/components/NavigationBar";
 import ContactForm from "@/components/ContactFormPages";
 import PageHeader from "@/components/common/Headers";
-import { Briefcase, Award, Users } from "lucide-react";
 import Work from "@/components/Work";
 import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
@@ -12,11 +11,7 @@ import ClientProviders from "@/components/ClientProviders";
 import StructuredData from "@/components/StructuredData";
 
 const CaseStudiesHeader = () => {
-  const items = [
-    { icon: <Briefcase className="h-8 w-8" />, label: "50+ Projects Completed" },
-    { icon: <Award className="h-8 w-8" />, label: "98% Client Satisfaction" },
-    { icon: <Users className="h-8 w-8" />, label: "30+ Happy Clients" },
-  ];
+  const items = [];
 
   const description = (
     <>

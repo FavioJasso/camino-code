@@ -33,16 +33,6 @@ const testimonials = [
     stars: 5,
     image: "/assets/images/testimonial-2.jpg",
   },
-  {
-    id: 3,
-    name: "Michael Rodriguez",
-    role: "Founder of FinServe",
-    company: "FinServe Technologies",
-    quote:
-      "The AI-powered solutions they delivered revolutionized our customer service and reduced costs significantly.",
-    stars: 5,
-    image: "/assets/images/testimonial-3.jpg",
-  },
 ];
 
 export default function Testimonials() {
