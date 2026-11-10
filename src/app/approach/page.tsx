@@ -18,8 +18,8 @@ export default function ApproachPage() {
         <div className="wrap">
           <h2 id="discovery-title">It starts with discovery</h2>
           <p className="in-lead">
-            Discovery is a conversation about your business: the tools you use, where the data
-            lives, and where time is being lost. It is free, and there is nothing to prepare.
+            Discovery is a free conversation about your business: the tools you use, where the data
+            lives, and where time is being lost.
           </p>
           <dl className="facts" style={{ marginTop: "1.75rem" }}>
             {discoveryFacts.map((f) => (
@@ -51,7 +51,7 @@ export default function ApproachPage() {
           <h2 id="start-title">If you have not started</h2>
           <p className="in-lead">
             You are not behind. Starting properly matters more than starting first, and discovery
-            is a low-risk way to find out where to start.
+            is where we work out where to start.
           </p>
         </div>
       </section>

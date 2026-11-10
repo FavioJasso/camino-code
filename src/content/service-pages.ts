@@ -50,7 +50,7 @@ export const servicePages: Record<Service["slug"], ServicePage> = {
       },
       {
         q: "What does discovery cost?",
-        a: "Nothing. It is a free 45-minute conversation. There is no obligation to continue afterwards.",
+        a: "Nothing. It is a free 45-minute conversation.",
       },
       {
         q: "How soon will we hear back after we ask?",
@@ -103,7 +103,7 @@ export const servicePages: Record<Service["slug"], ServicePage> = {
       "Practical AI where it pays for itself, with the rules, access controls and checks to use it safely. Start with a free discovery session.",
     kicker: "AI & governance",
     intro:
-      "AI is worth using where it saves real time, and not worth using where it adds risk for no gain. Discovery is how we tell the two apart for your business.",
+      "AI is worth using where it saves real time, and not worth using where it adds complexity for no gain. Discovery is how we tell the two apart for your business.",
     problems: [
       "Staff are already pasting company information into AI tools, and nobody has set rules.",
       "You are not sure which jobs AI would help with and which it would only complicate.",

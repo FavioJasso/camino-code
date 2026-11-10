@@ -27,11 +27,6 @@ export default function WorkPage() {
           </p>
         </div>
       </section>
-      <section className="inner-sec in-light in-day">
-        <div className="wrap">
-          <p>Other projects appear here once the clients have confirmed them.</p>
-        </div>
-      </section>
       <BookDiscovery />
     </>
   );

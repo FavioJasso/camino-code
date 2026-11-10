@@ -21,9 +21,9 @@ export default function TermsPage() {
           <h2>Results we describe</h2>
           <p>The figures on this site describe one specific project, the Transparent Energy reconciliation system. Another business should not expect the same numbers. Your own results depend on your data and your process.</p>
           <h2>Discovery</h2>
-          <p>The discovery session is free and carries no obligation on either side. Afterwards we send a one-page written summary. We reply to enquiries within one business day.</p>
+          <p>The discovery session is free. Afterwards we send a one-page written summary. We reply to enquiries within one business day.</p>
           <h2>Paid work</h2>
-          <p>If you decide to go ahead, the work is covered by a separate written agreement between you and Camino Code, which sets out the scope, the stages and how hand-over works.</p>
+          <p>If you decide to go ahead, the work is agreed separately in writing.</p>
           <h2>Contact</h2>
           <p>Questions about these terms: {site.contact.email} or {site.contact.phone}. Camino Code, {site.contact.place}.</p>
         </div>
