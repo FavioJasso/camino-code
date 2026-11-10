@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { site } from "@/content/site";
 
 const SITE_LINKS = [
   { href: "/services/software", label: "Software" },
@@ -15,12 +16,12 @@ export function SiteFooter() {
       <div className="wrap">
         <div>
           <h2>Camino Code</h2>
-          <p>Newark, New Jersey</p>
+          <p>{site.contact.place}</p>
         </div>
         <div>
           <h2>Contact</h2>
-          <p>contact@caminocode.com</p>
-          <p>+1 973-234-2073</p>
+          <p>{site.contact.email}</p>
+          <p className="nowrap">{site.contact.phone}</p>
         </div>
         <nav aria-label="Site">
           <h2>Site</h2>

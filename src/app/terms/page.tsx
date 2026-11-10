@@ -25,7 +25,7 @@ export default function TermsPage() {
           <h2>Paid work</h2>
           <p>If you decide to go ahead, the work is agreed separately in writing.</p>
           <h2>Contact</h2>
-          <p>Questions about these terms: {site.contact.email} or {site.contact.phone}. Camino Code, {site.contact.place}.</p>
+          <p>Questions about these terms: {site.contact.email} or <span className="nowrap">{site.contact.phone}</span>. Camino Code, {site.contact.place}.</p>
         </div>
       </section>
       <BookDiscovery heading="Questions? Start with discovery" />

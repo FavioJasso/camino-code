@@ -25,7 +25,7 @@ export default function PrivacyPage() {
           <h2>How long we keep it</h2>
           <p>We keep your enquiry for as long as we are in touch with you, and delete it when you ask us to.</p>
           <h2>Your choices</h2>
-          <p>You can ask to see, correct or delete what we hold about you. Write to {site.contact.email} or call {site.contact.phone}.</p>
+          <p>You can ask to see, correct or delete what we hold about you. Write to {site.contact.email} or call <span className="nowrap">{site.contact.phone}</span>.</p>
           <h2>Who we are</h2>
           <p>Camino Code, {site.contact.place}.</p>
         </div>

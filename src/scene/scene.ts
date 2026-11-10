@@ -579,7 +579,7 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
     };
     const CHIP = "color-mix(in srgb,var(--midnight) 80%,transparent)";
     const FONT =
-      "font:500 0.65625rem/1.5 var(--font-mono),ui-monospace,Menlo,monospace;letter-spacing:.09em;text-transform:uppercase;color:var(--haze);font-variant-numeric:tabular-nums;";
+      "font:500 0.65625rem/1.5 var(--font-martian),ui-monospace,Menlo,monospace;letter-spacing:.09em;text-transform:uppercase;color:var(--haze);font-variant-numeric:tabular-nums;";
     const narrow = innerWidth < 900; // phones: one strip under the header; desktop: a small block top-right
     const box = el(
       "div",

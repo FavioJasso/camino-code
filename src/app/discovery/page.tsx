@@ -47,7 +47,7 @@ export default function DiscoveryPage() {
             </ol>
             <h3 className="in-alt-title">Prefer to write or call?</h3>
             <p>
-              Email {site.contact.email} or call {site.contact.phone}. {site.contact.place}.
+              Email {site.contact.email} or call <span className="nowrap">{site.contact.phone}</span>. {site.contact.place}.
             </p>
           </aside>
         </div>

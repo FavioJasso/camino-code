@@ -33,7 +33,7 @@ export function Discovery() {
             Book a discovery session
           </Link>
           <p className="cta-contact">
-            Or write to {site.contact.email} or call {site.contact.phone}.
+            Or write to {site.contact.email} or call <span className="nowrap">{site.contact.phone}</span>.
           </p>
         </div>
       </div>

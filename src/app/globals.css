@@ -33,7 +33,7 @@
   --color-ember-ink: var(--ember-ink);
 
   --font-sans: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
-  --font-mono: var(--font-mono), ui-monospace, "SF Mono", Menlo, Consolas,
+  --font-mono: var(--font-martian), ui-monospace, "SF Mono", Menlo, Consolas,
     monospace;
 }
 
@@ -129,7 +129,7 @@ body {
   display: flex;
   align-items: center;
   min-height: 2.75rem;
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-martian), ui-monospace, monospace;
   font-size: 0.75rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -138,6 +138,10 @@ body {
 }
 .nav a:hover {
   color: var(--cream);
+}
+
+.nowrap {
+  white-space: nowrap;
 }
 
 .btn {
@@ -202,7 +206,7 @@ body {
 }
 .site-foot h2 {
   margin: 0 0 0.5rem;
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-martian), ui-monospace, monospace;
   font-size: 0.75rem;
   font-weight: 400;
   letter-spacing: 0.14em;

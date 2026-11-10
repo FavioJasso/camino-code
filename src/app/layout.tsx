@@ -19,7 +19,7 @@ const archivo = localFont({
 
 const martianMono = localFont({
   src: "../fonts/MartianMono-Variable.woff2",
-  variable: "--font-mono",
+  variable: "--font-martian",
   weight: "100 800",
   display: "swap",
   declarations: [{ prop: "font-stretch", value: "75% 112.5%" }],

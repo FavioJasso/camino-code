@@ -12,6 +12,13 @@ test("first screen at 360×560 shows H1, lead and primary button", async ({ page
   ).toBeInViewport({ ratio: 1 });
 });
 
+test("hero primary button keeps Midnight text on Ember", async ({ page }) => {
+  await page.goto("/");
+  const btn = page.locator(".hero").getByRole("link", { name: "Book a discovery session" });
+  await expect(btn).toHaveCSS("color", "rgb(14, 19, 32)");
+  await expect(btn).toHaveCSS("background-color", "rgb(255, 122, 61)");
+});
+
 test("every section is present in order", async ({ page }) => {
   await page.goto("/");
   const ids = await page.evaluate(() =>

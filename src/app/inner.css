@@ -56,7 +56,7 @@
   --bg: var(--day);
 }
 .in-mono {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-martian), ui-monospace, monospace;
   font-size: 0.6875rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -162,7 +162,7 @@
 }
 .steps li::before {
   content: counter(step, decimal-leading-zero);
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-martian), ui-monospace, monospace;
   font-size: 0.75rem;
   color: var(--accent);
   padding-top: 0.25rem;

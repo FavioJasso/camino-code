@@ -66,7 +66,7 @@ export const servicePages: Record<Service["slug"], ServicePage> = {
       "Pipelines, clean reporting and dashboards, so the numbers you decide on are the same numbers everywhere. Start with a free discovery session.",
     kicker: "Data",
     intro:
-      "If two people can open two files and get two different totals, the problem is not the people. It is how the data moves. We fix how it moves.",
+      "If two people can open two files and get two different totals, the problem is not the people. It is how the data moves. That is where we start.",
     problems: [
       "Analysts spend their week reconciling files by hand instead of analysing them.",
       "Reports disagree, and nobody is sure which one is right.",
