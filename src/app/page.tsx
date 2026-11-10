@@ -1,7 +1,25 @@
+import "./home.css";
+import { Discovery } from "@/components/home/Discovery";
+import { DawnWindow } from "@/components/home/DawnWindow";
+import { EdgeLine } from "@/components/home/EdgeLine";
+import { Founder } from "@/components/home/Founder";
+import { Hero, Scene } from "@/components/home/Hero";
+import { Proof } from "@/components/home/Proof";
+import { ServiceLanes } from "@/components/home/ServiceLanes";
+
 export default function Home() {
   return (
-    <div className="wrap py-16">
-      <h1 className="text-4xl font-extrabold">Camino Code</h1>
+    <div className="home">
+      <Scene />
+      <div className="page">
+        <Hero />
+        <EdgeLine />
+        <ServiceLanes />
+        <DawnWindow />
+        <Proof />
+        <Founder />
+        <Discovery />
+      </div>
     </div>
   );
 }

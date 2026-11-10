@@ -1,0 +1,48 @@
+import Link from "next/link";
+import { site } from "@/content/site";
+
+const stages = [
+  { name: "Scout", line: "We sit down with you and map the technology and data you already have." },
+  { name: "Route", line: "You get a one-page summary: what to fix first, what to leave alone." },
+  { name: "Build", line: "We build in stages you can see working." },
+  { name: "Hand over", line: "We hand over the system with documentation your team can work from." },
+];
+
+export function Discovery() {
+  return (
+    <section className="sec light day" id="discovery" aria-labelledby="discovery-title">
+      <div className="wrap">
+        <div className="sec-head">
+          <p className="mono">
+            <i>04</i> Approach
+          </p>
+          <h2 id="discovery-title">It starts with discovery.</h2>
+          <p className="lead">
+            A free 45-minute conversation, by video or in person. Within a week
+            you get a one-page summary of where data or AI would pay off, and
+            where it wouldn&rsquo;t. We reply within one business day.
+          </p>
+        </div>
+        <ol className="stages">
+          {stages.map((s, i) => (
+            <li className="stage" key={s.name}>
+              <span className="mono">
+                Stage {String(i + 1).padStart(2, "0")} / 04
+              </span>
+              <h3>{s.name}</h3>
+              <p>{s.line}</p>
+            </li>
+          ))}
+        </ol>
+        <div className="cta">
+          <Link className="btn btn-lg" href="/discovery">
+            Book a discovery session
+          </Link>
+          <p className="cta-contact">
+            Or write to {site.contact.email} or call {site.contact.phone}.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}

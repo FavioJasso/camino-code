@@ -10,3 +10,4 @@ These are the decisions made for version 1 until Favio answers the open question
 - **Privacy and terms.** Short plain-language drafts, marked as drafts pending review.
 - **Founder photo.** A neutral placeholder until Favio supplies one (the current photo may carry an AI-tool watermark).
 - **Review.** Version 1 is reviewed on a Vercel preview from a branch. Nothing merges to `main` without Favio's go-ahead.
+- **Founder block (home).** A Dusk-coloured block with initials "FJ" stands in for the portrait, and the two lines under "Favio Jasso, founder" are neutral placeholder text. Both wait for Favio's photo and bio. Edit `src/components/home/Founder.tsx`.
