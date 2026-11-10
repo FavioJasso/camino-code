@@ -34,3 +34,19 @@ test("?ref=maria prefills the referrer field", async ({ page }) => {
   await page.goto("/discovery?ref=maria");
   await expect(page.getByLabel(/Who introduced you/)).toHaveValue("maria");
 });
+
+test("success is announced in a status region that existed before submit, and takes focus", async ({ page }) => {
+  await page.goto("/discovery");
+  const status = page.getByRole("status");
+  await expect(status).toBeAttached();
+  await expect(status).toBeEmpty();
+  const handle = await status.elementHandle();
+  await page.getByLabel(/Your name/).fill("Ana Ruiz");
+  await page.getByLabel(/^Email/).fill("ana@example.com");
+  await page.getByLabel(/Business name/).fill("__test_sent__");
+  await page.waitForTimeout(3500);
+  await page.getByRole("button", { name: "Send request" }).click();
+  await expect(status).toContainText("Your request is in");
+  expect(await handle!.evaluate((el) => el.isConnected)).toBe(true);
+  await expect(page.getByRole("heading", { name: /Your request is in/ })).toBeFocused();
+});

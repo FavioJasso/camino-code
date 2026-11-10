@@ -37,8 +37,8 @@ describe("parseBooking", () => {
     }
   });
 
-  it('treats a filled honeypot field "website" as spam', () => {
-    const r = parseBooking(form({ ...valid, website: "http://spam.example" }), 0);
+  it('treats a filled honeypot field "hp_note" as spam', () => {
+    const r = parseBooking(form({ ...valid, hp_note: "http://spam.example" }), 0);
     expect(r).toEqual({ ok: false, errors: { form: SPAM } });
   });
 

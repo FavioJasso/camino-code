@@ -29,7 +29,7 @@ function text(form: FormData, key: string): string {
 
 export function parseBooking(form: FormData, now: number): ParseResult {
   void now; // timing is checked separately with verifyTimestamp (it needs the secret)
-  if (text(form, "website") !== "") return { ok: false, errors: { form: SPAM } };
+  if (text(form, "hp_note") !== "") return { ok: false, errors: { form: SPAM } };
 
   const errors: BookingErrors = {};
   const name = text(form, "name");

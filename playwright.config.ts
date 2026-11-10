@@ -35,6 +35,7 @@ export default defineConfig({
   webServer: {
     command: "npm run build && npm run start -- --port 3100",
     url: "http://localhost:3100",
+    env: { BOOKING_TEST_MODE: "sent" },
     reuseExistingServer: !process.env.CI,
     timeout: 240_000,
   },

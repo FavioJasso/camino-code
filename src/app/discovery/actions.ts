@@ -57,6 +57,11 @@ export async function submitBooking(_prev: State, form: FormData): Promise<State
     return { status: "error", errors: { form: FALLBACK }, values };
   }
 
+  // Test-only: lets Playwright reach the success state without Resend. Never set in production.
+  if (process.env.BOOKING_TEST_MODE === "sent" && parsed.data.business === "__test_sent__") {
+    return { status: "sent" };
+  }
+
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.BOOKING_FROM;
   if (!apiKey || !from) return { status: "error", errors: { form: FALLBACK }, values };

@@ -20,6 +20,7 @@ export function DiscoveryForm() {
   const [token, setToken] = useState("");
   const summary = useRef<HTMLDivElement>(null);
   const referrer = useRef<HTMLInputElement>(null);
+  const confirmTitle = useRef<HTMLHeadingElement>(null);
 
   // A fresh signed timestamp after every result, so a retry is never judged on a stale or too-young one.
   useEffect(() => {
@@ -43,17 +44,22 @@ export function DiscoveryForm() {
     if (failed) summary.current?.focus();
   }, [failed, state]);
 
-  if (state.status === "sent") {
-    return (
-      <div className="in-confirm" role="status">
-        <h3>Thank you. Your request is in.</h3>
-        <p>
-          We reply within one business day to agree a time for your free 45-minute conversation.
-          If you do not hear from us, write to {site.contact.email}.
-        </p>
-      </div>
-    );
-  }
+  const sent = state.status === "sent";
+  useEffect(() => {
+    if (sent) confirmTitle.current?.focus();
+  }, [sent]);
+
+  const confirmation = (
+    <div className="in-confirm">
+      <h3 ref={confirmTitle} tabIndex={-1}>
+        Thank you. Your request is in.
+      </h3>
+      <p>
+        We reply within one business day to agree a time for your free 45-minute conversation. If
+        you do not hear from us, write to {site.contact.email}.
+      </p>
+    </div>
+  );
 
   const v: Partial<Booking> = state.values ?? {};
   const field = (key: keyof Booking) => ({
@@ -72,7 +78,7 @@ export function DiscoveryForm() {
       </p>
     ) : null;
 
-  return (
+  const form = (
     <form action={action} className="in-form" noValidate>
       {failed ? (
         <div ref={summary} tabIndex={-1} className="in-summary" role="group" aria-labelledby="summary-title">
@@ -136,8 +142,8 @@ export function DiscoveryForm() {
 
       {/* Honeypot: people never see or reach it; bots fill it. */}
       <div className="in-trap" aria-hidden="true">
-        <label htmlFor="f-website">Leave this field empty</label>
-        <input id="f-website" name="website" type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
+        <label htmlFor="f-hp_note">Leave this field empty</label>
+        <input id="f-hp_note" name="hp_note" type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
       </div>
       <input type="hidden" name="t" value={token} />
 
@@ -145,6 +151,14 @@ export function DiscoveryForm() {
         {pending ? "Sending…" : "Send request"}
       </button>
     </form>
+  );
+
+  // The status region is in the DOM from the first render, so screen readers announce what is put into it.
+  return (
+    <>
+      <div role="status">{sent ? confirmation : null}</div>
+      {sent ? null : form}
+    </>
   );
 }
 
