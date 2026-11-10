@@ -8,6 +8,10 @@ declare global {
 
 function collectErrors(page: Page): string[] {
   const errors: string[] = [];
+  // Vercel Analytics and Speed Insights scripts are served by Vercel's edge; a local server 404s them
+  void page.route("**/_vercel/**", (route) =>
+    route.fulfill({ status: 200, contentType: "text/javascript", body: "" }),
+  );
   page.on("console", (msg) => {
     // Next prefetches header links (?_rsc=) to pages later tasks build; those 404s are not scene errors
     if (msg.type() === "error" && !msg.location().url.includes("?_rsc=")) errors.push(msg.text());

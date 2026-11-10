@@ -1,5 +1,6 @@
 "use server";
 
+import { track } from "@vercel/analytics/server";
 import { Resend } from "resend";
 import { SPAM, parseBooking, signTimestamp, verifyTimestamp, type Booking, type BookingErrors } from "@/lib/booking";
 import { site } from "@/content/site";
@@ -88,6 +89,12 @@ export async function submitBooking(_prev: State, form: FormData): Promise<State
   } catch (e) {
     console.error("[booking] send failed", e instanceof Error ? e.message : e);
     return { status: "error", errors: { form: FALLBACK }, values };
+  }
+  // Counting is best-effort: analytics must never turn a delivered booking into an error.
+  try {
+    await track("discovery_request");
+  } catch (e) {
+    console.warn("[booking] analytics event failed", e instanceof Error ? e.message : e);
   }
   return { status: "sent" };
 }

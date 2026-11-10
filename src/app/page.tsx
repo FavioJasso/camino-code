@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import "./home.css";
 import { Discovery } from "@/components/home/Discovery";
 import { DawnWindow } from "@/components/home/DawnWindow";
@@ -7,6 +8,8 @@ import { Hero, Scene } from "@/components/home/Hero";
 import { Proof } from "@/components/home/Proof";
 import { SceneMount } from "@/components/home/SceneMount";
 import { ServiceLanes } from "@/components/home/ServiceLanes";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export default function Home() {
   return (
