@@ -47,7 +47,7 @@ interface Spec {
 
 const SPECS: Spec[] = [
   { name: 'hero-desktop', w: 1440, h: 900, portrait: false, progress: 0, dawn: 0, theme: NIGHT },
-  { name: 'hero-phone', w: 390, h: 844, box: [0, 72, 390, 468], portrait: true, progress: 0, dawn: 0, theme: NIGHT },
+  { name: 'hero-phone', w: 390, h: 844, portrait: true, progress: 0, dawn: 0, theme: NIGHT },
   { name: 'dawn-desktop', w: 1440, h: 900, portrait: false, progress: 0.6, dawn: 0.6, theme: DAWN },
   { name: 'dawn-phone', w: 390, h: 844, portrait: true, progress: 0.6, dawn: 0.6, theme: DAWN },
   { name: 'band-night', w: 1440, h: 900, box: [0, 190, 1440, 324], portrait: false, progress: 0.3, dawn: 0, theme: NIGHT },
