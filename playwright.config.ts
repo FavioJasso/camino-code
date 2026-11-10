@@ -1,5 +1,7 @@
 import { defineConfig } from "@playwright/test";
 
+const SCENE_SPEC = /scene\.spec\.ts$/;
+
 export default defineConfig({
   testDir: "tests/e2e",
   forbidOnly: !!process.env.CI,
@@ -8,14 +10,25 @@ export default defineConfig({
   projects: [
     {
       name: "desktop",
+      testIgnore: SCENE_SPEC,
       use: { viewport: { width: 1440, height: 900 } },
     },
     {
       name: "phone",
+      testIgnore: SCENE_SPEC,
       use: {
         viewport: { width: 390, height: 844 },
         isMobile: true,
         hasTouch: true,
+      },
+    },
+    {
+      // the live scene needs WebGL 2; SwiftShader gives every machine (and CI) a software GPU
+      name: "scene",
+      testMatch: SCENE_SPEC,
+      use: {
+        viewport: { width: 1440, height: 900 },
+        launchOptions: { args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader"] },
       },
     },
   ],

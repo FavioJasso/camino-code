@@ -68,8 +68,65 @@
   opacity: 0;
   transition: opacity 0.9s ease;
 }
+#scene #gl {
+  /* sized to the large viewport so the iOS toolbar never resizes it */
+  height: 100lvh;
+  bottom: auto;
+}
 .is-live #gl {
   opacity: 1;
+}
+.scene-ui {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+#scene:not(.is-live) .scene-ui {
+  visibility: hidden;
+}
+/* the live scene turns to sunrise behind the window, so its still steps aside */
+.dawn-window .dawn-still {
+  transition: opacity 0.9s ease;
+}
+#scene.is-live ~ .page .dawn-still {
+  opacity: 0;
+}
+
+/* Motion control: present only while the live scene runs */
+.motion-toggle {
+  position: fixed;
+  z-index: 6;
+  right: max(0.75rem, env(safe-area-inset-right, 0px));
+  bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+  min-height: 2.75rem;
+  padding: 0 0.875rem;
+  background: var(--midnight);
+  color: var(--cream);
+  border: 1px solid var(--haze);
+  border-radius: 2px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s ease, visibility 0.2s;
+}
+.motion-toggle:hover {
+  border-color: var(--cream);
+}
+.motion-toggle[aria-pressed="true"] {
+  border-color: var(--ember);
+}
+.motion-toggle:focus-visible {
+  outline: 2px solid var(--moon);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--midnight);
+}
+/* when solid panels cover the scene there is nothing to pause, so the control steps aside */
+.motion-toggle.is-away {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .mono {
@@ -163,7 +220,8 @@
     background: none;
   }
   .hero .wrap {
-    padding-block: 1.875rem 2.25rem;
+    /* the bottom padding reserves room for the fixed Motion control */
+    padding-block: 1.875rem 4.25rem;
     background: linear-gradient(
       to bottom,
       var(--scrim-0) 0,

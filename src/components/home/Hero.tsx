@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-/* Task 5 mounts the live scene into #gl; #scene stays fixed behind the page. */
+/* SceneMount starts the live scene in #gl and draws its readouts into #scene-ui; #scene stays fixed behind the page. */
 export function Scene() {
   return (
     <div id="scene" aria-hidden="true">
@@ -9,6 +9,7 @@ export function Scene() {
         <img src="/stills/hero-phone.svg" alt="" width="390" height="844" />
       </picture>
       <canvas id="gl" />
+      <div id="scene-ui" className="scene-ui" />
     </div>
   );
 }

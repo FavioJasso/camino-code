@@ -25,7 +25,8 @@ const sstep = (a: number, b: number, x: number): number => {
 };
 
 // ---------- seeded heightfield: one long ridge with a high saddle, foothills in front ----------
-function mulberry(seed: number): () => number {
+/** Seeded PRNG (mulberry32), 0..1. */
+export function mulberry(seed: number): () => number {
   let a = seed;
   return () => {
     a |= 0;
@@ -145,14 +146,29 @@ export function trailPoints(count: number): Array<[number, number, number]> {
  * if an even drawRange thinning is wanted.
  */
 export function terrainSamples(opts: { small: boolean }): Float32Array {
+  const { rows, cols } = terrainGrid(opts);
+  const out = new Float32Array(rows * cols * 3);
+  const pending = fillTerrainSamples(out, opts);
+  while (!pending.next().done);
+  return out;
+}
+
+/** Row and column counts of the terrainSamples grid. */
+export function terrainGrid(opts: { small: boolean }): { rows: number; cols: number } {
+  return opts.small ? { rows: 118, cols: 212 } : { rows: 214, cols: 392 };
+}
+
+/**
+ * The same samples as terrainSamples, written into `out` (rows * cols * 3) one row at a time.
+ * Yields each finished row index, so the browser scene can time-slice the work.
+ */
+export function* fillTerrainSamples(out: Float32Array, opts: { small: boolean }): Generator<number, void> {
   const { small } = opts;
   const X0 = small ? -60 : -118;
   const X1 = small ? 52 : 92;
   const Z0 = -104;
   const Z1 = 24;
-  const rows = small ? 118 : 214;
-  const cols = small ? 212 : 392;
-  const out = new Float32Array(rows * cols * 3);
+  const { rows, cols } = terrainGrid(opts);
   const rnd = mulberry(77);
   let k = 0;
   for (let r = 0; r < rows; r++) {
@@ -163,8 +179,8 @@ export function terrainSamples(opts: { small: boolean }): Float32Array {
       out[k++] = heightAt(x, z) + 0.12;
       out[k++] = z;
     }
+    yield r;
   }
-  return out;
 }
 
 // ---------- camera ----------
