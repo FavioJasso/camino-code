@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MobileMenu } from "./MobileMenu";
 
 const NAV = [
   { href: "/#services", label: "Services" },
@@ -34,6 +35,7 @@ export function SiteHeader() {
         <Link className="btn" href="/discovery">
           Book discovery
         </Link>
+        <MobileMenu />
       </div>
     </header>
   );
