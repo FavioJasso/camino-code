@@ -274,18 +274,36 @@ body {
   }
 }
 
-@media (max-width: 401px) {
-  /* room for the Menu button and the 16 px gutter: the mark alone carries the brand (the link keeps its aria-label) */
-  .brand span {
-    display: none;
+/* mark + wordmark + Book discovery + Menu need ~418 px at full size: tighten the row so it keeps the 16 px gutter on 360-419 px phones */
+@media (max-width: 419px) {
+  .site-head .wrap {
+    gap: 0.5rem;
+  }
+  .brand {
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    letter-spacing: 0.01em;
+  }
+  .site-head .btn {
+    padding: 0 0.625rem;
+    font-size: 0.8125rem;
   }
 }
 
-/* mark + wordmark + Book discovery + Menu need ~418 px at full size; compact the button so the row fits 390 px phones */
-@media (max-width: 419px) {
-  .site-head .btn {
-    padding: 0 0.75rem;
+@media (max-width: 379px) {
+  .brand {
     font-size: 0.8125rem;
+  }
+  .site-head .btn {
+    padding: 0 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 359px) {
+  /* room for the Menu button: the mark alone carries the brand (the link keeps its aria-label) */
+  .brand span {
+    display: none;
   }
 }
 

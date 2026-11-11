@@ -5,7 +5,7 @@ test.describe("phone layout", () => {
     test.skip(testInfo.project.name !== "phone", "phone viewport only");
   });
 
-  for (const width of [320, 380, 390, 393, 412]) {
+  for (const width of [320, 360, 380, 390, 393, 412]) {
     test(`header keeps its 16 px gutter at ${width} px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 844 });
       await page.goto("/privacy");
@@ -18,6 +18,9 @@ test.describe("phone layout", () => {
       expect(m.innerWidth).toBe(width);
       expect(m.scrollWidth).toBeLessThanOrEqual(width);
       expect(right).toBeLessThanOrEqual(width - 16);
+      const wordmark = page.locator(".site-head .brand span");
+      if (width >= 360) await expect(wordmark).toBeVisible();
+      else await expect(wordmark).toBeHidden();
       const box = await toggle.boundingBox();
       expect(box!.width).toBeGreaterThanOrEqual(44);
       expect(box!.height).toBeGreaterThanOrEqual(44);
