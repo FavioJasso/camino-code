@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import { site } from "@/content/site";
-import { LIMITS, type Booking } from "@/lib/booking";
+import { LIMITS, type Booking } from "@/lib/booking-shared";
 import { issueFormToken, submitBooking, type State } from "./actions";
 
 const FIELD_ORDER = ["name", "email", "business"] as const;

@@ -77,3 +77,11 @@ describe("timestamp tokens", () => {
     expect(verifyTimestamp("garbage", secret, t + 5_000)).toBe(false);
   });
 });
+
+describe("booking-shared", () => {
+  it("stays free of node-only imports, so the client form never pulls in a crypto polyfill", async () => {
+    const { readFileSync } = await import("node:fs");
+    const src = readFileSync(new URL("./booking-shared.ts", import.meta.url), "utf8");
+    expect(src).not.toMatch(/from\s+["'](node:|crypto|resend|@vercel\/analytics\/server)/);
+  });
+});

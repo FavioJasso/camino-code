@@ -1,22 +1,12 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
+import { LIMITS, type Booking, type BookingErrors } from "./booking-shared";
 
-export type Booking = {
-  name: string;
-  email: string;
-  business: string;
-  phone?: string;
-  lookAt?: string;
-  referrer?: string;
-};
-
-export type BookingErrors = Partial<Record<keyof Booking | "form", string>>;
+export { LIMITS, type Booking, type BookingErrors };
 
 export type ParseResult = { ok: true; data: Booking } | { ok: false; errors: BookingErrors };
 
 /** Marker returned in `errors.form` when the honeypot was filled. */
 export const SPAM = "spam";
-
-export const LIMITS = { name: 100, email: 254, business: 200, phone: 40, lookAt: 2000, referrer: 100 } as const;
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_AGE_MS = 3_000;
