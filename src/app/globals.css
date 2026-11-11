@@ -274,12 +274,8 @@ body {
   }
 }
 
-@media (max-width: 379px) {
-  .brand {
-    font-size: 0.9375rem;
-    gap: 0.5rem;
-  }
-  /* room for the Menu button: the mark alone carries the brand (the link keeps its aria-label) */
+@media (max-width: 401px) {
+  /* room for the Menu button and the 16 px gutter: the mark alone carries the brand (the link keeps its aria-label) */
   .brand span {
     display: none;
   }
