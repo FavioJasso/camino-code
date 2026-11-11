@@ -49,6 +49,15 @@ const caseStudies = [
     href: "/case-study/daniel-avila",
     color: "from-blue-700 to-blue-400",
   },
+  {
+    id: 4,
+    title: "DANIEL AVILA 64",
+    description:
+      "How we turned an IT portfolio into a playable N64-era 3D castle that still reads like a résumé.",
+    image: "/assets/images/case_studies/danielavila64_work.webp",
+    href: "/case-study/daniel-avila-64",
+    color: "from-yellow-400 to-blue-700",
+  },
 ];
 
 const CaseStudyCard = ({ study, index }) => {
