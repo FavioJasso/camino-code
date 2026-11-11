@@ -122,3 +122,19 @@ test("on a phone the footer reaches services, work, approach and about", async (
     await expect(footer.locator(`a[href="${href}"]`)).toBeVisible();
   }
 });
+
+test("/about shows the sized founder portrait and no FJ placeholder", async ({ page }) => {
+  await page.goto("/about");
+  const img = page.getByRole("img", { name: "Favio Jasso, founder of Camino Code" });
+  await expect(img).toHaveCount(1);
+  await expect(img).toHaveAttribute("width", "400");
+  await expect(img).toHaveAttribute("height", "501");
+  const srcset = (await img.getAttribute("srcset")) ?? "";
+  expect(srcset).toMatch(/favio-jasso-400\.webp 400w/);
+  expect(srcset).toMatch(/favio-jasso-800\.webp 800w/);
+  await expect(img).toHaveAttribute("loading", "lazy");
+  await expect(page.locator("main")).toContainText("Favio Jasso · Founder · Newark, NJ");
+  await expect(page.locator("main")).not.toContainText(/\bFJ\b/);
+  await img.scrollIntoViewIfNeeded();
+  await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth)).toBeGreaterThan(0);
+});

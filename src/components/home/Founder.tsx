@@ -1,10 +1,10 @@
+import { FounderPhoto } from "@/components/FounderPhoto";
+
 export function Founder() {
   return (
     <section className="sec light day" id="founder" aria-labelledby="founder-title">
       <div className="wrap founder">
-        <div className="portrait" aria-hidden="true">
-          FJ
-        </div>
+        <FounderPhoto className="portrait" sizes="(max-width: 599px) 160px, 176px" />
         <div>
           <p className="mono">
             <i>03</i> Founder

@@ -574,16 +574,26 @@
   padding-block: clamp(3.5rem, 7vw, 6rem);
 }
 .portrait {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 1;
-  background: var(--dusk);
-  color: var(--cream);
-  font-weight: 800;
-  font-stretch: 122%;
-  font-size: 3rem;
-  letter-spacing: -0.02em;
+  margin: 0;
+}
+.portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 400 / 501;
+  object-fit: cover;
   border-radius: 2px;
+}
+.portrait figcaption {
+  margin-top: 0.625rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--line-strong, rgba(20, 26, 43, 0.5));
+  font-family: var(--font-martian), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: var(--fg-soft);
+  text-wrap: balance;
 }
 @media (max-width: 599px) {
   .founder {
@@ -591,8 +601,7 @@
     gap: 1.5rem;
   }
   .portrait {
-    width: 7rem;
-    font-size: 2.25rem;
+    width: 10rem;
   }
 }
 

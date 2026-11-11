@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { BookDiscovery } from "@/components/BookDiscovery";
+import { FounderPhoto } from "@/components/FounderPhoto";
 import { PageBand } from "@/components/PageBand";
 import { site } from "@/content/site";
 import { testimonials } from "@/content/testimonials";
@@ -17,9 +18,7 @@ export default function AboutPage() {
       <PageBand time="day" kicker="About" title="About Camino Code" />
       <section className="inner-sec in-light in-day" aria-labelledby="founder-title">
         <div className="wrap founder-row">
-          <div className="in-portrait" aria-hidden="true">
-            FJ
-          </div>
+          <FounderPhoto className="in-portrait" sizes="(max-width: 599px) 160px, 144px" />
           <div>
             <h2 id="founder-title">Favio Jasso, founder</h2>
             <p>

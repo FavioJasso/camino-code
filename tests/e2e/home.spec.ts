@@ -76,3 +76,21 @@ test("no horizontal scroll at 320 px", async ({ page }) => {
   }));
   expect(scroll).toBeLessThanOrEqual(client);
 });
+
+test("founder section shows the sized portrait and no FJ placeholder", async ({ page }) => {
+  await page.goto("/");
+  const section = page.locator("#founder");
+  const img = section.getByRole("img", { name: "Favio Jasso, founder of Camino Code" });
+  await expect(img).toHaveCount(1);
+  await expect(img).toHaveAttribute("width", "400");
+  await expect(img).toHaveAttribute("height", "501");
+  const srcset = (await img.getAttribute("srcset")) ?? "";
+  expect(srcset).toMatch(/favio-jasso-400\.webp 400w/);
+  expect(srcset).toMatch(/favio-jasso-800\.webp 800w/);
+  await expect(img).toHaveAttribute("loading", "lazy");
+  await expect(section).toContainText("Favio Jasso · Founder · Newark, NJ");
+  await expect(section).not.toContainText(/\bFJ\b/);
+  // the image actually loads
+  await img.scrollIntoViewIfNeeded();
+  await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth)).toBeGreaterThan(0);
+});
