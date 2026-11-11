@@ -18,27 +18,36 @@ import {
   type IUniform,
 } from "three";
 import {
+  BAND_STAGE_T,
   CAMERA_TARGET,
   H_MAX,
   PALETTE,
   RIDGE_Z,
   SADDLE,
+  bandCameraFor,
   cameraFor,
   fillTerrainSamples,
   heightAt,
   mulberry,
   terrainGrid,
   trailPoints,
+  type BandStage,
+  type SceneCamera,
 } from "./terrain";
 import * as GLSL from "./shaders";
 
 // The reduced-motion e2e test checks this stays undefined: proof the chunk never ran.
 (globalThis as { __caminoScene?: boolean }).__caminoScene = true;
 
+export type BandTime = "night" | "morning" | "day";
 export interface SceneOptions {
   paused?: boolean;
   /** Called with true once a frame is showing over the still, false after context loss or teardown. */
   onLive?: (live: boolean) => void;
+  /** "home": the full-viewport scene driven by scroll (default). "band": an inner-page header band. */
+  mode?: "home" | "band";
+  /** Band framing: the stage on the trail where the lantern rests, and the hour. */
+  band?: { stage: BandStage; time: BandTime };
 }
 export interface SceneHandle {
   destroy(): void;
@@ -68,10 +77,19 @@ const PAUSED_STEP = 0.1; // while paused, scroll moves the scene in discrete ste
 
 const ABORT = Symbol("abort");
 
+/** Band colour state per hour: night is the hero at first light; morning and day are the sunrise phase. */
+const BAND_LIGHT: Record<BandTime, { p: number; d: number }> = {
+  night: { p: 0.3, d: 0 },
+  morning: { p: 1, d: 0.8 },
+  day: { p: 1, d: 1 },
+};
+const HOME_FOCAL = 450 / Math.tan((19 * Math.PI) / 180); // the home camera's focal length at 900 px tall, in px
+
 export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHandle {
-  const canvas = root.querySelector<HTMLCanvasElement>("#gl");
-  const ui = root.querySelector<HTMLElement>("#scene-ui");
-  const dawnEl = document.getElementById("dawn-window");
+  const band = opts.mode === "band" ? (opts.band ?? { stage: 1, time: "night" }) : null;
+  const canvas = root.querySelector<HTMLCanvasElement>(band ? "canvas.band-gl" : "#gl");
+  const ui = band ? null : root.querySelector<HTMLElement>("#scene-ui");
+  const dawnEl = band ? null : document.getElementById("dawn-window");
   const noop: SceneHandle = { destroy() {}, setPaused() {} };
   if (!canvas) return noop;
 
@@ -152,13 +170,16 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
     const cap = (small() ? 1.25 : 1.5) * (state.level >= 1 ? 0.8 : 1);
     const dpr = state.level >= 2 ? 1 : Math.min(devicePixelRatio || 1, cap);
     renderer.setPixelRatio(dpr);
-    U.uPx.value = (dpr * view.h) / 900;
+    // band: points keep the size they would have at the home camera's scale, whatever the band's shape
+    U.uPx.value = band ? (dpr * view.h) / 2 / Math.tan((bandCam.fov * Math.PI) / 360) / HOME_FOCAL : (dpr * view.h) / 900;
   };
 
-  // ---- sizing: the canvas is 100lvh; height-only resizes on touch (the toolbar) are ignored ----
+  // ---- sizing: home: the canvas is 100lvh; height-only resizes on touch (the toolbar) are ignored.
+  //      band: the canvas fills the header band and follows its size ----
   let viewKey = "";
+  let bandCam: SceneCamera = bandCameraFor({ aspect: 1, portrait: false, stage: band?.stage ?? 1 });
   const frameView = () => {
-    const cam = cameraFor({ aspect: view.w / view.h, portrait: view.portrait, progress: state.travel, dawn: state.d });
+    const cam = band ? bandCam : cameraFor({ aspect: view.w / view.h, portrait: view.portrait, progress: state.travel, dawn: state.d });
     const key = cam.viewOffset.cx + "|" + cam.viewOffset.cy + "|" + view.w + "|" + view.h;
     camera.fov = cam.fov;
     if (key !== viewKey) {
@@ -171,11 +192,12 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
   const resize = (force = false) => {
     const w = canvas.clientWidth || innerWidth;
     const h = canvas.clientHeight || innerHeight;
-    if (!force && w === view.w && (coarse || h === view.h)) return;
+    if (!force && w === view.w && ((coarse && !band) || h === view.h)) return;
     if (w !== view.w) vh0 = innerHeight; // a width change is never the toolbar
     view.w = w;
     view.h = h;
-    view.portrait = w / h < 0.9;
+    view.portrait = band ? w < 700 : w / h < 0.9;
+    if (band) bandCam = bandCameraFor({ aspect: w / h, portrait: view.portrait, stage: band.stage });
     applyDpr();
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
@@ -220,6 +242,7 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
   // ---- scroll, visibility ----
   let onScreen = true, covered = false, bandOn = false;
   const readScroll = () => {
+    if (band) return; // the band holds its framing: no scroll-linked travel
     state.pTarget = clamp(scrollY / (vh0 * 1.25), 0, 1);
     covered = scrollY > vh0 * 1.7;
     if (dawnEl) {
@@ -266,7 +289,8 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
     if (!skip || firstFrame) {
       U.uProg.value = Math.pow(state.p, 0.72); // light runs ahead of scroll so it lands before the panels cover it
       U.uTime.value = state.time;
-      U.uQuietK.value = view.portrait ? 1 - sstep(0.12, 0.34, state.p) : 1; // phone: the quiet zone lifts as the copy leaves
+      // phone: the quiet zone lifts as the copy leaves; band: the title sits on its own solid panel
+      U.uQuietK.value = band ? 0 : view.portrait ? 1 - sstep(0.12, 0.34, state.p) : 1;
       applyDawn(state.d);
       for (const part of parts) part.update(state);
       renderer.render(scene, camera);
@@ -297,8 +321,14 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
   }
 
   // ---- listeners ----
-  on("scroll", () => { readScroll(); requestRender(); }, { passive: true });
+  if (!band) on("scroll", () => { readScroll(); requestRender(); }, { passive: true });
   on("resize", () => resize(), { passive: true });
+  if (band) {
+    // the band's height also changes without a window resize (its title wraps differently once fonts load)
+    const ro = new ResizeObserver(() => resize());
+    ro.observe(canvas);
+    cleanups.push(() => ro.disconnect());
+  }
   const onVisibility = () => { last = 0; requestRender(); };
   document.addEventListener("visibilitychange", onVisibility);
   cleanups.push(() => document.removeEventListener("visibilitychange", onVisibility));
@@ -443,8 +473,14 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
         else if (!s.still) s.travel = s.p; // paused: hold; reduced motion: no camera travel
         const cam = frameView();
         const par = s.still ? 0 : 1;
-        camera.position.set(cam.position[0] + par * s.mx * 0.8, cam.position[1] - par * s.my * 0.4, cam.position[2]);
-        camera.lookAt(target);
+        // band: a slow ambient sway that holds where it is while paused (time only runs while animating)
+        const sway = band && !s.reduced ? 1 : 0;
+        camera.position.set(
+          cam.position[0] + par * s.mx * 0.8 + sway * Math.sin(s.time * 0.09) * 1.1,
+          cam.position[1] - par * s.my * 0.4 + sway * Math.sin(s.time * 0.063 + 1) * 0.35,
+          cam.position[2],
+        );
+        camera.lookAt(target.set(...cam.target));
         camera.updateProjectionMatrix();
       },
     });
@@ -497,7 +533,8 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
     parts.push({
       update(s) {
         // already on the trail at the top; reaches the saddle before the panels cover it
-        const u = clamp(s.p / 0.7, 0, 1), t = lerp(view.portrait ? 0.6 : 0.13, 1, u);
+        // band: the lantern rests at the stage's waypoint
+        const u = clamp(s.p / 0.7, 0, 1), t = band ? BAND_STAGE_T[band.stage] : lerp(view.portrait ? 0.6 : 0.13, 1, u);
         lantern.u = u;
         lantern.t = t;
         at(t, lantern.pos);
@@ -563,7 +600,9 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
           return;
         }
         const e = camera.position, k = (-440 - e.z) / (CAMERA_TARGET[2] - e.z), rise = (s.d - 0.25) / 0.4;
-        sun.set(e.x + (CAMERA_TARGET[0] + 1.2 - e.x) * k + 6 * rise, LINE_Y - R - 3 + clamp(rise, 0, 2) * (2 * R + 12), R);
+        // band: the sun holds in the short frame, just clearing the saddle at morning and higher by day
+        const y = band ? LINE_Y + (s.d >= 1 ? 12 : 4) : LINE_Y - R - 3 + clamp(rise, 0, 2) * (2 * R + 12);
+        sun.set(e.x + (CAMERA_TARGET[0] + 1.2 - e.x) * k + 6 * rise, y, R);
       },
     });
   }
@@ -667,6 +706,10 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
 
   const build = async () => {
     try {
+      if (band) {
+        state.pTarget = BAND_LIGHT[band.time].p;
+        state.dTarget = BAND_LIGHT[band.time].d;
+      }
       readScroll();
       state.p = state.pTarget;
       state.d = state.dTarget;
@@ -679,9 +722,9 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
       buildSky();
       buildReadouts();
       await slice();
-      frameView();
-      camera.position.set(...cameraFor({ aspect: view.w / view.h, portrait: view.portrait, progress: state.travel, dawn: state.d }).position);
-      camera.lookAt(target);
+      const cam = frameView();
+      camera.position.set(...cam.position);
+      camera.lookAt(target.set(...cam.target));
       camera.updateProjectionMatrix();
       // compile off the main thread where the driver allows it; otherwise one program per slice
       if (renderer.extensions.has("KHR_parallel_shader_compile")) await renderer.compileAsync(scene, camera);

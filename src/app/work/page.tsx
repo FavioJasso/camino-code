@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default function WorkPage() {
   return (
     <>
-      <PageBand time="morning" title="Work" />
+      <PageBand stage={2} time="morning" title="Work" />
       <section className="inner-sec in-light" aria-labelledby="te-title">
         <div className="wrap">
           <h2 id="te-title">{te.name}</h2>

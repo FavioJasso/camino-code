@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
+  BAND_STAGE_T,
   CAMERA_TARGET,
   H_MAX,
   SADDLE,
+  bandCameraFor,
   cameraFor,
   heightAt,
   projectToSvg,
   terrainSamples,
+  trailAt,
   trailPoints,
 } from './terrain';
 
@@ -69,5 +72,40 @@ describe('terrain', () => {
   it('projectToSvg returns null for points behind the camera', () => {
     const cam = cameraFor({ aspect: 1.6, portrait: false, progress: 0, dawn: 0 });
     expect(projectToSvg([7, 7.5, 200], cam, 1440, 900)).toBeNull();
+  });
+  it('trailAt runs from the trail start to the saddle', () => {
+    expect(trailAt(0)).toEqual(trailPoints(2)[0]);
+    const end = trailAt(1);
+    expect(end[0]).toBeCloseTo(SADDLE.x, 5);
+    expect(end[2]).toBeCloseTo(SADDLE.z, 5);
+  });
+
+  describe('header band camera', () => {
+    const bands = [
+      { w: 1440, h: 304, portrait: false },
+      { w: 1024, h: 266, portrait: false },
+      { w: 390, h: 250, portrait: true },
+      { w: 320, h: 300, portrait: true },
+    ];
+    for (const { w, h, portrait } of bands) {
+      for (const stage of [1, 2, 3, 4] as const) {
+        it(`${w}x${h}, stage ${stage}: the lantern and the saddle are in frame, the saddle below the top`, () => {
+          const cam = bandCameraFor({ aspect: w / h, portrait, stage });
+          const lantern = projectToSvg(trailAt(BAND_STAGE_T[stage]), cam, w, h)!;
+          const saddle = projectToSvg([SADDLE.x, SADDLE.y, SADDLE.z], cam, w, h)!;
+          for (const [x, y] of [lantern, saddle]) {
+            expect(x / w).toBeGreaterThan(0);
+            expect(x / w).toBeLessThan(1);
+            expect(y / h).toBeGreaterThan(0.1);
+            expect(y / h).toBeLessThan(0.95);
+          }
+          // the camera is down-trail of the lantern, looking up the trail
+          expect(cam.position[2]).toBeGreaterThan(trailAt(BAND_STAGE_T[stage])[2]);
+          // wide bands do not stretch past an 86 degree horizontal field
+          const hfov = 2 * Math.atan(Math.tan((cam.fov * Math.PI) / 360) * (w / h));
+          expect(hfov).toBeLessThanOrEqual((86.5 * Math.PI) / 180);
+        });
+      }
+    }
   });
 });

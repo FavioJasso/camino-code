@@ -92,43 +92,6 @@
   opacity: 0;
 }
 
-/* Motion control: present only while the live scene runs */
-.motion-toggle {
-  position: fixed;
-  z-index: 6;
-  right: max(0.75rem, env(safe-area-inset-right, 0px));
-  bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
-  min-height: 2.75rem;
-  padding: 0 0.875rem;
-  background: var(--midnight);
-  color: var(--cream);
-  border: 1px solid var(--haze);
-  border-radius: 2px;
-  font-family: var(--font-martian), ui-monospace, monospace;
-  font-size: 0.625rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: opacity 0.2s ease, visibility 0.2s;
-}
-.motion-toggle:hover {
-  border-color: var(--cream);
-}
-.motion-toggle[aria-pressed="true"] {
-  border-color: var(--ember);
-}
-.motion-toggle:focus-visible {
-  outline: 2px solid var(--moon);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 5px var(--midnight);
-}
-/* when solid panels cover the scene there is nothing to pause, so the control steps aside */
-.motion-toggle.is-away {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
 .mono {
   font-family: var(--font-martian), ui-monospace, monospace;
   font-size: 0.6875rem;

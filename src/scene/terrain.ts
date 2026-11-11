@@ -213,6 +213,57 @@ export function cameraFor(view: { aspect: number; portrait: boolean; progress: n
   };
 }
 
+// ---------- inner-page header bands ----------
+export type BandStage = 1 | 2 | 3 | 4;
+
+/** Where the lantern rests on each stage's band, as a fraction of the trail (stage n covers its nth quarter). */
+export const BAND_STAGE_T: Record<BandStage, number> = { 1: 0.14, 2: 0.4, 3: 0.64, 4: 0.88 };
+
+/** The point at fraction `t` of the trail's length, start to saddle. */
+export function trailAt(t: number): Vec3 {
+  const { pts, cum } = TRAIL;
+  const d = clamp(t, 0, 1) * cum[TRAIL_STEPS];
+  let i = 0;
+  while (i < TRAIL_STEPS - 1 && cum[i + 1] < d) i++;
+  const f = (d - cum[i]) / Math.max(1e-6, cum[i + 1] - cum[i]);
+  const a = pts[i];
+  const b = pts[i + 1];
+  return [lerp(a[0], b[0], f), lerp(a[1], b[1], f), lerp(a[2], b[2], f)];
+}
+
+/** About the height of the ridge crest either side of the saddle. */
+const CREST_Y = 26;
+
+/**
+ * Camera for a short, wide header band: it stands down-trail of the stage's waypoint (where the lantern
+ * rests) and looks up toward the saddle, pitched and zoomed so the ridge crest sits near the top of the band
+ * and the lantern near the bottom. The horizontal field of view is capped, so a very wide band does not
+ * stretch; then the lantern keeps its place and the crest may run off the top.
+ */
+export function bandCameraFor(view: { aspect: number; portrait: boolean; stage: BandStage }): SceneCamera {
+  const { aspect, portrait, stage } = view;
+  const w = trailAt(BAND_STAGE_T[stage]);
+  const position: Vec3 = [lerp(w[0], 4, 0.6), w[1] + (portrait ? 6 : 5), w[2] + (portrait ? 34 : 52)];
+  const hx = SADDLE.x - position[0];
+  const hz = RIDGE_Z - position[2];
+  const elev = (p: Vec3) => Math.atan2(p[1] - position[1], Math.hypot(p[0] - position[0], p[2] - position[2]));
+  const crest = elev([SADDLE.x, CREST_Y, RIDGE_Z]);
+  const low = Math.min(elev(w), elev([SADDLE.x, SADDLE.y, SADDLE.z])); // near the top of the trail the saddle is lower
+  // where the crest and the lower of lantern and saddle should land, as fractions of the band's height
+  const [top, bottom] = portrait ? [0.12, 0.56] : [0.14, 0.84];
+  const deg = Math.PI / 180;
+  const hmax = (portrait ? 80 : 86) * deg;
+  const vmax = Math.min(58 * deg, 2 * Math.atan(Math.tan(hmax / 2) / aspect));
+  const v = clamp((crest - low) / (bottom - top), 14 * deg, vmax);
+  const pitch = low + (bottom - 0.5) * v; // small-angle fit, exact enough at these fields of view
+  return {
+    position,
+    target: [SADDLE.x, position[1] + Math.tan(pitch) * Math.hypot(hx, hz), RIDGE_Z],
+    fov: v / deg,
+    viewOffset: { cx: portrait ? 0.32 : 0.68, cy: 0.5 }, // phones: the saddle sits left of the Motion control
+  };
+}
+
 /** Pure perspective projection to pixel coordinates; null when behind the camera. */
 export function projectToSvg(
   p: [number, number, number],

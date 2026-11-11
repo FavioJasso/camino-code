@@ -9,17 +9,39 @@
   background: var(--midnight);
   color: var(--cream);
 }
-.band-still {
+.band-art,
+.band-still,
+.band-gl {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+}
+.band-still {
   object-fit: cover;
+}
+.band-gl {
+  display: block;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.band.is-live .band-gl {
+  opacity: 1;
 }
 .band .wrap {
   position: relative;
   width: 100%;
   padding-block: 2rem;
+}
+/* live bands reserve a strip at the top for the Motion control, so it can never sit on the title */
+.band-live .wrap {
+  padding-top: 4.25rem;
+}
+.band .motion-toggle {
+  position: absolute;
+  top: 0.75rem;
+  bottom: auto;
+  z-index: 2;
 }
 .band-panel {
   display: inline-block;

@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <PageBand time="day" kicker="About" title="About Camino Code" />
+      <PageBand stage={4} time="day" kicker="About" title="About Camino Code" />
       <section className="inner-sec in-light in-day" aria-labelledby="founder-title">
         <div className="wrap founder-row">
           <FounderPhoto className="in-portrait" sizes="(max-width: 599px) 160px, 144px" />

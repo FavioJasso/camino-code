@@ -37,7 +37,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
 
   return (
     <>
-      <PageBand time="night" kicker={page.kicker} title={page.title} />
+      <PageBand stage={1} time="night" kicker={page.kicker} title={page.title} />
       <section className="inner-sec in-light">
         <div className="wrap">
           <p className="in-lead">{page.intro}</p>

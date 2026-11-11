@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { SceneHandle } from "@/scene/scene";
+import type { BandTime, SceneHandle } from "@/scene/scene";
+import type { BandStage } from "@/scene/terrain";
 
 const PAUSE_KEY = "camino:motion-paused";
 
@@ -44,20 +45,27 @@ function controlFits(button: HTMLElement): boolean {
   return true;
 }
 
+/** The inner-page header band that hosts a band-mode scene (rendered by PageBand). */
+export const BAND_SCENE_ID = "band-scene";
+
 /**
  * Starts the live scene after first paint, unless the visitor prefers reduced motion (the scene code
  * is then never loaded). Renders the Motion control only while the scene is live.
+ * Without `band` it drives the home scene in #scene; with `band` it drives the inner-page header band,
+ * where the control sits inside the band in space the band reserves for it, clear of the title.
  */
-export function SceneMount() {
+export function SceneMount({ band }: { band?: { stage: BandStage; time: BandTime } } = {}) {
   const handle = useRef<SceneHandle | null>(null);
   const button = useRef<HTMLButtonElement | null>(null);
   const [live, setLive] = useState(false);
   const [paused, setPaused] = useState(false);
   const [away, setAway] = useState(false);
 
+  const stage = band?.stage;
+  const time = band?.time;
   useEffect(() => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const root = document.getElementById("scene");
+    const root = document.getElementById(stage ? BAND_SCENE_ID : "scene");
     if (!root) return;
     let cancelled = false;
     const initialPaused = readPaused();
@@ -67,7 +75,11 @@ export function SceneMount() {
         .then(({ startScene }) => {
           if (cancelled) return;
           setPaused(initialPaused);
-          handle.current = startScene(root, { paused: initialPaused, onLive: setLive });
+          handle.current = startScene(root, {
+            paused: initialPaused,
+            onLive: setLive,
+            ...(stage && time ? { mode: "band" as const, band: { stage, time } } : {}),
+          });
         })
         .catch(() => {
           // the still stays: nothing else to do
@@ -84,11 +96,11 @@ export function SceneMount() {
       handle.current = null;
       setLive(false);
     };
-  }, []);
+  }, [stage, time]);
 
-  // keep the control out of the way of text while the page scrolls
+  // home: keep the control out of the way of text while the page scrolls (the band's control has its own space)
   useEffect(() => {
-    if (!live) return;
+    if (!live || stage) return;
     let frame = 0;
     const check = () => {
       frame = 0;
@@ -105,7 +117,7 @@ export function SceneMount() {
       removeEventListener("scroll", schedule);
       removeEventListener("resize", schedule);
     };
-  }, [live]);
+  }, [live, stage]);
 
   if (!live) return null;
 

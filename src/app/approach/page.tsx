@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function ApproachPage() {
   return (
     <>
-      <PageBand time="day" kicker="Approach" title="How we work" />
+      <PageBand stage={3} time="day" kicker="Approach" title="How we work" />
       <section className="inner-sec in-light in-day" aria-labelledby="discovery-title">
         <div className="wrap">
           <h2 id="discovery-title">It starts with discovery</h2>

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function TransparentEnergyPage() {
   return (
     <>
-      <PageBand time="morning" kicker="Case study" title="Transparent Energy: reconciliation, automated" />
+      <PageBand stage={2} time="morning" kicker="Case study" title="Transparent Energy: reconciliation, automated" />
       <section className="inner-sec in-light" aria-labelledby="at-a-glance">
         <div className="wrap">
           <h2 id="at-a-glance">At a glance</h2>
