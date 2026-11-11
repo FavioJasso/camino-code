@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { BookDiscovery } from "@/components/BookDiscovery";
 import { Figures } from "@/components/Figures";
 import { PageBand } from "@/components/PageBand";
-import { transparentEnergy as te } from "@/content/proof";
+import { proofBlocks } from "@/content/proof";
 import { servicePages } from "@/content/service-pages";
 import { services } from "@/content/services";
 
@@ -33,6 +33,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 export default async function ServicePage({ params }: { params: Promise<Params> }) {
   const page = pageFor((await params).slug);
   if (!page) notFound();
+  const proof = page.proof ? proofBlocks[page.proof] : null;
 
   return (
     <>
@@ -62,15 +63,15 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
           </div>
         </div>
       </section>
-      {page.proof ? (
+      {proof ? (
         <section className="inner-sec in-light" aria-labelledby="proof-title">
           <div className="wrap">
-            <h2 id="proof-title">{te.name}</h2>
-            <Figures />
-            <p>{te.summary}</p>
-            <p className="in-mono credit">{te.wording}</p>
+            <h2 id="proof-title">{proof.name}</h2>
+            <Figures figures={proof.figures} />
+            <p>{proof.summary}</p>
+            <p className="in-mono credit">{proof.wording}</p>
             <p>
-              <Link href={te.href}>Read the case study</Link>
+              <Link href={proof.href}>Read the case study</Link>
             </p>
           </div>
         </section>

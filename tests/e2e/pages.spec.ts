@@ -7,6 +7,7 @@ const ROUTES = [
   "/services/ai-governance",
   "/work",
   "/work/transparent-energy",
+  "/work/daniel-avila-64",
   "/approach",
   "/about",
   "/privacy",
@@ -57,6 +58,47 @@ test("only the Data page carries the Transparent Energy proof, with the permitte
     await page.goto(`/services/${slug}`);
     expect(await page.locator("main").innerText()).not.toContain("Transparent Energy");
   }
+});
+
+test("DANIEL AVILA 64 case study shows its four figures, gallery and visit link", async ({ page }) => {
+  await page.goto("/work/daniel-avila-64");
+  const main = ((await page.locator("main").innerText()) ?? "").replace(/\s+/g, " ");
+  for (const f of [
+    "158 kB first-load JavaScript",
+    "0 model, texture or audio files",
+    "4 control schemes, all live",
+    "100% touch and plain-HTML ready",
+  ])
+    expect(main).toContain(f);
+  expect(main).not.toContain("TODO");
+  await expect(page.locator(".gallery img")).toHaveCount(4);
+  for (const img of await page.locator(".gallery img").all()) {
+    await expect(img).toHaveAttribute("alt", /\S{3}/);
+    await expect(img).toHaveAttribute("width", /\d+/);
+    await expect(img).toHaveAttribute("height", /\d+/);
+  }
+  await expect(page.getByRole("link", { name: "Visit danielavila.tech" })).toHaveAttribute(
+    "href",
+    "https://www.danielavila.tech",
+  );
+});
+
+test("no built page contains TODO", async ({ request }) => {
+  for (const route of [...ROUTES, "/"]) {
+    expect(await (await request.get(route)).text(), route).not.toContain("TODO");
+  }
+});
+
+test("Software page shows DANIEL AVILA 64 as its proof point; Data keeps Transparent Energy", async ({
+  page,
+}) => {
+  await page.goto("/services/software");
+  const software = ((await page.locator("main").innerText()) ?? "").replace(/\s+/g, " ");
+  expect(software).toContain("DANIEL AVILA 64");
+  expect(software).toContain("158 kB first-load JavaScript");
+  await expect(page.locator('main a[href="/work/daniel-avila-64"]')).toBeVisible();
+  await page.goto("/services/ai-governance");
+  expect(await page.locator("main").innerText()).not.toContain("DANIEL AVILA 64");
 });
 
 test("case study and about carry no banned claims", async ({ page }) => {

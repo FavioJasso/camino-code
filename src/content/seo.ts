@@ -8,6 +8,7 @@ export const PAGE_PATHS = [
   "/services/ai-governance",
   "/work",
   "/work/transparent-energy",
+  "/work/daniel-avila-64",
   "/approach",
   "/about",
   "/discovery",

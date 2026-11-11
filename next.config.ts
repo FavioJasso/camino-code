@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
       permanent("/case-study/transparent-energy", "/work/transparent-energy"),
       permanent("/case-study/victorias-painting", "/work"),
       permanent("/case-study/daniel-avila", "/work"),
+      permanent("/case-study/daniel-avila-64", "/work/daniel-avila-64"),
       permanent("/case-study/healthtrack", "/work"),
       permanent("/services", "/#services"),
       permanent("/contact", "/discovery"),

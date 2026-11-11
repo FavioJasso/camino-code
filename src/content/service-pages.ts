@@ -10,8 +10,8 @@ export type ServicePage = {
   gets: string[];
   engaged: string[];
   faq: { q: string; a: string }[];
-  /** Only the Data page has a real proof point. */
-  proof: boolean;
+  /** Which case study the page shows as its proof point (see src/content/proof.ts), if any. */
+  proof: "transparentEnergy" | "danielAvila64" | null;
 };
 
 const commonEngaged = [
@@ -57,7 +57,7 @@ export const servicePages: Record<Service["slug"], ServicePage> = {
         a: "Within one business day.",
       },
     ],
-    proof: false,
+    proof: "danielAvila64",
   },
   data: {
     slug: "data",
@@ -94,7 +94,7 @@ export const servicePages: Record<Service["slug"], ServicePage> = {
         a: "Within one business day.",
       },
     ],
-    proof: true,
+    proof: "transparentEnergy",
   },
   "ai-governance": {
     slug: "ai-governance",
@@ -131,6 +131,6 @@ export const servicePages: Record<Service["slug"], ServicePage> = {
         a: "Within one business day.",
       },
     ],
-    proof: false,
+    proof: null,
   },
 };
