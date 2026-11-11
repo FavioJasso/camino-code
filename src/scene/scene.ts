@@ -18,13 +18,18 @@ import {
   type IUniform,
 } from "three";
 import {
+  BAND_PHONE_MAX,
   BAND_STAGE_T,
   CAMERA_TARGET,
   H_MAX,
   PALETTE,
   RIDGE_Z,
   SADDLE,
+  SKY_LINE_Y,
+  SKY_Z,
+  SUN_R,
   bandCameraFor,
+  bandSun,
   cameraFor,
   fillTerrainSamples,
   heightAt,
@@ -32,6 +37,7 @@ import {
   terrainGrid,
   trailPoints,
   type BandStage,
+  type BandTime,
   type SceneCamera,
 } from "./terrain";
 import * as GLSL from "./shaders";
@@ -39,7 +45,7 @@ import * as GLSL from "./shaders";
 // The reduced-motion e2e test checks this stays undefined: proof the chunk never ran.
 (globalThis as { __caminoScene?: boolean }).__caminoScene = true;
 
-export type BandTime = "night" | "morning" | "day";
+export type { BandTime };
 export interface SceneOptions {
   paused?: boolean;
   /** Called with true once a frame is showing over the still, false after context loss or teardown. */
@@ -129,7 +135,7 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
   const coarse = matchMedia("(pointer: coarse)").matches;
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
   const small = () => coarse || innerWidth < 700;
-  const isSmall = small();
+  const isSmall = band ? false : small(); // bands: the large grid, whose edges stay out of the band camera's view
 
   const scene = new Scene();
   const camera = new PerspectiveCamera(38, 1, 0.5, 600);
@@ -170,8 +176,8 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
     const cap = (small() ? 1.25 : 1.5) * (state.level >= 1 ? 0.8 : 1);
     const dpr = state.level >= 2 ? 1 : Math.min(devicePixelRatio || 1, cap);
     renderer.setPixelRatio(dpr);
-    // band: points keep the size they would have at the home camera's scale, whatever the band's shape
-    U.uPx.value = band ? (dpr * view.h) / 2 / Math.tan((bandCam.fov * Math.PI) / 360) / HOME_FOCAL : (dpr * view.h) / 900;
+    // band: point sizes follow the band camera's scale, held near the home scene's so dots and lantern stay legible
+    U.uPx.value = band ? dpr * clamp(view.h / 2 / Math.tan((bandCam.fov * Math.PI) / 360) / HOME_FOCAL, 0.8, 1.2) : (dpr * view.h) / 900;
   };
 
   // ---- sizing: home: the canvas is 100lvh; height-only resizes on touch (the toolbar) are ignored.
@@ -196,7 +202,8 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
     if (w !== view.w) vh0 = innerHeight; // a width change is never the toolbar
     view.w = w;
     view.h = h;
-    view.portrait = band ? w < 700 : w / h < 0.9;
+    // band: the same rule as the still's <source media>, so live and still use the same framing
+    view.portrait = band ? !matchMedia(`(min-width: ${BAND_PHONE_MAX}px)`).matches : w / h < 0.9;
     if (band) bandCam = bandCameraFor({ aspect: w / h, portrait: view.portrait, stage: band.stage });
     applyDpr();
     renderer.setSize(w, h, false);
@@ -572,7 +579,7 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
     stars.renderOrder = -1;
     scene.add(stars);
 
-    const LINE_Y = 44; // just above the saddle floor as seen from the camera
+    const LINE_Y = SKY_LINE_Y; // just above the saddle floor as seen from the camera
     const sky = new Mesh(
       geometry(new PlaneGeometry(2400, 700)),
       material(
@@ -587,11 +594,11 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
         }),
       ),
     );
-    sky.position.set(0, 200, -440);
+    sky.position.set(0, 200, SKY_Z);
     sky.renderOrder = -2;
     sky.frustumCulled = false;
     scene.add(sky);
-    const R = 15;
+    const R = SUN_R;
     parts.push({
       update(s) {
         const sun = U.uSun.value as Vector3;
@@ -599,10 +606,15 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
           sun.set(0, -999, R);
           return;
         }
+        if (band) {
+          // band: a fixed point in the sky, shared with the stills (terrain.ts)
+          const b = bandSun(view.portrait, band.stage, band.time);
+          if (b) sun.set(b[0], b[1], R);
+          else sun.set(0, -999, R);
+          return;
+        }
         const e = camera.position, k = (-440 - e.z) / (CAMERA_TARGET[2] - e.z), rise = (s.d - 0.25) / 0.4;
-        // band: the sun holds in the short frame, just clearing the saddle at morning and higher by day
-        const y = band ? LINE_Y + (s.d >= 1 ? 12 : 4) : LINE_Y - R - 3 + clamp(rise, 0, 2) * (2 * R + 12);
-        sun.set(e.x + (CAMERA_TARGET[0] + 1.2 - e.x) * k + 6 * rise, y, R);
+        sun.set(e.x + (CAMERA_TARGET[0] + 1.2 - e.x) * k + 6 * rise, LINE_Y - R - 3 + clamp(rise, 0, 2) * (2 * R + 12), R);
       },
     });
   }

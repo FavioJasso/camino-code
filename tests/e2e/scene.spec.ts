@@ -203,6 +203,10 @@ test("inner page with WebGL unavailable keeps the still and the title panel", as
   await expect(band(page).locator(".band-still")).toBeVisible();
   await expect(band(page).locator(".band-panel h1")).toBeVisible();
   await expect(motionButton(page)).toHaveCount(0);
+  // the still framed for this page's stage and hour, desktop version at this width
+  expect(await band(page).locator(".band-still").evaluate((img: HTMLImageElement) => img.currentSrc)).toContain(
+    "/stills/band-s2-morning-desktop.svg",
+  );
   expect(errors).toEqual([]);
 });
 
@@ -235,6 +239,9 @@ test.describe("band on a phone", () => {
     expect(overlap).toBe(false);
     // no horizontal scroll at 320 px
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+    expect(await band(page).locator(".band-still").evaluate((img: HTMLImageElement) => img.currentSrc)).toContain(
+      "/stills/band-s2-morning-phone.svg",
+    );
   });
 });
 

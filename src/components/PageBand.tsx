@@ -1,6 +1,6 @@
 import "@/app/inner.css";
 import { BAND_SCENE_ID, SceneMount } from "@/components/home/SceneMount";
-import type { BandStage } from "@/scene/terrain";
+import { BAND_PHONE_MAX, type BandStage } from "@/scene/terrain";
 
 type Time = "night" | "morning" | "day";
 
@@ -13,8 +13,16 @@ export function PageBand({ time, title, kicker, stage }: { time: Time; title: st
   return (
     <section id={stage ? BAND_SCENE_ID : undefined} className={`band band-${time}${stage ? " band-live" : ""}`}>
       <div className="band-art" aria-hidden="true">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="band-still" src={`/stills/band-${time}.svg`} alt="" width="1440" height="324" />
+        {stage ? (
+          // the stills are framed exactly as the live band (scripts/render-stills.ts), so the canvas fades in without a jump
+          <picture>
+            <source media={`(min-width: ${BAND_PHONE_MAX}px)`} srcSet={`/stills/band-s${stage}-${time}-desktop.svg`} />
+            <img className="band-still" src={`/stills/band-s${stage}-${time}-phone.svg`} alt="" width="390" height="250" />
+          </picture>
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="band-still" src={`/stills/band-${time}.svg`} alt="" width="1440" height="324" />
+        )}
         {stage ? <canvas className="band-gl" /> : null}
       </div>
       {/* early in the focus order, inside the space the band reserves for it */}

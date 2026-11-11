@@ -5,12 +5,23 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import {
+  BAND_REF,
+  BAND_STAGE_T,
   PALETTE,
+  RIDGE_Z,
   SADDLE,
+  SKY_LINE_Y,
+  SKY_Z,
+  SUN_R,
+  bandCameraFor,
+  bandSun,
   cameraFor,
   projectToSvg,
   terrainSamples,
+  trailAt,
   trailPoints,
+  type BandStage,
+  type BandTime,
   type SceneCamera,
 } from '../src/scene/terrain';
 
@@ -65,14 +76,22 @@ function rng(seed: number): () => number {
   };
 }
 
-function ridgeRows(cam: SceneCamera, w: number, h: number, small: boolean): string[] {
+function ridgeRows(
+  cam: SceneCamera,
+  w: number,
+  h: number,
+  small: boolean,
+  opts: { clipY?: number; steps?: { row: number; col: number }; minZ?: number } = {},
+): string[] {
+  const { clipY = Infinity, steps, minZ = -Infinity } = opts;
   const cols = small ? 212 : 392;
   const rows = small ? 118 : 214;
   const s = terrainSamples({ small });
-  const rowStep = small ? 3 : 5;
-  const colStep = small ? 2 : 4;
+  const rowStep = steps?.row ?? (small ? 3 : 5);
+  const colStep = steps?.col ?? (small ? 2 : 4);
   const pathsFarToNear: string[] = [];
   for (let row = rows - 1; row >= 0; row -= rowStep) {
+    if (s[row * cols * 3 + 2] < minZ) continue;
     const pts: Array<[number, number]> = [];
     for (let c = 0; c < cols; c += colStep) {
       const k = (row * cols + c) * 3;
@@ -80,6 +99,7 @@ function ridgeRows(cam: SceneCamera, w: number, h: number, small: boolean): stri
       if (p && p[0] > -60 && p[0] < w + 60) pts.push([r(p[0]), r(p[1])]);
     }
     if (pts.length < 2) continue;
+    if (pts.every((q) => q[1] > clipY)) continue; // wholly below the frame
     pts.sort((a, b) => a[0] - b[0]);
     let d = `M${pts[0][0]} ${pts[0][1]}`;
     for (let i = 1; i < pts.length; i++) d += `l${pts[i][0] - pts[i - 1][0]} ${pts[i][1] - pts[i - 1][1]}`;
@@ -158,9 +178,111 @@ function render(spec: Spec): string {
   return out.join('');
 }
 
+// ---------- live-band stills: the inner-page header bands, framed exactly as the live band ----------
+/** The (stage, hour) pairs the inner pages use: services, work, approach, about, discovery. */
+export const BAND_STILLS: Array<{ stage: BandStage; time: BandTime }> = [
+  { stage: 1, time: 'night' },
+  { stage: 2, time: 'morning' },
+  { stage: 3, time: 'day' },
+  { stage: 4, time: 'day' },
+  { stage: 4, time: 'morning' },
+];
+export const bandStillName = (stage: BandStage, time: BandTime, phone: boolean): string =>
+  `band-s${stage}-${time}-${phone ? 'phone' : 'desktop'}`;
+
+const hex = (c: [number, number, number]) => '#' + c.map((v) => Math.round(v).toString(16).padStart(2, '0')).join('');
+const mixHex = (a: string, b: string, t: number): string => {
+  const p = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const [x, y] = [p(a), p(b)];
+  return hex([0, 1, 2].map((i) => x[i] + (y[i] - x[i]) * t) as [number, number, number]);
+};
+
+function renderBand(stage: BandStage, time: BandTime, phone: boolean): string {
+  const ref = phone ? BAND_REF.phone : BAND_REF.desktop;
+  const { w, h } = ref;
+  const cam = bandCameraFor({ aspect: w / h, portrait: phone, stage });
+  const proj = (p: [number, number, number]) => projectToSvg(p, cam, w, h);
+  const night = time === 'night';
+  const theme = night ? NIGHT : MORNING;
+  // the live shader's colours: path ahead of the lantern, path walked (darkening to ember ink in daylight)
+  const ahead = mixHex(hex([0x1c * 1.5, 0x25 * 1.5, 0x40 * 1.5]), PALETTE.ember, 0.58);
+  const walked = night ? PALETTE.ember : mixHex(PALETTE.ember, PALETTE.emberInk, 0.8);
+  const line = proj([cam.position[0], SKY_LINE_Y, SKY_Z]);
+  const lineY = line ? line[1] : -10;
+
+  const out: string[] = [];
+  out.push(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="${phone ? 'xMidYMin' : 'xMidYMid'} slice" role="img" aria-label="Dotted mountain ridges with a lantern on the trail below a saddle">`,
+  );
+  if (night) {
+    // midnight, lifting a little toward deep blue at the horizon line
+    out.push(
+      `<defs><linearGradient id="sky" gradientUnits="userSpaceOnUse" x1="0" y1="${r(lineY - 120)}" x2="0" y2="${r(lineY)}"><stop offset="0" stop-color="${PALETTE.midnight}"/><stop offset="1" stop-color="#132042"/></linearGradient></defs>`,
+    );
+  }
+  out.push(`<rect x="-10" y="-10" width="${w + 20}" height="${h + 20}" fill="${night ? 'url(#sky)' : theme.sky}"/>`);
+  if (theme.stars) {
+    const rand = rng(11);
+    let d = '';
+    for (let i = 0; i < (phone ? 18 : 60); i++) d += `M${r(rand() * w)} ${r(rand() * Math.max(8, lineY - 6))}h0`;
+    out.push(`<path d="${d}" stroke="${theme.stars}" stroke-linecap="round" stroke-width="1.6" opacity=".6"/>`);
+  }
+  const sun = bandSun(phone, stage, time);
+  if (sun) {
+    const c = proj(sun);
+    const e = proj([sun[0], sun[1] + SUN_R, sun[2]]);
+    if (c && e) {
+      const rad = c[1] - e[1];
+      out.push(`<clipPath id="up"><rect x="-10" y="-10" width="${w + 20}" height="${r(lineY + 10)}"/></clipPath>`);
+      out.push(
+        `<g clip-path="url(#up)" fill="${PALETTE.sun}"><circle cx="${r(c[0])}" cy="${r(c[1])}" r="${rad.toFixed(1)}"/><circle cx="${r(c[0])}" cy="${r(c[1])}" r="${(rad + 7).toFixed(1)}" fill="none" stroke="${PALETTE.sun}" stroke-width="1.3" opacity=".9"/></g>`,
+      );
+    }
+  }
+  // horizon line on the sky plane (hidden behind the ridge except through the saddle)
+  if (line) out.push(`<path d="M0 ${r(lineY)}H${w}" stroke="${night ? PALETTE.ember : PALETTE.emberInk}" stroke-width="1" opacity="${night ? 0.6 : 0.9}"/>`);
+
+  const sw = phone ? 1.5 : 1.4;
+  out.push(`<g fill="${theme.ground}" stroke="${theme.dots}" stroke-linecap="round" stroke-width="${sw}" stroke-dasharray="0 3" stroke-opacity=".8">`);
+    // the large grid, as the live band; the low ground behind the ridge barely shows live, so it is left out
+  const rowsOpts = { clipY: h + 10, steps: phone ? { row: 5, col: 6 } : { row: 5, col: 5 }, minZ: RIDGE_Z - 3 };
+  for (const d of ridgeRows(cam, w, h, false, rowsOpts)) out.push(d);
+  out.push('</g>');
+
+  // the trail: walked up to the lantern, dimmer beyond it
+  const T = BAND_STAGE_T[stage];
+  const pts = trailPoints(phone ? 200 : 300);
+  const seg = (from: number, to: number) => {
+    const ps = pts
+      .slice(Math.round(from * (pts.length - 1)), Math.round(to * (pts.length - 1)) + 1)
+      .map(proj)
+      .filter((p): p is [number, number] => p !== null && p[1] > -20 && p[1] < h + 40);
+    if (ps.length < 2) return '';
+    let d = `M${r(ps[0][0])} ${r(ps[0][1])}`;
+    for (let i = 1; i < ps.length; i++) d += `L${r(ps[i][0])} ${r(ps[i][1])}`;
+    return d;
+  };
+  const sw2 = phone ? 2.4 : 2.2;
+  out.push(`<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0 5.5" stroke-width="${sw2}">`);
+  out.push(`<path d="${seg(T, 1)}" stroke="${ahead}" opacity=".8"/><path d="${seg(0, T)}" stroke="${walked}"/>`);
+  out.push('</g>');
+  const L = proj(trailAt(T));
+  if (L) {
+    const [x, y] = [r(L[0]), r(L[1] - 2)];
+    out.push(
+      `<circle cx="${x}" cy="${y}" r="8.4" fill="none" stroke="${night ? PALETTE.ember : PALETTE.emberInk}" stroke-width="1.6"/><circle cx="${x}" cy="${y}" r="5.4" fill="${PALETTE.midnight}"/><circle cx="${x}" cy="${y}" r="3.6" fill="${mixHex(PALETTE.cream, PALETTE.moon, 0.55)}"/>`,
+    );
+  }
+  out.push('</svg>');
+  return out.join('');
+}
+
 export function renderAllStills(): Record<string, string> {
   const res: Record<string, string> = {};
   for (const s of SPECS) res[s.name] = render(s);
+  for (const { stage, time } of BAND_STILLS) {
+    for (const phone of [false, true]) res[bandStillName(stage, time, phone)] = renderBand(stage, time, phone);
+  }
   return res;
 }
 

@@ -20,6 +20,12 @@
 .band-still {
   object-fit: cover;
 }
+/* phone band stills are cropped from the top, as the live band's phone framing is (terrain.ts BAND_REF) */
+@media (max-width: 699.98px) {
+  .band-live .band-still {
+    object-position: 50% 0;
+  }
+}
 .band-gl {
   display: block;
   opacity: 0;
