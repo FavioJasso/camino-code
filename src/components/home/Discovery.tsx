@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { stages } from "@/content/approach";
+import { TrailStages } from "@/components/TrailStages";
 import { site } from "@/content/site";
 
 export function Discovery() {
@@ -17,17 +17,7 @@ export function Discovery() {
             where it wouldn&rsquo;t. We reply within one business day.
           </p>
         </div>
-        <ol className="stages">
-          {stages.map((s, i) => (
-            <li className="stage" key={s.name}>
-              <span className="mono">
-                Stage {String(i + 1).padStart(2, "0")} / 04
-              </span>
-              <h3>{s.name}</h3>
-              <p>{s.line}</p>
-            </li>
-          ))}
-        </ol>
+        <TrailStages />
         <div className="cta">
           <Link className="btn btn-lg" href="/discovery">
             Book a discovery session

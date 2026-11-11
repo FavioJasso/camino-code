@@ -15,8 +15,11 @@ export default function DanielAvila64Page() {
   return (
     <>
       <PageBand stage={2} time="morning" kicker="Case study" title={study.title} />
-      <section className="inner-sec in-light" aria-labelledby="at-a-glance">
+      <section className="inner-sec in-dark on-dark" aria-labelledby="at-a-glance">
         <div className="wrap">
+          <p className="in-mono in-label">
+            <i>01</i> / 06
+          </p>
           <h2 id="at-a-glance">At a glance</h2>
           <p className="in-lead">{study.subtitle}</p>
           <dl className="facts">
@@ -27,13 +30,16 @@ export default function DanielAvila64Page() {
               </div>
             ))}
           </dl>
-          <p className="in-mono credit" style={{ marginTop: "1.25rem" }}>
+          <p className="in-mono credit in-credit-gap">
             {da.wording}
           </p>
         </div>
       </section>
-      <section className="inner-sec in-light in-day" aria-labelledby="challenge-title">
+      <section className="inner-sec in-light" aria-labelledby="challenge-title">
         <div className="wrap">
+          <p className="in-mono in-label">
+            <i>02</i> / 06
+          </p>
           <h2 id="challenge-title">The challenge</h2>
           <p>{study.challengeIntro}</p>
           <ul className="ticks">
@@ -46,6 +52,9 @@ export default function DanielAvila64Page() {
       </section>
       <section className="inner-sec in-light" aria-labelledby="built-title">
         <div className="wrap">
+          <p className="in-mono in-label">
+            <i>03</i> / 06
+          </p>
           <h2 id="built-title">What was built</h2>
           <p>{study.builtIntro}</p>
           <ul className="ticks">
@@ -58,6 +67,9 @@ export default function DanielAvila64Page() {
       </section>
       <section className="inner-sec in-light in-day" aria-labelledby="phases-title">
         <div className="wrap">
+          <p className="in-mono in-label">
+            <i>04</i> / 06
+          </p>
           <h2 id="phases-title">How it was done</h2>
           <ol className="steps">
             {study.phases.map((t) => (
@@ -73,8 +85,11 @@ export default function DanielAvila64Page() {
           </ol>
         </div>
       </section>
-      <section className="inner-sec in-light" aria-labelledby="gallery-title">
+      <section className="inner-sec in-light in-day" aria-labelledby="gallery-title">
         <div className="wrap">
+          <p className="in-mono in-label">
+            <i>05</i> / 06
+          </p>
           <h2 id="gallery-title">Gallery</h2>
           <ul className="gallery">
             {study.gallery.map((g) => (
@@ -88,6 +103,9 @@ export default function DanielAvila64Page() {
       </section>
       <section className="inner-sec in-light in-day" aria-labelledby="result-title">
         <div className="wrap">
+          <p className="in-mono in-label">
+            <i>06</i> / 06
+          </p>
           <h2 id="result-title">Result</h2>
           <Figures figures={da.figures} />
           <ul className="ticks">

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ClosingBand } from "@/components/BookDiscovery";
 import { PageBand } from "@/components/PageBand";
 import { site } from "@/content/site";
 import { DiscoveryForm } from "./DiscoveryForm";
@@ -17,6 +18,9 @@ export default function DiscoveryPage() {
       <section className="inner-sec in-light" aria-labelledby="form-title">
         <div className="wrap in-split">
           <div>
+            <p className="in-mono in-label">
+              <i>01</i> Request
+            </p>
             <h2 id="form-title">Tell us about your business</h2>
             <p className="in-lead">
               A few details is enough. We reply within one business day to find a time.
@@ -24,6 +28,9 @@ export default function DiscoveryPage() {
             <DiscoveryForm />
           </div>
           <aside aria-labelledby="next-title">
+            <p className="in-mono in-label">
+              <i>02</i> Next
+            </p>
             <h2 id="next-title">What happens next</h2>
             <ol className="steps">
               <li>
@@ -45,13 +52,14 @@ export default function DiscoveryPage() {
                 </div>
               </li>
             </ol>
-            <h3 className="in-alt-title">Prefer to write or call?</h3>
-            <p>
-              Email {site.contact.email} or call <span className="nowrap">{site.contact.phone}</span>. {site.contact.place}.
-            </p>
           </aside>
         </div>
       </section>
+      <ClosingBand heading="Prefer to write or call?">
+        <p className="in-lead">
+          Email {site.contact.email} or call <span className="nowrap">{site.contact.phone}</span>. {site.contact.place}.
+        </p>
+      </ClosingBand>
     </>
   );
 }

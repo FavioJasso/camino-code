@@ -16,10 +16,13 @@ export default function AboutPage() {
   return (
     <>
       <PageBand stage={4} time="day" kicker="About" title="About Camino Code" />
-      <section className="inner-sec in-light in-day" aria-labelledby="founder-title">
+      <section className="inner-sec in-light" aria-labelledby="founder-title">
         <div className="wrap founder-row">
           <FounderPhoto className="in-portrait" sizes="(max-width: 599px) 160px, 144px" />
           <div>
+            <p className="in-mono in-label">
+              <i>01</i> Founder
+            </p>
             <h2 id="founder-title">Favio Jasso, founder</h2>
             <p>
               Favio founded Camino Code in {site.contact.place}, and led the build for Transparent
@@ -34,6 +37,9 @@ export default function AboutPage() {
       </section>
       <section className="inner-sec in-light" aria-labelledby="working-title">
         <div className="wrap">
+          <p className="in-mono in-label">
+            <i>02</i> Process
+          </p>
           <h2 id="working-title">Working with us</h2>
           <p className="in-lead">
             Clients start with a free 45-minute discovery session, by video or in person. We write
@@ -44,6 +50,9 @@ export default function AboutPage() {
       </section>
       <section className="inner-sec in-light in-day" aria-labelledby="kind-words-title">
         <div className="wrap">
+          <p className="in-mono in-label">
+            <i>03</i> Kind words
+          </p>
           <h2 id="kind-words-title">Kind words from website projects</h2>
           <div className="quotes">
             {testimonials.map((t) => (
@@ -57,7 +66,7 @@ export default function AboutPage() {
               </figure>
             ))}
           </div>
-          <p style={{ marginTop: "1.25rem" }}>
+          <p className="in-aside">
             Both were website projects for small businesses.
           </p>
         </div>

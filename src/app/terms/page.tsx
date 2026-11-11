@@ -13,7 +13,7 @@ export default function TermsPage() {
   return (
     <>
       <PageBand time="day" kicker="Legal" title="Terms" />
-      <section className="inner-sec in-light in-day legal">
+      <section className="inner-sec in-light legal">
         <div className="wrap">
           <p className="in-mono draft">Draft, pending review</p>
           <h2>This website</h2>

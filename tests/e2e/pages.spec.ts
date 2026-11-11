@@ -138,3 +138,129 @@ test("/about shows the sized founder portrait and no FJ placeholder", async ({ p
   await img.scrollIntoViewIfNeeded();
   await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth)).toBeGreaterThan(0);
 });
+
+/* Task 4: night-to-day flow, trail stages, reveal-once motion */
+
+const FLOW_ROUTES = [...ROUTES, "/discovery"];
+const TONE: Record<string, number> = {
+  "rgb(14, 19, 32)": 0, // Midnight
+  "rgb(28, 37, 64)": 0, // Dusk
+  "rgb(242, 230, 208)": 1, // Morning
+  "rgb(250, 244, 232)": 2, // Day
+};
+
+for (const route of FLOW_ROUTES) {
+  test(`${route} runs night to day: dark band, Morning, then Day, closing on the booking band`, async ({ page }) => {
+    await page.goto(route);
+    const backgrounds = await page.$$eval("main > section", (els) =>
+      els.map((el) => getComputedStyle(el).backgroundColor),
+    );
+    const tones = backgrounds.map((bg) => TONE[bg]);
+    expect(tones, `unexpected background in ${backgrounds.join(", ")}`).not.toContain(undefined);
+    expect(tones[0]).toBe(0);
+    expect(tones).toContain(1);
+    expect(tones.at(-1)).toBe(2);
+    expect([...tones].sort((a, b) => a - b), backgrounds.join(", ")).toEqual(tones);
+    await expect(page.locator("main > section").last()).toHaveClass(/\bin-book\b/);
+  });
+}
+
+const STAGE_NAMES = ["Scout", "Route", "Build", "Hand over"];
+
+for (const [route, scope] of [
+  ["/approach", "main"],
+  ["/", "#discovery"],
+] as const) {
+  test(`${route} draws the four stages as a trail: an SVG with four waypoints and the text as HTML`, async ({
+    page,
+  }, testInfo) => {
+    await page.goto(route);
+    const trail = page.locator(`${scope} .trail`);
+    await expect(trail).toHaveCount(1);
+    const svg = trail.locator("svg.trail-map");
+    await expect(svg).toHaveAttribute("aria-hidden", "true");
+    await expect(svg.locator("[data-stage]")).toHaveCount(4);
+    expect(await svg.locator("[data-stage]").evaluateAll((els) => els.map((e) => e.getAttribute("data-stage")))).toEqual(
+      STAGE_NAMES,
+    );
+    // stage names and text live in the page's HTML, not inside the drawing
+    expect(await svg.locator("text").count()).toBe(0);
+    const items = trail.locator("ol.trail-list > li");
+    await expect(items).toHaveCount(4);
+    expect(await items.locator("h3").allInnerTexts()).toEqual(STAGE_NAMES);
+    for (const item of await items.all()) await expect(item.locator("p")).toHaveText(/\w{3,}/);
+    if (testInfo.project.name === "desktop") {
+      await expect(svg).toBeVisible();
+      // waypoints climb: each is higher on screen than the one before
+      const ys = await svg.locator("[data-stage]").evaluateAll((els) => els.map((e) => e.getBoundingClientRect().top));
+      expect([...ys].sort((a, b) => b - a)).toEqual(ys);
+    } else {
+      // on phones the trail runs down the page beside the list
+      const box = await items.first().boundingBox();
+      const last = await items.last().boundingBox();
+      expect(last!.y).toBeGreaterThan(box!.y + box!.height - 1);
+      expect(Math.abs(last!.x - box!.x)).toBeLessThan(2);
+    }
+  });
+}
+
+test("/discovery has no axe violations before any interaction", async ({ page }) => {
+  await page.goto("/discovery");
+  const results = await new AxeBuilder({ page }).analyze();
+  expect(results.violations).toEqual([]);
+});
+
+test("no inner page scrolls sideways at 320 px", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 });
+  for (const route of [...FLOW_ROUTES, "/no-such-page"]) {
+    await page.goto(route);
+    const { scroll, client } = await page.evaluate(() => ({
+      scroll: document.documentElement.scrollWidth,
+      client: document.documentElement.clientWidth,
+    }));
+    expect(scroll, route).toBeLessThanOrEqual(client);
+  }
+});
+
+test("Work and the case studies show their proof figures large, in wide Archivo", async ({ page }) => {
+  for (const route of ["/work", "/work/transparent-energy", "/work/daniel-avila-64"]) {
+    await page.goto(route);
+    const fig = page.locator(".in-fig b").first();
+    await expect(fig).toBeVisible();
+    const { size, stretch } = await fig.evaluate((el) => {
+      const cs = getComputedStyle(el);
+      return { size: parseFloat(cs.fontSize), stretch: cs.fontStretch };
+    });
+    expect(size, route).toBeGreaterThanOrEqual(isPhone(page) ? 40 : 52);
+    expect(parseFloat(stretch), route).toBeGreaterThanOrEqual(118);
+    // no figure spills out of its cell, from tablet width up
+    for (const width of isPhone(page) ? [page.viewportSize()!.width] : [900, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      const spills = await page.locator(".in-fig b").evaluateAll((els) =>
+        els.filter((el) => el.scrollWidth > el.clientWidth + 1).map((el) => el.textContent),
+      );
+      expect(spills, `${route} at ${width}px`).toEqual([]);
+    }
+  }
+});
+
+function isPhone(page: import("@playwright/test").Page) {
+  return (page.viewportSize()?.width ?? 1440) < 900;
+}
+
+test("reveal motion is scroll-driven, desktop only, and off under reduced motion", async ({ page }, testInfo) => {
+  await page.goto("/approach");
+  const heading = page.locator("main > section").nth(1).locator("h2");
+  const animated = () => heading.evaluate((el) => getComputedStyle(el.closest(".wrap > *") ?? el).animationName);
+  if (testInfo.project.name === "desktop") {
+    expect(await animated()).toBe("in-reveal");
+    const timeline = await heading.evaluate((el) => getComputedStyle(el.closest(".wrap > *") ?? el).getPropertyValue("animation-timeline"));
+    expect(timeline).toMatch(/view\(/);
+  } else {
+    expect(await animated()).toBe("none");
+  }
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  expect(await animated()).toBe("none");
+  // with no motion, content is simply there
+  await expect(heading).toHaveCSS("opacity", "1");
+});

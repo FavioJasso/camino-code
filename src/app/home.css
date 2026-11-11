@@ -546,57 +546,7 @@
   }
 }
 
-/* discovery: four stages on one rising line */
-.stages {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  position: relative;
-}
-.stages::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 4px;
-  height: 3px;
-  background: radial-gradient(circle, var(--ink) 1px, var(--morning-0) 1.6px) 0 0 / 9px 3px repeat-x;
-}
-.stage {
-  position: relative;
-  padding: 2.125rem 1.5rem 0 0;
-}
-.stage::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 0.6875rem;
-  height: 0.6875rem;
-  border-radius: 50%;
-  background: var(--bg);
-  border: 1px solid var(--ink);
-}
-.stage:first-child::before {
-  background: var(--ember);
-  border-color: var(--ember);
-}
-.stage .mono {
-  display: block;
-  margin-bottom: 0.625rem;
-}
-.stage h3 {
-  font-weight: 800;
-  font-stretch: 118%;
-  font-size: 1.5rem;
-  line-height: 1.1;
-  margin-bottom: 0.625rem;
-}
-.stage p {
-  max-width: 30ch;
-}
+/* discovery: the four stages are drawn by TrailStages (trail.css) */
 .cta {
   display: flex;
   flex-wrap: wrap;
@@ -615,27 +565,6 @@
   color: var(--fg);
 }
 @media (max-width: 899px) {
-  .stages {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .stages::before {
-    left: 4px;
-    right: auto;
-    top: 6px;
-    bottom: 0;
-    width: 3px;
-    height: auto;
-    background: radial-gradient(circle, var(--ink) 1px, var(--morning-0) 1.6px) 0 0 / 3px 9px repeat-y;
-  }
-  .stage {
-    padding: 0 0 1.75rem 2.125rem;
-  }
-  .stage:last-child {
-    padding-bottom: 0;
-  }
-  .stage p {
-    max-width: none;
-  }
   .cta .btn {
     width: 100%;
   }
