@@ -3,7 +3,7 @@
    stays fully static with no runtime /_next/image requests. */
 export function FounderPhoto({ className, sizes }: { className: string; sizes: string }) {
   return (
-    <figure className={className}>
+    <figure className={`founder-photo ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/people/favio-jasso-400.webp"

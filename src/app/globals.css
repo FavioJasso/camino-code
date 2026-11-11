@@ -329,3 +329,27 @@ body {
   min-height: 2.75rem;
   color: var(--cream);
 }
+
+/* founder portrait (shared by home and About; callers set only the width) */
+.founder-photo {
+  margin: 0;
+}
+.founder-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 400 / 501;
+  object-fit: cover;
+  border-radius: 2px;
+}
+.founder-photo figcaption {
+  margin-top: 0.625rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--line-strong, rgba(20, 26, 43, 0.5));
+  font-family: var(--font-martian), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: var(--fg-soft);
+  text-wrap: balance;
+}
