@@ -244,6 +244,22 @@ test("Work and the case studies show their proof figures large, in wide Archivo"
   }
 });
 
+test("proof figures fit their cells at 320 px", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 });
+  let checked = 0;
+  for (const route of ["/work", "/work/transparent-energy", "/work/daniel-avila-64", "/services/software", "/services/data", "/services/ai-governance"]) {
+    await page.goto(route);
+    const spills = await page.locator(".in-fig b").evaluateAll((els) =>
+      els
+        .filter((el) => el.scrollWidth > el.parentElement!.clientWidth)
+        .map((el) => `${el.textContent} ${el.scrollWidth}>${el.parentElement!.clientWidth}`),
+    );
+    expect(spills, route).toEqual([]);
+    checked += await page.locator(".in-fig b").count();
+  }
+  expect(checked).toBeGreaterThan(0);
+});
+
 function isPhone(page: import("@playwright/test").Page) {
   return (page.viewportSize()?.width ?? 1440) < 900;
 }

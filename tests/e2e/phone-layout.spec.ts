@@ -5,7 +5,7 @@ test.describe("phone layout", () => {
     test.skip(testInfo.project.name !== "phone", "phone viewport only");
   });
 
-  for (const width of [320, 360, 380, 390, 393, 412]) {
+  for (const width of [320, 360, 380, 390, 393, 412, 420, 430]) {
     test(`header keeps its 16 px gutter at ${width} px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 844 });
       await page.goto("/privacy");
