@@ -5,6 +5,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import {
+  BAND_LIGHT,
   BAND_REF,
   BAND_STAGE_T,
   PALETTE,
@@ -15,11 +16,14 @@ import {
   SUN_R,
   bandCameraFor,
   bandSun,
+  skyColours,
   cameraFor,
   projectToSvg,
+  terrainGrid,
   terrainSamples,
   trailAt,
   trailPoints,
+  type BandLayout,
   type BandStage,
   type BandTime,
   type SceneCamera,
@@ -81,12 +85,11 @@ function ridgeRows(
   w: number,
   h: number,
   small: boolean,
-  opts: { clipY?: number; steps?: { row: number; col: number }; minZ?: number } = {},
+  opts: { clipY?: number; steps?: { row: number; col: number }; minZ?: number; wide?: boolean } = {},
 ): string[] {
-  const { clipY = Infinity, steps, minZ = -Infinity } = opts;
-  const cols = small ? 212 : 392;
-  const rows = small ? 118 : 214;
-  const s = terrainSamples({ small });
+  const { clipY = Infinity, steps, minZ = -Infinity, wide = false } = opts;
+  const { rows, cols } = terrainGrid({ small, wide });
+  const s = terrainSamples({ small, wide });
   const rowStep = steps?.row ?? (small ? 3 : 5);
   const colStep = steps?.col ?? (small ? 2 : 4);
   const pathsFarToNear: string[] = [];
@@ -187,9 +190,10 @@ export const BAND_STILLS: Array<{ stage: BandStage; time: BandTime }> = [
   { stage: 4, time: 'day' },
   { stage: 4, time: 'morning' },
 ];
-export const bandStillName = (stage: BandStage, time: BandTime, phone: boolean): string =>
-  `band-s${stage}-${time}-${phone ? 'phone' : 'desktop'}`;
+export const BAND_LAYOUTS: BandLayout[] = ['desktop', 'tablet', 'phone'];
+export const bandStillName = (stage: BandStage, time: BandTime, layout: BandLayout): string => `band-s${stage}-${time}-${layout}`;
 
+const hex01 = (c: [number, number, number]) => hex(c.map((v) => v * 255) as [number, number, number]);
 const hex = (c: [number, number, number]) => '#' + c.map((v) => Math.round(v).toString(16).padStart(2, '0')).join('');
 const mixHex = (a: string, b: string, t: number): string => {
   const p = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
@@ -197,10 +201,11 @@ const mixHex = (a: string, b: string, t: number): string => {
   return hex([0, 1, 2].map((i) => x[i] + (y[i] - x[i]) * t) as [number, number, number]);
 };
 
-function renderBand(stage: BandStage, time: BandTime, phone: boolean): string {
-  const ref = phone ? BAND_REF.phone : BAND_REF.desktop;
-  const { w, h } = ref;
-  const cam = bandCameraFor({ aspect: w / h, portrait: phone, stage });
+function renderBand(stage: BandStage, time: BandTime, layout: BandLayout): string {
+  const { w, h } = BAND_REF[layout];
+  const phone = layout === 'phone';
+  const strip = layout !== 'desktop';
+  const cam = bandCameraFor({ aspect: w / h, layout, stage });
   const proj = (p: [number, number, number]) => projectToSvg(p, cam, w, h);
   const night = time === 'night';
   const theme = night ? NIGHT : MORNING;
@@ -212,22 +217,30 @@ function renderBand(stage: BandStage, time: BandTime, phone: boolean): string {
 
   const out: string[] = [];
   out.push(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="${phone ? 'xMidYMin' : 'xMidYMid'} slice" role="img" aria-label="Dotted mountain ridges with a lantern on the trail below a saddle">`,
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="${strip ? 'xMidYMin' : 'xMidYMid'} slice" role="img" aria-label="Dotted mountain ridges with a lantern on the trail below a saddle">`,
   );
+  const { d } = BAND_LIGHT[time];
   if (night) {
     // midnight, lifting a little toward deep blue at the horizon line
     out.push(
       `<defs><linearGradient id="sky" gradientUnits="userSpaceOnUse" x1="0" y1="${r(lineY - 120)}" x2="0" y2="${r(lineY)}"><stop offset="0" stop-color="${PALETTE.midnight}"/><stop offset="1" stop-color="#132042"/></linearGradient></defs>`,
     );
+  } else {
+    // the scene's sunrise sky: horizon colour at the line, high-sky colour above (85 sky units: 63% of the way)
+    const sky = skyColours(d);
+    const up = proj([cam.position[0], SKY_LINE_Y + 170, SKY_Z]);
+    out.push(
+      `<defs><linearGradient id="sky" gradientUnits="userSpaceOnUse" x1="0" y1="${r(lineY)}" x2="0" y2="${r(up ? up[1] : lineY - 200)}"><stop offset="0" stop-color="${hex01(sky.horizon)}"/><stop offset="1" stop-color="${mixHex(hex01(sky.horizon), hex01(sky.high), 0.86)}"/></linearGradient></defs>`,
+    );
   }
-  out.push(`<rect x="-10" y="-10" width="${w + 20}" height="${h + 20}" fill="${night ? 'url(#sky)' : theme.sky}"/>`);
+  out.push(`<rect x="-10" y="-10" width="${w + 20}" height="${h + 20}" fill="url(#sky)"/>`);
   if (theme.stars) {
     const rand = rng(11);
     let d = '';
     for (let i = 0; i < (phone ? 18 : 60); i++) d += `M${r(rand() * w)} ${r(rand() * Math.max(8, lineY - 6))}h0`;
     out.push(`<path d="${d}" stroke="${theme.stars}" stroke-linecap="round" stroke-width="1.6" opacity=".6"/>`);
   }
-  const sun = bandSun(phone, stage, time);
+  const sun = bandSun(layout, stage, time);
   if (sun) {
     const c = proj(sun);
     const e = proj([sun[0], sun[1] + SUN_R, sun[2]]);
@@ -245,8 +258,9 @@ function renderBand(stage: BandStage, time: BandTime, phone: boolean): string {
   const sw = phone ? 1.5 : 1.4;
   out.push(`<g fill="${theme.ground}" stroke="${theme.dots}" stroke-linecap="round" stroke-width="${sw}" stroke-dasharray="0 3" stroke-opacity=".8">`);
     // the large grid, as the live band; the low ground behind the ridge barely shows live, so it is left out
-  const rowsOpts = { clipY: h + 10, steps: phone ? { row: 5, col: 6 } : { row: 5, col: 5 }, minZ: RIDGE_Z - 3 };
-  for (const d of ridgeRows(cam, w, h, false, rowsOpts)) out.push(d);
+  // phone and tablet: the band's small-screen sample set (the large grid's extent at about 25k points)
+  const rowsOpts = { clipY: h + 10, steps: strip ? { row: 3, col: 3 } : { row: 5, col: 5 }, minZ: RIDGE_Z - 3, wide: true };
+  for (const row of ridgeRows(cam, w, h, strip, rowsOpts)) out.push(row);
   out.push('</g>');
 
   // the trail: walked up to the lantern, dimmer beyond it
@@ -281,7 +295,7 @@ export function renderAllStills(): Record<string, string> {
   const res: Record<string, string> = {};
   for (const s of SPECS) res[s.name] = render(s);
   for (const { stage, time } of BAND_STILLS) {
-    for (const phone of [false, true]) res[bandStillName(stage, time, phone)] = renderBand(stage, time, phone);
+    for (const layout of BAND_LAYOUTS) res[bandStillName(stage, time, layout)] = renderBand(stage, time, layout);
   }
   return res;
 }

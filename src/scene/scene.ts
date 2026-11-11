@@ -18,7 +18,7 @@ import {
   type IUniform,
 } from "three";
 import {
-  BAND_PHONE_MAX,
+  BAND_LIGHT,
   BAND_STAGE_T,
   CAMERA_TARGET,
   H_MAX,
@@ -29,6 +29,8 @@ import {
   SKY_Z,
   SUN_R,
   bandCameraFor,
+  bandLayoutFor,
+  skyColours,
   bandSun,
   cameraFor,
   fillTerrainSamples,
@@ -36,6 +38,7 @@ import {
   mulberry,
   terrainGrid,
   trailPoints,
+  type BandLayout,
   type BandStage,
   type BandTime,
   type SceneCamera,
@@ -83,12 +86,6 @@ const PAUSED_STEP = 0.1; // while paused, scroll moves the scene in discrete ste
 
 const ABORT = Symbol("abort");
 
-/** Band colour state per hour: night is the hero at first light; morning and day are the sunrise phase. */
-const BAND_LIGHT: Record<BandTime, { p: number; d: number }> = {
-  night: { p: 0.3, d: 0 },
-  morning: { p: 1, d: 0.8 },
-  day: { p: 1, d: 1 },
-};
 const HOME_FOCAL = 450 / Math.tan((19 * Math.PI) / 180); // the home camera's focal length at 900 px tall, in px
 
 export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHandle {
@@ -98,6 +95,7 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
   const dawnEl = band ? null : document.getElementById("dawn-window");
   const noop: SceneHandle = { destroy() {}, setPaused() {} };
   if (!canvas) return noop;
+  const glCanvas: HTMLCanvasElement = canvas; // for the hoisted build functions below
 
   const attrs = { antialias: false, alpha: false, depth: true, stencil: false, powerPreference: "high-performance" } as const;
   const gl = canvas.getContext("webgl2", { ...attrs }) as WebGL2RenderingContext | null;
@@ -135,7 +133,10 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
   const coarse = matchMedia("(pointer: coarse)").matches;
   const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
   const small = () => coarse || innerWidth < 700;
-  const isSmall = band ? false : small(); // bands: the large grid, whose edges stay out of the band camera's view
+  const isSmall = small();
+  // bands: the large grid's extent (their cameras see further across), at about 25k points on small screens
+  const gridOpts = { small: isSmall, wide: !!band };
+  const wideGround = !isSmall || !!band;
 
   const scene = new Scene();
   const camera = new PerspectiveCamera(38, 1, 0.5, 600);
@@ -183,7 +184,8 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
   // ---- sizing: home: the canvas is 100lvh; height-only resizes on touch (the toolbar) are ignored.
   //      band: the canvas fills the header band and follows its size ----
   let viewKey = "";
-  let bandCam: SceneCamera = bandCameraFor({ aspect: 1, portrait: false, stage: band?.stage ?? 1 });
+  let bandLayout: BandLayout = "desktop";
+  let bandCam: SceneCamera = bandCameraFor({ aspect: 1, layout: bandLayout, stage: band?.stage ?? 1 });
   const frameView = () => {
     const cam = band ? bandCam : cameraFor({ aspect: view.w / view.h, portrait: view.portrait, progress: state.travel, dawn: state.d });
     const key = cam.viewOffset.cx + "|" + cam.viewOffset.cy + "|" + view.w + "|" + view.h;
@@ -202,9 +204,13 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
     if (w !== view.w) vh0 = innerHeight; // a width change is never the toolbar
     view.w = w;
     view.h = h;
-    // band: the same rule as the still's <source media>, so live and still use the same framing
-    view.portrait = band ? !matchMedia(`(min-width: ${BAND_PHONE_MAX}px)`).matches : w / h < 0.9;
-    if (band) bandCam = bandCameraFor({ aspect: w / h, portrait: view.portrait, stage: band.stage });
+    view.portrait = w / h < 0.9;
+    if (band) {
+      // the viewport width, as the stills' <source media> see it, so live and still use the same framing
+      bandLayout = bandLayoutFor(innerWidth);
+      view.portrait = bandLayout === "phone";
+      bandCam = bandCameraFor({ aspect: w / h, layout: bandLayout, stage: band.stage });
+    }
     applyDpr();
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
@@ -222,22 +228,14 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
     requestRender();
   };
 
-  // ---- sunrise: one sky whose colour follows dawn progress; exactly Morning from d = 0.8 ----
-  const SKY: Array<[number, Vector3]> = (
-    [[0, PALETTE.midnight], [0.2, "#16264D"], [0.4, "#3A5184"], [0.56, "#93A2C2"], [0.62, "#D3CBC8"], [0.68, "#E9CDA6"], [0.8, PALETTE.morning]] as const
-  ).map(([t, h]) => [t, rgb(h)]);
-  const skyRamp = (t: number, out: Vector3) => {
-    let i = 0;
-    while (i < SKY.length - 2 && t > SKY[i + 1][0]) i++;
-    return out.lerpVectors(SKY[i][1], SKY[i + 1][1], clamp((t - SKY[i][0]) / (SKY[i + 1][0] - SKY[i][0]), 0, 1));
-  };
+  // ---- sunrise: one sky whose colour follows dawn progress (terrain.ts SKY_STOPS); exactly Morning from d = 0.8 ----
   const LAND0 = rgb(PALETTE.midnight), LAND1 = rgb("#171F38"), MORN = rgb(PALETTE.morning);
   const clearCol = new Color(), clearV = new Vector3();
   const applyDawn = (d: number) => {
     U.uDawn.value = d;
-    const arc = Math.sin(Math.PI * clamp(d / 0.8, 0, 1)); // 0 at both ends: opens dark, closes flat
-    skyRamp(d - 0.04 * arc, U.cSkyA.value);
-    skyRamp(d + 0.13 * arc, U.cSkyB.value); // the horizon runs ahead of the high sky
+    const sky = skyColours(d); // the horizon runs ahead of the high sky
+    (U.cSkyA.value as Vector3).set(...sky.high);
+    (U.cSkyB.value as Vector3).set(...sky.horizon);
     const f = d > 0 ? lerp(1.45, -0.5, clamp((d - 0.52) / 0.25, 0, 1)) : 9; // daylight walks down, high ground first
     U.uDay.value = f;
     U.uLandL.value = sstep(f, f + 0.1, 0.52);
@@ -382,11 +380,12 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
   };
 
   async function buildTerrain() {
-    const grid = terrainGrid({ small: isSmall });
+    const grid = terrainGrid(gridOpts);
     const { rows, cols } = grid;
     const N = rows * cols;
+    glCanvas.dataset.points = String(N); // the point budget, checked by the e2e tests
     const raw = new Float32Array(N * 3);
-    const rowsLeft = fillTerrainSamples(raw, { small: isSmall });
+    const rowsLeft = fillTerrainSamples(raw, gridOpts);
     while (!rowsLeft.next().done) await slice();
 
     // slope from the grid neighbours: the same shading as the mockup, without extra heightAt calls
@@ -451,7 +450,7 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
     detail.push((level) => geo.setDrawRange(0, Math.floor(N * (level >= 2 ? 0.62 : 0.8))));
 
     // midnight occluder so far slopes hide behind near ones
-    const X0 = isSmall ? -60 : -118, X1 = isSmall ? 52 : 92, Z0 = -104, Z1 = 24;
+    const X0 = wideGround ? -118 : -60, X1 = wideGround ? 92 : 52, Z0 = -104, Z1 = 24;
     const seg = isSmall ? 96 : 150;
     const og = geometry(new PlaneGeometry(X1 - X0 + 40, Z1 - Z0 + 30, seg, seg));
     og.rotateX(-Math.PI / 2);
@@ -608,7 +607,7 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
         }
         if (band) {
           // band: a fixed point in the sky, shared with the stills (terrain.ts)
-          const b = bandSun(view.portrait, band.stage, band.time);
+          const b = bandSun(bandLayout, band.stage, band.time);
           if (b) sun.set(b[0], b[1], R);
           else sun.set(0, -999, R);
           return;

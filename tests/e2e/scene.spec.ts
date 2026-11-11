@@ -245,6 +245,18 @@ test.describe("band on a phone", () => {
   });
 });
 
+test.describe("band on a 390 px phone", () => {
+  test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+
+  test("the band draws about 25,000 terrain points, not the desktop 84,000", async ({ page }) => {
+    await page.goto("/services/data");
+    await expect(band(page)).toHaveClass(/\bis-live\b/, { timeout: 10_000 });
+    const points = Number(await band(page).locator("canvas").getAttribute("data-points"));
+    expect(points).toBeGreaterThan(20_000);
+    expect(points).toBeLessThanOrEqual(25_000);
+  });
+});
+
 test("home -> /work -> /approach -> / leaves exactly one live WebGL context", async ({ page }) => {
   // record every WebGL context the page creates, so a leaked one cannot hide on a removed canvas
   await page.addInitScript(() => {

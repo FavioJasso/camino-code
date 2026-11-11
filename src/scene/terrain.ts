@@ -145,7 +145,7 @@ export function trailPoints(count: number): Array<[number, number, number]> {
  * About 25k points small, 84k large. Rows are in order; shuffle on the scene side
  * if an even drawRange thinning is wanted.
  */
-export function terrainSamples(opts: { small: boolean }): Float32Array {
+export function terrainSamples(opts: TerrainOpts): Float32Array {
   const { rows, cols } = terrainGrid(opts);
   const out = new Float32Array(rows * cols * 3);
   const pending = fillTerrainSamples(out, opts);
@@ -153,8 +153,18 @@ export function terrainSamples(opts: { small: boolean }): Float32Array {
   return out;
 }
 
+/**
+ * Grid options. `small`: about 25k points (small screens) instead of about 84k. `wide`: the large grid's
+ * extent even when small, for the header bands, whose cameras see further across than the home hero.
+ */
+export interface TerrainOpts {
+  small: boolean;
+  wide?: boolean;
+}
+
 /** Row and column counts of the terrainSamples grid. */
-export function terrainGrid(opts: { small: boolean }): { rows: number; cols: number } {
+export function terrainGrid(opts: TerrainOpts): { rows: number; cols: number } {
+  if (opts.small && opts.wide) return { rows: 110, cols: 220 };
   return opts.small ? { rows: 118, cols: 212 } : { rows: 214, cols: 392 };
 }
 
@@ -162,10 +172,10 @@ export function terrainGrid(opts: { small: boolean }): { rows: number; cols: num
  * The same samples as terrainSamples, written into `out` (rows * cols * 3) one row at a time.
  * Yields each finished row index, so the browser scene can time-slice the work.
  */
-export function* fillTerrainSamples(out: Float32Array, opts: { small: boolean }): Generator<number, void> {
-  const { small } = opts;
-  const X0 = small ? -60 : -118;
-  const X1 = small ? 52 : 92;
+export function* fillTerrainSamples(out: Float32Array, opts: TerrainOpts): Generator<number, void> {
+  const narrow = opts.small && !opts.wide;
+  const X0 = narrow ? -60 : -118;
+  const X1 = narrow ? 52 : 92;
   const Z0 = -104;
   const Z1 = 24;
   const { rows, cols } = terrainGrid(opts);
@@ -234,50 +244,57 @@ export function trailAt(t: number): Vec3 {
 /** About the height of the ridge crest either side of the saddle. */
 const CREST_Y = 26;
 
+/** Band framings by width: phones and tablets keep the subject in the strip above the title panel. */
+export type BandLayout = 'phone' | 'tablet' | 'desktop';
+
 /**
  * Reference band shapes. The build-time band stills are rendered at these sizes, and a band of any other
  * shape shows the same picture cropped the way CSS `object-fit: cover` crops the still (centred across;
- * desktop centred down, phone anchored at the top), so the live canvas fades in over its still without a jump.
+ * desktop centred down, phone and tablet anchored at the top), so the live canvas fades in without a jump.
  */
 export const BAND_REF = {
   desktop: { w: 1440, h: 304, anchorY: 0.5 },
+  tablet: { w: 768, h: 236, anchorY: 0 },
   phone: { w: 390, h: 250, anchorY: 0 },
-} as const;
-/** Horizontal field-of-view caps, degrees: wide bands do not stretch, phone bands do not run off the terrain. */
-export const BAND_HFOV_MAX = { desktop: 86, phone: 64 } as const;
-/** Band widths below this use the phone framing and still (matches the still's `<source media>`). */
-export const BAND_PHONE_MAX = 700;
+} as const satisfies Record<BandLayout, { w: number; h: number; anchorY: number }>;
+/** Horizontal field-of-view caps, degrees: wide bands do not stretch, strip framings do not run off the terrain. */
+export const BAND_HFOV_MAX = { desktop: 86, tablet: 86, phone: 64 } as const satisfies Record<BandLayout, number>;
+/** Smallest band width for each larger layout (the stills' `<source media>` use the same numbers). */
+export const BAND_LAYOUT_MIN = { tablet: 700, desktop: 1024 } as const;
+
+export function bandLayoutFor(width: number): BandLayout {
+  return width >= BAND_LAYOUT_MIN.desktop ? 'desktop' : width >= BAND_LAYOUT_MIN.tablet ? 'tablet' : 'phone';
+}
 
 /**
  * The band camera at its reference shape. It stands down-trail of the stage's waypoint (where the lantern
- * rests) and looks up toward the saddle, pitched and zoomed so the ridge crest lands near `top` and the
- * lower of lantern and saddle near `bottom`. Desktop: the subject sits right of the title panel. Phone: the
- * panel covers all but a strip at the top of the band, so the lantern and the trail around it sit in that
- * strip, left of the Motion control, with the ridge above it (on the early stages the crest runs off the top).
- * Bands always use the large terrain grid: from these viewpoints the small grid's edges would show.
+ * rests), pitched and zoomed so the ridge crest lands near `top` and the subject near `bottom`.
+ * Desktop: it looks across at the saddle, which with the lantern sits right of the title panel.
+ * Phone and tablet: the panel covers all but a strip at the top of the band, so the camera aims at the
+ * lantern and holds it, with the trail around it, in that strip and clear of the Motion control; the ridge
+ * rises above it (on the early stages the crest runs off the top).
  */
-function bandRefCamera(portrait: boolean, stage: BandStage): SceneCamera {
-  const ref = portrait ? BAND_REF.phone : BAND_REF.desktop;
+function bandRefCamera(layout: BandLayout, stage: BandStage): SceneCamera {
+  const ref = BAND_REF[layout];
+  const strip = layout !== 'desktop';
   const w = trailAt(BAND_STAGE_T[stage]);
-  const position: Vec3 = [lerp(w[0], 4, 0.6), w[1] + (portrait ? 6 : 5), w[2] + (portrait ? 40 : 52)];
+  const position: Vec3 = [lerp(w[0], 4, 0.6), w[1] + (strip ? 6 : 5), w[2] + (strip ? 40 : 52)];
   const elev = (p: Vec3) => Math.atan2(p[1] - position[1], Math.hypot(p[0] - position[0], p[2] - position[2]));
   const crest = elev([SADDLE.x, CREST_Y, RIDGE_Z]);
-  // desktop: near the top of the trail the saddle is lower than the lantern, and both should show;
-  // phone: the lantern is what must stay in the strip above the panel
-  const low = portrait ? elev(w) : Math.min(elev(w), elev([SADDLE.x, SADDLE.y, SADDLE.z]));
-  const [top, bottom] = portrait ? [0.02, 0.12] : [0.14, 0.8];
+  // desktop: near the top of the trail the saddle is lower than the lantern, and both should show
+  const low = strip ? elev(w) : Math.min(elev(w), elev([SADDLE.x, SADDLE.y, SADDLE.z]));
+  const [top, bottom] = strip ? [0.02, 0.12] : [0.14, 0.8];
   const deg = Math.PI / 180;
-  const hmax = (portrait ? BAND_HFOV_MAX.phone : BAND_HFOV_MAX.desktop) * deg;
+  const hmax = BAND_HFOV_MAX[layout] * deg;
   const vmax = Math.min(58 * deg, 2 * Math.atan(Math.tan(hmax / 2) / (ref.w / ref.h)));
   const v = clamp((crest - low) / (bottom - top), 14 * deg, vmax);
-  const aim: Vec3 = portrait ? w : [SADDLE.x, SADDLE.y, RIDGE_Z];
+  const aim: Vec3 = strip ? w : [SADDLE.x, SADDLE.y, RIDGE_Z];
   const pitch = low + (bottom - 0.5) * v; // small-angle fit, exact enough at these fields of view; crest may run off the top
   return {
     position,
-    // desktop: aim across at the saddle; phone: at the lantern, which must stay left of the Motion control
     target: [aim[0], position[1] + Math.tan(pitch) * Math.hypot(aim[0] - position[0], aim[2] - position[2]), aim[2]],
     fov: v / deg,
-    viewOffset: { cx: portrait ? 0.3 : 0.72, cy: 0.5 },
+    viewOffset: { cx: layout === 'phone' ? 0.3 : layout === 'tablet' ? 0.5 : 0.72, cy: 0.5 },
   };
 }
 
@@ -286,11 +303,11 @@ function bandRefCamera(portrait: boolean, stage: BandStage): SceneCamera {
  * A band wider than the reference keeps the full width and loses some height; a narrower one keeps the
  * full height and loses the sides.
  */
-export function bandCameraFor(view: { aspect: number; portrait: boolean; stage: BandStage }): SceneCamera {
-  const { aspect, portrait, stage } = view;
-  const ref = portrait ? BAND_REF.phone : BAND_REF.desktop;
+export function bandCameraFor(view: { aspect: number; layout: BandLayout; stage: BandStage }): SceneCamera {
+  const { aspect, layout, stage } = view;
+  const ref = BAND_REF[layout];
   const a0 = ref.w / ref.h;
-  const cam = bandRefCamera(portrait, stage);
+  const cam = bandRefCamera(layout, stage);
   const { cx, cy } = cam.viewOffset;
   if (aspect >= a0) {
     const k = aspect / a0;
@@ -302,29 +319,55 @@ export function bandCameraFor(view: { aspect: number; portrait: boolean; stage: 
 
 export type BandTime = 'night' | 'morning' | 'day';
 
+/** Band colour state per hour: night is the hero at first light; morning is mid-sunrise; day is full morning light. */
+export const BAND_LIGHT: Record<BandTime, { p: number; d: number }> = {
+  night: { p: 0.3, d: 0 },
+  morning: { p: 1, d: 0.7 },
+  day: { p: 1, d: 1 },
+};
+
+/** The sunrise sky ramp (dawn progress -> colour): one sky, exactly Morning from d = 0.8. */
+export const SKY_STOPS: ReadonlyArray<readonly [number, string]> = [
+  [0, PALETTE.midnight], [0.2, '#16264D'], [0.4, '#3A5184'], [0.56, '#93A2C2'], [0.62, '#D3CBC8'], [0.68, '#E9CDA6'], [0.8, PALETTE.morning],
+];
+
+/** The two sky colours at dawn progress d, as the scene's sky shader uses them: high sky, and horizon (which runs ahead). */
+export function skyColours(d: number): { high: Vec3; horizon: Vec3 } {
+  const at = (t: number): Vec3 => {
+    let i = 0;
+    while (i < SKY_STOPS.length - 2 && t > SKY_STOPS[i + 1][0]) i++;
+    const [t0, a] = SKY_STOPS[i];
+    const [t1, b] = SKY_STOPS[i + 1];
+    const k = clamp((t - t0) / (t1 - t0), 0, 1);
+    const c = (h: string, j: number) => parseInt(h.slice(1 + 2 * j, 3 + 2 * j), 16) / 255;
+    return [0, 1, 2].map((j) => lerp(c(a, j), c(b, j), k)) as Vec3;
+  };
+  const arc = Math.sin(Math.PI * clamp(d / 0.8, 0, 1)); // 0 at both ends: opens dark, closes flat
+  return { high: at(d - 0.04 * arc), horizon: at(d + 0.13 * arc) };
+}
+
 /** The sky plane and its horizon line, as the browser scene draws them. */
 export const SKY_Z = -440;
 export const SKY_LINE_Y = 44;
 export const SUN_R = 15;
 
 /**
- * Where the band's sun sits (world centre on the sky plane), or null at night: behind the saddle, just
- * clearing the horizon line at morning and higher by day, but never so high that its ring (drawn 7 px
- * outside the disc) leaves the top of the reference band.
+ * Where the band's sun sits (world centre on the sky plane), or null at night: behind the saddle; at
+ * morning still rising (its lower part behind the horizon line), by day clear of the line but never so
+ * high that its ring (drawn 7 px outside the disc) leaves the top of the reference band.
  */
-export function bandSun(portrait: boolean, stage: BandStage, time: BandTime): Vec3 | null {
+export function bandSun(layout: BandLayout, stage: BandStage, time: BandTime): Vec3 | null {
   if (time === 'night') return null;
-  const ref = portrait ? BAND_REF.phone : BAND_REF.desktop;
-  const cam = bandRefCamera(portrait, stage);
+  const ref = BAND_REF[layout];
+  const cam = bandRefCamera(layout, stage);
   const e = cam.position;
   const k = (SKY_Z - e[2]) / (CAMERA_TARGET[2] - e[2]);
   const x = e[0] + (CAMERA_TARGET[0] + 1.2 - e[0]) * k;
-  let y = SKY_LINE_Y + (time === 'day' ? 12 : 4);
-  for (; y > SKY_LINE_Y; y -= 0.5) {
-    const c = projectToSvg([x, y, SKY_Z], cam, ref.w, ref.h);
+  if (time === 'morning') return [x, SKY_LINE_Y - 5, SKY_Z];
+  let y = SKY_LINE_Y + 12;
+  for (; y > SKY_LINE_Y + 3; y -= 0.5) {
     const edge = projectToSvg([x, y + SUN_R, SKY_Z], cam, ref.w, ref.h);
-    if (!c || !edge) break;
-    if (edge[1] - 9 >= ref.h * 0.04) break; // ring top (7 px out, 1.3 px wide) stays inside the band
+    if (!edge || edge[1] - 9 >= ref.h * 0.04) break; // ring top (7 px out, 1.3 px wide) stays inside the band
   }
   return [x, y, SKY_Z];
 }

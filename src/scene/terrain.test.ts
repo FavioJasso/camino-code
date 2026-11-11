@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   BAND_HFOV_MAX,
-  BAND_PHONE_MAX,
+  BAND_LIGHT,
+  bandLayoutFor,
+  terrainGrid,
   BAND_REF,
   BAND_STAGE_T,
   CAMERA_TARGET,
@@ -106,6 +108,12 @@ describe('terrain', () => {
       { w: 390, h: 208, stage: 3, panel: [16, 85, 269, 176], page: '/approach' },
       { w: 390, h: 208, stage: 4, panel: [16, 85, 372, 176], page: '/about' },
       { w: 390, h: 220, stage: 4, panel: [16, 68, 374, 188], page: '/discovery' },
+      { w: 768, h: 236, stage: 1, panel: [16, 68, 720, 204], page: '/services/data' },
+      { w: 768, h: 208, stage: 2, panel: [16, 100, 156, 176], page: '/work' },
+      { w: 768, h: 236, stage: 2, panel: [16, 68, 720, 204], page: '/work/transparent-energy' },
+      { w: 768, h: 208, stage: 3, panel: [16, 72, 302, 176], page: '/approach' },
+      { w: 768, h: 208, stage: 4, panel: [16, 72, 415, 176], page: '/about' },
+      { w: 768, h: 208, stage: 4, panel: [16, 72, 506, 176], page: '/discovery' },
       { w: 1024, h: 266, stage: 1, panel: [16, 77, 720, 234], page: '/services/data' },
       { w: 1024, h: 266, stage: 2, panel: [16, 77, 720, 234], page: '/work/transparent-energy' },
       { w: 1024, h: 266, stage: 3, panel: [16, 120, 381, 234], page: '/approach' },
@@ -124,8 +132,8 @@ describe('terrain', () => {
 
     for (const { w, h, stage, panel, page } of PAGES) {
       it(`${page} at ${w}x${h}: the lantern is in the band, clear of the title panel and the Motion control`, () => {
-        const portrait = w < BAND_PHONE_MAX;
-        const cam = bandCameraFor({ aspect: w / h, portrait, stage });
+        const layout = bandLayoutFor(w);
+        const cam = bandCameraFor({ aspect: w / h, layout, stage });
         const lantern = projectToSvg(trailAt(BAND_STAGE_T[stage]), cam, w, h)!;
         expect(lantern[0]).toBeGreaterThan(LANTERN_R);
         expect(lantern[0]).toBeLessThan(w - LANTERN_R);
@@ -133,9 +141,9 @@ describe('terrain', () => {
         expect(lantern[1]).toBeLessThan(h - LANTERN_R);
         expect(clear(lantern, panel, LANTERN_R), 'panel').toBe(true);
         expect(clear(lantern, [w - 165, 12, w - 12, 56], LANTERN_R), 'control').toBe(true);
-        // phones: inside the 68 px strip the band reserves above the panel; at 320 px within the top fifth
-        if (portrait) expect(lantern[1] + LANTERN_R).toBeLessThanOrEqual(w === 320 ? 0.21 * h : 60);
-        if (!portrait) {
+        // phones and tablets: inside the 68 px strip the band reserves above the panel; at 320 px within the top fifth
+        if (layout !== 'desktop') expect(lantern[1] + LANTERN_R).toBeLessThanOrEqual(w === 320 ? 0.21 * h : 60);
+        if (layout === 'desktop') {
           // desktop: the saddle clears the panel too
           const saddle = projectToSvg([SADDLE.x, SADDLE.y, SADDLE.z], cam, w, h)!;
           expect(saddle[0]).toBeGreaterThan(panel[2] + 20);
@@ -143,16 +151,17 @@ describe('terrain', () => {
       });
     }
 
-    for (const portrait of [false, true]) {
+    const SHAPES = { phone: [1.0, 1.3, 2.2], tablet: [2.9, 3.25, 3.9], desktop: [3.2, 3.85, 6] } as const;
+    for (const layout of ['phone', 'tablet', 'desktop'] as const) {
       for (const stage of [1, 2, 3, 4] as const) {
-        it(`${portrait ? 'phone' : 'desktop'} stage ${stage}: any band shape is a cover crop of the reference (the still)`, () => {
-          const ref = portrait ? BAND_REF.phone : BAND_REF.desktop;
+        it(`${layout} stage ${stage}: any band shape is a cover crop of the reference (the still)`, () => {
+          const ref = BAND_REF[layout];
           const a0 = ref.w / ref.h;
-          const refCam = bandCameraFor({ aspect: a0, portrait, stage });
+          const refCam = bandCameraFor({ aspect: a0, layout, stage });
           const p = trailAt(BAND_STAGE_T[stage]);
           const [fx, fy] = projectToSvg(p, refCam, ref.w, ref.h)!.map((v, i) => v / (i ? ref.h : ref.w));
-          for (const aspect of portrait ? [1.0, 1.3, 2.2] : [3.2, 3.85, 6]) {
-            const [bx, by] = projectToSvg(p, bandCameraFor({ aspect, portrait, stage }), aspect * 100, 100)!;
+          for (const aspect of SHAPES[layout]) {
+            const [bx, by] = projectToSvg(p, bandCameraFor({ aspect, layout, stage }), aspect * 100, 100)!;
             const k = aspect / a0;
             const ex = aspect >= a0 ? fx : 0.5 + (fx - 0.5) / k;
             const ey = aspect >= a0 ? ref.anchorY + (fy - ref.anchorY) * k : fy;
@@ -161,11 +170,11 @@ describe('terrain', () => {
           }
         });
 
-        it(`${portrait ? 'phone' : 'desktop'} stage ${stage}: no stretch past the horizontal cap`, () => {
-          for (const aspect of portrait ? [0.9, 1.56, 3] : [2.8, 4.74, 6.5]) {
-            const cam = bandCameraFor({ aspect, portrait, stage });
+        it(`${layout} stage ${stage}: no stretch past the horizontal cap`, () => {
+          for (const aspect of [SHAPES[layout][0] * 0.9, ...SHAPES[layout], SHAPES[layout][2] * 1.1]) {
+            const cam = bandCameraFor({ aspect, layout, stage });
             const hfov = 2 * Math.atan(Math.tan((cam.fov * Math.PI) / 360) * aspect);
-            expect(hfov).toBeLessThanOrEqual(((portrait ? BAND_HFOV_MAX.phone : BAND_HFOV_MAX.desktop) * Math.PI) / 180 + 1e-9);
+            expect(hfov).toBeLessThanOrEqual((BAND_HFOV_MAX[layout] * Math.PI) / 180 + 1e-9);
           }
         });
       }
@@ -174,8 +183,8 @@ describe('terrain', () => {
     for (const stage of [3, 4] as const) {
       it(`desktop stage ${stage} by day: the sun and its ring stay inside the band's top edge`, () => {
         const { w, h } = BAND_REF.desktop;
-        const cam = bandCameraFor({ aspect: w / h, portrait: false, stage });
-        const sun = bandSun(false, stage, 'day')!;
+        const cam = bandCameraFor({ aspect: w / h, layout: 'desktop', stage });
+        const sun = bandSun('desktop', stage, 'day')!;
         const c = projectToSvg(sun, cam, w, h)!;
         const edge = projectToSvg([sun[0], sun[1] + SUN_R, sun[2]], cam, w, h)!;
         expect(edge[1] - 9).toBeGreaterThanOrEqual(0);
@@ -184,7 +193,33 @@ describe('terrain', () => {
       });
     }
     it('there is no sun at night', () => {
-      expect(bandSun(false, 1, 'night')).toBeNull();
+      expect(bandSun('desktop', 1, 'night')).toBeNull();
+    });
+
+    it('morning is the earlier sunrise: less dawn progress and a lower sun than day', () => {
+      expect(BAND_LIGHT.morning.d).toBeLessThan(BAND_LIGHT.day.d);
+      expect(BAND_LIGHT.morning.d).toBeCloseTo(0.7, 5);
+      for (const layout of ['phone', 'tablet', 'desktop'] as const) {
+        expect(bandSun(layout, 4, 'morning')![1]).toBeLessThan(bandSun(layout, 4, 'day')![1] - 5);
+      }
+    });
+
+    it('layouts switch at 700 and 1024 px', () => {
+      expect([699, 700, 1023, 1024].map(bandLayoutFor)).toEqual(['phone', 'tablet', 'tablet', 'desktop']);
+    });
+
+    it("small screens' band grid keeps the large extent at no more than 25,000 points", () => {
+      const { rows, cols } = terrainGrid({ small: true, wide: true });
+      expect(rows * cols).toBeLessThanOrEqual(25_000);
+      expect(rows * cols).toBeGreaterThan(20_000);
+      const s = terrainSamples({ small: true, wide: true });
+      let minX = Infinity, maxX = -Infinity;
+      for (let i = 0; i < s.length; i += 3) {
+        minX = Math.min(minX, s[i]);
+        maxX = Math.max(maxX, s[i]);
+      }
+      expect(minX).toBeLessThan(-115);
+      expect(maxX).toBeGreaterThan(90);
     });
   });
 });

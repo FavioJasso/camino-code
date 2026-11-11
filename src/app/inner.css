@@ -20,8 +20,8 @@
 .band-still {
   object-fit: cover;
 }
-/* phone band stills are cropped from the top, as the live band's phone framing is (terrain.ts BAND_REF) */
-@media (max-width: 699.98px) {
+/* phone and tablet band stills are cropped from the top, as the live band's strip framing is (terrain.ts BAND_REF) */
+@media (max-width: 1023.98px) {
   .band-live .band-still {
     object-position: 50% 0;
   }
