@@ -132,7 +132,7 @@ test("/about shows the sized founder portrait and no FJ placeholder", async ({ p
   const srcset = (await img.getAttribute("srcset")) ?? "";
   expect(srcset).toMatch(/favio-jasso-400\.webp 400w/);
   expect(srcset).toMatch(/favio-jasso-800\.webp 800w/);
-  await expect(img).toHaveAttribute("loading", "lazy");
+  await expect(img).toHaveAttribute("loading", "eager");
   await expect(page.locator("main")).toContainText("Favio Jasso · Founder · Newark, NJ");
   await expect(page.locator("main")).not.toContainText(/\bFJ\b/);
   await img.scrollIntoViewIfNeeded();

@@ -95,7 +95,7 @@ export default function DanielAvila64Page() {
             {study.gallery.map((g) => (
               <li key={g.src}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={g.src} alt={g.alt} width={1920} height={1280} loading="lazy" decoding="async" />
+                <img src={g.src.replace(".webp", "-960.webp")} srcSet={`${g.src.replace(".webp", "-960.webp")} 960w, ${g.src} 1920w`} sizes="(max-width: 899px) calc(100vw - 2rem), min(566px, calc(50vw - 1.5rem))" alt={g.alt} width={1920} height={1280} loading="lazy" decoding="async" />
               </li>
             ))}
           </ul>

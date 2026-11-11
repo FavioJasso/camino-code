@@ -19,7 +19,7 @@ export default function TermsPage() {
           <h2>This website</h2>
           <p>The site describes what Camino Code does. It is general information, not advice for your particular business. Please do not rely on it as legal, financial or technical advice.</p>
           <h2>Results we describe</h2>
-          <p>The figures on this site describe one specific project, the Transparent Energy reconciliation system. Another business should not expect the same numbers. Your own results depend on your data and your process.</p>
+          <p>The figures on this site describe specific projects: the Transparent Energy reconciliation system and DANIEL AVILA 64. Another business should not expect the same numbers. Your own results depend on your data and your process.</p>
           <h2>Discovery</h2>
           <p>The discovery session is free. Afterwards we send a one-page written summary. We reply to enquiries within one business day.</p>
           <h2>Paid work</h2>

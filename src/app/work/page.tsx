@@ -41,7 +41,7 @@ export default function WorkPage() {
           </p>
           <h2 id="da-title">{da.name}</h2>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={da.cardImage.src} alt={da.cardImage.alt} width={1920} height={1280} loading="lazy" decoding="async" />
+          <img src={da.cardImage.src.replace(".webp", "-960.webp")} srcSet={`${da.cardImage.src.replace(".webp", "-960.webp")} 960w, ${da.cardImage.src} 1920w`} sizes="(max-width: 815px) calc(100vw - 2rem), 768px" alt={da.cardImage.alt} width={1920} height={1280} loading="lazy" decoding="async" />
           <Figures figures={da.figures} />
           <div className="in-proof-body">
             <div>

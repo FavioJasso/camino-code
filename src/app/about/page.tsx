@@ -18,7 +18,7 @@ export default function AboutPage() {
       <PageBand stage={4} time="day" kicker="About" title="About Camino Code" />
       <section className="inner-sec in-light" aria-labelledby="founder-title">
         <div className="wrap founder-row">
-          <FounderPhoto className="in-portrait" sizes="(max-width: 599px) 160px, 144px" />
+          <FounderPhoto loading="eager" className="in-portrait" sizes="(max-width: 599px) 160px, 144px" />
           <div>
             <p className="in-mono in-label">
               <i>01</i> Founder
@@ -67,7 +67,7 @@ export default function AboutPage() {
             ))}
           </div>
           <p className="in-aside">
-            Both were website projects for small businesses.
+            Both were website projects.
           </p>
         </div>
       </section>
