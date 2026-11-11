@@ -14,10 +14,17 @@ export type State = {
 const FALLBACK = `We couldn't send this. Email us at ${site.contact.email} and we'll reply within one business day.`;
 const DEV_SECRET = "camino-code-development-only-secret";
 
+const isProduction = () => process.env.VERCEL_ENV === "production";
+
 let warned = false;
-function secret(): string {
+/** The signing secret, or null in production when FORM_SECRET is missing (a public fallback would make tokens forgeable). */
+function secret(): string | null {
   const s = process.env.FORM_SECRET;
   if (s) return s;
+  if (isProduction()) {
+    console.error("[booking] FORM_SECRET is not set in production; bookings fall back to email.");
+    return null;
+  }
   if (!warned) {
     warned = true;
     console.warn("[booking] FORM_SECRET is not set; signing form timestamps with a development secret.");
@@ -27,7 +34,8 @@ function secret(): string {
 
 /** Called by the form once it is on screen, so the page itself stays statically prerendered. */
 export async function issueFormToken(): Promise<string> {
-  return signTimestamp(Date.now(), secret());
+  const s = secret();
+  return s ? signTimestamp(Date.now(), s) : "";
 }
 
 function valuesOf(form: FormData): Partial<Booking> {
@@ -51,15 +59,17 @@ export async function submitBooking(_prev: State, form: FormData): Promise<State
     return { status: "error", errors: parsed.errors, values };
   }
 
-  // A token is present once the page's script has run. Without JavaScript there is none, and the
-  // honeypot is the only check. A token that is present must be valid; a bad one is never silent.
+  // Every send needs a valid signed timestamp, which the form gets once its script has run.
+  // Missing, forged or stale tokens (including JavaScript-off visitors) get the email fallback,
+  // never a silent drop and never an email.
   const token = form.get("t");
-  if (typeof token === "string" && token !== "" && !verifyTimestamp(token, secret(), Date.now())) {
+  const s = secret();
+  if (!s || typeof token !== "string" || !verifyTimestamp(token, s, Date.now())) {
     return { status: "error", errors: { form: FALLBACK }, values };
   }
 
-  // Test-only: lets Playwright reach the success state without Resend. Never set in production.
-  if (process.env.BOOKING_TEST_MODE === "sent" && parsed.data.business === "__test_sent__") {
+  // Test-only: lets Playwright reach the success state without Resend. Disabled in production.
+  if (!isProduction() && process.env.BOOKING_TEST_MODE === "sent" && parsed.data.business === "__test_sent__") {
     return { status: "sent" };
   }
 
