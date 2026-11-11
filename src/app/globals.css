@@ -283,6 +283,10 @@ body {
   .brand span {
     display: none;
   }
+}
+
+/* mark + wordmark + Book discovery + Menu need ~418 px at full size; compact the button so the row fits 390 px phones */
+@media (max-width: 419px) {
   .site-head .btn {
     padding: 0 0.75rem;
     font-size: 0.8125rem;
