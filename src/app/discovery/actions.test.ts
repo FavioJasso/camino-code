@@ -3,8 +3,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const send = vi.fn(async () => ({ data: { id: "1" }, error: null }));
 vi.mock("resend", () => ({ Resend: class { emails = { send }; } }));
 vi.mock("@vercel/analytics/server", () => ({ track: vi.fn(async () => {}) }));
+let ip = "203.0.113.7";
+vi.mock("next/headers", () => ({ headers: async () => new Headers({ "x-forwarded-for": ip }) }));
 
 import { signTimestamp } from "@/lib/booking";
+import { resetAbuseGuard } from "@/lib/abuse-guard";
 import { submitBooking } from "./actions";
 
 const SECRET = "test-secret";
@@ -22,6 +25,8 @@ const freshToken = () => signTimestamp(Date.now() - 10_000, SECRET);
 
 beforeEach(() => {
   send.mockClear();
+  resetAbuseGuard();
+  ip = "203.0.113.7";
   vi.stubEnv("RESEND_API_KEY", "re_test");
   vi.stubEnv("BOOKING_FROM", "site@send.caminocode.com");
   vi.stubEnv("FORM_SECRET", SECRET);
@@ -66,5 +71,32 @@ describe("submitBooking spam protection", () => {
     f.set("business", "__test_sent__");
     await submitBooking(idle, f);
     expect(send).toHaveBeenCalledTimes(1);
+  });
+
+  it("sends only once per token: a replayed token never sends", async () => {
+    const token = freshToken();
+    expect((await submitBooking(idle, booking(token))).status).toBe("sent");
+    for (let i = 0; i < 3; i++) {
+      const r = await submitBooking(idle, booking(token));
+      expect(r.status).toBe("error");
+      expect(r.values?.name).toBe("Ana Diaz");
+    }
+    expect(send).toHaveBeenCalledTimes(1);
+  });
+
+  it("allows 5 sends per visitor per 10 minutes, then falls back to email", async () => {
+    for (let i = 0; i < 5; i++) expect((await submitBooking(idle, booking(freshToken()))).status).toBe("sent");
+    expect((await submitBooking(idle, booking(freshToken()))).status).toBe("error");
+    expect(send).toHaveBeenCalledTimes(5);
+    ip = "198.51.100.4"; // a different visitor is unaffected
+    expect((await submitBooking(idle, booking(freshToken()))).status).toBe("sent");
+  });
+
+  it("ignores the test override of the send limit in production", async () => {
+    vi.stubEnv("VERCEL_ENV", "production");
+    vi.stubEnv("BOOKING_SENDS_PER_10_MIN", "1000");
+    for (let i = 0; i < 5; i++) await submitBooking(idle, booking(freshToken()));
+    expect((await submitBooking(idle, booking(freshToken()))).status).toBe("error");
+    expect(send).toHaveBeenCalledTimes(5);
   });
 });

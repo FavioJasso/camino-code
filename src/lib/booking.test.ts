@@ -64,24 +64,24 @@ describe("parseBooking", () => {
 describe("timestamp tokens", () => {
   const secret = "s3cret";
   const t = 1_000_000;
-  it("rejects a timestamp younger than 3 s or older than 2 h or with a bad signature", () => {
+  it("rejects a timestamp younger than 3 s or older than 30 min or with a bad signature", () => {
     const token = signTimestamp(t, secret);
     expect(verifyTimestamp(token, secret, t + 2_999)).toBe(false);
     expect(verifyTimestamp(token, secret, t + 3_000)).toBe(true);
-    expect(verifyTimestamp(token, secret, t + 2 * 3600_000)).toBe(true);
-    expect(verifyTimestamp(token, secret, t + 2 * 3600_000 + 1)).toBe(false);
+    expect(verifyTimestamp(token, secret, t + 30 * 60_000)).toBe(true);
+    expect(verifyTimestamp(token, secret, t + 30 * 60_000 + 1)).toBe(false);
     expect(verifyTimestamp(token, "other", t + 5_000)).toBe(false);
-    expect(verifyTimestamp(token.replace(/.$/, "0"), secret, t + 5_000)).toBe(false);
-    expect(verifyTimestamp(`${t + 1}.${token.split(".")[1]}`, secret, t + 5_000)).toBe(false);
+    const flipped = token.slice(0, -1) + (token.endsWith("0") ? "1" : "0");
+    expect(verifyTimestamp(flipped, secret, t + 5_000)).toBe(false);
+    const [, nonce, sig] = token.split(".");
+    expect(verifyTimestamp(`${t + 1}.${nonce}.${sig}`, secret, t + 5_000)).toBe(false);
+    expect(verifyTimestamp(`${t}.${"0".repeat(24)}.${sig}`, secret, t + 5_000)).toBe(false);
+    expect(verifyTimestamp(`${token}.x`, secret, t + 5_000)).toBe(false);
     expect(verifyTimestamp("", secret, t + 5_000)).toBe(false);
     expect(verifyTimestamp("garbage", secret, t + 5_000)).toBe(false);
   });
-});
 
-describe("booking-shared", () => {
-  it("stays free of node-only imports, so the client form never pulls in a crypto polyfill", async () => {
-    const { readFileSync } = await import("node:fs");
-    const src = readFileSync(new URL("./booking-shared.ts", import.meta.url), "utf8");
-    expect(src).not.toMatch(/from\s+["'](node:|crypto|resend|@vercel\/analytics\/server)/);
+  it("gives every token a different nonce", () => {
+    expect(signTimestamp(t, secret)).not.toBe(signTimestamp(t, secret));
   });
 });

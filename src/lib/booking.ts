@@ -1,4 +1,4 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { LIMITS, type Booking, type BookingErrors } from "./booking-shared";
 
 export { LIMITS, type Booking, type BookingErrors };
@@ -10,7 +10,8 @@ export const SPAM = "spam";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_AGE_MS = 3_000;
-const MAX_AGE_MS = 2 * 60 * 60 * 1000;
+/** Tokens are short-lived and single-use (see abuse-guard.ts), so a captured token cannot be replayed for long. */
+export const MAX_AGE_MS = 30 * 60 * 1000;
 
 function text(form: FormData, key: string): string {
   const v = form.get(key);
@@ -54,20 +55,21 @@ export function parseBooking(form: FormData, now: number): ParseResult {
   return { ok: true, data };
 }
 
-function mac(t: number, secret: string): string {
-  return createHmac("sha256", secret).update(String(t)).digest("hex");
+function mac(payload: string, secret: string): string {
+  return createHmac("sha256", secret).update(payload).digest("hex");
 }
 
-export function signTimestamp(t: number, secret: string): string {
-  return `${t}.${mac(t, secret)}`;
+/** `<timestamp>.<nonce>.<hmac>`: the random nonce makes every token unique, so each can be consumed once. */
+export function signTimestamp(t: number, secret: string, nonce: string = randomBytes(12).toString("hex")): string {
+  return `${t}.${nonce}.${mac(`${t}.${nonce}`, secret)}`;
 }
 
-/** Valid when the signature matches and the token is between 3 seconds and 2 hours old. */
+/** Valid when the signature matches and the token is between 3 seconds and 30 minutes old. */
 export function verifyTimestamp(token: string, secret: string, now: number): boolean {
-  const [stamp, sig, extra] = token.split(".");
-  if (!stamp || !sig || extra !== undefined || !/^\d+$/.test(stamp)) return false;
+  const [stamp, nonce, sig, extra] = token.split(".");
+  if (!stamp || !nonce || !sig || extra !== undefined || !/^\d+$/.test(stamp) || !/^[0-9a-f]{24}$/.test(nonce)) return false;
   const t = Number(stamp);
-  const expected = Buffer.from(mac(t, secret));
+  const expected = Buffer.from(mac(`${stamp}.${nonce}`, secret));
   const given = Buffer.from(sig);
   if (given.length !== expected.length || !timingSafeEqual(given, expected)) return false;
   const age = now - t;

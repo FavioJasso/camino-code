@@ -2,7 +2,9 @@
 
 import { track } from "@vercel/analytics/server";
 import { Resend } from "resend";
-import { SPAM, parseBooking, signTimestamp, verifyTimestamp, type Booking, type BookingErrors } from "@/lib/booking";
+import { headers } from "next/headers";
+import { MAX_AGE_MS, SPAM, parseBooking, signTimestamp, verifyTimestamp, type Booking, type BookingErrors } from "@/lib/booking";
+import { allowSend, consumeToken } from "@/lib/abuse-guard";
 import { site } from "@/content/site";
 
 export type State = {
@@ -15,6 +17,19 @@ const FALLBACK = `We couldn't send this. Email us at ${site.contact.email} and w
 const DEV_SECRET = "camino-code-development-only-secret";
 
 const isProduction = () => process.env.VERCEL_ENV === "production";
+
+/** Sends allowed per visitor in a 10-minute window. BOOKING_SENDS_PER_10_MIN raises it for automated tests only. */
+const SEND_WINDOW_MS = 10 * 60 * 1000;
+function sendLimit(): number {
+  const n = Number(process.env.BOOKING_SENDS_PER_10_MIN);
+  return Number.isInteger(n) && n > 0 && !isProduction() ? n : 5;
+}
+
+/** The visitor's address as reported by the platform proxy; one shared bucket if absent. */
+async function visitorKey(): Promise<string> {
+  const h = await headers();
+  return h.get("x-real-ip") || h.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+}
 
 let warned = false;
 /** The signing secret, or null in production when FORM_SECRET is missing (a public fallback would make tokens forgeable). */
@@ -65,6 +80,12 @@ export async function submitBooking(_prev: State, form: FormData): Promise<State
   const token = form.get("t");
   const s = secret();
   if (!s || typeof token !== "string" || !verifyTimestamp(token, s, Date.now())) {
+    return { status: "error", errors: { form: FALLBACK }, values };
+  }
+
+  // Each token works once (a replayed token never sends), and each visitor gets a few sends per window.
+  const now = Date.now();
+  if (!consumeToken(token, now, MAX_AGE_MS) || !allowSend(await visitorKey(), now, sendLimit(), SEND_WINDOW_MS)) {
     return { status: "error", errors: { form: FALLBACK }, values };
   }
 
