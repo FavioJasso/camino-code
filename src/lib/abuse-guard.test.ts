@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { allowSend, consumeToken, resetAbuseGuard } from "./abuse-guard";
+import { allowGlobalSend, allowSend, consumeToken, resetAbuseGuard } from "./abuse-guard";
 import { visitorKeyFromIp } from "./booking";
 
 beforeEach(() => resetAbuseGuard());
@@ -34,5 +34,14 @@ describe("visitorKeyFromIp", () => {
     expect(visitorKeyFromIp("2001:0db8:ABCD:0012:ffff:1:2:3")).toBe("2001:db8:abcd:12::/64");
     expect(visitorKeyFromIp("::1")).toBe("0:0:0:0::/64");
     expect(visitorKeyFromIp("")).toBe("unknown");
+    expect(visitorKeyFromIp("::ffff:203.0.113.7")).toBe("203.0.113.7");
+  });
+});
+
+describe("allowGlobalSend", () => {
+  it("is not reset by a flood of distinct per-visitor keys", () => {
+    expect(allowGlobalSend(0, 1, 1_000_000)).toBe(true);
+    for (let i = 0; i < 12_000; i++) allowSend(`mint:${i}`, i, 30, 1_000_000);
+    expect(allowGlobalSend(12_000, 1, 1_000_000)).toBe(false);
   });
 });

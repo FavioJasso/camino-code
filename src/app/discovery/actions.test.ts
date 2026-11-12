@@ -142,13 +142,27 @@ describe("submitBooking spam protection", () => {
     expect((await submitBooking(idle, booking(freshToken()))).status).toBe("sent");
   });
 
-  it("caps sends per server at 30 an hour in production, whatever the addresses", async () => {
+  it("caps sends per server at 60 an hour in production, whatever the addresses", async () => {
     vi.stubEnv("VERCEL_ENV", "production");
-    for (let i = 0; i < 31; i++) {
+    for (let i = 0; i < 61; i++) {
       ip = `192.0.2.${i + 1}`;
       await submitBooking(idle, booking(freshToken()));
     }
-    expect(send).toHaveBeenCalledTimes(30);
+    expect(send).toHaveBeenCalledTimes(60);
+  });
+
+  it("never lets one visitor exhaust the server's hourly ceiling", async () => {
+    vi.stubEnv("VERCEL_ENV", "production");
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-11-12T10:00:00Z"));
+    // Every 10 minutes: one fresh token, sent once and then replayed four times (5 attempts per window).
+    for (let minute = 0; minute < 60; minute += 10) {
+      vi.setSystemTime(new Date(Date.parse("2026-11-12T10:00:00Z") + minute * 60_000));
+      const token = freshToken();
+      for (let i = 0; i < 5; i++) await submitBooking(idle, booking(token));
+    }
+    ip = "198.51.100.20"; // a different visitor can still book
+    expect((await submitBooking(idle, booking(freshToken()))).status).toBe("sent");
   });
 
   it("stops issuing tokens to a visitor who requests more than 30 in 10 minutes", async () => {

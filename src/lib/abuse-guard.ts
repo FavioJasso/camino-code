@@ -9,10 +9,13 @@ const MAX_ENTRIES = 10_000;
 
 const usedTokens = new Map<string, number>(); // token -> expiry time
 const sends = new Map<string, number[]>(); // visitor key -> recent send times
+let globalSends: number[] = []; // kept apart so a flood of distinct keys can never evict the global cap
 
 function prune(now: number) {
   for (const [token, expires] of usedTokens) {
-    if (expires > now) break; // records are inserted in deadline order, so the rest are still live
+    // Deadlines follow issue time, so records are roughly in deadline order: stopping at the first
+    // live one can only keep an expired record a little longer, never drop a live one.
+    if (expires > now) break;
     usedTokens.delete(token);
   }
   // Maps iterate in insertion order, so dropping from the front removes the oldest entries.
@@ -46,8 +49,17 @@ export function allowSend(key: string, now: number, limit: number, windowMs: num
   return true;
 }
 
+/** Per-instance ceiling across all visitors, stored separately from the per-key buckets. */
+export function allowGlobalSend(now: number, limit: number, windowMs: number): boolean {
+  globalSends = globalSends.filter((t) => now - t < windowMs);
+  if (globalSends.length >= limit) return false;
+  globalSends.push(now);
+  return true;
+}
+
 /** Test helper: forget every recorded token and send. */
 export function resetAbuseGuard() {
   usedTokens.clear();
   sends.clear();
+  globalSends = [];
 }

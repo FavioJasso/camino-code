@@ -95,8 +95,9 @@ export function tokenDeadline(token: string): number {
  * server usually controls a whole /64, so per-address buckets could be rotated).
  */
 export function visitorKeyFromIp(ip: string): string {
-  const a = ip.trim().toLowerCase();
+  let a = ip.trim().toLowerCase();
   if (!a) return "unknown";
+  if (a.startsWith("::ffff:") && a.slice(7).includes(".")) a = a.slice(7); // IPv4-mapped IPv6
   if (!a.includes(":")) return a;
   const [head, tail = ""] = a.split("::");
   const h = head ? head.split(":") : [];

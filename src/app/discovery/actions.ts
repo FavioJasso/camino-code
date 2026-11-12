@@ -13,7 +13,7 @@ import {
   type Booking,
   type BookingErrors,
 } from "@/lib/booking";
-import { allowSend, consumeToken } from "@/lib/abuse-guard";
+import { allowGlobalSend, allowSend, consumeToken } from "@/lib/abuse-guard";
 import { site } from "@/content/site";
 
 export type State = {
@@ -33,10 +33,16 @@ function sendLimit(): number {
   const n = Number(process.env.BOOKING_SENDS_PER_10_MIN);
   return Number.isInteger(n) && n > 0 && !isProduction() ? n : 5;
 }
+/** Sends per visitor per hour, kept well below the instance ceiling so one visitor can never exhaust it. */
+const SENDS_PER_VISITOR_PER_HOUR = 10;
 /** Ceiling on sends per server instance per hour, whatever addresses they come from. */
-const GLOBAL_SENDS_PER_HOUR = 30;
+const GLOBAL_SENDS_PER_HOUR = 60;
+const HOUR_MS = 60 * 60 * 1000;
 /** Tokens a visitor may request per 10 minutes (the form asks for one after mount and after each result). */
-const MINTS_PER_10_MIN = 30;
+function mintLimit(): number {
+  return isProduction() ? 30 : Math.max(30, sendLimit());
+}
+let mintWarned = false;
 
 /**
  * The visitor's network key. On Vercel, x-real-ip is set by the platform and cannot be supplied by
@@ -68,7 +74,13 @@ export async function issueFormToken(): Promise<string> {
   const s = secret();
   if (!s) return "";
   const visitor = await visitorKey();
-  if (!allowSend(`mint:${visitor}`, Date.now(), MINTS_PER_10_MIN, SEND_WINDOW_MS)) return "";
+  if (!allowSend(`mint:${visitor}`, Date.now(), mintLimit(), SEND_WINDOW_MS)) {
+    if (!mintWarned) {
+      mintWarned = true;
+      console.warn("[booking] token requests limited for a visitor; their next submit falls back to email.");
+    }
+    return "";
+  }
   return signTimestamp(Date.now(), s, visitor);
 }
 
@@ -104,12 +116,13 @@ export async function submitBooking(_prev: State, form: FormData): Promise<State
     return { status: "error", errors: { form: FALLBACK }, values };
   }
 
-  // Each token works once (a replayed token never sends), each visitor gets a few sends per window,
-  // and each server instance has an hourly ceiling however many addresses a sender rotates through.
+  // Order matters: per-visitor limits first, then the token is spent (so a replay is refused before it
+  // can touch the shared ceiling), then the per-instance ceiling, which one visitor alone cannot reach.
   if (
     !allowSend(`send:${visitor}`, now, sendLimit(), SEND_WINDOW_MS) ||
-    !allowSend("send:*", now, isProduction() ? GLOBAL_SENDS_PER_HOUR : Math.max(GLOBAL_SENDS_PER_HOUR, sendLimit()), 60 * 60 * 1000) ||
-    !consumeToken(token, now, tokenDeadline(token))
+    !allowSend(`send1h:${visitor}`, now, isProduction() ? SENDS_PER_VISITOR_PER_HOUR : Math.max(SENDS_PER_VISITOR_PER_HOUR, sendLimit()), HOUR_MS) ||
+    !consumeToken(token, now, tokenDeadline(token)) ||
+    !allowGlobalSend(now, isProduction() ? GLOBAL_SENDS_PER_HOUR : Math.max(GLOBAL_SENDS_PER_HOUR, sendLimit()), HOUR_MS)
   ) {
     return { status: "error", errors: { form: FALLBACK }, values };
   }
