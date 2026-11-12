@@ -11,18 +11,24 @@ const usedTokens = new Map<string, number>(); // token -> expiry time
 const sends = new Map<string, number[]>(); // visitor key -> recent send times
 
 function prune(now: number) {
-  for (const [token, expires] of usedTokens) if (expires <= now) usedTokens.delete(token);
+  for (const [token, expires] of usedTokens) {
+    if (expires > now) break; // records are inserted in deadline order, so the rest are still live
+    usedTokens.delete(token);
+  }
   // Maps iterate in insertion order, so dropping from the front removes the oldest entries.
   while (usedTokens.size > MAX_ENTRIES) usedTokens.delete(usedTokens.keys().next().value as string);
   while (sends.size > MAX_ENTRIES) sends.delete(sends.keys().next().value as string);
 }
 
-/** Records a token as used. Returns false if it was already used and has not yet expired. */
-export function consumeToken(token: string, now: number, ttlMs: number): boolean {
+/**
+ * Records a token as used until `deadline` (the moment it could no longer verify anyway).
+ * Returns false if it was already used.
+ */
+export function consumeToken(token: string, now: number, deadline: number): boolean {
   prune(now);
   const expires = usedTokens.get(token);
   if (expires !== undefined && expires > now) return false;
-  usedTokens.set(token, now + ttlMs);
+  usedTokens.set(token, deadline);
   return true;
 }
 

@@ -3,7 +3,16 @@
 import { track } from "@vercel/analytics/server";
 import { Resend } from "resend";
 import { headers } from "next/headers";
-import { MAX_AGE_MS, SPAM, parseBooking, signTimestamp, verifyTimestamp, type Booking, type BookingErrors } from "@/lib/booking";
+import {
+  SPAM,
+  parseBooking,
+  signTimestamp,
+  tokenDeadline,
+  verifyTimestamp,
+  visitorKeyFromIp,
+  type Booking,
+  type BookingErrors,
+} from "@/lib/booking";
 import { allowSend, consumeToken } from "@/lib/abuse-guard";
 import { site } from "@/content/site";
 
@@ -24,11 +33,18 @@ function sendLimit(): number {
   const n = Number(process.env.BOOKING_SENDS_PER_10_MIN);
   return Number.isInteger(n) && n > 0 && !isProduction() ? n : 5;
 }
+/** Ceiling on sends per server instance per hour, whatever addresses they come from. */
+const GLOBAL_SENDS_PER_HOUR = 30;
+/** Tokens a visitor may request per 10 minutes (the form asks for one after mount and after each result). */
+const MINTS_PER_10_MIN = 30;
 
-/** The visitor's address as reported by the platform proxy; one shared bucket if absent. */
+/**
+ * The visitor's network key. On Vercel, x-real-ip is set by the platform and cannot be supplied by
+ * the client; x-forwarded-for is not trusted because other hosts pass it through from the client.
+ */
 async function visitorKey(): Promise<string> {
   const h = await headers();
-  return h.get("x-real-ip") || h.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  return visitorKeyFromIp(h.get("x-real-ip") ?? "");
 }
 
 let warned = false;
@@ -50,7 +66,10 @@ function secret(): string | null {
 /** Called by the form once it is on screen, so the page itself stays statically prerendered. */
 export async function issueFormToken(): Promise<string> {
   const s = secret();
-  return s ? signTimestamp(Date.now(), s) : "";
+  if (!s) return "";
+  const visitor = await visitorKey();
+  if (!allowSend(`mint:${visitor}`, Date.now(), MINTS_PER_10_MIN, SEND_WINDOW_MS)) return "";
+  return signTimestamp(Date.now(), s, visitor);
 }
 
 function valuesOf(form: FormData): Partial<Booking> {
@@ -79,13 +98,19 @@ export async function submitBooking(_prev: State, form: FormData): Promise<State
   // never a silent drop and never an email.
   const token = form.get("t");
   const s = secret();
-  if (!s || typeof token !== "string" || !verifyTimestamp(token, s, Date.now())) {
+  const visitor = await visitorKey();
+  const now = Date.now();
+  if (!s || typeof token !== "string" || !verifyTimestamp(token, s, now, visitor)) {
     return { status: "error", errors: { form: FALLBACK }, values };
   }
 
-  // Each token works once (a replayed token never sends), and each visitor gets a few sends per window.
-  const now = Date.now();
-  if (!consumeToken(token, now, MAX_AGE_MS) || !allowSend(await visitorKey(), now, sendLimit(), SEND_WINDOW_MS)) {
+  // Each token works once (a replayed token never sends), each visitor gets a few sends per window,
+  // and each server instance has an hourly ceiling however many addresses a sender rotates through.
+  if (
+    !allowSend(`send:${visitor}`, now, sendLimit(), SEND_WINDOW_MS) ||
+    !allowSend("send:*", now, isProduction() ? GLOBAL_SENDS_PER_HOUR : Math.max(GLOBAL_SENDS_PER_HOUR, sendLimit()), 60 * 60 * 1000) ||
+    !consumeToken(token, now, tokenDeadline(token))
+  ) {
     return { status: "error", errors: { form: FALLBACK }, values };
   }
 
