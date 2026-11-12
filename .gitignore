@@ -21,3 +21,12 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+.superpowers/
+
+# next / tooling
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+/test-results/
+/playwright-report/

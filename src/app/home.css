@@ -1,0 +1,571 @@
+/* Home page. The page is a morning: a fixed scene behind, a dark services panel,
+   a transparent sunrise window, then proof in morning light and discovery in daylight.
+   Role variables follow the mockup: dark values here, .light redefines them. */
+.home {
+  --bg: var(--midnight);
+  --fg: var(--cream);
+  --fg-soft: var(--haze);
+  --line: var(--rule);
+  --line-strong: rgba(169, 180, 208, 0.42);
+  --accent: var(--ember);
+  --accent-hover: var(--moon);
+  --scrim: rgba(14, 19, 32, 0.86);
+  --scrim-0: rgba(14, 19, 32, 0);
+  --scrim-96: rgba(14, 19, 32, 0.96);
+  --scrim-90: rgba(14, 19, 32, 0.9);
+  --scrim-78: rgba(14, 19, 32, 0.78);
+  --morning-0: rgba(242, 230, 208, 0);
+  --sun: #f6d98a;
+  position: relative;
+}
+.home .page {
+  position: relative;
+  z-index: 1;
+}
+.home h1,
+.home h2,
+.home h3,
+.home p {
+  margin: 0;
+}
+.home h1,
+.home h2,
+.home h3 {
+  text-wrap: balance;
+}
+.home a:not(.btn) {
+  color: inherit;
+}
+.home a:focus-visible,
+.home .on-dark a:focus-visible {
+  outline-color: var(--focus, var(--moon));
+}
+.home .light a:focus-visible {
+  outline-color: var(--ink);
+}
+
+/* scene: fixed behind the page */
+#scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--midnight);
+}
+#scene picture,
+#scene img,
+#scene canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+#scene img {
+  object-fit: cover;
+}
+#gl {
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+#scene #gl {
+  /* sized to the large viewport so the iOS toolbar never resizes it */
+  height: 100lvh;
+  bottom: auto;
+}
+.is-live #gl {
+  opacity: 1;
+}
+.scene-ui {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+#scene:not(.is-live) .scene-ui {
+  visibility: hidden;
+}
+/* the live scene turns to sunrise behind the window, so its still steps aside */
+.dawn-window .dawn-still {
+  transition: opacity 0.9s ease;
+}
+#scene.is-live ~ .page .dawn-still {
+  opacity: 0;
+}
+
+.mono {
+  font-family: var(--font-martian), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-soft);
+}
+.btn-lg {
+  min-height: 3rem;
+  padding: 0 1.5rem;
+  font-size: 1rem;
+}
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--fg);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.375rem;
+  font-weight: 500;
+}
+.link:hover {
+  color: var(--accent-hover);
+}
+.lead {
+  max-width: 54ch;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+
+/* hero: transparent over the scene, scrim on the copy side */
+.hero {
+  min-height: calc(92svh - 4.25rem);
+  display: flex;
+  align-items: flex-end;
+  color: var(--cream);
+  background: linear-gradient(
+    to right,
+    var(--scrim-90) 0%,
+    var(--scrim-78) 36%,
+    var(--scrim-0) 60%
+  );
+}
+.hero .wrap {
+  width: 100%;
+  padding-block: 2.5rem 3rem;
+}
+.hero-copy {
+  max-width: 40rem;
+}
+.home .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--ember);
+  margin-bottom: 1.375rem;
+}
+.eyebrow::before {
+  content: "";
+  flex: none;
+  width: 1.75rem;
+  height: 1px;
+  background: var(--ember);
+}
+.home h1 {
+  font-weight: 800;
+  font-stretch: 122%;
+  font-size: clamp(2.2rem, 5.1vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.022em;
+}
+.hero .lead {
+  margin-top: 1.5rem;
+  color: var(--cream);
+  font-size: clamp(1.0625rem, 1.5vw, 1.3125rem);
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.875rem 1.75rem;
+  margin-top: 1.875rem;
+}
+@media (max-width: 899px) {
+  .hero {
+    min-height: calc(92svh - 3.75rem);
+    background: none;
+  }
+  .hero .wrap {
+    /* the bottom padding reserves room for the fixed Motion control */
+    padding-block: 1.875rem 4.25rem;
+    background: linear-gradient(
+      to bottom,
+      var(--scrim-0) 0,
+      var(--scrim) 1.875rem,
+      var(--scrim-96) 5.25rem,
+      var(--midnight) 7.5rem,
+      var(--midnight) calc(100% - 2.25rem),
+      var(--scrim-0) 100%
+    );
+  }
+  .home h1 {
+    font-stretch: 112%;
+    font-size: clamp(2.05rem, 9.4vw, 2.9rem);
+  }
+  .hero .lead {
+    margin-top: 0.875rem;
+    font-size: 0.97rem;
+  }
+  .hero-actions {
+    margin-top: 1.25rem;
+    gap: 0.125rem 1.25rem;
+  }
+  .hero-actions .btn {
+    width: 100%;
+  }
+  .home .eyebrow {
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* edge line: transparent band over the scene */
+.edge {
+  min-height: 33svh;
+  display: flex;
+  align-items: center;
+  color: var(--cream);
+  background:
+    linear-gradient(to bottom, var(--scrim-0) 62%, var(--midnight) 100%),
+    linear-gradient(to right, var(--scrim-90) 0%, var(--scrim-78) 36%, var(--scrim-0) 60%);
+}
+.edge .wrap {
+  width: 100%;
+  padding-block: 2.5rem;
+}
+.edge p {
+  max-width: 28ch;
+  font-weight: 700;
+  font-stretch: 112%;
+  font-size: clamp(1.5rem, 3.3vw, 2.5rem);
+  line-height: 1.14;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+.edge em {
+  font-style: normal;
+  color: var(--ember);
+}
+@media (max-width: 899px) {
+  .edge {
+    align-items: flex-end;
+    background: linear-gradient(
+      to bottom,
+      var(--scrim-0) 0,
+      var(--scrim-0) 20%,
+      var(--scrim-90) 42%,
+      var(--midnight) 100%
+    );
+  }
+  .edge .wrap {
+    padding-block: 3rem 1.875rem;
+  }
+}
+
+/* solid sections */
+.sec {
+  background: var(--bg);
+  color: var(--fg);
+  border-top: 1px solid var(--line);
+}
+.sec .wrap {
+  padding-block: clamp(4rem, 9vw, 7.5rem);
+}
+.sec-head {
+  display: grid;
+  gap: 0.875rem;
+  margin-bottom: clamp(2rem, 5vw, 4rem);
+}
+.sec-head .mono i,
+.founder .mono i {
+  font-style: normal;
+  color: var(--accent);
+  margin-right: 0.75rem;
+}
+.home h2 {
+  font-weight: 800;
+  font-stretch: 120%;
+  font-size: clamp(1.9rem, 4.2vw, 3.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+}
+
+.lanes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line-strong);
+}
+.lane {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 5fr) minmax(0, 7fr);
+  gap: 1.5rem;
+  align-items: baseline;
+  padding-block: 1.875rem;
+  border-bottom: 1px solid var(--line);
+}
+.lane h3 {
+  font-weight: 800;
+  font-stretch: 118%;
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.lane h3 a {
+  display: inline-block;
+  text-decoration: none;
+}
+.lane h3 a:hover {
+  color: var(--accent-hover);
+}
+.lane p {
+  max-width: 52ch;
+}
+@media (max-width: 899px) {
+  .lane {
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    gap: 0.375rem 0.75rem;
+    padding-block: 1.375rem;
+  }
+  .lane p {
+    grid-column: 2;
+  }
+}
+
+/* light sections */
+.light {
+  --bg: var(--morning);
+  --fg: var(--ink);
+  --fg-soft: var(--ink-soft);
+  --line: var(--rule-ink);
+  --line-strong: rgba(20, 26, 43, 0.5);
+  --accent: var(--ember-ink);
+  --accent-hover: var(--ember-ink);
+  color-scheme: light;
+}
+.light.day {
+  --bg: var(--day);
+}
+.light .btn:hover {
+  background: var(--ink);
+  color: var(--day);
+}
+.light .link:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* sunrise window: no background of its own, the fixed scene shows through */
+.dawn-window {
+  position: relative;
+  height: 80svh;
+  min-height: 26rem;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+.dawn-window picture,
+.dawn-window .dawn-still {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+.dawn-window::before,
+.dawn-window::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.dawn-window::before {
+  top: 0;
+  height: 17%;
+  background: linear-gradient(
+    to bottom,
+    var(--midnight) 0,
+    var(--scrim-78) 20%,
+    color-mix(in srgb, var(--midnight) 30%, transparent) 55%,
+    var(--scrim-0) 100%
+  );
+}
+.dawn-window::after {
+  bottom: 0;
+  height: 21%;
+  background: linear-gradient(
+    to bottom,
+    var(--morning-0) 0,
+    color-mix(in srgb, var(--morning) 14%, transparent) 26%,
+    color-mix(in srgb, var(--morning) 50%, transparent) 56%,
+    color-mix(in srgb, var(--morning) 88%, transparent) 84%,
+    var(--morning) 100%
+  );
+}
+.dawn-window .wrap {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding-block: 0 1.75rem;
+}
+.dawn-caption {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 2rem;
+  padding: 0 0.75rem;
+  background: var(--midnight);
+  color: var(--cream);
+  border-radius: 2px;
+}
+.dawn-caption::before {
+  content: "";
+  width: 0.4375rem;
+  height: 0.4375rem;
+  border-radius: 50%;
+  background: var(--sun);
+}
+@media (max-width: 899px) {
+  .dawn-window {
+    height: 64svh;
+    min-height: 21rem;
+  }
+  .dawn-window .wrap {
+    padding-block: 0 1.25rem;
+  }
+}
+
+/* proof, in morning light */
+#work {
+  border-top: 0;
+}
+.light .proof-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.8fr) minmax(0, 1.15fr);
+  border-bottom: 1px solid var(--line);
+  background: radial-gradient(circle, var(--ink) 1px, var(--morning-0) 1.6px) 0 0 / 9px 3px repeat-x;
+}
+.fig {
+  padding: 2.25rem 1.5rem 2.25rem 0;
+}
+.fig + .fig {
+  padding-left: 1.75rem;
+  border-left: 1px solid var(--line);
+}
+.fig b {
+  display: block;
+  font-weight: 800;
+  font-stretch: 122%;
+  font-size: clamp(2.1rem, 3.9vw, 3.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+.fig:first-child b {
+  color: var(--accent);
+}
+.fig span {
+  display: block;
+  margin-top: 0.875rem;
+  color: var(--fg-soft);
+  max-width: 22ch;
+}
+.proof-body {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 2rem;
+  align-items: end;
+  margin-top: 2.25rem;
+}
+.proof-body p {
+  max-width: 52ch;
+  font-size: 1.125rem;
+}
+.proof-body .proof-credit {
+  margin-top: 0.875rem;
+  font-size: 0.6875rem;
+}
+.proof-body .link {
+  justify-self: end;
+}
+@media (max-width: 899px) {
+  .light .proof-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .fig {
+    padding: 1.375rem 0;
+  }
+  .fig + .fig {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  .fig b {
+    font-size: clamp(2.6rem, 13vw, 3.4rem);
+  }
+  .fig span {
+    margin-top: 0.5rem;
+    max-width: none;
+  }
+  .proof-body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+  .proof-body .link {
+    justify-self: start;
+  }
+}
+
+/* founder */
+.founder {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: center;
+}
+.founder h2 {
+  margin-block: 0.875rem 1.25rem;
+  font-size: clamp(1.6rem, 3vw, 2.5rem);
+}
+.founder p + p {
+  margin-top: 0.75rem;
+}
+.founder .wrap,
+.sec .founder {
+  padding-block: clamp(3.5rem, 7vw, 6rem);
+}
+@media (max-width: 599px) {
+  .founder {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+  .portrait {
+    width: 10rem;
+  }
+}
+
+/* discovery: the four stages are drawn by TrailStages (trail.css) */
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.875rem 1.5rem;
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+  padding-top: 2rem;
+  border-top: 2px solid var(--ink);
+}
+.cta .btn {
+  min-height: 3.5rem;
+  padding: 0 1.875rem;
+  font-size: 1.0625rem;
+}
+.cta-contact {
+  color: var(--fg);
+}
+@media (max-width: 899px) {
+  .cta .btn {
+    width: 100%;
+  }
+}

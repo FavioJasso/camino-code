@@ -1,0 +1,115 @@
+/* TrailStages: the four stages on a dotted trail (home discovery section and /approach).
+   Uses the light role variables (--bg, --fg, --fg-soft, --accent) of whichever section it sits in. */
+.trail {
+  --trail-ink: var(--fg, var(--ink));
+  --trail-line: var(--accent, var(--ember-ink));
+}
+.trail-map {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  margin-bottom: 1.5rem;
+}
+.trail-map line,
+.trail-path {
+  fill: none;
+  stroke-linecap: round;
+}
+.trail-base {
+  stroke: var(--trail-ink);
+  stroke-width: 1.8;
+  stroke-dasharray: 0 8;
+}
+.trail-stake {
+  stroke: var(--trail-ink);
+  stroke-width: 1.4;
+  stroke-dasharray: 0 6;
+  opacity: 0.55;
+}
+.trail-path {
+  stroke: var(--trail-line);
+  stroke-width: 3.4;
+  stroke-dasharray: 0 10;
+}
+/* lantern: crisp core, a gap of the section's own colour, one thin ring */
+.trail-ring {
+  fill: var(--bg, var(--day));
+  stroke: var(--trail-ink);
+  stroke-width: 1.5;
+}
+.trail-core {
+  fill: var(--ember);
+}
+.trail-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.trail-list li {
+  position: relative;
+  padding-right: 1.5rem;
+}
+.trail-label {
+  display: block;
+  margin-bottom: 0.625rem;
+  font-family: var(--font-martian), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-soft, var(--ink-soft));
+}
+.trail .trail-list h3 {
+  margin: 0 0 0.625rem;
+  font-weight: 800;
+  font-stretch: 118%;
+  font-size: 1.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.trail .trail-list p {
+  margin: 0;
+  max-width: 30ch;
+}
+
+/* phones: the list stacks and the trail runs down beside it, lantern to lantern */
+@media (max-width: 899px) {
+  .trail-map {
+    display: none;
+  }
+  .trail-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .trail-list li {
+    padding: 0 0 1.75rem 2.25rem;
+  }
+  .trail-list li:last-child {
+    padding-bottom: 0;
+  }
+  .trail-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    box-sizing: border-box;
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 1.5px solid var(--trail-ink);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--ember) 0 0.25rem, var(--bg, var(--day)) 0.3rem);
+  }
+  .trail-list li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: calc(0.625rem - 1.5px);
+    top: 1.5rem;
+    bottom: 0.25rem;
+    width: 3px;
+    background: radial-gradient(circle, var(--trail-line) 1.2px, transparent 1.7px) 0 0 / 3px 9px repeat-y;
+  }
+  .trail .trail-list p {
+    max-width: none;
+  }
+}

@@ -1,0 +1,726 @@
+/* Inner pages run night to day, as the home page does: the dark header band (and, on some pages, a dark
+   intro), then Morning sections, then Day sections, closing on the sunrise booking band.
+   Role variables follow the home page's .light pattern: .in-dark, .in-light (Morning), .in-light.in-day. */
+.band {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: clamp(13rem, 26vw, 19rem);
+  overflow: hidden;
+  background: var(--midnight);
+  color: var(--cream);
+}
+.band-art,
+.band-still,
+.band-gl {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.band-still {
+  object-fit: cover;
+}
+/* phone and tablet band stills are cropped from the top, as the live band's strip framing is (terrain.ts BAND_REF) */
+@media (max-width: 1023.98px) {
+  .band-live .band-still {
+    object-position: 50% 0;
+  }
+}
+.band-gl {
+  display: block;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.band.is-live .band-gl {
+  opacity: 1;
+}
+.band .wrap {
+  position: relative;
+  width: 100%;
+  padding-block: 2rem;
+}
+/* live bands reserve a strip at the top for the Motion control, so it can never sit on the title */
+.band-live .wrap {
+  padding-top: 4.25rem;
+}
+.band .motion-toggle {
+  position: absolute;
+  top: 0.75rem;
+  bottom: auto;
+  z-index: 2;
+}
+.band-panel {
+  display: inline-block;
+  max-width: min(100%, 44rem);
+  padding: 1.25rem 1.5rem 1.5rem;
+  background: var(--midnight);
+  border-left: 3px solid var(--ember);
+}
+.band-kicker {
+  margin: 0 0 0.625rem;
+  color: var(--haze);
+}
+.band h1 {
+  margin: 0;
+  font-weight: 800;
+  font-stretch: 118%;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.in-dark {
+  --bg: var(--dusk);
+  --fg: var(--cream);
+  --fg-soft: var(--haze);
+  --line: var(--rule);
+  --line-strong: rgba(169, 180, 208, 0.42);
+  --accent: var(--ember);
+  --dots: radial-gradient(circle, var(--haze) 1px, transparent 1.6px) 0 0 / 9px 3px repeat-x;
+  background: var(--bg);
+  color: var(--fg);
+}
+.in-light {
+  --bg: var(--morning);
+  --fg: var(--ink);
+  --fg-soft: var(--ink-soft);
+  --line: var(--rule-ink);
+  --line-strong: rgba(20, 26, 43, 0.5);
+  --accent: var(--ember-ink);
+  --dots: radial-gradient(circle, var(--ink) 1px, transparent 1.6px) 0 0 / 9px 3px repeat-x;
+  background: var(--bg);
+  color: var(--fg);
+  color-scheme: light;
+}
+.in-light.in-day {
+  --bg: var(--day);
+}
+/* the first light section meets the dark above it edge to edge, as the sunrise does on the home page */
+.in-dark + .in-light,
+.band + .in-light {
+  border-top: 0;
+}
+.in-mono {
+  font-family: var(--font-martian), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.inner-sec .in-mono {
+  color: var(--fg-soft);
+}
+/* survey label above a section heading: an index in the accent, then a short name */
+.in-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 0.875rem !important;
+}
+.in-label i {
+  font-style: normal;
+  color: var(--accent);
+}
+.in-label::after {
+  content: "";
+  flex: 1 1 auto;
+  max-width: 6rem;
+  height: 3px;
+  background: var(--dots);
+}
+.inner-sec {
+  border-top: 1px solid var(--line);
+}
+.inner-sec .wrap {
+  padding-block: clamp(3rem, 7vw, 5.5rem);
+}
+.inner-sec h2 {
+  margin: 0 0 1.5rem;
+  font-weight: 800;
+  font-stretch: 120%;
+  font-size: clamp(1.75rem, 3.6vw, 3rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.cols h2 {
+  font-size: clamp(1.5rem, 2.8vw, 2.25rem);
+}
+.inner-sec h3 {
+  margin: 0 0 0.375rem;
+  font-weight: 700;
+  font-stretch: 108%;
+  font-size: 1.125rem;
+  line-height: 1.25;
+}
+.inner-sec p {
+  margin: 0;
+  max-width: 62ch;
+}
+.inner-sec p + p {
+  margin-top: 0.75rem;
+}
+.inner-sec .in-lead {
+  font-size: 1.1875rem;
+  line-height: 1.5;
+  max-width: 54ch;
+}
+/* the dark intro carries the page's opening line large, like the home page's edge line */
+.in-intro .wrap {
+  padding-block: clamp(2.5rem, 6vw, 4.5rem);
+}
+.in-intro .in-lead {
+  max-width: 34ch;
+  font-weight: 700;
+  font-stretch: 112%;
+  font-size: clamp(1.375rem, 2.8vw, 2.125rem);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.in-aside {
+  margin-top: 2rem !important;
+  padding-top: 1rem;
+  background: var(--dots);
+  color: var(--fg-soft);
+}
+.in-credit-gap {
+  margin-top: 1.25rem !important;
+}
+.in-facts-gap {
+  margin-top: 1.75rem !important;
+}
+.inner-sec a:not(.btn) {
+  color: var(--fg);
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.3rem;
+}
+.in-light a:not(.btn):focus-visible,
+.in-light .btn:focus-visible {
+  outline-color: var(--ink);
+}
+.in-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-weight: 500;
+  text-decoration-thickness: 1px;
+}
+.in-link:hover {
+  text-decoration-thickness: 2px;
+}
+.in-light .btn:hover {
+  background: var(--ink);
+  color: var(--day);
+}
+.in-btn-lg {
+  min-height: 3rem;
+  padding: 0 1.5rem;
+  font-size: 1rem;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 4rem);
+}
+.ticks {
+  list-style: none;
+  margin: 0;
+  padding: 3px 0 0;
+  background: var(--dots);
+}
+.ticks li {
+  position: relative;
+  max-width: 54ch;
+  padding: 0.75rem 0 0.75rem 1.5rem;
+}
+.ticks li + li {
+  border-top: 1px solid var(--line);
+}
+.ticks li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 1.2rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.ticks li:last-child {
+  border-bottom: 1px solid var(--line);
+}
+p + .ticks,
+.ticks + p {
+  margin-top: 1.25rem;
+}
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 3px 0 0;
+  counter-reset: step;
+  background: var(--dots);
+}
+.steps li {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  max-width: 62ch;
+  padding: 1rem 0;
+}
+.steps li + li {
+  border-top: 1px solid var(--line);
+}
+.steps li::before {
+  content: counter(step, decimal-leading-zero);
+  font-family: var(--font-martian), ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: var(--accent);
+  padding-top: 0.25rem;
+}
+.faq {
+  margin: 0;
+  display: grid;
+  gap: 1.5rem;
+  max-width: 62ch;
+}
+.faq dt {
+  font-weight: 700;
+}
+.faq dd {
+  margin: 0.25rem 0 0;
+}
+
+.in-figs {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 3px 0 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.7fr) minmax(0, 1.3fr);
+  background: var(--dots);
+  border-bottom: 1px solid var(--line);
+}
+.in-figs[data-count="4"] {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.in-fig {
+  padding: 2.25rem 1.5rem 2.25rem 0;
+}
+.in-fig + .in-fig {
+  padding-left: 1.75rem;
+  border-left: 1px solid var(--line);
+}
+.in-fig b {
+  display: block;
+  font-weight: 800;
+  font-stretch: 122%;
+  font-size: clamp(2.3rem, 3.8vw, 3.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+.in-fig:first-child b {
+  color: var(--accent);
+}
+.in-fig span {
+  display: block;
+  margin-top: 0.875rem;
+  color: var(--fg-soft);
+  max-width: 22ch;
+}
+.credit {
+  font-size: 0.6875rem;
+}
+.in-figs + p,
+.in-figs + .ticks {
+  margin-top: 1.75rem;
+}
+.steps h3 .in-mono {
+  margin-left: 0.375rem;
+}
+.in-proof-body {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 1rem 2rem;
+  align-items: end;
+  margin-top: 2rem;
+}
+.in-proof-body p {
+  max-width: 52ch;
+  font-size: 1.125rem;
+}
+.in-proof-body .credit {
+  margin-top: 0.875rem !important;
+  font-size: 0.6875rem;
+}
+.in-proof-body .in-link {
+  justify-self: end;
+}
+.gallery {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.gallery img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+}
+.work-card img {
+  display: block;
+  width: 100%;
+  max-width: 48rem;
+  height: auto;
+  margin: 0 0 2rem;
+  border: 1px solid var(--line);
+}
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1.25rem 1.5rem;
+  margin: 0;
+  padding-top: 1.25rem;
+  background: var(--dots);
+}
+p + .facts {
+  margin-top: 1.75rem;
+}
+.facts dt {
+  color: var(--fg-soft);
+}
+.facts dd {
+  margin: 0.375rem 0 0;
+  font-weight: 800;
+  font-stretch: 112%;
+  font-size: 1.25rem;
+  line-height: 1.25;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.chips li {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--fg-soft);
+  border-radius: 2px;
+}
+.quotes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3rem);
+  margin: 0;
+}
+.quotes figure {
+  margin: 0;
+}
+.quotes blockquote {
+  margin: 0;
+  padding-left: 1.25rem;
+  border-left: 3px solid var(--accent);
+}
+.quotes blockquote p {
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+.quotes figcaption {
+  margin-top: 0.75rem;
+  color: var(--fg-soft);
+}
+.founder-row {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+.in-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.875rem 1.5rem;
+  margin-top: 1.75rem;
+}
+.work-card {
+  display: block;
+}
+.draft {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  padding: 0.375rem 0.75rem;
+  background: var(--ink);
+  color: var(--day);
+  border-radius: 2px;
+}
+.in-light .draft {
+  color: var(--day);
+}
+.legal h2 {
+  margin-top: 2rem;
+  font-size: 1.375rem;
+}
+.legal h2:first-of-type {
+  margin-top: 0;
+}
+.legal ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  max-width: 62ch;
+}
+
+@media (max-width: 899px) {
+  .cols,
+  .quotes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .in-figs,
+  .in-figs[data-count="4"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .gallery {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .in-fig {
+    padding: 1.375rem 0;
+  }
+  .in-fig b {
+    font-size: clamp(2.6rem, 13vw, 3.4rem);
+  }
+  .in-proof-body {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 1.5rem;
+  }
+  .in-proof-body .in-link {
+    justify-self: start;
+  }
+  .in-fig + .in-fig {
+    padding-left: 0;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  .in-fig span {
+    margin-top: 0.5rem;
+    max-width: none;
+  }
+  .in-btn-lg {
+    width: 100%;
+  }
+}
+@media (max-width: 599px) {
+  .founder-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+  .in-portrait {
+    width: 10rem;
+  }
+  .band-panel {
+    padding: 1rem 1.125rem 1.125rem;
+  }
+}
+
+/* Discovery booking */
+.in-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+.in-form {
+  display: grid;
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+  max-width: 36rem;
+}
+.in-note {
+  font-size: 0.9375rem;
+  color: var(--fg-soft);
+}
+.in-row {
+  display: grid;
+  gap: 0.375rem;
+}
+.in-row label {
+  font-weight: 700;
+}
+.in-row label span {
+  font-weight: 400;
+  color: var(--fg-soft);
+}
+.in-row input,
+.in-row textarea {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.625rem 0.75rem;
+  font: inherit;
+  color: var(--ink);
+  background: var(--day);
+  border: 1.5px solid var(--ink-soft);
+  border-radius: 0.25rem;
+}
+.in-row input[aria-invalid="true"],
+.in-row textarea[aria-invalid="true"] {
+  border-color: var(--ember-ink);
+  border-width: 2px;
+}
+.in-err {
+  color: var(--ember-ink);
+  font-weight: 600;
+}
+.in-summary {
+  padding: 1rem 1.25rem;
+  border: 2px solid var(--ember-ink);
+  border-radius: 0.25rem;
+  background: var(--day);
+}
+.in-summary:focus {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+.in-summary h3 {
+  margin: 0 0 0.5rem;
+}
+.in-summary ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+.in-summary a {
+  display: inline-block;
+  min-height: 2.75rem;
+  line-height: 2.75rem;
+}
+.in-trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.in-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.in-confirm {
+  margin-top: 1.75rem;
+  padding: 1.25rem 1.5rem;
+  border: 2px solid var(--ink);
+  border-radius: 0.25rem;
+  background: var(--day);
+  max-width: 36rem;
+}
+.in-confirm h3 {
+  font-size: 1.375rem;
+}
+.in-form .btn:disabled {
+  opacity: 0.7;
+}
+@media (max-width: 52rem) {
+  .in-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Closing band: Day light, a sun clearing the ridge, then the way to book */
+.in-book {
+  background:
+    radial-gradient(ellipse 60% 70% at 85% 0%, color-mix(in srgb, var(--moon) 16%, transparent), transparent 70%),
+    var(--bg);
+}
+.in-book .wrap {
+  padding-block: clamp(3.5rem, 8vw, 6.5rem);
+}
+.in-book-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem 2.5rem;
+  align-items: end;
+}
+.in-book h2 {
+  max-width: 18ch;
+  font-size: clamp(1.9rem, 4.2vw, 3.5rem);
+}
+.in-sunrise {
+  display: block;
+  width: clamp(12rem, 24vw, 20rem);
+  height: auto;
+  margin-bottom: 1.25rem;
+}
+.in-sun {
+  fill: var(--moon);
+}
+.in-sun-ring {
+  fill: none;
+  stroke: var(--ember-ink);
+  stroke-width: 1.5;
+}
+.in-ridge {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 0 8;
+}
+.in-horizon {
+  stroke: var(--ink);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-dasharray: 0 8;
+}
+.in-book .in-cta {
+  margin-top: clamp(2rem, 5vw, 3.5rem);
+  padding-top: 2rem;
+  border-top: 2px solid var(--ink);
+}
+.in-book .in-btn-lg {
+  min-height: 3.5rem;
+  padding: 0 1.875rem;
+  font-size: 1.0625rem;
+}
+.in-book .in-cta p {
+  color: var(--fg);
+}
+@media (max-width: 599px) {
+  .in-book-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .in-sunrise {
+    order: -1;
+    width: 11rem;
+    margin-bottom: 0.25rem;
+  }
+}
+
+/* Reveal once: content rises into place as it scrolls into view. Scroll-driven CSS only, on desktop pointers,
+   never under reduced motion; anywhere this does not apply, everything is simply visible. */
+@keyframes in-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .inner-sec .wrap > *,
+    .inner-sec .wrap.cols > * > * {
+      animation: in-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+    .inner-sec .wrap.cols > * {
+      animation: none;
+    }
+  }
+}
