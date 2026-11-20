@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { SITE_URL } from "@/content/seo";
+import { OG_IMAGE, SITE_URL } from "@/content/seo";
 import { site } from "@/content/site";
+import { ORGANIZATION_ID } from "@/lib/structured-data";
 import "./globals.css";
 
 const archivo = localFont({
@@ -35,20 +36,26 @@ export const metadata: Metadata = {
     type: "website",
     siteName: site.name,
     locale: "en_US",
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Camino Code" }],
+    images: [OG_IMAGE],
   },
-  twitter: { card: "summary_large_image", images: ["/og.png"] },
+  twitter: { card: "summary_large_image", images: [OG_IMAGE.url] },
 };
+
+export const viewport: Viewport = { themeColor: "#0e1320" };
 
 const organization = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
+  "@id": ORGANIZATION_ID,
   name: site.name,
   url: SITE_URL,
   description: DESCRIPTION,
   email: site.contact.email,
   telephone: site.contact.phone,
-  image: `${SITE_URL}/og.png`,
+  image: `${SITE_URL}${OG_IMAGE.url}`,
+  logo: `${SITE_URL}/icon-512.png`,
+  founder: { "@type": "Person", name: "Favio Jasso" },
+  sameAs: [site.social.linkedin],
   address: {
     "@type": "PostalAddress",
     addressLocality: "Newark",
@@ -59,8 +66,11 @@ const organization = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${archivo.variable} ${martianMono.variable}`}>
+    // data-scroll-behavior: globals.css scrolls smoothly inside a page; this tells Next to jump, not glide, on a route change
+    <html lang="en" data-scroll-behavior="smooth" className={`${archivo.variable} ${martianMono.variable}`}>
       <body className="flex min-h-screen flex-col">
+        {/* the organization comes first, so it is the first ld+json script on every page; pages add theirs inside main */}
+        <JsonLd data={organization} />
         <a className="skip-link" href="#content">
           Skip to content
         </a>
@@ -69,7 +79,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         <SiteFooter />
-        <JsonLd data={organization} />
         <Analytics />
         <SpeedInsights />
       </body>
