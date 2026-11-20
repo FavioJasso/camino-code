@@ -8,7 +8,7 @@ export function Discovery() {
       <div className="wrap">
         <div className="sec-head">
           <p className="mono">
-            <i>04</i> Approach
+            <i>04</i> Approach <span className="t">07:30 · Daylight</span>
           </p>
           <h2 id="discovery-title">It starts with discovery.</h2>
           <p className="lead">
@@ -23,7 +23,11 @@ export function Discovery() {
             Book a discovery session
           </Link>
           <p className="cta-contact">
-            Or write to {site.contact.email} or call <span className="nowrap">{site.contact.phone}</span>.
+            Or write to <a href={site.contact.emailHref}>{site.contact.email}</a> or call{" "}
+            <a className="nowrap" href={site.contact.phoneHref}>
+              {site.contact.phone}
+            </a>
+            .
           </p>
         </div>
       </div>

@@ -15,7 +15,7 @@ function readPaused(): boolean {
 }
 
 /** Elements that carry text: the Motion control must never sit over one. */
-const TEXT_TAGS = new Set(["A", "BUTTON", "P", "H1", "H2", "H3", "H4", "LI", "DT", "DD", "SPAN", "EM", "STRONG", "SMALL", "LABEL", "FIGCAPTION", "BLOCKQUOTE"]);
+const TEXT_TAGS = new Set(["A", "BUTTON", "P", "H1", "H2", "H3", "H4", "LI", "DT", "DD", "SPAN", "B", "EM", "STRONG", "SMALL", "LABEL", "FIGCAPTION", "BLOCKQUOTE"]);
 
 /**
  * The control shows only while the scene is what fills the bottom of the viewport (the hero area, or the

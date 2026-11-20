@@ -191,10 +191,17 @@
 .in-facts-gap {
   margin-top: 1.75rem !important;
 }
+/* Tailwind's reset takes the underline off every link, so it is drawn here: a link in a sentence
+   must be told from the words around it by more than colour. */
 .inner-sec a:not(.btn) {
   color: var(--fg);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
   text-decoration-color: var(--accent);
   text-underline-offset: 0.3rem;
+}
+.inner-sec a:not(.btn):hover {
+  text-decoration-thickness: 2px;
 }
 .in-light a:not(.btn):focus-visible,
 .in-light .btn:focus-visible {
@@ -243,7 +250,8 @@
   content: "";
   position: absolute;
   left: 0;
-  top: 1.2rem;
+  /* centred on the first line: the item's top padding, half a 1.55 line, less half the dot */
+  top: calc(0.75rem + 0.775em - 0.25rem);
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
@@ -454,7 +462,6 @@ p + .facts {
 }
 .draft {
   display: inline-block;
-  margin-bottom: 1.5rem;
   padding: 0.375rem 0.75rem;
   background: var(--ink);
   color: var(--day);
@@ -597,6 +604,12 @@ p + .facts {
   min-height: 2.75rem;
   line-height: 2.75rem;
 }
+/* a link inside a sentence in the summary stays in the line of text (the field links are block-sized touch targets) */
+.in-summary a.in-inline {
+  display: inline;
+  min-height: 0;
+  line-height: inherit;
+}
 .in-trap {
   position: absolute;
   left: -10000px;
@@ -720,6 +733,14 @@ p + .facts {
       animation-range: entry 0% entry 35%;
     }
     .inner-sec .wrap.cols > * {
+      animation: none;
+    }
+    /* A section that is on screen when its page loads stays out of the reveal: content caught mid-fade
+       at the bottom of the window would sit half-transparent, and read as low contrast, until the
+       visitor scrolls. Put in-still on the section that sits at the bottom of a 1440 x 900 window when
+       the page loads (tests/e2e/pages.spec.ts names it when one is missing). */
+    .inner-sec.in-still .wrap > *,
+    .inner-sec.in-still .wrap.cols > * > * {
       animation: none;
     }
   }

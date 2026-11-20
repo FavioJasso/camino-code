@@ -7,7 +7,7 @@ export function ServiceLanes() {
       <div className="wrap">
         <div className="sec-head">
           <p className="mono">
-            <i>01</i> Services
+            <i>01</i> Services <span className="t">06:10 · Before dawn</span>
           </p>
           <h2 id="services-title">What we do</h2>
         </div>

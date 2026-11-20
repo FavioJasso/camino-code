@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { transparentEnergy as te } from "@/content/proof";
 
 /* SceneMount starts the live scene in #gl and draws its readouts into #scene-ui; #scene stays fixed behind the page. */
 export function Scene() {
@@ -14,12 +15,22 @@ export function Scene() {
   );
 }
 
+/* The proof line under the actions: the first permitted Transparent Energy figure, read from the proof data. */
+const headline = te.figures[0];
+
 export function Hero() {
   return (
     <section className="hero on-dark" aria-labelledby="hero-title">
       <div className="wrap">
         <div className="hero-copy">
-          <p className="mono eyebrow">Software · Data · AI consulting · Newark, NJ</p>
+          {/* one line where it fits; on narrow phones the place takes a line of its own (home.css) */}
+          <p className="mono eyebrow">
+            <span>
+              Software · Data · AI consulting
+              <span className="eyebrow-dot">{" · "}</span>
+              <span className="eyebrow-place">Newark, NJ</span>
+            </span>
+          </p>
           <h1 id="hero-title">Be on the trail before your competitors wake up.</h1>
           <p className="lead">
             We bring data, AI and the rules to run them safely into small and
@@ -33,6 +44,12 @@ export function Hero() {
               See what it did for Transparent Energy
             </a>
           </div>
+          <p className="hero-proof">
+            <b>{headline.value}</b>{" "}
+            <span>
+              {headline.label} · {te.name}
+            </span>
+          </p>
         </div>
       </div>
     </section>

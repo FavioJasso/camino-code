@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { currentState } from "./NavLink";
 
 const LINKS = [
   { href: "/services/software", label: "Software" },
@@ -78,7 +79,7 @@ export function MobileMenu() {
           <ul>
             {LINKS.map((l) => (
               <li key={l.href}>
-                <Link href={l.href} onClick={() => setOpen(false)}>
+                <Link href={l.href} aria-current={currentState(pathname, l.href)} onClick={() => setOpen(false)}>
                   {l.label}
                 </Link>
               </li>
@@ -88,6 +89,7 @@ export function MobileMenu() {
         <Link
           className="btn menu-cta"
           href="/discovery"
+          aria-current={currentState(pathname, "/discovery")}
           onClick={() => setOpen(false)}
         >
           Book discovery

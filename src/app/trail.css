@@ -72,6 +72,7 @@
 .trail .trail-list p {
   margin: 0;
   max-width: 30ch;
+  font-size: 1rem;
 }
 
 /* phones: the list stacks and the trail runs down beside it, lantern to lantern */

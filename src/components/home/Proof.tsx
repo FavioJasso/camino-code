@@ -7,7 +7,7 @@ export function Proof() {
       <div className="wrap">
         <div className="sec-head">
           <p className="mono">
-            <i>02</i> Proof
+            <i>02</i> Proof <span className="t">06:40 · Morning</span>
           </p>
           <h2 id="work-title">{te.name}</h2>
         </div>

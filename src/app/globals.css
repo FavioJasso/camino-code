@@ -17,6 +17,13 @@
   --rule: rgba(169, 180, 208, 0.22);
   --rule-ink: rgba(20, 26, 43, 0.18);
   --wrap: 73.75rem;
+  /* height of the sticky header row; phones step it down below */
+  --head-h: 4.25rem;
+}
+@media (max-width: 899px) {
+  :root {
+    --head-h: 3.75rem;
+  }
 }
 
 @theme inline {
@@ -39,14 +46,35 @@
 
 html {
   background: var(--day);
+  color-scheme: light;
+  /* in-page links travel, and land below the sticky header (its row plus the 1px rule).
+     Route changes stay instant only if <html> carries data-scroll-behavior="smooth" (src/app/layout.tsx):
+     Next 16 no longer switches smooth scrolling off during navigation by itself. */
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--head-h) + 1px + env(safe-area-inset-top, 0px));
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+/* the home page's base is night: dark scrollbar and overscroll, as in the design */
+html:has(.home) {
+  background: var(--midnight);
+  color-scheme: dark;
+}
+html:has(.home) body {
+  background: var(--midnight);
 }
 
 body {
   background: var(--day);
   color: var(--ink);
   font-family: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 :focus-visible {
@@ -96,12 +124,13 @@ body {
   background: var(--midnight);
   color: var(--cream);
   border-bottom: 1px solid var(--rule);
+  color-scheme: dark;
 }
 .site-head .wrap {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  height: 4.25rem;
+  height: var(--head-h);
 }
 .brand {
   display: flex;
@@ -130,7 +159,7 @@ body {
   align-items: center;
   min-height: 2.75rem;
   font-family: var(--font-martian), ui-monospace, monospace;
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   text-decoration: none;
@@ -138,6 +167,14 @@ body {
 }
 .nav a:hover {
   color: var(--cream);
+}
+/* the section the visitor is in: Cream, on a thin Ember line */
+.nav a[aria-current] {
+  color: var(--cream);
+  text-decoration: underline;
+  text-decoration-color: var(--ember);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.5rem;
 }
 
 .nowrap {
@@ -159,9 +196,15 @@ body {
   text-decoration: none;
   white-space: nowrap;
   border-radius: 2px;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
 }
 .btn:hover {
   background: var(--moon);
+}
+.btn:active {
+  transform: translateY(1px);
 }
 
 /* Phone menu */
@@ -172,13 +215,13 @@ body {
 
 @media (max-width: 899px) {
   .site-head .wrap {
-    height: 3.75rem;
     gap: 0.75rem;
   }
   .nav {
     display: none;
   }
-  .site-head .btn {
+  /* the header row's own button: the menu's button below keeps its full size and width */
+  .site-head .wrap > .btn {
     margin-left: auto;
   }
   .menu-toggle {
@@ -225,7 +268,7 @@ body {
     flex-direction: column;
     gap: 1.5rem;
     position: fixed;
-    inset: calc(3.75rem + 1px + env(safe-area-inset-top, 0px)) 0 0 0;
+    inset: calc(var(--head-h) + 1px + env(safe-area-inset-top, 0px)) 0 0 0;
     overflow-y: auto;
     overscroll-behavior: contain;
     padding: 1.5rem max(1rem, env(safe-area-inset-left, 0px)) max(1.5rem, env(safe-area-inset-bottom, 0px));
@@ -257,6 +300,16 @@ body {
     text-decoration: none;
     color: var(--cream);
   }
+  /* the section the visitor is in carries a lantern dot */
+  .menu-panel li a[aria-current]::after {
+    content: "";
+    flex: none;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-left: auto;
+    border-radius: 50%;
+    background: var(--ember);
+  }
   .menu-panel .menu-cta {
     min-height: 3.25rem;
     font-size: 1rem;
@@ -269,7 +322,8 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .menu-panel,
   .menu-panel[data-open="true"],
-  .menu-icon i {
+  .menu-icon i,
+  .btn {
     transition: none;
   }
 }
@@ -284,7 +338,7 @@ body {
     font-size: 0.875rem;
     letter-spacing: 0.01em;
   }
-  .site-head .btn {
+  .site-head .wrap > .btn {
     padding: 0 0.625rem;
     font-size: 0.8125rem;
   }
@@ -294,7 +348,7 @@ body {
   .brand {
     font-size: 0.8125rem;
   }
-  .site-head .btn {
+  .site-head .wrap > .btn {
     padding: 0 0.5rem;
     font-size: 0.75rem;
   }
@@ -307,21 +361,25 @@ body {
   }
 }
 
-/* Footer */
+/* Footer: every page ends in Day, as the morning does. Ink on Day, Ink-soft labels, Ember ink for the accent. */
 .site-foot {
   position: relative;
   z-index: 1;
-  background: var(--midnight);
-  color: var(--haze);
-  border-top: 1px solid var(--rule);
-  font-size: 0.9375rem;
+  background: var(--day);
+  color: var(--ink);
+  border-top: 1px solid var(--rule-ink);
+  /* a page whose height is a fraction of a pixel leaves a sliver of the root under the footer
+     (Midnight on the home page): paint it Day */
+  box-shadow: 0 1px 0 var(--day);
+  font-size: 0.95rem;
+  color-scheme: light;
 }
 .site-foot .wrap {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 2rem;
-  padding-block: 2.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  align-items: start;
+  gap: 2rem clamp(2rem, 5vw, 4.5rem);
+  padding-block: 2.25rem 2.75rem;
 }
 .site-foot h2 {
   margin: 0 0 0.5rem;
@@ -330,22 +388,70 @@ body {
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--haze);
+  color: var(--ink-soft);
 }
 .site-foot p {
   margin: 0;
-  color: var(--cream);
+  color: var(--ink);
+}
+.site-foot .foot-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 0.5rem;
+  font-weight: 800;
+  font-stretch: 118%;
+  font-size: 1.0625rem;
+  letter-spacing: 0.02em;
+}
+.foot-brand svg {
+  width: 1.625rem;
+  height: 1.875rem;
+  flex: none;
 }
 .site-foot ul {
   margin: 0;
   padding: 0;
   list-style: none;
 }
+/* the site list runs down two columns: services, then the rest */
+.site-foot .foot-cols {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(4, auto);
+  grid-auto-columns: max-content;
+  column-gap: clamp(1.5rem, 4vw, 3rem);
+}
 .site-foot a {
   display: inline-flex;
   align-items: center;
   min-height: 2.75rem;
-  color: var(--cream);
+  color: var(--ink);
+  text-decoration-color: var(--ember-ink);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3rem;
+}
+.site-foot a:hover {
+  text-decoration-line: underline;
+}
+@media (max-width: 899px) {
+  /* the name takes a row of its own, then the three lists stand side by side */
+  .site-foot .wrap {
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
+  }
+  .foot-id {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 599px) {
+  /* phones: the site list takes a row as well, and contact sits beside legal */
+  .site-foot .wrap {
+    grid-template-columns: repeat(2, auto);
+  }
+  .foot-site {
+    grid-column: 1 / -1;
+  }
 }
 
 /* founder portrait (shared by home and About; callers set only the width) */
@@ -399,7 +505,7 @@ body {
 }
 .motion-toggle:focus-visible {
   outline: 2px solid var(--moon);
-  outline-offset: 2px;
+  outline-offset: 3px;
   box-shadow: 0 0 0 5px var(--midnight);
 }
 /* when solid panels cover the scene there is nothing to pause, so the control steps aside */

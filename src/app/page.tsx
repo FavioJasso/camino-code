@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import "./home.css";
 import { Discovery } from "@/components/home/Discovery";
 import { DawnWindow } from "@/components/home/DawnWindow";
@@ -8,8 +7,16 @@ import { Hero, Scene } from "@/components/home/Hero";
 import { Proof } from "@/components/home/Proof";
 import { SceneMount } from "@/components/home/SceneMount";
 import { ServiceLanes } from "@/components/home/ServiceLanes";
+import { pageMetadata } from "@/content/seo";
 
-export const metadata: Metadata = { alternates: { canonical: "/" } };
+/* No structured data of its own: the layout's organization object describes this page,
+   and it has to stay the first ld+json script in the home page's HTML. */
+export const metadata = pageMetadata({
+  title: "Camino Code | Software, data and AI consulting in Newark, NJ",
+  description:
+    "Camino Code is a software, data and AI consultancy in Newark, New Jersey, for small and mid-sized businesses. It starts with a free discovery session.",
+  path: "/",
+});
 
 export default function Home() {
   return (
