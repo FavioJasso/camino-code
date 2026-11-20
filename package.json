@@ -11,6 +11,7 @@
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",
     "stills": "tsx scripts/render-stills.ts",
+    "icons": "node scripts/render-icons.mjs",
     "prebuild": "npm run stills"
   },
   "dependencies": {

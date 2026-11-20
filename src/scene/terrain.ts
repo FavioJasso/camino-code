@@ -208,11 +208,20 @@ export interface SceneCamera {
 
 const BASE_EYE: Vec3 = [7, 7.5, 34];
 
-export function cameraFor(view: { aspect: number; portrait: boolean; progress: number; dawn: number }): SceneCamera {
-  const { portrait, dawn } = view;
+/** The home page lays out for phones below this width: nav, hero copy and the scene stills all switch here. */
+export const HOME_LAYOUT_MIN = 900;
+
+/**
+ * The home camera. Two tests decide the framing, as in the mockup:
+ * `narrow` (the page is in its phone layout, viewport under HOME_LAYOUT_MIN wide) says where the saddle
+ * sits in the viewport, because that follows where the page puts its copy;
+ * `portrait` (the canvas is taller than about 10:9) picks the field of view and the sunrise drop.
+ */
+export function cameraFor(view: { aspect: number; portrait: boolean; narrow: boolean; progress: number; dawn: number }): SceneCamera {
+  const { portrait, narrow, dawn } = view;
   const travel = clamp(view.progress, 0, 1);
-  const cx = portrait ? 0.58 : 0.68; // 00-vars.css --scene-cx
-  const cy0 = portrait ? 0.24 : 0.4; // 00-vars.css --scene-cy
+  const cx = narrow ? 0.58 : 0.68; // 00-vars.css --scene-cx, switched by @media (max-width: 899px)
+  const cy0 = narrow ? 0.24 : 0.4; // 00-vars.css --scene-cy
   // phones: the saddle drops to the middle of the sunrise band while it passes
   const cy = portrait ? lerp(cy0, 0.42, sstep(0, 0.2, dawn)) : cy0;
   return {

@@ -8,6 +8,7 @@ import {
   BAND_STAGE_T,
   CAMERA_TARGET,
   H_MAX,
+  HOME_LAYOUT_MIN,
   SADDLE,
   SKY_LINE_Y,
   SUN_R,
@@ -58,7 +59,7 @@ describe('terrain', () => {
   it('projectToSvg puts the saddle near the design composition', () => {
     const w = 1440;
     const h = 900;
-    const cam = cameraFor({ aspect: w / h, portrait: false, progress: 0, dawn: 0 });
+    const cam = cameraFor({ aspect: w / h, portrait: false, narrow: false, progress: 0, dawn: 0 });
     const p = projectToSvg([SADDLE.x, SADDLE.y, SADDLE.z], cam, w, h);
     expect(p).not.toBeNull();
     expect(Math.abs(p![0] / w - 0.66)).toBeLessThan(0.05);
@@ -71,15 +72,38 @@ describe('terrain', () => {
   it('phone composition puts the saddle near 0.58 across and 0.24-0.28 down', () => {
     const w = 390;
     const h = 844;
-    const cam = cameraFor({ aspect: w / h, portrait: true, progress: 0, dawn: 0 });
+    const cam = cameraFor({ aspect: w / h, portrait: true, narrow: true, progress: 0, dawn: 0 });
     const p = projectToSvg([SADDLE.x, SADDLE.y, SADDLE.z], cam, w, h)!;
     expect(Math.abs(p[0] / w - 0.58)).toBeLessThan(0.03);
     expect(p[1] / h).toBeGreaterThan(0.22);
     expect(p[1] / h).toBeLessThan(0.3);
   });
 
+  // The mockup takes the saddle's place from CSS, switched at the page's 899 px breakpoint, and the field of
+  // view from the canvas shape. The two tests disagree in small landscape windows and on tall wide screens.
+  it('the saddle follows the page layout (narrow), the field of view follows the canvas shape (portrait)', () => {
+    expect(HOME_LAYOUT_MIN).toBe(900);
+    const at = (cam: ReturnType<typeof cameraFor>, w: number, h: number) => {
+      const t = projectToSvg([...CAMERA_TARGET], cam, w, h)!;
+      return [+(t[0] / w).toFixed(2), +(t[1] / h).toFixed(2)];
+    };
+    // 800 x 600: the phone layout in a landscape window
+    const landscapePhone = cameraFor({ aspect: 800 / 600, portrait: false, narrow: true, progress: 0, dawn: 0 });
+    expect(at(landscapePhone, 800, 600)).toEqual([0.58, 0.24]);
+    expect(landscapePhone.fov).toBe(38);
+    // 1024 x 1366: the desktop layout on a tall screen
+    const tallDesktop = cameraFor({ aspect: 1024 / 1366, portrait: true, narrow: false, progress: 0, dawn: 0 });
+    expect(at(tallDesktop, 1024, 1366)).toEqual([0.68, 0.4]);
+    expect(tallDesktop.fov).toBe(52);
+    // the sunrise drop to the middle of the window stays with the tall canvas
+    const tallAtDawn = cameraFor({ aspect: 1024 / 1366, portrait: true, narrow: false, progress: 1, dawn: 0.5 });
+    expect(at(tallAtDawn, 1024, 1366)).toEqual([0.68, 0.42]);
+    const landscapeAtDawn = cameraFor({ aspect: 800 / 600, portrait: false, narrow: true, progress: 1, dawn: 0.5 });
+    expect(at(landscapeAtDawn, 800, 600)).toEqual([0.58, 0.24]);
+  });
+
   it('projectToSvg returns null for points behind the camera', () => {
-    const cam = cameraFor({ aspect: 1.6, portrait: false, progress: 0, dawn: 0 });
+    const cam = cameraFor({ aspect: 1.6, portrait: false, narrow: false, progress: 0, dawn: 0 });
     expect(projectToSvg([7, 7.5, 200], cam, 1440, 900)).toBeNull();
   });
   it('trailAt runs from the trail start to the saddle', () => {

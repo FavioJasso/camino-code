@@ -22,6 +22,7 @@ import {
   BAND_STAGE_T,
   CAMERA_TARGET,
   H_MAX,
+  HOME_LAYOUT_MIN,
   PALETTE,
   RIDGE_Z,
   SADDLE,
@@ -163,7 +164,9 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
   const material = (m: ShaderMaterial) => (disposables.push(m), m);
   const geometry = <G extends BufferGeometry>(g: G) => (disposables.push(g), g);
 
-  const view = { w: 1, h: 1, portrait: false };
+  // narrow: the page's phone layout, by the same media query that picks the phone still (Hero.tsx <source>)
+  const mqWide = matchMedia(`(min-width: ${HOME_LAYOUT_MIN}px)`);
+  const view = { w: 1, h: 1, portrait: false, narrow: !mqWide.matches };
   const state = {
     p: 0, pTarget: 0, d: 0, dTarget: 0, time: 0, dt: 0, level: 0,
     still: false, reduced: false, travel: 0, mx: 0, my: 0, band: false,
@@ -187,7 +190,9 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
   let bandLayout: BandLayout = "desktop";
   let bandCam: SceneCamera = bandCameraFor({ aspect: 1, layout: bandLayout, stage: band?.stage ?? 1 });
   const frameView = () => {
-    const cam = band ? bandCam : cameraFor({ aspect: view.w / view.h, portrait: view.portrait, progress: state.travel, dawn: state.d });
+    const cam = band
+      ? bandCam
+      : cameraFor({ aspect: view.w / view.h, portrait: view.portrait, narrow: view.narrow, progress: state.travel, dawn: state.d });
     const key = cam.viewOffset.cx + "|" + cam.viewOffset.cy + "|" + view.w + "|" + view.h;
     camera.fov = cam.fov;
     if (key !== viewKey) {
@@ -205,6 +210,7 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
     view.w = w;
     view.h = h;
     view.portrait = w / h < 0.9;
+    view.narrow = !mqWide.matches;
     if (band) {
       // the viewport width, as the stills' <source media> see it, so live and still use the same framing
       bandLayout = bandLayoutFor(innerWidth);
