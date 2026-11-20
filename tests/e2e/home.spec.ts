@@ -94,3 +94,81 @@ test("founder section shows the sized portrait and no FJ placeholder", async ({ 
   await img.scrollIntoViewIfNeeded();
   await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth)).toBeGreaterThan(0);
 });
+
+test("home has its own title and description, canonical and share address", async ({ page }) => {
+  await page.goto("/");
+  await expect(page).toHaveTitle("Camino Code | Software, data and AI consulting in Newark, NJ");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+    "content",
+    "Camino Code is a software, data and AI consultancy in Newark, New Jersey, for small and mid-sized businesses. It starts with a free discovery session.",
+  );
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://www.caminocode.com");
+  await expect(page.locator('meta[property="og:url"]')).toHaveAttribute("content", "https://www.caminocode.com");
+});
+
+test("section heads carry the scene clock's hour, in order through the morning", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("#services .sec-head .t")).toHaveText("06:10 · Before dawn");
+  await expect(page.locator("#dawn-window .dawn-caption")).toHaveText("06:24 · First light on the saddle");
+  await expect(page.locator("#work .sec-head .t")).toHaveText("06:40 · Morning");
+  await expect(page.locator("#discovery .sec-head .t")).toHaveText("07:30 · Daylight");
+});
+
+test("the hero proof line shows the first permitted figure, and steps aside on short phones", async ({ page }) => {
+  const proof = page.locator(".hero .hero-proof");
+  for (const size of [
+    { width: 1440, height: 900 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(size);
+    await page.goto("/");
+    await expect(proof).toBeVisible();
+    expect(((await proof.innerText()) ?? "").replace(/\s+/g, " ")).toBe(
+      "$65,000+ a year saved in analyst time · Transparent Energy",
+    );
+  }
+  // on a short phone it would lie under the Motion control, so it is not shown
+  await page.setViewportSize({ width: 360, height: 560 });
+  await page.goto("/");
+  await expect(proof).toBeHidden();
+});
+
+test("founder block leads with the founder and links to About", async ({ page }) => {
+  await page.goto("/");
+  const section = page.locator("#founder");
+  await expect(section.getByRole("heading", { level: 2 })).toHaveText("You work with the founder.");
+  await expect(section).toContainText("Favio Jasso founded Camino Code in Newark, New Jersey.");
+  await expect(section.getByRole("link", { name: "More about Favio" })).toHaveAttribute("href", "/about");
+  const text = (await section.innerText()).toLowerCase();
+  for (const banned of [/one-man/, /\bsolo\b/, /\bour team\b/, /\bour staff\b/, /award/, /years of experience/]) {
+    expect(text).not.toMatch(banned);
+  }
+});
+
+test("the page is dark at the root on the home page and light elsewhere", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveCSS("color-scheme", "dark");
+  await expect(page.locator("html")).toHaveCSS("background-color", "rgb(14, 19, 32)");
+  await page.goto("/about");
+  await expect(page.locator("html")).toHaveCSS("color-scheme", "light");
+});
+
+test("the hero still is framed where the live camera puts the saddle", async ({ page }, testInfo) => {
+  await page.emulateMedia({ reducedMotion: "reduce" }); // the still stays; no scene code runs
+  await page.goto("/");
+  const still = page.locator("#scene picture img");
+  await expect(still).toBeVisible();
+  const desktop = testInfo.project.name === "desktop";
+  await expect(still).toHaveCSS("object-fit", "cover");
+  await expect(still).toHaveCSS("object-position", desktop ? "68% 40%" : "58% 24%");
+  expect(await still.evaluate((img: HTMLImageElement) => img.currentSrc)).toContain(
+    desktop ? "/stills/hero-desktop.svg" : "/stills/hero-phone.svg",
+  );
+  // the still fills the same box as the canvas
+  const boxes = await page.evaluate(() => {
+    const img = document.querySelector("#scene picture img")!.getBoundingClientRect();
+    const gl = document.querySelector("#gl")!.getBoundingClientRect();
+    return { img: [img.width, img.height], gl: [gl.width, gl.height] };
+  });
+  expect(boxes.img).toEqual(boxes.gl);
+});

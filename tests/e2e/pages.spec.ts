@@ -1,18 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
-
-const ROUTES = [
-  "/services/software",
-  "/services/data",
-  "/services/ai-governance",
-  "/work",
-  "/work/transparent-energy",
-  "/work/daniel-avila-64",
-  "/approach",
-  "/about",
-  "/privacy",
-  "/terms",
-];
+import { ROUTES } from "./routes";
 
 const titles = new Map<string, string>();
 
@@ -43,6 +31,10 @@ test("unknown path shows the designed 404 with status 404", async ({ page }) => 
   await expect(page.locator("h1")).toHaveCount(1);
   await expect(page.locator("h1")).toContainText("trail");
   await expect(page.locator('main a[href="/"]').first()).toBeVisible();
+  // other places to start
+  for (const href of ["/services", "/work", "/discovery"]) {
+    await expect(page.locator(`main a[href="${href}"]`)).toBeVisible();
+  }
   const results = await new AxeBuilder({ page }).analyze();
   expect(results.violations).toEqual([]);
 });
@@ -84,7 +76,7 @@ test("DANIEL AVILA 64 case study shows its four figures, gallery and visit link"
 });
 
 test("no built page contains TODO", async ({ request }) => {
-  for (const route of [...ROUTES, "/"]) {
+  for (const route of [...ROUTES, "/", "/discovery", "/no-such-page"]) {
     expect(await (await request.get(route)).text(), route).not.toContain("TODO");
   }
 });
@@ -258,6 +250,24 @@ test("proof figures fit their cells at 320 px", async ({ page }) => {
     checked += await page.locator(".in-fig b").count();
   }
   expect(checked).toBeGreaterThan(0);
+});
+
+test("nothing on screen when a page loads is caught mid-fade by the reveal", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop", "the reveal runs on desktop pointers only");
+  for (const route of [...FLOW_ROUTES, "/no-such-page"]) {
+    await page.goto(route);
+    // Content at the bottom edge of the window sits part-way through its fade until the visitor scrolls,
+    // and reads as low contrast there. The fix is the class in-still on that section (see inner.css).
+    const faded = await page.locator(".inner-sec .wrap > *, .inner-sec .wrap.cols > * > *").evaluateAll((els) =>
+      els
+        .filter((el) => {
+          const box = el.getBoundingClientRect();
+          return box.top < window.innerHeight && box.bottom > 0 && Number(getComputedStyle(el).opacity) < 0.9;
+        })
+        .map((el) => `${el.tagName.toLowerCase()}: ${(el.textContent ?? "").trim().slice(0, 40)}`),
+    );
+    expect(faded, `${route}: add in-still to the section that holds this`).toEqual([]);
+  }
 });
 
 function isPhone(page: import("@playwright/test").Page) {

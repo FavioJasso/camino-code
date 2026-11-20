@@ -50,3 +50,41 @@ test("success is announced in a status region that existed before submit, and ta
   expect(await handle!.evaluate((el) => el.isConnected)).toBe(true);
   await expect(page.getByRole("heading", { name: /Your request is in/ })).toBeFocused();
 });
+
+test("the form says what the details are used for, with a link to the privacy page", async ({ page }) => {
+  await page.goto("/discovery");
+  const note = page.locator("#privacy-note");
+  await expect(note).toBeVisible();
+  await expect(note).toContainText("We use these details to reply to you and to prepare for the conversation.");
+  const link = note.getByRole("link", { name: "Read the privacy page (opens in a new tab)" });
+  await expect(link).toHaveAttribute("href", "/privacy");
+  await expect(link).toHaveAttribute("target", "_blank");
+  await expect(page.getByRole("button", { name: "Send request" })).toHaveAttribute("aria-describedby", "privacy-note");
+  // the note repeats the privacy page's own sentence
+  await page.goto("/privacy");
+  await expect(page.locator("main")).toContainText("We use this to reply to you and to prepare for the conversation.");
+});
+
+test("the email in the fallback message is a link, and the words are unchanged", async ({ page }) => {
+  await page.goto("/discovery");
+  await page.getByLabel(/Your name/).fill("Ana Ruiz");
+  await page.getByLabel(/^Email/).fill("ana@example.com");
+  await page.getByLabel(/Business name/).fill("Ruiz Bakery, wholesale bread");
+  await page.waitForTimeout(3500); // the form's signed timestamp must be at least 3 seconds old
+  await page.getByRole("button", { name: "Send request" }).click();
+  const summary = page.getByRole("group", { name: "We could not send your request" });
+  await expect(summary).toContainText(
+    "We couldn't send this. Email us at contact@caminocode.com and we'll reply within one business day.",
+  );
+  await expect(summary.getByRole("link", { name: "contact@caminocode.com" })).toHaveAttribute(
+    "href",
+    "mailto:contact@caminocode.com",
+  );
+});
+
+test("the closing band gives the email and phone as links", async ({ page }) => {
+  await page.goto("/discovery");
+  const band = page.locator("main > section.in-book");
+  await expect(band.locator('a[href="mailto:contact@caminocode.com"]')).toHaveText("contact@caminocode.com");
+  await expect(band.locator('a[href="tel:+19732342073"]')).toHaveText("+1 973-234-2073");
+});

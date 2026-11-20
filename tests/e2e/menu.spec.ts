@@ -57,6 +57,24 @@ test.describe("phone menu", () => {
     });
   }
 
+  test("the open menu marks the current page, and its button spans the panel", async ({ page }) => {
+    await page.goto("/services/data");
+    await page.getByRole("button", { name: "Menu" }).click();
+    const menu = page.getByRole("navigation", { name: "Menu" });
+    await expect(menu.getByRole("link", { name: "Data", exact: true })).toHaveAttribute("aria-current", "page");
+    await expect(menu.locator("a[aria-current]")).toHaveCount(1);
+    const cta = page.locator("#mobile-menu .menu-cta");
+    await expect(cta).toBeVisible();
+    await expect(cta).not.toHaveAttribute("aria-current", /./);
+    const box = await cta.boundingBox();
+    // full width inside the 16 px gutters, and a comfortable touch target
+    expect(Math.round(box!.width)).toBe(page.viewportSize()!.width - 32);
+    expect(box!.height).toBeGreaterThanOrEqual(44);
+    await page.goto("/discovery");
+    await page.getByRole("button", { name: "Menu" }).click();
+    await expect(page.locator("#mobile-menu .menu-cta")).toHaveAttribute("aria-current", "page");
+  });
+
   test("Escape closes and returns focus to the button", async ({ page }) => {
     await page.goto("/");
     const toggle = page.getByRole("button", { name: "Menu" });

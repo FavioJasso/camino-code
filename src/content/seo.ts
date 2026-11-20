@@ -8,12 +8,15 @@ export const OG_IMAGE = { url: "/og.png", width: 1200, height: 630, alt: "Camino
 /** Every public page, in the order the sitemap lists them. */
 export const PAGE_PATHS = [
   "/",
+  "/services",
   "/services/software",
   "/services/data",
   "/services/ai-governance",
   "/work",
   "/work/transparent-energy",
   "/work/daniel-avila-64",
+  "/work/victorias-painting",
+  "/work/daniel-avila",
   "/approach",
   "/about",
   "/discovery",

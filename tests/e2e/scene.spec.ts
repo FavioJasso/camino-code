@@ -22,6 +22,44 @@ function collectErrors(page: Page): string[] {
 
 const motionButton = (page: Page) => page.getByRole("button", { name: "Pause animation" });
 
+/** Collects Content-Security-Policy violations: the browser's own event, and its console report. */
+async function collectCspViolations(page: Page): Promise<() => Promise<string[]>> {
+  const logged: string[] = [];
+  page.on("console", (msg) => {
+    if (/Content[- ]Security[- ]Policy/i.test(msg.text())) logged.push(msg.text());
+  });
+  await page.addInitScript(() => {
+    const w = window as unknown as { __csp?: string[] };
+    w.__csp = [];
+    document.addEventListener("securitypolicyviolation", (e) => {
+      w.__csp!.push(`${e.effectiveDirective}: ${e.blockedURI || "inline"}`);
+    });
+  });
+  return async () => [...logged, ...(await page.evaluate(() => (window as unknown as { __csp?: string[] }).__csp ?? []))];
+}
+
+test("the live scene runs under the Content-Security-Policy with no violation", async ({ page }) => {
+  const violations = await collectCspViolations(page);
+  const response = await page.goto("/");
+  expect(response?.headers()["content-security-policy"]).toContain("script-src 'self' 'unsafe-inline'");
+  await expect(page.locator("#scene")).toHaveClass(/\bis-live\b/, { timeout: 10_000 });
+  await expect(page.locator("#gl")).toHaveCSS("opacity", "1");
+  // through the hero and the sunrise window, pause and resume, then down to the foot of the page
+  await page.locator("#dawn-window").scrollIntoViewIfNeeded();
+  await page.waitForTimeout(500);
+  await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
+  await page.waitForTimeout(500);
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await motionButton(page).click();
+  await motionButton(page).click();
+  expect(await violations()).toEqual([]);
+  // then a live band on an inner page, reached by a client-side route change
+  await page.locator("header").getByRole("link", { name: "Work" }).click();
+  await expect(page.locator("section.band")).toHaveClass(/\bis-live\b/, { timeout: 10_000 });
+  await page.waitForTimeout(500);
+  expect(await violations()).toEqual([]);
+});
+
 test("scene goes live with software WebGL and logs no errors", async ({ page }) => {
   const errors = collectErrors(page);
   await page.goto("/");
@@ -139,7 +177,7 @@ test("leaving the home page by a header link tears the scene down and frees its 
 
 const band = (page: Page) => page.locator("section.band");
 
-for (const path of ["/services/data", "/work", "/approach", "/about"]) {
+for (const path of ["/services", "/services/data", "/work", "/work/victorias-painting", "/approach", "/about"]) {
   test(`${path}: the header band goes live with no console errors`, async ({ page }) => {
     const errors = collectErrors(page);
     await page.goto(path);
@@ -174,7 +212,7 @@ test.describe("inner pages with reduced motion", () => {
   test.use({ reducedMotion: "reduce" });
 
   test("no inner page runs scene code and the band still shows", async ({ page }) => {
-    for (const path of ["/services/data", "/work", "/approach", "/about", "/discovery"]) {
+    for (const path of ["/services", "/services/data", "/work", "/work/daniel-avila", "/approach", "/about", "/discovery"]) {
       await page.goto(path);
       await page.waitForLoadState("load");
       await page.waitForTimeout(1500);
@@ -225,6 +263,20 @@ test("band Motion control pauses and never covers the title", async ({ page }) =
   expect(overlap).toBe(false);
 });
 
+// the longest title on the site
+const LONGEST_TITLE = "/work/victorias-painting";
+
+test("band Motion control stays clear of the longest title", async ({ page }) => {
+  await page.goto(LONGEST_TITLE);
+  await expect(motionButton(page)).toBeVisible({ timeout: 10_000 });
+  const overlap = await page.evaluate(() => {
+    const a = document.querySelector(".motion-toggle")!.getBoundingClientRect();
+    const b = document.querySelector(".band-panel")!.getBoundingClientRect();
+    return a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+  });
+  expect(overlap).toBe(false);
+});
+
 test.describe("band on a phone", () => {
   test.use({ viewport: { width: 320, height: 640 }, isMobile: true, hasTouch: true });
 
@@ -242,6 +294,20 @@ test.describe("band on a phone", () => {
     expect(await band(page).locator(".band-still").evaluate((img: HTMLImageElement) => img.currentSrc)).toContain(
       "/stills/band-s2-morning-phone.svg",
     );
+  });
+
+  test("the Motion control never covers the longest title on the site, and the page does not scroll sideways", async ({
+    page,
+  }) => {
+    await page.goto(LONGEST_TITLE);
+    await expect(motionButton(page)).toBeVisible({ timeout: 10_000 });
+    const overlap = await page.evaluate(() => {
+      const a = document.querySelector(".motion-toggle")!.getBoundingClientRect();
+      const b = document.querySelector(".band-panel")!.getBoundingClientRect();
+      return a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+    });
+    expect(overlap).toBe(false);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
   });
 });
 
