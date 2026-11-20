@@ -1,15 +1,22 @@
-import type { Metadata } from "next";
+import Link from "next/link";
 import { BookDiscovery } from "@/components/BookDiscovery";
 import { Figures } from "@/components/Figures";
+import { JsonLd } from "@/components/JsonLd";
 import { PageBand } from "@/components/PageBand";
 import { danielAvila64 as da, danielAvila64Study as study } from "@/content/proof";
+import { pageMetadata } from "@/content/seo";
+import { breadcrumbList, caseStudyLd } from "@/lib/structured-data";
+import { MoreWork } from "../MoreWork";
+import { GALLERY_SIZES, WorkImage } from "../WorkImage";
 
-export const metadata: Metadata = {
+const description =
+  "A playable 3D portfolio built by Camino Code for Daniel Avila: an N64-era castle to explore, over a complete HTML portfolio recruiters can read at once.";
+
+export const metadata = pageMetadata({
   title: "DANIEL AVILA 64 case study | Camino Code",
-  description:
-    "A playable 3D portfolio built by Camino Code for Daniel Avila: an N64-era castle to explore, over a complete HTML portfolio recruiters can read at once.",
-  alternates: { canonical: "/work/daniel-avila-64" },
-};
+  description,
+  path: da.href,
+});
 
 export default function DanielAvila64Page() {
   return (
@@ -48,6 +55,11 @@ export default function DanielAvila64Page() {
             ))}
           </ul>
           <p>{study.challengeNote}</p>
+          <p>
+            {study.firstSiteNote}{" "}
+            <Link href={study.firstSiteHref}>{study.firstSiteLabel}</Link>
+            .
+          </p>
         </div>
       </section>
       <section className="inner-sec in-light" aria-labelledby="built-title">
@@ -94,8 +106,7 @@ export default function DanielAvila64Page() {
           <ul className="gallery">
             {study.gallery.map((g) => (
               <li key={g.src}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={g.src.replace(".webp", "-960.webp")} srcSet={`${g.src.replace(".webp", "-960.webp")} 960w, ${g.src} 1920w`} sizes="(max-width: 899px) calc(100vw - 2rem), min(566px, calc(50vw - 1.5rem))" alt={g.alt} width={1920} height={1280} loading="lazy" decoding="async" />
+                <WorkImage src={g.src} alt={g.alt} sizes={GALLERY_SIZES} />
               </li>
             ))}
           </ul>
@@ -114,13 +125,22 @@ export default function DanielAvila64Page() {
             ))}
           </ul>
           <p>
-            <a href={study.visitHref} rel="noopener">
+            <a className="in-link" href={study.visitHref} rel="noopener">
               {study.visitLabel}
             </a>
           </p>
         </div>
       </section>
+      <MoreWork current={da.href} />
       <BookDiscovery heading="Want something like this?" />
+      <JsonLd data={caseStudyLd({ headline: study.title, description, path: da.href, image: da.cardImage.src, about: da.name })} />
+      <JsonLd
+        data={breadcrumbList([
+          { name: "Home", path: "/" },
+          { name: "Work", path: "/work" },
+          { name: da.name, path: da.href },
+        ])}
+      />
     </>
   );
 }

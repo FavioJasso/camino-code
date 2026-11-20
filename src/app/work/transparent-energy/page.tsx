@@ -1,20 +1,26 @@
-import type { Metadata } from "next";
 import { BookDiscovery } from "@/components/BookDiscovery";
 import { Figures } from "@/components/Figures";
+import { JsonLd } from "@/components/JsonLd";
 import { PageBand } from "@/components/PageBand";
 import { transparentEnergy as te, transparentEnergyStudy as study } from "@/content/proof";
+import { pageMetadata } from "@/content/seo";
+import { breadcrumbList, caseStudyLd } from "@/lib/structured-data";
+import { MoreWork } from "../MoreWork";
 
-export const metadata: Metadata = {
+const title = "Transparent Energy: reconciliation, automated";
+const description =
+  "How an automated Python pipeline on AWS replaced hand reconciliation of Excel, PDF and vendor files at Transparent Energy, in 3.5 months with a team of two.";
+
+export const metadata = pageMetadata({
   title: "Transparent Energy case study | Camino Code",
-  description:
-    "How an automated Python pipeline on AWS replaced hand reconciliation of Excel, PDF and vendor files at Transparent Energy, in 3.5 months with a team of two.",
-  alternates: { canonical: "/work/transparent-energy" },
-};
+  description,
+  path: te.href,
+});
 
 export default function TransparentEnergyPage() {
   return (
     <>
-      <PageBand stage={2} time="morning" kicker="Case study" title="Transparent Energy: reconciliation, automated" />
+      <PageBand stage={2} time="morning" kicker="Case study" title={title} />
       <section className="inner-sec in-dark on-dark" aria-labelledby="at-a-glance">
         <div className="wrap">
           <p className="in-mono in-label">
@@ -34,7 +40,8 @@ export default function TransparentEnergyPage() {
           </p>
         </div>
       </section>
-      <section className="inner-sec in-light" aria-labelledby="before-title">
+      {/* in-still: this section's heading is at the bottom of the window when the page loads, so it does not fade in */}
+      <section className="inner-sec in-light in-still" aria-labelledby="before-title">
         <div className="wrap">
           <p className="in-mono in-label">
             <i>02</i> / 07
@@ -112,7 +119,16 @@ export default function TransparentEnergyPage() {
           <p>{te.summary}</p>
         </div>
       </section>
+      <MoreWork current={te.href} />
       <BookDiscovery heading="Have a process like this?" />
+      <JsonLd data={caseStudyLd({ headline: title, description, path: te.href, about: te.name })} />
+      <JsonLd
+        data={breadcrumbList([
+          { name: "Home", path: "/" },
+          { name: "Work", path: "/work" },
+          { name: te.name, path: te.href },
+        ])}
+      />
     </>
   );
 }

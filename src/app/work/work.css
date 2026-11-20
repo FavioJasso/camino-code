@@ -1,0 +1,70 @@
+/* Work pages only: the client quote on a case study, the "More work" links, and the image-only
+   cards on the index. Every class here is prefixed in- and builds on the role variables that
+   inner.css sets per section (--fg-soft, --accent, --line, --dots). Selectors carry two classes
+   where they adjust an inner.css rule, so they win whichever stylesheet loads first. */
+
+/* One long quote in the client's own words */
+.in-quote {
+  margin: 2rem 0 0;
+  max-width: 62ch;
+}
+.in-quote blockquote {
+  margin: 0;
+  padding-left: 1.25rem;
+  border-left: 3px solid var(--accent);
+}
+.in-quote blockquote p {
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+.in-quote figcaption {
+  margin-top: 1rem;
+  padding-left: 1.25rem;
+  color: var(--fg-soft);
+}
+.inner-sec .in-quote + p {
+  margin-top: 2rem;
+}
+.inner-sec .in-sub {
+  margin-top: 2.25rem;
+}
+.in-sub + .in-quote {
+  margin-top: 1rem;
+}
+
+/* Links to the other case studies: navigation, so it sits lower and quieter than a content section */
+.inner-sec.in-more .wrap {
+  padding-block: clamp(2rem, 4.5vw, 3.25rem);
+}
+.inner-sec.in-more h2 {
+  margin: 0 0 1rem;
+  font-size: 1.375rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.in-more-list {
+  list-style: none;
+  margin: 0;
+  padding: 3px 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0 2rem;
+  background: var(--dots);
+}
+.in-more-list li {
+  padding: 0.5rem 0 0.75rem;
+}
+.in-more-list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-weight: 700;
+}
+.in-more-list span {
+  display: block;
+}
+
+/* An index card with no figures: the summary follows the image directly */
+.in-proof-body.in-proof-flush {
+  margin-top: 0;
+}
