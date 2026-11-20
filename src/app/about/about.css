@@ -1,0 +1,27 @@
+/* About page only. Builds on inner.css (which PageBand brings in); every class is
+   prefixed "in-" and none of them is used by another page. */
+
+/* a row of text links under a block of copy */
+.in-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.75rem;
+  margin-top: 1rem;
+}
+
+/* the link from a testimonial to its case study, under the giver's name */
+.quotes .in-quote-link {
+  margin-top: 0.25rem;
+}
+
+/* eight questions read better side by side once there is room for two columns */
+@media (min-width: 900px) {
+  .faq.in-faq-cols {
+    max-width: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem clamp(1.5rem, 4vw, 4rem);
+  }
+  .faq.in-faq-cols dd {
+    max-width: 52ch;
+  }
+}

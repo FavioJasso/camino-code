@@ -1,6 +1,10 @@
+import Link from "next/link";
 import { FounderPhoto } from "@/components/FounderPhoto";
+import { founder } from "@/content/founder";
 
+/* Who you are hiring, on the home page. The copy lives in src/content/founder.ts. */
 export function Founder() {
+  const { heading, paragraphs, link } = founder.home;
   return (
     <section className="sec light day" id="founder" aria-labelledby="founder-title">
       <div className="wrap founder">
@@ -9,14 +13,17 @@ export function Founder() {
           <p className="mono">
             <i>03</i> Founder
           </p>
-          <h2 id="founder-title">Favio Jasso, founder</h2>
+          <h2 id="founder-title">{heading}</h2>
+          {paragraphs.map((line) => (
+            // "lead" keeps each paragraph to a readable measure
+            <p key={line} className="lead">
+              {line}
+            </p>
+          ))}
           <p>
-            Favio founded Camino Code in Newark, New Jersey, and led the build
-            for Transparent Energy.
-          </p>
-          <p>
-            He works with small and mid-sized businesses on data, software and
-            AI, one stage at a time.
+            <Link className="link" href={link.href}>
+              {link.label}
+            </Link>
           </p>
         </div>
       </div>

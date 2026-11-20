@@ -1,15 +1,18 @@
-import type { Metadata } from "next";
+import Link from "next/link";
 import { BookDiscovery } from "@/components/BookDiscovery";
+import { JsonLd } from "@/components/JsonLd";
 import { PageBand } from "@/components/PageBand";
 import { TrailStages } from "@/components/TrailStages";
 import { discoveryFacts } from "@/content/approach";
+import { pageMetadata } from "@/content/seo";
+import { breadcrumbList } from "@/lib/structured-data";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Approach | Camino Code",
   description:
     "Every engagement starts with a free 45-minute discovery session and a one-page written summary, then moves in stages you can see working.",
-  alternates: { canonical: "/approach" },
-};
+  path: "/approach",
+});
 
 export default function ApproachPage() {
   return (
@@ -22,8 +25,8 @@ export default function ApproachPage() {
           </p>
           <h2 id="discovery-title">It starts with discovery</h2>
           <p className="in-lead">
-            Discovery is a free conversation about your business: the tools you use, where the data
-            lives, and where time is being lost.
+            Discovery is a free conversation with Favio Jasso, Camino Code&rsquo;s founder, about
+            your business: the tools you use, where the data lives, and where time is being lost.
           </p>
           <dl className="facts in-facts-gap">
             {discoveryFacts.map((f) => (
@@ -42,6 +45,10 @@ export default function ApproachPage() {
           </p>
           <h2 id="stages-title">Then, in stages</h2>
           <TrailStages />
+          <p className="in-aside">
+            Favio leads every stage and is your point of contact from discovery to hand-over.{" "}
+            <Link href="/about#who">Who you work with</Link>
+          </p>
         </div>
       </section>
       <section className="inner-sec in-light in-day" aria-labelledby="start-title">
@@ -57,6 +64,7 @@ export default function ApproachPage() {
         </div>
       </section>
       <BookDiscovery />
+      <JsonLd data={breadcrumbList([{ name: "Home", path: "/" }, { name: "Approach", path: "/approach" }])} />
     </>
   );
 }

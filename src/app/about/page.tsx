@@ -1,15 +1,27 @@
-import type { Metadata } from "next";
+import Link from "next/link";
 import { BookDiscovery } from "@/components/BookDiscovery";
+import { Faq } from "@/components/Faq";
 import { FounderPhoto } from "@/components/FounderPhoto";
+import { JsonLd } from "@/components/JsonLd";
 import { PageBand } from "@/components/PageBand";
-import { site } from "@/content/site";
+import { faq } from "@/content/faq";
+import { founder, whoYouWorkWith as who } from "@/content/founder";
+import { pageMetadata } from "@/content/seo";
 import { testimonials } from "@/content/testimonials";
+import { breadcrumbList, faqPage, personLd } from "@/lib/structured-data";
+import "./about.css";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "About | Camino Code",
   description:
-    "Camino Code is a software, data and AI consultancy in Newark, New Jersey, founded by Favio Jasso.",
-  alternates: { canonical: "/about" },
+    "Camino Code is a founder-led software, data and AI consultancy in Newark, New Jersey. Favio Jasso, the founder, leads every engagement from discovery to hand-over.",
+  path: "/about",
+});
+
+/** Link text for each testimonial's case study: two links on one page need two different names. */
+const STUDY_LINK: Record<string, string> = {
+  "/work/victorias-painting": "Read the Victoria's Painting case study",
+  "/work/daniel-avila": "Read the Daniel Avila portfolio case study",
 };
 
 export default function AboutPage() {
@@ -23,29 +35,45 @@ export default function AboutPage() {
             <p className="in-mono in-label">
               <i>01</i> Founder
             </p>
-            <h2 id="founder-title">Favio Jasso, founder</h2>
-            <p>
-              Favio founded Camino Code in {site.contact.place}, and led the build for Transparent
-              Energy.
-            </p>
-            <p>
-              He works with small and mid-sized businesses on data, software and AI, one stage at a
-              time.
-            </p>
+            <h2 id="founder-title">{founder.about.heading}</h2>
+            {founder.about.note.map((line, i) => (
+              <p key={line} className={i === 0 ? "in-lead" : undefined}>
+                {line}
+              </p>
+            ))}
+            <div className="in-links">
+              {founder.about.links.map((l) => (
+                <Link key={l.href} className="in-link" href={l.href}>
+                  {l.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>
-      <section className="inner-sec in-light" aria-labelledby="working-title">
+      {/* id "who" is the target of the link under the stages on /approach */}
+      <section className="inner-sec in-light" id="who" aria-labelledby="who-title">
         <div className="wrap">
           <p className="in-mono in-label">
-            <i>02</i> Process
+            <i>02</i> Working together
           </p>
-          <h2 id="working-title">Working with us</h2>
-          <p className="in-lead">
-            Clients start with a free 45-minute discovery session, by video or in person. We write
-            up one page within a week, build in stages you can see working, and leave documentation
-            when we hand over.
-          </p>
+          <h2 id="who-title">{who.heading}</h2>
+          <p className="in-lead">{who.lead}</p>
+          <p>{who.body}</p>
+          <dl className="facts">
+            {who.facts.map((f) => (
+              <div key={f.label}>
+                <dt className="in-mono">{f.label}</dt>
+                <dd>{f.value}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="in-aside">{who.we}</p>
+          <div className="in-links">
+            <Link className="in-link" href={who.link.href}>
+              {who.link.label}
+            </Link>
+          </div>
         </div>
       </section>
       <section className="inner-sec in-light in-day" aria-labelledby="kind-words-title">
@@ -56,22 +84,39 @@ export default function AboutPage() {
           <h2 id="kind-words-title">Kind words from website projects</h2>
           <div className="quotes">
             {testimonials.map((t) => (
-              <figure key={t.name}>
-                <blockquote>
-                  <p>&ldquo;{t.quote}&rdquo;</p>
-                </blockquote>
-                <figcaption>
-                  {t.name}, {t.role}, {t.company}
-                </figcaption>
-              </figure>
+              <div key={t.name}>
+                <figure>
+                  <blockquote>
+                    <p>&ldquo;{t.quote}&rdquo;</p>
+                  </blockquote>
+                  <figcaption>
+                    {t.name}, {t.role}, {t.company}
+                  </figcaption>
+                </figure>
+                <p className="in-quote-link">
+                  <Link className="in-link" href={t.href}>
+                    {STUDY_LINK[t.href] ?? `Read the ${t.company} case study`}
+                  </Link>
+                </p>
+              </div>
             ))}
           </div>
-          <p className="in-aside">
-            Both were website projects.
+          <p className="in-aside">Both were website projects.</p>
+        </div>
+      </section>
+      <section className="inner-sec in-light in-day" aria-labelledby="faq-title">
+        <div className="wrap">
+          <p className="in-mono in-label">
+            <i>04</i> FAQ
           </p>
+          <h2 id="faq-title">Questions</h2>
+          <Faq items={faq} className="in-faq-cols" />
         </div>
       </section>
       <BookDiscovery />
+      <JsonLd data={breadcrumbList([{ name: "Home", path: "/" }, { name: "About", path: "/about" }])} />
+      <JsonLd data={personLd({ name: founder.name, jobTitle: founder.role, path: "/about", image: founder.portrait })} />
+      <JsonLd data={faqPage(faq)} />
     </>
   );
 }
