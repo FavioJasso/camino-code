@@ -14,6 +14,37 @@ export type ServicePage = {
   proof: "transparentEnergy" | "danielAvila64" | null;
 };
 
+/**
+ * Copy for the /services index. It describes how the three services relate and repeats the
+ * process promises already made elsewhere; it makes no claim of past delivery. The case studies
+ * the index links to come from each service page's `proof` field below.
+ */
+export const servicesIndex = {
+  title: "Software, data and AI services | Camino Code",
+  description:
+    "The three services Camino Code offers small and mid-sized businesses: software, data, and AI and governance. What each covers and how they fit together.",
+  intro:
+    "Software, data and AI for small and mid-sized businesses. Every service starts with a free discovery session.",
+  fitLead:
+    "The three overlap, so discovery starts from the technology and data you already have, not from a service.",
+  fit: [
+    {
+      name: "Software is where the work happens",
+      line: "Internal tools, portals and integrations decide what gets recorded, and how many times someone has to type it.",
+    },
+    {
+      name: "Data is what the work leaves behind",
+      line: "Pipelines and reporting turn those records into numbers you can check and decide on.",
+    },
+    {
+      name: "AI and governance rest on both",
+      line: "AI is only as useful as the data it can reach. Rules, access controls and checks decide what it may see, and who confirms its output before it is relied on.",
+    },
+  ],
+  fitNote:
+    "You may only need one of them. The one-page written summary you get after discovery says what to fix first and what to leave alone.",
+} as const;
+
 const commonEngaged = [
   "It starts with a free 45-minute discovery session, by video or in person.",
   "Within a week you get a one-page written summary of what we found and what we would do first.",
@@ -68,7 +99,7 @@ export const servicePages: Record<Service["slug"], ServicePage> = {
     intro:
       "If two people can open two files and get two different totals, the problem is not the people. It is how the data moves. That is where we start.",
     problems: [
-      "Analysts spend their week reconciling files by hand instead of analysing them.",
+      "Analysts spend their week reconciling files by hand instead of analyzing them.",
       "Reports disagree, and nobody is sure which one is right.",
       "Data arrives as Excel, PDF and vendor files, each in its own format.",
       "A manual monthly process that everyone dreads and nobody can audit.",

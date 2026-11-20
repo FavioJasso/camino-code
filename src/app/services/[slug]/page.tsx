@@ -3,10 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BookDiscovery } from "@/components/BookDiscovery";
 import { Figures } from "@/components/Figures";
+import { JsonLd } from "@/components/JsonLd";
 import { PageBand } from "@/components/PageBand";
 import { proofBlocks } from "@/content/proof";
+import { pageMetadata } from "@/content/seo";
 import { servicePages } from "@/content/service-pages";
 import { services } from "@/content/services";
+import { breadcrumbList, faqPage, serviceLd } from "@/lib/structured-data";
+import "../services.css";
 
 type Params = { slug: string };
 
@@ -23,27 +27,43 @@ function pageFor(slug: string) {
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const page = pageFor((await params).slug);
   if (!page) return {};
-  return {
-    title: `${page.kicker} | Camino Code`,
+  return pageMetadata({
+    // the long title, so the three pages and the /services index each have their own
+    title: `${page.title} | Camino Code`,
     description: page.description,
-    alternates: { canonical: `/services/${page.slug}` },
-  };
+    path: `/services/${page.slug}`,
+  });
 }
 
 export default async function ServicePage({ params }: { params: Promise<Params> }) {
   const page = pageFor((await params).slug);
   if (!page) notFound();
   const proof = page.proof ? proofBlocks[page.proof] : null;
+  const service = services.find((s) => s.slug === page.slug);
+  const others = services.filter((s) => s.slug !== page.slug);
+  const path = `/services/${page.slug}`;
 
   return (
     <>
       <PageBand stage={1} time="night" kicker={page.kicker} title={page.title} />
-      <section className="inner-sec in-dark on-dark in-intro">
+      <section className="inner-sec in-dark on-dark in-intro in-svc-intro">
         <div className="wrap">
+          <nav className="in-crumbs in-mono" aria-label="Breadcrumb">
+            <ol>
+              <li>
+                <Link href="/">Home</Link>
+              </li>
+              <li>
+                <Link href="/services">Services</Link>
+              </li>
+              <li aria-current="page">{page.kicker}</li>
+            </ol>
+          </nav>
           <p className="in-lead">{page.intro}</p>
         </div>
       </section>
-      <section className="inner-sec in-light" aria-labelledby="problems-title">
+      {/* in-still: this section is at the bottom of the window when the page loads, so it does not fade in */}
+      <section className="inner-sec in-light in-still" aria-labelledby="problems-title">
         <div className="wrap cols">
           <div>
             <p className="in-mono in-label">
@@ -119,9 +139,33 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
             ))}
           </dl>
           <p className="in-aside">Favio Jasso, Camino Code&rsquo;s founder, runs the discovery session.</p>
+          <nav className="in-svc-more" aria-labelledby="more-title">
+            <p className="in-mono" id="more-title">
+              Other services
+            </p>
+            <ul>
+              {others.map((s) => (
+                <li key={s.slug}>
+                  <Link href={s.href}>{s.name}</Link>
+                </li>
+              ))}
+              <li>
+                <Link href="/services">All services</Link>
+              </li>
+            </ul>
+          </nav>
         </div>
       </section>
       <BookDiscovery />
+      <JsonLd
+        data={breadcrumbList([
+          { name: "Home", path: "/" },
+          { name: "Services", path: "/services" },
+          { name: page.kicker, path },
+        ])}
+      />
+      <JsonLd data={serviceLd({ name: page.title, description: service?.line ?? page.description, path })} />
+      <JsonLd data={faqPage(page.faq.map((f) => ({ question: f.q, answer: f.a })))} />
     </>
   );
 }

@@ -1,9 +1,11 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useActionState, useEffect, useRef, useState, type ReactNode } from "react";
 import { site } from "@/content/site";
 import { LIMITS, type Booking } from "@/lib/booking-shared";
 import { issueFormToken, submitBooking, type State } from "./actions";
+import { EMAIL_HREF, EmailLink } from "@/components/ContactLinks";
 
 const FIELD_ORDER = ["name", "email", "business"] as const;
 const LABELS: Record<string, string> = {
@@ -56,7 +58,7 @@ export function DiscoveryForm() {
       </h3>
       <p>
         We reply within one business day to agree a time for your free 45-minute conversation. If
-        you do not hear from us, write to {site.contact.email}.
+        you do not hear from us, write to <EmailLink />.
       </p>
     </div>
   );
@@ -86,7 +88,7 @@ export function DiscoveryForm() {
             {errors.form && FIELD_ORDER.every((k) => !errors[k]) ? "We could not send your request" : "Please fix the following"}
           </h3>
           <ul>
-            {errors.form ? <li>{errors.form}</li> : null}
+            {errors.form ? <li>{withEmailLink(errors.form)}</li> : null}
             {(Object.keys(errors) as (keyof Booking | "form")[])
               .filter((k) => k !== "form")
               .sort((a, b) => order(a) - order(b))
@@ -147,9 +149,18 @@ export function DiscoveryForm() {
       </div>
       <input type="hidden" name="t" value={token} />
 
-      <button className="btn in-btn-lg" type="submit" disabled={pending}>
+      <button className="btn in-btn-lg" type="submit" disabled={pending} aria-describedby="privacy-note">
         {pending ? "Sending…" : "Send request"}
       </button>
+
+      {/* opens in a new tab so a half-filled form is not lost */}
+      <p className="in-note" id="privacy-note">
+        We use these details to reply to you and to prepare for the conversation.{" "}
+        <Link href="/privacy" target="_blank">
+          Read the privacy page (opens in a new tab)
+        </Link>
+        .
+      </p>
     </form>
   );
 
@@ -158,6 +169,21 @@ export function DiscoveryForm() {
     <>
       <div role="status">{sent ? confirmation : null}</div>
       {sent ? null : form}
+    </>
+  );
+}
+
+/** The server's message with the published email address turned into a mailto link; the words stay the same. */
+function withEmailLink(message: string): ReactNode {
+  const at = message.indexOf(site.contact.email);
+  if (at < 0) return message;
+  return (
+    <>
+      {message.slice(0, at)}
+      <a className="in-inline" href={EMAIL_HREF}>
+        {site.contact.email}
+      </a>
+      {message.slice(at + site.contact.email.length)}
     </>
   );
 }

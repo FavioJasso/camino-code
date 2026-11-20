@@ -1,21 +1,25 @@
-import type { Metadata } from "next";
 import { ClosingBand } from "@/components/BookDiscovery";
+import { JsonLd } from "@/components/JsonLd";
 import { PageBand } from "@/components/PageBand";
+import { pageMetadata } from "@/content/seo";
 import { site } from "@/content/site";
+import { breadcrumbList } from "@/lib/structured-data";
+import { EmailLink, PhoneLink } from "@/components/ContactLinks";
 import { DiscoveryForm } from "./DiscoveryForm";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Book a discovery session | Camino Code",
   description:
     "Tell us about your business. A free 45-minute discovery conversation, by video or in person; we reply within one business day.",
-  alternates: { canonical: "/discovery" },
-};
+  path: "/discovery",
+});
 
 export default function DiscoveryPage() {
   return (
     <>
       <PageBand stage={4} time="morning" kicker="Discovery" title="Book a discovery session" />
-      <section className="inner-sec in-light" aria-labelledby="form-title">
+      {/* in-still: the form is on screen when the page loads, so it does not fade in */}
+      <section className="inner-sec in-light in-still" aria-labelledby="form-title">
         <div className="wrap in-split">
           <div>
             <p className="in-mono in-label">
@@ -57,9 +61,15 @@ export default function DiscoveryPage() {
       </section>
       <ClosingBand heading="Prefer to write or call?">
         <p className="in-lead">
-          Email {site.contact.email} or call <span className="nowrap">{site.contact.phone}</span>. {site.contact.place}.
+          Email <EmailLink /> or call <PhoneLink />. {site.contact.place}.
         </p>
       </ClosingBand>
+      <JsonLd
+        data={breadcrumbList([
+          { name: "Home", path: "/" },
+          { name: "Book a discovery session", path: "/discovery" },
+        ])}
+      />
     </>
   );
 }

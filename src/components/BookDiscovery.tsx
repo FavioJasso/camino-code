@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { site } from "@/content/site";
+import { EmailLink, PhoneLink } from "@/components/ContactLinks";
 
 /** A sun rising in the saddle of a dotted ridge line: decoration for the closing band. */
 function Sunrise() {
@@ -49,7 +49,7 @@ export function BookDiscovery({ heading = "Start with discovery" }: { heading?: 
           Book a discovery session
         </Link>
         <p>
-          Or write to {site.contact.email} or call <span className="nowrap">{site.contact.phone}</span>.
+          Or write to <EmailLink /> or call <PhoneLink />.
         </p>
       </div>
     </ClosingBand>

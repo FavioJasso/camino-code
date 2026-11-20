@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: [rebuild]
+    branches: [main, rebuild]
   pull_request:
 permissions:
   contents: read
