@@ -7,7 +7,10 @@ export function Proof() {
       <div className="wrap">
         <div className="sec-head">
           <p className="mono">
-            <i>02</i> Proof <span className="t">06:40 · Morning</span>
+            <i>02</i> Proof{" "}
+            <span className="t" aria-hidden="true">
+              06:40 · Morning
+            </span>
           </p>
           <h2 id="work-title">{te.name}</h2>
         </div>
@@ -24,9 +27,14 @@ export function Proof() {
             <p>{te.summary}</p>
             <p className="proof-credit mono">{te.wording}</p>
           </div>
-          <Link className="link" href={te.href}>
-            Read the case study
-          </Link>
+          <div className="proof-links">
+            <Link className="link" href={te.href}>
+              Read the case study
+            </Link>
+            <Link className="link" href="/work">
+              See all work
+            </Link>
+          </div>
         </div>
       </div>
     </section>

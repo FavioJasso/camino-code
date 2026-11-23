@@ -705,8 +705,9 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
           tagText.style.background = dawn ? "var(--midnight)" : CHIP;
           svg.setAttribute("stroke", mode & 2 ? "var(--ink)" : "var(--cream)");
         }
-        // the bracket leaves before the window's lower edge reaches it; short phones: the hero copy covers the saddle
-        const tf = s.d > (narrow ? 0.6 : 0.65) || (narrow && !dawn && view.h < 700) ? "0" : "1";
+        // the bracket leaves before the window's lower edge reaches it; phones under 820 px tall: the hero copy
+        // (with its note by the button from 720 px) covers the saddle
+        const tf = s.d > (narrow ? 0.6 : 0.65) || (narrow && !dawn && view.h < 820) ? "0" : "1";
         if (tag.style.opacity !== tf) tag.style.opacity = tf;
         const bo = dawn ? (s.d > 0.8 ? "0" : "1") : !narrow || s.p < 0.1 ? "1" : s.p > 0.16 ? "0" : (1 - (s.p - 0.1) / 0.06).toFixed(2);
         if (box.style.opacity !== bo) box.style.opacity = bo;

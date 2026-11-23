@@ -40,6 +40,10 @@ export function Hero() {
             <Link className="btn btn-lg" href="/discovery">
               Book a discovery session
             </Link>
+            {/* what the session is, from the facts on /approach; under the button on phones, under the row on desktop (home.css) */}
+            <p className="hero-note">
+              45 minutes, by video or in person. You get a one-page written summary within a week.
+            </p>
             <a className="link" href="#work">
               See what it did for Transparent Energy
             </a>
