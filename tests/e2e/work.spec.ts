@@ -1,10 +1,44 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 import { STUDIES } from "./routes";
 
-/* The four case studies and the /work index. The two website projects carry facts and the
-   client's own words only: no figures block, and none of the old pages' filler statistics. */
+/* The four case studies, the /work index and the proof blocks on the service pages. The two website
+   projects carry facts and the client's own words only: no figures block, and none of the old pages'
+   filler statistics. Every study brings its outcome up under "At a glance". Only Transparent Energy
+   shows large figures: the DANIEL AVILA 64 measurements are one small "Under the hood" line. */
 
 const flat = (text: string | null) => (text ?? "").replace(/\s+/g, " ");
+
+const HOOD = [
+  "158 kB first-load JavaScript",
+  "0 model, texture or audio files",
+  "4 control schemes, all live",
+  "100% touch and plain-HTML ready",
+];
+
+/** The section of <main> that holds the element with this id. */
+const sectionOf = (page: Page, id: string) => page.locator("main > section").filter({ has: page.locator(`#${id}`) });
+
+/** Waits until the page has stopped scrolling (in-page jumps and scroll-into-view travel smoothly). */
+async function settled(page: Page) {
+  let last = -1;
+  await expect
+    .poll(async () => {
+      const y = await page.evaluate(() => window.scrollY);
+      const still = y === last;
+      last = y;
+      return still;
+    })
+    .toBe(true);
+}
+
+/** The "Under the hood" line: its label, the four measurements, and type no larger than body text. */
+async function expectHoodLine(hood: Locator) {
+  await expect(hood).toHaveCount(1);
+  await expect(hood.locator(".in-mono")).toHaveText("Under the hood");
+  await expect(hood.locator("li")).toHaveText(HOOD);
+  const sizes = await hood.locator("li, li b").evaluateAll((els) => els.map((el) => parseFloat(getComputedStyle(el).fontSize)));
+  expect(Math.max(...sizes)).toBeLessThanOrEqual(18);
+}
 
 test("Victoria's Painting case study: facts only, the client's quote, gallery and visit link", async ({ page }) => {
   await page.goto("/work/victorias-painting");
@@ -21,6 +55,14 @@ test("Victoria's Painting case study: facts only, the client's quote, gallery an
   }
   // six numbered sections, as on the other studies
   await expect(page.locator("main .in-label")).toHaveCount(6);
+  // the outcome first: under "At a glance", the one sentence About shows, attributed as About does, linked to the full text
+  const line = sectionOf(page, "at-a-glance").locator(".in-outcome");
+  await expect(line.locator("blockquote")).toHaveText(
+    "“His ability to turn my ideas into a modern, functional, and visually appealing design exceeded all my expectations.”",
+  );
+  await expect(line.locator("figcaption")).toHaveText("Juan Porras, Founder, Victoria's Painting");
+  await expect(line.getByRole("link", { name: "In the client’s words" })).toHaveAttribute("href", "#client-words");
+  await expect(sectionOf(page, "result-title").locator("#client-words")).toHaveText("In the client’s words");
   // the testimonial is the client's whole text, attributed as the original page gave it
   const quote = page.locator("figure.in-quote");
   await expect(quote.locator("blockquote p")).toHaveCount(4);
@@ -61,6 +103,14 @@ test("Daniel Avila's first site: facts only, his quote, three safe images, and t
     expect(main.toLowerCase(), fact).toContain(fact.toLowerCase());
   }
   await expect(page.locator("main .in-label")).toHaveCount(6);
+  // the outcome first: his one sentence from About under "At a glance", linked to the full text
+  const line = sectionOf(page, "at-a-glance").locator(".in-outcome");
+  await expect(line.locator("blockquote")).toHaveText(
+    "“Camino Code didn't just build me a website, they helped me create an online presence that actually feels like me.”",
+  );
+  await expect(line.locator("figcaption")).toHaveText("Daniel Avila, IT Support Professional, danielavila.tech");
+  await expect(line.getByRole("link", { name: "In the client’s words" })).toHaveAttribute("href", "#client-words");
+  await expect(sectionOf(page, "result-title").locator("#client-words")).toHaveText("In the client’s words");
   const quote = page.locator("figure.in-quote");
   await expect(quote.locator("blockquote p")).toHaveCount(3);
   await expect(quote.locator("blockquote p").first()).toHaveText(
@@ -130,8 +180,30 @@ test("/work lists all four studies, each with a credit and its own link", async 
   ]) {
     expect(main.toLowerCase(), credit).toContain(credit.toLowerCase());
   }
-  // only the two measured projects show figures
-  await expect(page.locator("main section").filter({ has: page.locator(".in-fig") })).toHaveCount(2);
+  // one link per project for screen readers and the keyboard, directly under the summary and its credit
+  const cards = page.locator("main > section").filter({ has: page.locator(".in-card") });
+  await expect(cards).toHaveCount(4);
+  for (const card of await cards.all()) {
+    await expect(card.locator("a")).toHaveCount(1);
+    const text = (await card.locator(".in-proof-body > div").boundingBox())!;
+    const link = (await card.locator("a.in-link").boundingBox())!;
+    expect(Math.abs(link.x - text.x)).toBeLessThan(2);
+    const gap = link.y - (text.y + text.height);
+    expect(gap).toBeGreaterThanOrEqual(0);
+    expect(gap).toBeLessThan(24);
+    expect(link.height).toBeGreaterThanOrEqual(44);
+  }
+  // only Transparent Energy shows large figures: they are business results
+  const withFigures = page.locator("main > section").filter({ has: page.locator(".in-fig") });
+  await expect(withFigures).toHaveCount(1);
+  await expect(withFigures.locator(".in-fig b")).toHaveText(["$65,000+", "85%", "3.5 months"]);
+  // DANIEL AVILA 64 leads with its screenshot and summary; its developer measurements are one small line
+  const da = sectionOf(page, "da-title");
+  await expect(da).toContainText(
+    "A playable 3D portfolio: an N64-era castle you can explore, with every section one click away for recruiters.",
+  );
+  await expectHoodLine(da.locator(".in-hood"));
+  await expect(page.locator(".in-hood")).toHaveCount(1);
   // the card that used to describe the wrong image
   await expect(page.locator('img[src*="/work/daniel-avila-64/card"]')).toHaveAttribute("alt", /title screen/);
   await expect(page.locator(".work-card img")).toHaveCount(3);
@@ -140,6 +212,122 @@ test("/work lists all four studies, each with a credit and its own link", async 
     await expect(img).toHaveAttribute("width", "1920");
     await expect(img).toHaveAttribute("height", "1280");
   }
+});
+
+test("on /work a project's title and image lead to its case study too", async ({ page }) => {
+  // the card's one link stretches over the title and the image, so a click or tap on either follows it
+  const targets = [
+    ["#te-title", STUDIES[0]],
+    ["#da-title", STUDIES[1]],
+    ['section[aria-labelledby="da-title"] img', STUDIES[1]],
+    ["#vp-title", STUDIES[2]],
+    ['section[aria-labelledby="vp-title"] img', STUDIES[2]],
+    ["#da-first-title", STUDIES[3]],
+    ['section[aria-labelledby="da-first-title"] img', STUDIES[3]],
+  ];
+  for (const [selector, route] of targets) {
+    await page.goto("/work");
+    const target = page.locator(`main ${selector}`);
+    await target.scrollIntoViewIfNeeded();
+    await settled(page);
+    const box = (await target.boundingBox())!;
+    await page.mouse.click(box.x + Math.min(40, box.width / 2), box.y + box.height / 2);
+    await page.waitForURL(`**${route}`);
+    await expect(page.locator("h1"), selector).not.toHaveText("Work");
+  }
+  // the summary is plain text above the stretched link: the pointer meets the paragraph there, not the link
+  await page.goto("/work");
+  const summary = page.locator('main section[aria-labelledby="vp-title"] .in-proof-body p').first();
+  await summary.scrollIntoViewIfNeeded();
+  await settled(page);
+  const box = (await summary.boundingBox())!;
+  const hit = await page.evaluate(
+    ([x, y]) => document.elementFromPoint(x, y)?.closest("a, p")?.tagName,
+    [box.x + 20, box.y + box.height / 2],
+  );
+  expect(hit).toBe("P");
+});
+
+test("Transparent Energy shows its three figures once, under At a glance", async ({ page }) => {
+  await page.goto("/work/transparent-energy");
+  const glance = sectionOf(page, "at-a-glance");
+  await expect(glance.locator(".in-fig b")).toHaveText(["$65,000+", "85%", "3.5 months"]);
+  await expect(page.locator("main .in-fig")).toHaveCount(3);
+  // the facts row leaves the time to the third figure, directly below it
+  await expect(glance.locator(".facts dt")).toHaveText(["Client", "Industry", "Team"]);
+  expect(flat(await glance.innerText()).split("3.5 months")).toHaveLength(2);
+  // Result keeps its words, without the figures a second time
+  const result = sectionOf(page, "result-title");
+  await expect(result.locator(".in-fig")).toHaveCount(0);
+  await expect(result).toContainText(
+    "Analysts were reconciling Excel, PDF and vendor files by hand. An automated system now does it every day.",
+  );
+  await expect(page.locator("main .in-label")).toHaveCount(7);
+});
+
+test("DANIEL AVILA 64 leads with its title screen and a plain sentence; the measurements are one small line", async ({
+  page,
+}) => {
+  await page.goto("/work/daniel-avila-64");
+  const outcome = "Explorers roam the castle and collect stars; recruiters open the pause menu and download the PDF résumé in one click.";
+  const glance = sectionOf(page, "at-a-glance");
+  await expect(glance.locator(".in-outcome")).toHaveText(outcome);
+  const shot = glance.locator("img");
+  await expect(shot).toHaveAttribute("alt", /title screen/);
+  await expect(shot).toHaveAttribute("src", "/work/daniel-avila-64/card-960.webp");
+  await expect(shot).toHaveAttribute("width", "1920");
+  await expect(shot).toHaveAttribute("height", "1280");
+  // the sentence moved up from "What was built": it is said once
+  expect(flat(await page.locator("main").innerText()).split(outcome)).toHaveLength(2);
+  // no large figures: the four developer measurements close the Result section at body size
+  await expect(page.locator("main .in-fig")).toHaveCount(0);
+  const result = sectionOf(page, "result-title");
+  await expect(result.locator(".ticks li")).toHaveCount(4);
+  await expectHoodLine(result.locator(".in-hood"));
+  await expect(page.locator("main .in-label")).toHaveCount(6);
+});
+
+test("the client's line under At a glance jumps to the full testimonial, clear of the sticky header", async ({ page }) => {
+  for (const route of ["/work/victorias-painting", "/work/daniel-avila"]) {
+    await page.goto(route);
+    const link = page.locator(".in-outcome").getByRole("link", { name: "In the client’s words" });
+    expect((await link.boundingBox())!.height, route).toBeGreaterThanOrEqual(44);
+    await link.click();
+    const heading = page.locator("#client-words");
+    await expect(heading).toBeInViewport();
+    await settled(page);
+    const top = await heading.evaluate((el) => el.getBoundingClientRect().top);
+    const header = await page.locator(".site-head").evaluate((el) => el.getBoundingClientRect().bottom);
+    expect(top, route).toBeGreaterThanOrEqual(header);
+    await expect(page.locator("figure.in-quote")).toBeInViewport();
+  }
+});
+
+test("service pages: Software leads with the screenshot and summary, Data keeps its large figures", async ({ page }) => {
+  await page.goto("/services/software");
+  const proof = sectionOf(page, "proof-title");
+  await expect(proof.locator("h2")).toHaveText("DANIEL AVILA 64");
+  await expect(proof.locator(".in-fig")).toHaveCount(0);
+  await expect(proof.locator("img")).toHaveAttribute("alt", /title screen/);
+  await expect(proof).toContainText(
+    "A playable 3D portfolio: an N64-era castle you can explore, with every section one click away for recruiters.",
+  );
+  await expectHoodLine(proof.locator(".in-hood"));
+  await expect(proof.locator('a[href="/work/daniel-avila-64"]')).toHaveCount(1);
+
+  await page.goto("/services/data");
+  await expect(page.locator("main .in-fig b")).toHaveText(["$65,000+", "85%", "3.5 months"]);
+  await expect(page.locator(".in-hood")).toHaveCount(0);
+
+  // the index: a business result leads in the accent, a developer measurement is a small labelled line
+  await page.goto("/services");
+  const proofs = page.locator(".in-svc-proof");
+  await expect(proofs.nth(0).locator(".in-svc-fig")).toHaveCount(0);
+  await expect(proofs.nth(0).locator(".in-svc-hood")).toHaveText("Under the hood 158 kB first-load JavaScript");
+  const size = await proofs.nth(0).locator(".in-svc-hood").evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  expect(size).toBeLessThanOrEqual(18);
+  await expect(proofs.nth(1).locator(".in-svc-fig")).toHaveText("$65,000+ a year saved in analyst time");
+  await expect(proofs.nth(1).locator(".in-svc-hood")).toHaveCount(0);
 });
 
 test("About quotes each client in their own words and links to the case study", async ({ page }) => {

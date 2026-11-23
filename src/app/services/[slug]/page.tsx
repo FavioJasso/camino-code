@@ -10,6 +10,9 @@ import { pageMetadata } from "@/content/seo";
 import { servicePages } from "@/content/service-pages";
 import { services } from "@/content/services";
 import { breadcrumbList, faqPage, serviceLd } from "@/lib/structured-data";
+// the proof block borrows the work index's card image and its small "Under the hood" line
+import { UnderTheHood } from "@/app/work/UnderTheHood";
+import { CARD_SIZES, WorkImage } from "@/app/work/WorkImage";
 import "../services.css";
 
 type Params = { slug: string };
@@ -39,6 +42,8 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
   const page = pageFor((await params).slug);
   if (!page) notFound();
   const proof = page.proof ? proofBlocks[page.proof] : null;
+  // a proof whose figures carry a label ("Under the hood") shows them as one small line, not as large figures
+  const hood = proof && "figuresLabel" in proof ? proof : null;
   const service = services.find((s) => s.slug === page.slug);
   const others = services.filter((s) => s.slug !== page.slug);
   const path = `/services/${page.slug}`;
@@ -90,14 +95,19 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
         </div>
       </section>
       {proof ? (
-        <section className="inner-sec in-light" aria-labelledby="proof-title">
+        <section className={hood ? "inner-sec in-light work-card" : "inner-sec in-light"} aria-labelledby="proof-title">
           <div className="wrap">
             <p className="in-mono in-label">
               <i>03</i> Proof
             </p>
             <h2 id="proof-title">{proof.name}</h2>
-            <Figures figures={proof.figures} />
-            <div className="in-proof-body">
+            {/* developer measurements stay small: that proof leads with its screenshot and the summary instead */}
+            {hood ? (
+              <WorkImage src={hood.cardImage.src} alt={hood.cardImage.alt} sizes={CARD_SIZES} />
+            ) : (
+              <Figures figures={proof.figures} />
+            )}
+            <div className={hood ? "in-proof-body in-proof-flush" : "in-proof-body"}>
               <div>
                 <p>{proof.summary}</p>
                 <p className="in-mono credit">{proof.wording}</p>
@@ -106,6 +116,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
                 Read the case study
               </Link>
             </div>
+            {hood ? <UnderTheHood label={hood.figuresLabel} figures={hood.figures} /> : null}
           </div>
         </section>
       ) : null}

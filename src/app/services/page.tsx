@@ -92,10 +92,18 @@ export default function ServicesPage() {
               <li className="in-svc-proof" key={service.slug}>
                 <p className="in-mono">{service.name}</p>
                 <h3>{proof.name}</h3>
-                <p className="in-svc-fig">
-                  <b>{proof.figures[0].value}</b> {proof.figures[0].label}
-                </p>
+                {/* a business result leads in the accent; a developer measurement follows the summary as a small labelled line */}
+                {"figuresLabel" in proof ? null : (
+                  <p className="in-svc-fig">
+                    <b>{proof.figures[0].value}</b> {proof.figures[0].label}
+                  </p>
+                )}
                 <p>{proof.summary}</p>
+                {"figuresLabel" in proof ? (
+                  <p className="in-svc-hood">
+                    <span className="in-mono">{proof.figuresLabel}</span> {proof.figures[0].value} {proof.figures[0].label}
+                  </p>
+                ) : null}
                 <p className="in-mono credit">{proof.wording}</p>
                 <Link className="in-link" href={proof.href}>
                   Read the {proof.name} case study

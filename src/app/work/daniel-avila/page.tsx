@@ -6,6 +6,7 @@ import { danielAvila as da, danielAvilaStudy as study } from "@/content/proof";
 import { pageMetadata } from "@/content/seo";
 import { testimonialFor } from "@/content/testimonials";
 import { breadcrumbList, caseStudyLd } from "@/lib/structured-data";
+import { CLIENT_WORDS_ID, ClientLine } from "../ClientLine";
 import { ClientQuote } from "../ClientQuote";
 import { MoreWork } from "../MoreWork";
 import { GALLERY_SIZES, WorkImage } from "../WorkImage";
@@ -23,7 +24,8 @@ export default function DanielAvilaPage() {
   return (
     <>
       <PageBand stage={2} time="morning" kicker="Case study" title={study.title} />
-      <section className="inner-sec in-dark on-dark" aria-labelledby="at-a-glance">
+      {/* in-still: this section runs past the bottom of the window when the page loads, so it does not fade in */}
+      <section className="inner-sec in-dark on-dark in-still" aria-labelledby="at-a-glance">
         <div className="wrap">
           <p className="in-mono in-label">
             <i>01</i> / 06
@@ -38,6 +40,8 @@ export default function DanielAvilaPage() {
               </div>
             ))}
           </dl>
+          {/* the outcome first: one sentence of the client's testimonial, which is shown in full under Result */}
+          <ClientLine testimonial={testimonialFor(da.href)} />
           <p className="in-mono credit in-credit-gap">
             {da.wording}
           </p>
@@ -115,7 +119,9 @@ export default function DanielAvilaPage() {
               <li key={r}>{r}</li>
             ))}
           </ul>
-          <h3 className="in-sub">In the client&rsquo;s words</h3>
+          <h3 className="in-sub" id={CLIENT_WORDS_ID}>
+            In the client&rsquo;s words
+          </h3>
           <ClientQuote testimonial={testimonialFor(da.href)} />
           <h3 className="in-sub">What came next</h3>
           <p>{study.nextNote}</p>

@@ -103,6 +103,14 @@
   letter-spacing: -0.01em;
   color: var(--accent);
 }
+/* a developer measurement: a small labelled line at body size, set like the "For when" line above */
+.inner-sec .in-svc-hood {
+  color: var(--fg-soft);
+}
+.inner-sec .in-svc-hood .in-mono {
+  margin-right: 0.375rem;
+  color: var(--fg);
+}
 .in-svc-proof .credit {
   margin-top: 0.875rem;
 }
