@@ -82,7 +82,8 @@ test("the discovery form validates, sends and confirms without a violation", asy
   await page.goto("/discovery");
   // an empty submit: the server action answers with the error summary
   await page.getByRole("button", { name: "Send request" }).click();
-  await expect(page.getByRole("group", { name: "Please fix the following" })).toBeFocused();
+  // the form waits until its signed timestamp is old enough before any send, an empty one too
+  await expect(page.getByRole("group", { name: "Please fix the following" })).toBeFocused({ timeout: 15_000 });
   await page.getByLabel(/Your name/).fill("Ana Ruiz");
   await page.getByLabel(/^Email/).fill("ana@example.com");
   await page.getByLabel(/Business name/).fill("__test_sent__");

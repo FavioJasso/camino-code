@@ -1,7 +1,8 @@
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
-import { LIMITS, type Booking, type BookingErrors } from "./booking-shared";
+import { LIMITS, MAX_AGE_MS, MIN_AGE_MS, type Booking, type BookingErrors } from "./booking-shared";
 
-export { LIMITS, type Booking, type BookingErrors };
+// Tokens are short-lived (MIN_AGE_MS to MAX_AGE_MS old) and single-use (see abuse-guard.ts), so a captured token cannot be replayed for long.
+export { LIMITS, MAX_AGE_MS, type Booking, type BookingErrors };
 
 export type ParseResult = { ok: true; data: Booking } | { ok: false; errors: BookingErrors };
 
@@ -9,9 +10,6 @@ export type ParseResult = { ok: true; data: Booking } | { ok: false; errors: Boo
 export const SPAM = "spam";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MIN_AGE_MS = 3_000;
-/** Tokens are short-lived and single-use (see abuse-guard.ts), so a captured token cannot be replayed for long. */
-export const MAX_AGE_MS = 30 * 60 * 1000;
 
 function text(form: FormData, key: string): string {
   const v = form.get(key);
@@ -72,16 +70,28 @@ export function signTimestamp(
   return `${t}.${nonce}.${mac(`${t}.${nonce}.${visitor}`, secret)}`;
 }
 
-/** Valid when the signature matches for this visitor and the token is between 3 seconds and 30 minutes old. */
-export function verifyTimestamp(token: string, secret: string, now: number, visitor = ""): boolean {
+/** Why a token was refused. "signature" covers a forged token and one issued to a different visitor: the two cannot be told apart. */
+export type TokenVerdict = "ok" | "malformed" | "signature" | "young" | "expired";
+
+/**
+ * "ok" when the signature matches for this visitor and the token is between 3 seconds and 30 minutes old.
+ * The signature is checked before the age, so a forged token learns nothing about the time window.
+ */
+export function checkTimestamp(token: string, secret: string, now: number, visitor = ""): TokenVerdict {
   const [stamp, nonce, sig, extra] = token.split(".");
-  if (!stamp || !nonce || !sig || extra !== undefined || !/^\d+$/.test(stamp) || !/^[0-9a-f]{24}$/.test(nonce)) return false;
+  if (!stamp || !nonce || !sig || extra !== undefined || !/^\d+$/.test(stamp) || !/^[0-9a-f]{24}$/.test(nonce)) return "malformed";
   const t = Number(stamp);
   const expected = Buffer.from(mac(`${stamp}.${nonce}.${visitor}`, secret));
   const given = Buffer.from(sig);
-  if (given.length !== expected.length || !timingSafeEqual(given, expected)) return false;
+  if (given.length !== expected.length || !timingSafeEqual(given, expected)) return "signature";
   const age = now - t;
-  return age >= MIN_AGE_MS && age <= MAX_AGE_MS;
+  if (age < MIN_AGE_MS) return "young";
+  return age <= MAX_AGE_MS ? "ok" : "expired";
+}
+
+/** Valid when the signature matches for this visitor and the token is between 3 seconds and 30 minutes old. */
+export function verifyTimestamp(token: string, secret: string, now: number, visitor = ""): boolean {
+  return checkTimestamp(token, secret, now, visitor) === "ok";
 }
 
 /** The deadline after which a token can never verify again (used to expire consumed-token records). */

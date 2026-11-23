@@ -6,6 +6,7 @@ import { site } from "@/content/site";
 import { breadcrumbList } from "@/lib/structured-data";
 import { EmailLink, PhoneLink } from "@/components/ContactLinks";
 import { DiscoveryForm } from "./DiscoveryForm";
+import "./discovery.css";
 
 export const metadata = pageMetadata({
   title: "Book a discovery session | Camino Code",

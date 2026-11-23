@@ -25,9 +25,16 @@ function booking(token?: string) {
   return f;
 }
 const freshToken = (from = ip) => signTimestamp(Date.now() - 10_000, SECRET, visitorKeyFromIp(from));
+const tokenAged = (ms: number) => signTimestamp(Date.now() - ms, SECRET, visitorKeyFromIp(ip));
+
+// every refusal writes one line to the server log; the tests read it and keep the test output quiet
+const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+const logged = () => warn.mock.calls.map((args) => args.join(" "));
+const reasons = () => logged().flatMap((line) => /^\[booking\] fallback: (.+)$/.exec(line)?.[1] ?? []);
 
 beforeEach(() => {
   send.mockClear();
+  warn.mockClear();
   resetAbuseGuard();
   ip = "203.0.113.7";
   spoofedXff = "";
@@ -170,5 +177,167 @@ describe("submitBooking spam protection", () => {
     for (let i = 0; i < 31; i++) tokens.push(await issueFormToken());
     expect(tokens.slice(0, 30).every((t) => t.length > 0)).toBe(true);
     expect(tokens[30]).toBe("");
+  });
+});
+
+describe("submitBooking refusals the form can recover from", () => {
+  it("marks a refusal as retryable when the token was the only thing wrong", async () => {
+    const cases: [string, string | undefined, string][] = [
+      ["missing", undefined, "token-missing"],
+      ["empty", "", "token-missing"],
+      ["not a token", "garbage", "token-malformed"],
+      ["too young", tokenAged(1_000), "token-young"],
+      ["expired", tokenAged(30 * 60_000 + 1_000), "token-expired"],
+      ["issued to another network", freshToken("198.51.100.9"), "token-signature"],
+      ["forged", signTimestamp(Date.now() - 10_000, "wrong-secret", visitorKeyFromIp(ip)), "token-signature"],
+    ];
+    for (const [label, token, reason] of cases) {
+      warn.mockClear();
+      const r = await submitBooking(idle, booking(token));
+      expect(r.status, label).toBe("error");
+      expect(r.retry, label).toBe(true);
+      expect(r.values?.name, label).toBe("Ana Diaz");
+      expect(reasons(), label).toEqual([reason]);
+    }
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("marks a token that was already used as retryable, and still never sends it twice", async () => {
+    const token = freshToken();
+    expect((await submitBooking(idle, booking(token))).status).toBe("sent");
+    const replay = await submitBooking(idle, booking(token));
+    expect(replay.retry).toBe(true);
+    expect(reasons()).toEqual(["token-used"]);
+    expect(send).toHaveBeenCalledTimes(1);
+  });
+
+  it("sends the same values once a fresh token comes with them, under the same checks as any send", async () => {
+    const first = await submitBooking(idle, booking(tokenAged(31 * 60_000)));
+    expect(first.retry).toBe(true);
+    // the form's automatic resend: a new token from the server, old enough by the time it is sent
+    vi.useFakeTimers({ toFake: ["Date"] });
+    const fresh = await issueFormToken();
+    expect(fresh).not.toBe("");
+    const tooSoon = await submitBooking(idle, booking(fresh));
+    expect(tooSoon.status).toBe("error"); // the 3-second minimum holds for a resend too
+    expect(tooSoon.retry).toBe(true);
+    vi.setSystemTime(Date.now() + 3_500);
+    const second = await submitBooking(idle, booking(fresh));
+    expect(second.status).toBe("sent");
+    expect(second.retry).toBeUndefined();
+    expect(send).toHaveBeenCalledTimes(1);
+    // and that token is spent like any other
+    expect((await submitBooking(idle, booking(fresh))).status).toBe("error");
+    expect(send).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not mark a refusal as retryable when a fresh token would not help", async () => {
+    // a field error: the form is shown again with the messages, and nothing is logged as a fallback
+    const invalid = booking(freshToken());
+    invalid.set("email", "ana@");
+    const fieldError = await submitBooking(idle, invalid);
+    expect(fieldError.errors?.email).toBeTruthy();
+    expect(fieldError.retry).toBeUndefined();
+    expect(reasons()).toEqual([]);
+
+    // the visitor's send limit
+    for (let i = 0; i < 5; i++) await submitBooking(idle, booking(freshToken()));
+    const limited = await submitBooking(idle, booking(freshToken()));
+    expect(limited.status).toBe("error");
+    expect(limited.retry).toBeUndefined();
+    expect(reasons()).toEqual(["rate-visitor"]);
+
+    // the mail service is not set up
+    ip = "198.51.100.30";
+    warn.mockClear();
+    vi.stubEnv("RESEND_API_KEY", "");
+    const unset = await submitBooking(idle, booking(freshToken()));
+    expect(unset.status).toBe("error");
+    expect(unset.retry).toBeUndefined();
+    expect(reasons()).toEqual(["mail-not-configured"]);
+
+    // the mail service refuses
+    warn.mockClear();
+    vi.stubEnv("RESEND_API_KEY", "re_test");
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    send.mockResolvedValueOnce({ data: null, error: { message: "domain is not verified" } } as never);
+    const refused = await submitBooking(idle, booking(freshToken()));
+    error.mockRestore();
+    expect(refused.status).toBe("error");
+    expect(refused.retry).toBeUndefined();
+    expect(reasons()).toEqual(["send-failed"]);
+  });
+
+  it("does not mark a missing FORM_SECRET in production as retryable", async () => {
+    vi.stubEnv("VERCEL_ENV", "production");
+    vi.stubEnv("FORM_SECRET", "");
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    const r = await submitBooking(idle, booking(freshToken()));
+    error.mockRestore();
+    expect(r.status).toBe("error");
+    expect(r.retry).toBeUndefined();
+    expect(reasons()).toEqual(["no-secret"]);
+  });
+
+  it("logs a reason code for each fallback and nothing the visitor typed, their address or the token", async () => {
+    const token = freshToken("198.51.100.9");
+    const f = booking(token);
+    f.set("phone", "973 555 0100");
+    f.set("lookAt", "Our invoices");
+    f.set("referrer", "Maria");
+    await submitBooking(idle, f);
+    for (let i = 0; i < 6; i++) await submitBooking(idle, booking(freshToken()));
+    const lines = logged().join("\n");
+    expect(reasons()).toEqual(["token-signature", "rate-visitor"]);
+    for (const secretish of ["Ana", "ana@example.com", "Diaz", "973 555 0100", "Our invoices", "Maria", ip, token]) {
+      expect(lines, secretish).not.toContain(secretish);
+    }
+  });
+
+  it("says in the fallback message that the details are kept, and gives the email address and the phone number", async () => {
+    const r = await submitBooking(idle, booking());
+    expect(r.errors?.form).toBe(
+      "We couldn't send this. Your details are still in the form, so you can try again. You can also call +1 973-234-2073, or email us at contact@caminocode.com and we'll reply within one business day.",
+    );
+  });
+});
+
+describe("submitBooking success", () => {
+  it("gives back the address the reply will go to, trimmed", async () => {
+    const f = booking(freshToken());
+    f.set("email", "  ana@example.com ");
+    expect(await submitBooking(idle, f)).toEqual({ status: "sent", sentTo: "ana@example.com" });
+  });
+
+  it("gives the address back in test mode too", async () => {
+    vi.stubEnv("BOOKING_TEST_MODE", "sent");
+    const f = booking(freshToken());
+    f.set("business", "__test_sent__");
+    expect(await submitBooking(idle, f)).toEqual({ status: "sent", sentTo: "ana@example.com" });
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("gives a filled honeypot the very answer a real send gets, address included, with no email sent", async () => {
+    const real = booking(freshToken());
+    real.set("email", "  ana@example.com ");
+    const answer = await submitBooking(idle, real);
+    send.mockClear();
+    const f = booking(freshToken());
+    f.set("email", "  ana@example.com ");
+    f.set("hp_note", "http://spam.example");
+    expect(await submitBooking(idle, f)).toEqual(answer);
+    expect(answer).toEqual({ status: "sent", sentTo: "ana@example.com" });
+    expect(send).not.toHaveBeenCalled();
+    expect(reasons()).toEqual([]);
+  });
+
+  it("shows a filled honeypot no address when it gave none, or one too long to be an address", async () => {
+    for (const email of ["", "   ", `${"a".repeat(250)}@example.com`]) {
+      const f = booking(freshToken());
+      f.set("email", email);
+      f.set("hp_note", "http://spam.example");
+      expect(await submitBooking(idle, f), email).toEqual({ status: "sent" });
+    }
+    expect(send).not.toHaveBeenCalled();
   });
 });

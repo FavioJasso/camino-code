@@ -1,0 +1,27 @@
+/* Discovery form: additions to the form rules in inner.css (page.tsx imports this after PageBand, so it loads later). */
+
+/* A link in the error summary focuses its field. The page already stops a target below the sticky
+   header (scroll-padding-top in globals.css); this adds room for the field's label above it, which
+   runs to two lines on a phone. */
+.in-row input,
+.in-row textarea {
+  scroll-margin-top: 4.75rem;
+}
+
+/* "Business name and what it does": two rows, and it grows downward only */
+.in-row textarea {
+  resize: vertical;
+}
+
+/* The message and the "Try again" button when a send fails */
+.in-summary p {
+  margin: 0;
+}
+.in-summary .btn {
+  margin-top: 0.875rem;
+}
+
+/* The address shown back after sending: a long one wraps instead of pushing the page sideways */
+.in-sent-to {
+  overflow-wrap: anywhere;
+}
