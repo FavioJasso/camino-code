@@ -48,7 +48,8 @@ const TOKEN_RESUME_MS = 60_000;
 /** Some mail programs cut off or refuse a longer mailto link. */
 const MAIL_HREF_MAX = 1900;
 
-export function DiscoveryForm() {
+/** `intro` is the heading and lead above the form (written in page.tsx): shown until the request is sent. */
+export function DiscoveryForm({ intro }: { intro: ReactNode }) {
   // `posted` answers a plain form post: the only way to send before this script runs, or with JavaScript off.
   // Once the script runs, onSubmit sends the request itself and `result` holds the answer, so a request
   // that fails on the way never reaches useActionState (which would hand it to the page's error boundary
@@ -193,9 +194,10 @@ export function DiscoveryForm() {
 
   const confirmation = (
     <div className="in-confirm">
-      <h3 ref={confirmTitle} tabIndex={-1}>
+      {/* the section's heading now: it takes over the id of the heading it replaces (page.tsx) */}
+      <h2 id="form-title" ref={confirmTitle} tabIndex={-1}>
         Thank you. Your request is in.
-      </h3>
+      </h2>
       <p>
         We reply within one business day to agree a time for your free 45-minute conversation.{" "}
         {state.sentTo ? (
@@ -327,8 +329,10 @@ export function DiscoveryForm() {
 
   // The status region is in the DOM from the first render, so screen readers announce what is put into it:
   // the button's own "Sending…" while a send is under way (not shown: the button shows it), then the confirmation.
+  // Once sent, the heading and lead that introduced the form go with it: the confirmation is all that is left.
   return (
     <>
+      {sent ? null : intro}
       <div role="status">
         {sent ? confirmation : sending ? <span className="in-visually-hidden">Sending…</span> : null}
       </div>

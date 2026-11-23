@@ -314,6 +314,8 @@ test("a request that fails on the way keeps the form and every value, and Try ag
   await expect(summary).toContainText(NOT_SENT, SLOW);
   await expect(summary).toBeFocused();
   await expect(page.locator("h1")).toHaveText("Book a discovery session");
+  // a failed send is not a sent one: the form keeps its heading
+  await expect(page.getByRole("heading", { level: 2, name: "Tell us about your business" })).toBeVisible();
   await expect(page.getByLabel(/Your name/)).toHaveValue("Ana Ruiz");
   await expect(page.getByLabel(/^Email/)).toHaveValue("ana@example.com");
   await expect(page.getByLabel(/Business name/)).toHaveValue("__test_sent__");
@@ -425,6 +427,86 @@ test("success is announced in a status region that existed before submit, takes 
     "We reply within one business day to agree a time for your free 45-minute conversation. We will reply to ana@example.com. If you do not hear from us, write to contact@caminocode.com.",
   );
   expect(await violations(page)).toEqual([]);
+});
+
+test("once the request is sent, the confirmation takes the place of the form's heading and lead", async ({ page }) => {
+  await open(page);
+  const section = page.locator("main > section.inner-sec").first();
+  // before: the section is named by the heading above the form, and the lead sits under it
+  await expect(section).toHaveAttribute("aria-labelledby", "form-title");
+  await expect(page.locator("#form-title")).toHaveText("Tell us about your business");
+  await expect(section.locator(".in-lead")).toHaveCount(1);
+
+  await fill(page, "__test_sent__");
+  await page.getByRole("button", { name: "Send request" }).click();
+  const status = page.getByRole("status");
+  await expect(status).toContainText("Your request is in", SLOW);
+
+  // after: nothing is left that reads as if the form were still there
+  await expect(section).not.toContainText("Tell us about your business");
+  await expect(section.locator(".in-lead")).toHaveCount(0);
+  await expect(section.locator("form")).toHaveCount(0);
+  // the confirmation's title is the section's heading now: an h2 with the same id, inside the status region
+  const title = status.locator("h2#form-title");
+  await expect(title).toHaveText("Thank you. Your request is in.");
+  await expect(page.locator("#form-title")).toHaveCount(1);
+  await expect(page.getByRole("region", { name: "Thank you. Your request is in." })).toHaveCount(1);
+  // one h1, and no level skipped: the page title, then the two halves of this section, then the closing band
+  expect(
+    await page.locator("main :is(h1, h2, h3, h4, h5, h6)").evaluateAll((els) => els.map((el) => `${el.tagName} ${el.textContent}`)),
+  ).toEqual([
+    "H1 Book a discovery session",
+    "H2 Thank you. Your request is in.",
+    "H2 What happens next",
+    "H3 We reply",
+    "H3 We talk",
+    "H3 You get a summary",
+    "H2 Prefer to write or call?",
+  ]);
+  // it has the focus, and it comes to rest on screen, clear of the sticky header (the page glides there
+  // from the Send button, so the position is read until it settles)
+  await expect(title).toBeFocused();
+  const header = (await page.locator("header").first().boundingBox())!;
+  await expect.poll(async () => (await title.boundingBox())!.y).toBeGreaterThanOrEqual(header.y + header.height);
+  await expect(title).toBeInViewport({ ratio: 1 });
+  // "What happens next" stays beside (or under) it
+  await expect(page.getByRole("heading", { level: 2, name: "What happens next" })).toBeVisible();
+});
+
+test("the offer is said above the first field at every width, in the words the other pages use", async ({ page }) => {
+  for (const size of [
+    { width: 1440, height: 900 },
+    { width: 768, height: 1024 },
+    { width: 390, height: 844 },
+    { width: 320, height: 568 },
+  ]) {
+    await page.setViewportSize(size);
+    await page.goto("/discovery");
+    const lead = page.locator("#form-title + .in-lead");
+    await expect(lead, `${size.width}`).toHaveText(
+      "A free 45-minute conversation, by video or in person. We reply within one business day to find a time.",
+    );
+    await expect(lead, `${size.width}`).toBeVisible();
+    const said = (await lead.boundingBox())!;
+    const field = (await page.locator("#f-name").boundingBox())!;
+    expect(said.y + said.height, `${size.width}`).toBeLessThanOrEqual(field.y);
+  }
+  // its first sentence is the one the closing band opens with on the other pages
+  await page.goto("/approach");
+  await expect(page.locator("main > section.in-book")).toContainText("A free 45-minute conversation, by video or in person.");
+});
+
+test("on a 390 by 664 phone screen the first field is on the first screen, below the offer", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 664 });
+  await page.goto("/discovery");
+  await page.evaluate(async () => {
+    await document.fonts.ready; // the line breaks above the field are final once the fonts are in
+  });
+  expect(await page.evaluate(() => window.scrollY)).toBe(0);
+  const lead = (await page.locator("#form-title + .in-lead").boundingBox())!;
+  const field = (await page.locator("#f-name").boundingBox())!;
+  expect(lead.y + lead.height).toBeLessThanOrEqual(field.y);
+  expect(field.y + field.height).toBeLessThanOrEqual(664);
 });
 
 test("a filled honeypot gets the very message a real send gets, its address shown back included", async ({ page }) => {
@@ -619,6 +701,9 @@ test.describe("without JavaScript", () => {
 
   test("a send gets the failure message from the server, with the values kept and the contact links", async ({ page }) => {
     await page.goto("/discovery");
+    // the heading and the offer above the form are in the server's HTML
+    await expect(page.locator("#form-title")).toHaveText("Tell us about your business");
+    await expect(page.locator("#form-title + .in-lead")).toContainText("A free 45-minute conversation, by video or in person.");
     await fill(page);
     await page.getByRole("button", { name: "Send request" }).click();
     const summary = page.getByRole("group", { name: "We could not send your request" });

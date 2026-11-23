@@ -26,11 +26,20 @@ export default function DiscoveryPage() {
             <p className="in-mono in-label">
               <i>01</i> Request
             </p>
-            <h2 id="form-title">Tell us about your business</h2>
-            <p className="in-lead">
-              A few details is enough. We reply within one business day to find a time.
-            </p>
-            <DiscoveryForm />
+            {/* The heading and the lead belong to the form: once the request is sent, the confirmation
+                takes their place (and the heading's id, which names this section). The lead says the
+                offer before the first field at every width; "What happens next" is below the Send
+                button on phones and tablets. */}
+            <DiscoveryForm
+              intro={
+                <>
+                  <h2 id="form-title">Tell us about your business</h2>
+                  <p className="in-lead">
+                    A free 45-minute conversation, by video or in person. We reply within one business day to find a time.
+                  </p>
+                </>
+              }
+            />
           </div>
           <aside aria-labelledby="next-title">
             <p className="in-mono in-label">
