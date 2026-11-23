@@ -38,7 +38,7 @@ Copy `.env.example` to `.env.local` for local work. `.env.local` is ignored by g
 | `BOOKING_TO` | Where discovery requests are delivered. Defaults to the published contact address. |
 | `FORM_SECRET` | Random string that signs the form's token. Required in production. |
 
-Without `RESEND_API_KEY` or `BOOKING_FROM` the form sends nothing: it shows its email fallback and keeps what the visitor typed. In production, a missing `FORM_SECRET` has the same effect.
+Without `RESEND_API_KEY` or `BOOKING_FROM` the form sends nothing: it shows its failure message (try again, phone, pre-filled email link) and keeps what the visitor typed. In production, a missing `FORM_SECRET` has the same effect. Each fallback writes `[booking] fallback: <reason>` to the server log, with nothing the visitor typed (the reason codes are in `src/app/discovery/actions.ts`).
 
 Two more variables exist for automated tests only and are ignored in production: `BOOKING_TEST_MODE` and `BOOKING_SENDS_PER_10_MIN` (`src/app/discovery/actions.ts`, `playwright.config.ts`).
 
