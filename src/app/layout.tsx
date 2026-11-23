@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SkipLink } from "@/components/SkipLink";
 import { OG_IMAGE, SITE_URL } from "@/content/seo";
 import { site } from "@/content/site";
 import { ORGANIZATION_ID } from "@/lib/structured-data";
@@ -71,10 +72,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="flex min-h-screen flex-col">
         {/* the organization comes first, so it is the first ld+json script on every page; pages add theirs inside main */}
         <JsonLd data={organization} />
-        <a className="skip-link" href="#content">
-          Skip to content
-        </a>
+        <SkipLink />
         <SiteHeader />
+        {/* no tabIndex here: the skip link makes main focusable only while it holds focus (SkipLink.tsx) */}
         <main id="content" className="flex-1">
           {children}
         </main>

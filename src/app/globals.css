@@ -115,12 +115,26 @@ body {
   outline: 2px solid var(--moon);
   outline-offset: 2px;
 }
+/* the skip link moves focus to main (focusable only while it holds that focus), which shows no ring around the whole page */
+#content:focus {
+  outline: none;
+}
 
-/* Header */
+/* a long word breaks instead of running off the side when the visitor's text is large */
+h1,
+h2,
+h3 {
+  overflow-wrap: break-word;
+}
+
+/* Header. The row is laid out for the room it has, measured in rem by container queries on the header, so
+   it follows the visitor's text size as well as the window. The phone row (mark, wordmark, Book discovery,
+   Menu) is the base; the desktop row with its links needs a 900 px window and 45rem of header. */
 .site-head {
   position: sticky;
   top: env(safe-area-inset-top, 0px);
   z-index: 10;
+  container: head / inline-size;
   background: var(--midnight);
   color: var(--cream);
   border-bottom: 1px solid var(--rule);
@@ -129,28 +143,47 @@ body {
 .site-head .wrap {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 0.75rem;
   height: var(--head-h);
 }
+/* if the row still runs out of room (wider letter spacing, a fallback font), the brand gives way first:
+   the wordmark wraps to a second line, which the fixed height cuts off, and the mark stays */
 .brand {
   display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
   align-items: center;
-  gap: 0.625rem;
-  min-height: 2.75rem;
+  gap: 0 0.625rem;
+  flex: 0 1 auto;
+  min-width: 1.625rem;
+  height: 2.75rem;
+  overflow: hidden;
   white-space: nowrap;
   text-decoration: none;
   font-weight: 800;
   font-stretch: 118%;
   font-size: 1.0625rem;
+  line-height: 2.75rem;
   letter-spacing: 0.02em;
+}
+/* Cut only the second line: the last letter's ink reaches a little past the link's edge. In its own
+   @supports block because the build merges two overflow declarations in one rule into the last, and a
+   browser without overflow: clip (Safari 15) must keep the plain cut above, or the wrapped wordmark
+   would hang below the header. */
+@supports (overflow: visible clip) {
+  .brand {
+    overflow: visible clip;
+  }
 }
 .brand svg {
   width: 1.625rem;
   height: 1.875rem;
+  /* with its margins the mark is as tall as the link, so it stays centred when it is alone on the line */
+  margin-block: 0.4375rem;
   flex: none;
 }
 .nav {
-  display: flex;
+  display: none;
   gap: 1.75rem;
   margin-left: auto;
 }
@@ -180,6 +213,10 @@ body {
 .nowrap {
   white-space: nowrap;
 }
+/* the email address is one long word: with large text on a phone it may break instead of pushing the page wide */
+a[href^="mailto:"] {
+  overflow-wrap: anywhere;
+}
 
 .btn {
   display: inline-flex;
@@ -207,116 +244,122 @@ body {
   transform: translateY(1px);
 }
 
-/* Phone menu */
-.menu-toggle,
-.menu-panel {
-  display: none;
+/* Windows contrast themes drop the fill, so the button keeps an edge there (an outline: no change in size) */
+@media (forced-colors: active) {
+  .btn:not(:focus-visible) {
+    outline: 1px solid ButtonText;
+    outline-offset: -1px;
+  }
 }
 
-@media (max-width: 899px) {
-  .site-head .wrap {
-    gap: 0.75rem;
-  }
-  .nav {
-    display: none;
-  }
-  /* the header row's own button: the menu's button below keeps its full size and width */
-  .site-head .wrap > .btn {
-    margin-left: auto;
-  }
-  .menu-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    flex: none;
-    padding: 0;
-    background: none;
-    border: 1px solid var(--rule);
-    border-radius: 2px;
-    color: var(--cream);
-    cursor: pointer;
-  }
-  .menu-icon {
-    position: relative;
-    width: 1.25rem;
-    height: 0.875rem;
-  }
-  .menu-icon i {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: currentColor;
-    transition: transform 0.2s ease;
-  }
-  .menu-icon i:first-child {
-    top: 0.125rem;
-  }
-  .menu-icon i:last-child {
-    bottom: 0.125rem;
-  }
-  .menu-toggle[aria-expanded="true"] .menu-icon i:first-child {
-    transform: translateY(0.3125rem) rotate(45deg);
-  }
-  .menu-toggle[aria-expanded="true"] .menu-icon i:last-child {
-    transform: translateY(-0.3125rem) rotate(-45deg);
-  }
-  .menu-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    position: fixed;
-    inset: calc(var(--head-h) + 1px + env(safe-area-inset-top, 0px)) 0 0 0;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    padding: 1.5rem max(1rem, env(safe-area-inset-left, 0px)) max(1.5rem, env(safe-area-inset-bottom, 0px));
-    background: var(--midnight);
-    visibility: hidden;
-    opacity: 0;
-    transition:
-      opacity 0.2s ease,
-      visibility 0s linear 0.2s;
-  }
-  .menu-panel[data-open="true"] {
-    visibility: visible;
-    opacity: 1;
-    transition: opacity 0.2s ease;
-  }
-  .menu-panel ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .menu-panel li a {
-    display: flex;
-    align-items: center;
-    min-height: 3.5rem;
-    border-bottom: 1px solid var(--rule);
-    font-weight: 700;
-    font-stretch: 112%;
-    font-size: 1.5rem;
-    text-decoration: none;
-    color: var(--cream);
-  }
-  /* the section the visitor is in carries a lantern dot */
-  .menu-panel li a[aria-current]::after {
-    content: "";
-    flex: none;
-    width: 0.5rem;
-    height: 0.5rem;
-    margin-left: auto;
-    border-radius: 50%;
-    background: var(--ember);
-  }
-  .menu-panel .menu-cta {
-    min-height: 3.25rem;
-    font-size: 1rem;
-  }
-  html.menu-open {
-    overflow: hidden;
-  }
+/* Phone menu */
+/* the header row's own button: the menu's button below keeps its full size and width */
+.site-head .wrap > .btn {
+  margin-left: auto;
+}
+/* the button and its icon are sized in em from one font size, so the last step below can stop them growing with the text */
+.menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75em;
+  height: 2.75em;
+  flex: none;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--cream);
+  font-size: 1rem;
+  cursor: pointer;
+}
+.menu-icon {
+  position: relative;
+  width: 1.25em;
+  height: 0.875em;
+}
+/* the bars are borders, not backgrounds: Windows contrast themes repaint backgrounds and keep borders */
+.menu-icon i {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  border-top: 2px solid currentColor;
+  transition: transform 0.2s ease;
+}
+.menu-icon i:first-child {
+  top: 0.125em;
+}
+.menu-icon i:last-child {
+  bottom: 0.125em;
+}
+.menu-toggle[aria-expanded="true"] .menu-icon i:first-child {
+  transform: translateY(0.3125em) rotate(45deg);
+}
+.menu-toggle[aria-expanded="true"] .menu-icon i:last-child {
+  transform: translateY(-0.3125em) rotate(-45deg);
+}
+/* hangs from the sticky header and fills the rest of the screen below it */
+.menu-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: absolute;
+  top: calc(100% + 1px);
+  left: 0;
+  right: 0;
+  height: calc(100vh - var(--head-h) - 1px - env(safe-area-inset-top, 0px));
+  height: calc(100dvh - var(--head-h) - 1px - env(safe-area-inset-top, 0px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.5rem max(1rem, env(safe-area-inset-left, 0px)) max(1.5rem, env(safe-area-inset-bottom, 0px));
+  background: var(--midnight);
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 0.2s ease,
+    visibility 0s linear 0.2s;
+}
+.menu-panel[data-open="true"] {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+.menu-panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.menu-panel li a {
+  display: flex;
+  align-items: center;
+  min-height: 3.5rem;
+  border-bottom: 1px solid var(--rule);
+  font-weight: 700;
+  font-stretch: 112%;
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: var(--cream);
+}
+/* the three services sit under Services: indented, and a step smaller */
+.menu-panel .menu-sub a {
+  min-height: 3rem;
+  padding-left: 1.25rem;
+  font-size: 1.1875rem;
+}
+/* the page or section the visitor is in carries a lantern dot (a border, so contrast themes keep it) */
+.menu-panel li a[aria-current]::after {
+  content: "";
+  flex: none;
+  margin-left: auto;
+  border: 0.25rem solid var(--ember);
+  border-radius: 50%;
+}
+.menu-panel .menu-cta {
+  min-height: 3.25rem;
+  font-size: 1rem;
+}
+html.menu-open {
+  overflow: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -328,13 +371,32 @@ body {
   }
 }
 
-/* mark + wordmark + Book discovery + Menu need ~418 px at full size: tighten the row so it keeps the 16 px gutter on 360-419 px phones */
-@media (max-width: 419px) {
+/* Desktop row: the links in place of the Menu button */
+@media (min-width: 900px) {
+  @container head (min-width: 45rem) {
+    .site-head .wrap {
+      gap: 1.5rem;
+    }
+    .nav {
+      display: flex;
+    }
+    .site-head .wrap > .btn {
+      margin-left: 0;
+    }
+    .menu-toggle,
+    .menu-panel {
+      display: none;
+    }
+  }
+}
+
+/* mark + wordmark + Book discovery + Menu need about 26rem (418 px) at full size: tighten the row so it keeps the 16 px gutter on 360-419 px phones */
+@container head (max-width: 26.24rem) {
   .site-head .wrap {
     gap: 0.5rem;
   }
   .brand {
-    gap: 0.5rem;
+    column-gap: 0.5rem;
     font-size: 0.875rem;
     letter-spacing: 0.01em;
   }
@@ -344,7 +406,7 @@ body {
   }
 }
 
-@media (max-width: 379px) {
+@container head (max-width: 23.74rem) {
   .brand {
     font-size: 0.8125rem;
   }
@@ -354,10 +416,37 @@ body {
   }
 }
 
-@media (max-width: 359px) {
+@container head (max-width: 22.49rem) {
   /* room for the Menu button: the mark alone carries the brand (the link keeps its aria-label) */
   .brand span {
     display: none;
+  }
+}
+
+/* large text on a phone: the button's label takes two lines, and the mark and the Menu button stop growing with the text */
+@container head (max-width: 15.49rem) {
+  .site-head .wrap {
+    gap: 0.375rem;
+  }
+  .brand {
+    min-width: 26px;
+  }
+  .brand svg {
+    width: 26px;
+    height: 30px;
+    margin-block: calc(1.375rem - 15px);
+  }
+  .site-head .wrap > .btn {
+    flex: 0 1 auto;
+    min-width: 0;
+    padding: 0 0.375rem;
+    line-height: 1.1;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .menu-toggle {
+    font-size: 16px;
   }
 }
 
@@ -373,6 +462,7 @@ body {
   box-shadow: 0 1px 0 var(--day);
   font-size: 0.95rem;
   color-scheme: light;
+  container: foot / inline-size;
 }
 .site-foot .wrap {
   display: grid;
@@ -453,6 +543,36 @@ body {
     grid-column: 1 / -1;
   }
 }
+/* Large text: the same two steps again, taken by the footer's room in rem. At the default text size 52rem
+   (832 px) is inside the 899 px step and 37.49rem is the 599 px step, so nothing changes there. */
+@container foot (max-width: 52rem) {
+  .site-foot .wrap {
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
+  }
+  .foot-id {
+    grid-column: 1 / -1;
+  }
+}
+@container foot (max-width: 37.49rem) {
+  .site-foot .wrap {
+    grid-template-columns: repeat(2, auto);
+  }
+  .foot-site {
+    grid-column: 1 / -1;
+  }
+}
+/* and on a phone, where the two columns need about 17.6rem: everything in one column */
+@container foot (max-width: 17.99rem) {
+  .site-foot .wrap {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .site-foot .foot-cols {
+    grid-auto-flow: row;
+    grid-template-rows: none;
+    grid-auto-columns: auto;
+  }
+}
 
 /* founder portrait (shared by home and About; callers set only the width) */
 .founder-photo {
@@ -485,14 +605,16 @@ body {
   right: max(0.75rem, env(safe-area-inset-right, 0px));
   bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
   min-height: 2.75rem;
-  padding: 0 0.875rem;
+  /* 12 px text in about the width the 10 px label had: a wider control would sit on the hero's button
+     on a landscape phone, and step aside */
+  padding: 0 0.75rem;
   background: var(--midnight);
   color: var(--cream);
   border: 1px solid var(--haze);
   border-radius: 2px;
   font-family: var(--font-martian), ui-monospace, monospace;
-  font-size: 0.625rem;
-  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
   transition: opacity 0.2s ease, visibility 0.2s;
@@ -500,7 +622,8 @@ body {
 .motion-toggle:hover {
   border-color: var(--cream);
 }
-.motion-toggle[aria-pressed="true"] {
+/* paused: the label reads "Play animation", and the edge turns Ember with it */
+.motion-toggle.is-paused {
   border-color: var(--ember);
 }
 .motion-toggle:focus-visible {
@@ -513,4 +636,100 @@ body {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+/* Print and save as PDF: ink on white paper, everything there whether or not it was scrolled into view,
+   and nothing that only works on a screen. The page stylesheets load after this file, so the rules that
+   must beat them are !important. */
+@page {
+  margin: 1.5cm;
+}
+@media print {
+  /* dark surfaces turn to paper and their light text to ink, wherever a rule reads the palette */
+  :root {
+    --midnight: #fff;
+    --dusk: #fff;
+    --morning: #fff;
+    --day: #fff;
+    --cream: #141a2b;
+    --haze: #4a5266;
+    --ember: #b3391b;
+    --rule: rgba(20, 26, 43, 0.18);
+  }
+  /* no fills (most browsers leave them out of a print anyway, which strands light text on white), and no
+     animation: the scroll reveal would leave whatever was not yet scrolled into view invisible */
+  *,
+  *::before,
+  *::after {
+    background: none !important;
+    box-shadow: none !important;
+    animation: none !important;
+    transition: none !important;
+    /* the home page and the header ask for a dark canvas, which prints black when background printing is on */
+    color-scheme: light !important;
+  }
+  html {
+    background: #fff !important;
+  }
+  body {
+    display: block !important;
+    min-height: 0 !important;
+  }
+  /* the header is a letterhead: the name at the top of the first sheet, not stuck to every one */
+  .site-head {
+    position: static !important;
+    border-bottom-color: var(--ink);
+  }
+  /* left out: navigation and controls, the scene, and the home page's sunrise window (a view onto the scene) */
+  .skip-link,
+  .nav,
+  .site-head .btn,
+  .menu-toggle,
+  .menu-panel,
+  .motion-toggle,
+  .site-foot nav,
+  #scene,
+  #dawn-window,
+  canvas {
+    display: none !important;
+  }
+  /* home: on a screen the hero and the edge line are as tall as the window; on paper they take the room their words need */
+  .hero,
+  .edge {
+    min-height: 0 !important;
+  }
+  .home .wrap {
+    padding-block: 1.5rem !important;
+  }
+  /* the footer is the name, the place and the contact details, set close */
+  .site-foot {
+    break-inside: avoid;
+  }
+  .site-foot .wrap {
+    gap: 0.75rem 2rem;
+    padding-block: 1rem;
+  }
+  .site-foot a {
+    min-height: 0;
+  }
+  /* a button prints as an outlined label */
+  .btn {
+    border: 1px solid var(--ink);
+    color: var(--ink) !important;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+  /* a list or a figure stays on one sheet; a list too long for that breaks between its items */
+  ul,
+  ol,
+  dl,
+  li,
+  figure,
+  blockquote,
+  img {
+    break-inside: avoid;
+  }
 }

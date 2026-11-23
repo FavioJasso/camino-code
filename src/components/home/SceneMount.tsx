@@ -132,15 +132,15 @@ export function SceneMount({ band }: { band?: { stage: BandStage; time: BandTime
     }
   };
 
+  // the label names what the next press does, so the button needs no pressed state of its own
   return (
     <button
       ref={button}
       type="button"
-      className={away ? "motion-toggle is-away" : "motion-toggle"}
-      aria-pressed={paused}
+      className={`motion-toggle${paused ? " is-paused" : ""}${away ? " is-away" : ""}`}
       onClick={toggle}
     >
-      Pause animation
+      {paused ? "Play animation" : "Pause animation"}
     </button>
   );
 }

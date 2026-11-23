@@ -20,7 +20,8 @@ function collectErrors(page: Page): string[] {
   return errors;
 }
 
-const motionButton = (page: Page) => page.getByRole("button", { name: "Pause animation" });
+// the control's label says what the next press does: "Pause animation" while the scene runs, "Play animation" while it is paused
+const motionButton = (page: Page) => page.getByRole("button", { name: /^(Pause|Play) animation$/ });
 
 /** Collects Content-Security-Policy violations: the browser's own event, and its console report. */
 async function collectCspViolations(page: Page): Promise<() => Promise<string[]>> {
@@ -84,6 +85,28 @@ test.describe("on a phone", () => {
     await expect(page.locator("#scene")).toHaveClass(/\bis-live\b/, { timeout: 10_000 });
     expect(errors).toEqual([]);
   });
+
+  // The hero copy, with its note by the button, reaches the saddle on phones under 820 px tall:
+  // the scene's "Saddle" label steps aside there instead of showing through behind the words.
+  for (const [width, height, shown] of [
+    [390, 844, true],
+    [430, 739, false],
+    [412, 784, false],
+    [390, 664, false],
+  ] as const) {
+    test(`the Saddle label is ${shown ? "shown" : "hidden"} in the hero at ${width}x${height}`, async ({ page }) => {
+      await page.setViewportSize({ width, height });
+      await page.goto("/");
+      await expect(page.locator("#scene")).toHaveClass(/\bis-live\b/, { timeout: 10_000 });
+      const label = page.locator("#scene-ui > div").filter({ hasText: /^Saddle$/ });
+      await expect(label).toHaveCount(1);
+      await expect(label).toHaveCSS("opacity", shown ? "1" : "0");
+      // the label gives way only where the copy needs the room: the note shows from 720 px tall
+      const note = page.locator(".hero .hero-note");
+      if (height >= 720) await expect(note).toBeVisible();
+      else await expect(note).toBeHidden();
+    });
+  }
 });
 
 test.describe("with reduced motion", () => {
@@ -122,19 +145,32 @@ test("WebGL unavailable leaves the still and hides the Motion button", async ({ 
   expect(errors).toEqual([]);
 });
 
-test("Motion button toggles aria-pressed", async ({ page }) => {
+test("the Motion button's label follows its state, and the choice lasts for the session", async ({ page }) => {
   await page.goto("/");
   const button = motionButton(page);
   await expect(button).toBeVisible({ timeout: 10_000 });
-  await expect(button).toHaveAttribute("aria-pressed", "false");
+  await expect(button).toHaveText("Pause animation");
+  // the name carries the state, so there is no pressed state to contradict it
+  await expect(button).not.toHaveAttribute("aria-pressed", /.*/);
+  await expect(button).toHaveCSS("font-size", "12px");
+  expect((await button.boundingBox())!.height).toBeGreaterThanOrEqual(44);
   await button.click();
-  await expect(button).toHaveAttribute("aria-pressed", "true");
-  await expect(button).toHaveAccessibleName("Pause animation");
+  await expect(button).toHaveText("Play animation");
+  await expect(button).toHaveAccessibleName("Play animation");
+  await expect(button).not.toHaveAttribute("aria-pressed", /.*/);
+  // the edge changes with the words
+  await expect(button).toHaveCSS("border-top-color", "rgb(255, 122, 61)");
+  expect(await page.evaluate(() => sessionStorage.getItem("camino:motion-paused"))).toBe("1");
   // the choice persists for the session
   await page.reload();
-  await expect(motionButton(page)).toHaveAttribute("aria-pressed", "true", { timeout: 10_000 });
+  await expect(motionButton(page)).toHaveText("Play animation", { timeout: 10_000 });
   await motionButton(page).click();
-  await expect(motionButton(page)).toHaveAttribute("aria-pressed", "false");
+  await expect(motionButton(page)).toHaveText("Pause animation");
+  expect(await page.evaluate(() => sessionStorage.getItem("camino:motion-paused"))).toBe("0");
+  // and carries to an inner page's band
+  await motionButton(page).click();
+  await page.goto("/work");
+  await expect(motionButton(page)).toHaveText("Play animation", { timeout: 10_000 });
 });
 
 test("context loss falls back to the still, restore fades the scene back in", async ({ page }) => {
@@ -252,9 +288,9 @@ test("band Motion control pauses and never covers the title", async ({ page }) =
   await page.goto("/work/transparent-energy");
   const button = motionButton(page);
   await expect(button).toBeVisible({ timeout: 10_000 });
-  await expect(button).toHaveAttribute("aria-pressed", "false");
+  await expect(button).toHaveText("Pause animation");
   await button.click();
-  await expect(button).toHaveAttribute("aria-pressed", "true");
+  await expect(button).toHaveText("Play animation");
   const overlap = await page.evaluate(() => {
     const a = document.querySelector(".motion-toggle")!.getBoundingClientRect();
     const b = document.querySelector(".band-panel")!.getBoundingClientRect();

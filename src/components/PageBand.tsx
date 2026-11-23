@@ -1,4 +1,5 @@
 import "@/app/inner.css";
+import type { Ref } from "react";
 import { BAND_SCENE_ID, SceneMount } from "@/components/home/SceneMount";
 import { BAND_LAYOUT_MIN, type BandStage } from "@/scene/terrain";
 
@@ -9,7 +10,23 @@ type Time = "night" | "morning" | "day";
  * With a `stage`, a live band of the same ridge (framed at that point on the trail) fades in over the still
  * after first paint; without one (legal pages, 404) the still is all there is and no scene code loads.
  */
-export function PageBand({ time, title, kicker, stage }: { time: Time; title: string; kicker?: string; stage?: BandStage }) {
+export function PageBand({
+  time,
+  title,
+  kicker,
+  stage,
+  lazyStill,
+  titleRef,
+}: {
+  time: Time;
+  title: string;
+  kicker?: string;
+  stage?: BandStage;
+  /** For the 404 screen, which Next carries inside every page's payload: a lazy image is not preloaded site-wide. */
+  lazyStill?: boolean;
+  /** Lets a page move focus to its title (the error pages do, when they replace a page that failed). */
+  titleRef?: Ref<HTMLHeadingElement>;
+}) {
   return (
     <section id={stage ? BAND_SCENE_ID : undefined} className={`band band-${time}${stage ? " band-live" : ""}`}>
       <div className="band-art" aria-hidden="true">
@@ -22,7 +39,14 @@ export function PageBand({ time, title, kicker, stage }: { time: Time; title: st
           </picture>
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
-          <img className="band-still" src={`/stills/band-${time}.svg`} alt="" width="1440" height="324" />
+          <img
+            className="band-still"
+            src={`/stills/band-${time}.svg`}
+            alt=""
+            width="1440"
+            height="324"
+            loading={lazyStill ? "lazy" : undefined}
+          />
         )}
         {stage ? <canvas className="band-gl" /> : null}
       </div>
@@ -31,7 +55,9 @@ export function PageBand({ time, title, kicker, stage }: { time: Time; title: st
       <div className="wrap">
         <div className="band-panel">
           {kicker ? <p className="in-mono band-kicker">{kicker}</p> : null}
-          <h1>{title}</h1>
+          <h1 ref={titleRef} tabIndex={titleRef ? -1 : undefined}>
+            {title}
+          </h1>
         </div>
       </div>
     </section>

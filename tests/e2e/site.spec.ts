@@ -88,7 +88,8 @@ test("the header shows the mark beside the wordmark", async ({ page }, testInfo)
 // aria-current is "page" on the link to the page itself and "true" on the link to the section it sits in
 const CURRENT: Array<[route: string, header: Record<string, string>, menu: Record<string, string>]> = [
   ["/", {}, {}],
-  ["/services", { "/services": "page" }, {}],
+  ["/services", { "/services": "page" }, { "/services": "page" }],
+  // in the menu the service's own row carries the mark, so Services above it does not
   ["/services/data", { "/services": "true" }, { "/services/data": "page" }],
   ["/work", { "/work": "page" }, { "/work": "page" }],
   ["/work/victorias-painting", { "/work": "true" }, { "/work": "true" }],
@@ -116,6 +117,84 @@ test("the current page is visibly marked in the header", async ({ page }, testIn
   const nav = page.locator('header nav[aria-label="Primary"]');
   const colour = (href: string) => nav.locator(`a[href="${href}"]`).evaluate((a) => getComputedStyle(a).color);
   expect(await colour("/work")).not.toBe(await colour("/about"));
+});
+
+test("the skip link moves focus into main, which shows no ring of its own", async ({ page }) => {
+  await page.goto("/about");
+  await page.keyboard.press("Tab");
+  await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
+  await page.keyboard.press("Enter");
+  const main = page.locator("main#content");
+  await expect(main).toBeFocused();
+  await expect(main).toHaveCSS("outline-style", "none");
+  // the next Tab goes on from there, to the first control inside main
+  await page.keyboard.press("Tab");
+  expect(await page.evaluate(() => !!document.activeElement?.closest("main") && document.activeElement?.tagName !== "MAIN")).toBe(true);
+  // and main is focusable only while it holds that focus
+  await expect(main).not.toHaveAttribute("tabindex");
+});
+
+// A main that always carries tabindex="-1" takes focus on any click inside it, and Tab then starts
+// again from its first control, at the top of the page.
+for (const [route, plainText, next] of [
+  ["/discovery", "p.in-note:has-text('Fields marked (required) must be filled in.')", "#f-name"],
+  ["/work/victorias-painting", "h3:has-text('In the client’s words')", 'a[href="https://www.victoriaspainting.com"]'],
+] as const) {
+  test(`${route}: after a click on page text, Tab goes on from the click, not from the top of main`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" }); // no gliding scroll, so positions can be read at once
+    await page.goto(route);
+    const main = page.locator("main#content");
+    await expect(main).not.toHaveAttribute("tabindex");
+    const clicked = main.locator(plainText).first();
+    // part-way down the page, with the text a little below the sticky header
+    await clicked.evaluate((el) => window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 200, behavior: "instant" }));
+    await clicked.click();
+    expect(await page.evaluate(() => document.activeElement?.tagName)).toBe("BODY");
+    const before = await page.evaluate(() => window.scrollY);
+    expect(before).toBeGreaterThan(100);
+    await page.keyboard.press("Tab");
+    await expect(main.locator(next).first()).toBeFocused();
+    // the focused control comes after the clicked text, and the page has not jumped back to the top
+    expect(
+      await clicked.evaluate((el) => !!(el.compareDocumentPosition(document.activeElement!) & Node.DOCUMENT_POSITION_FOLLOWING)),
+    ).toBe(true);
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThanOrEqual(before - 1);
+  });
+}
+
+test("two more addresses from the old site's sitemap redirect for good", async ({ request }) => {
+  for (const [from, to] of [
+    ["/case-study-detailed", "/work"],
+    ["/all-models", "/services"],
+  ]) {
+    const res = await request.get(from, { maxRedirects: 0 });
+    expect(res.status(), from).toBe(308);
+    expect(res.headers()["location"], from).toBe(to);
+  }
+});
+
+test("no page preloads the 404 screen's band image", async ({ page, request }) => {
+  // Next carries the 404 screen inside every page's payload, so its image is named there;
+  // what must not be there is a preload for it: a link tag, or React's hint (:HL[...]) in the payload
+  for (const route of ["/", "/about", "/work/transparent-energy", "/privacy"]) {
+    const html = await (await request.get(route)).text();
+    expect(html, route).not.toMatch(/<link[^>]+band-night\.svg/);
+    expect(html, route).not.toMatch(/HL\[[^\]]*band-night\.svg/);
+  }
+  // and a normal page never fetches it
+  const fetched: string[] = [];
+  page.on("request", (req) => fetched.push(req.url()));
+  await page.goto("/about");
+  await page.waitForLoadState("load");
+  await page.waitForTimeout(500);
+  await expect(page.locator('link[href*="band-night"]')).toHaveCount(0);
+  expect(fetched.filter((url) => url.includes("band-night"))).toEqual([]);
+  // the 404 itself still shows it
+  await page.goto("/no-such-page");
+  const still = page.locator("section.band img.band-still");
+  await expect(still).toHaveAttribute("src", "/stills/band-night.svg");
+  await expect(still).toHaveAttribute("loading", "lazy");
+  await expect.poll(() => still.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
 });
 
 // ---- contact links and the footer ----
@@ -215,6 +294,43 @@ test("/about#who lands with the heading clear of the sticky header", async ({ pa
   }));
   expect(top).toBeGreaterThanOrEqual(headerBottom - 1);
   expect(top).toBeLessThan(headerBottom + 40);
+});
+
+// ---- print ----
+
+test("a printed page is ink on white with everything showing, and leaves the screen-only parts out", async ({ page }) => {
+  // opened fresh and not scrolled: on a desktop screen the scroll reveal still has most of this page faded out
+  await page.goto("/work/transparent-energy");
+  await page.emulateMedia({ media: "print" });
+  const faded = await page
+    .locator(".inner-sec .wrap > *, .inner-sec .wrap.cols > * > *")
+    .evaluateAll((els) => els.filter((el) => getComputedStyle(el).opacity !== "1" || getComputedStyle(el).animationName !== "none").length);
+  expect(faded).toBe(0);
+  // the header is a letterhead, not a bar stuck to every sheet; controls, navigation and the band's picture are out
+  await expect(page.locator(".site-head")).toHaveCSS("position", "static");
+  await expect(page.locator(".site-head .brand")).toBeVisible();
+  const shown = await page
+    .locator(".skip-link, .site-head .nav, .site-head .btn, .menu-toggle, .menu-panel, .motion-toggle, .band-art, canvas, .site-foot nav")
+    .evaluateAll((els) => els.filter((el) => getComputedStyle(el).display !== "none").length);
+  expect(shown).toBe(0);
+  // what was light text on a dark band is ink on paper
+  await expect(page.locator("html")).toHaveCSS("background-color", "rgb(255, 255, 255)");
+  await expect(page.locator("section.band")).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  await expect(page.locator("h1")).toHaveCSS("color", "rgb(20, 26, 43)");
+  await expect(page.locator(".band-kicker")).toHaveCSS("color", "rgb(74, 82, 102)");
+  await expect(page.locator(".site-head .brand")).toHaveCSS("color", "rgb(20, 26, 43)");
+  // a list or a row of figures is not split across two sheets
+  await expect(page.locator("main .in-figs").first()).toHaveCSS("break-inside", "avoid");
+  await expect(page.locator("main ul.ticks").first()).toHaveCSS("break-inside", "avoid");
+  // the contact details still print
+  await expect(page.getByRole("contentinfo").locator(`a[href="${EMAIL_HREF}"]`)).toBeVisible();
+
+  // the home page: no scene behind the words, and the hero is only as tall as its text
+  await page.goto("/");
+  await expect(page.locator("#scene")).toBeHidden();
+  await expect(page.locator("html")).toHaveCSS("background-color", "rgb(255, 255, 255)");
+  await expect(page.locator("h1")).toHaveCSS("color", "rgb(20, 26, 43)");
+  await expect(page.locator(".hero")).toHaveCSS("min-height", "0px");
 });
 
 // ---- founder-led wording, About, FAQ ----

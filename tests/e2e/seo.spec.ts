@@ -12,6 +12,9 @@ const REDIRECTS: Array<[string, string]> = [
   ["/case-study/healthtrack", "/work"],
   ["/case-study/finserve", "/work"],
   ["/case-study", "/work"],
+  // two more pages from the old site's sitemap
+  ["/case-study-detailed", "/work"],
+  ["/all-models", "/services"],
   ["/contact", "/discovery"],
   ["/manifest.json", "/manifest.webmanifest"],
   ["/og-images/og-image.png", "/og.png"],
