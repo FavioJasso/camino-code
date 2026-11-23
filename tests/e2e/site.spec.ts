@@ -269,6 +269,94 @@ test("base text is 17 px, and in-page jumps scroll smoothly unless motion is red
   await expect(html).toHaveCSS("scroll-behavior", "auto");
 });
 
+/** WCAG contrast ratio of two computed colours, each "rgb(r, g, b)". */
+function contrast(a: string, b: string) {
+  const luminance = (colour: string) => {
+    const [red, green, blue] = colour
+      .match(/[\d.]+/g)!
+      .slice(0, 3)
+      .map((value) => {
+        const channel = Number(value) / 255;
+        return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+      });
+    return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+  };
+  const [lighter, darker] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+test("a button's label stays readable on its fill all through the hover fade, and both switch at once when motion is reduced", async ({
+  page,
+}) => {
+  // On a light section the hover swaps both the fill and the label colour. A label that switched at the
+  // start, or faded along with the fill, would pass through the fill's own colour part-way: so the fade
+  // is held still here and walked through 2 ms at a time, in both directions.
+  const animation = await page.context().newCDPSession(page);
+  await animation.send("Animation.enable");
+  for (const [route, selector] of [
+    ["/about", "main .in-light a.btn"],
+    ["/discovery", "main form button.btn"],
+  ]) {
+    await page.goto(route);
+    const button = page.locator(selector).last();
+    await button.scrollIntoViewIfNeeded();
+    let last = -1;
+    await expect
+      .poll(async () => {
+        const y = await page.evaluate(() => window.scrollY);
+        const still = y === last;
+        last = y;
+        return still;
+      })
+      .toBe(true);
+    // time stands still: a fade that starts now stays at its first moment until it is moved by hand
+    await animation.send("Animation.setPlaybackRate", { playbackRate: 0 });
+    const lowest = async (direction: string) => {
+      // both the fill and the label are on their way
+      await expect.poll(() => button.evaluate((el) => el.getAnimations().length), { message: `${route} ${direction}` }).toBe(2);
+      const course = await button.evaluate((el) => {
+        const fades = el.getAnimations();
+        const steps: Array<[label: string, fill: string]> = [];
+        for (let ms = 0; ms <= 160; ms += 2) {
+          for (const fade of fades) fade.currentTime = ms;
+          const style = getComputedStyle(el);
+          steps.push([style.color, style.backgroundColor]);
+        }
+        for (const fade of fades) fade.finish();
+        return { changing: fades.map((fade) => (fade as CSSTransition).transitionProperty).sort(), steps };
+      });
+      expect(course.changing, `${route} ${direction}`).toEqual(["background-color", "color"]);
+      const ratios = course.steps.map(([label, fill]) => contrast(label, fill));
+      // it starts and ends as body-size text must (4.5:1): the colours really did swap
+      expect(ratios[0], `${route} ${direction}`).toBeGreaterThanOrEqual(4.5);
+      expect(ratios.at(-1)!, `${route} ${direction}`).toBeGreaterThanOrEqual(4.5);
+      expect(course.steps.at(-1)).not.toEqual(course.steps[0]);
+      return Math.min(...ratios);
+    };
+    await button.hover();
+    expect(await lowest("pointer on"), `${route}: pointer on`).toBeGreaterThanOrEqual(3);
+    await page.mouse.move(0, 0);
+    expect(await lowest("pointer off"), `${route}: pointer off`).toBeGreaterThanOrEqual(3);
+    await animation.send("Animation.setPlaybackRate", { playbackRate: 1 });
+  }
+
+  // with motion reduced nothing fades or waits: fill and label switch together, at rest and under the pointer
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/about");
+  const button = page.locator("main .in-light a.btn").last();
+  await expect(button).toHaveCSS("transition-property", "none");
+  const rest = await button.evaluate((el) => [getComputedStyle(el).color, getComputedStyle(el).backgroundColor]);
+  await button.hover();
+  await expect(button).toHaveCSS("transition-property", "none");
+  const hovered = await button.evaluate((el) => ({
+    fades: el.getAnimations().length,
+    colours: [getComputedStyle(el).color, getComputedStyle(el).backgroundColor],
+  }));
+  expect(hovered.fades).toBe(0);
+  expect(hovered.colours[0]).not.toBe(rest[0]);
+  expect(hovered.colours[1]).not.toBe(rest[1]);
+});
+
 test("a route change starts the new page at the top, at once", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop", "uses the desktop header nav");
   await page.goto("/work");
@@ -294,6 +382,173 @@ test("/about#who lands with the heading clear of the sticky header", async ({ pa
   }));
   expect(top).toBeGreaterThanOrEqual(headerBottom - 1);
   expect(top).toBeLessThan(headerBottom + 40);
+});
+
+/* A jump to a place on the same page adds a history entry the browser makes on its own. Next's router
+   ignores a Back that arrives at such an entry unless its state is on it: the address changes and the
+   page that was showing stays. HistoryRepair (in the layout) puts the state there; the /work list has its
+   own test in work.spec.ts. */
+const JUMPS: { name: string; route: string; hash: string; jump: (page: import("@playwright/test").Page) => Promise<void> }[] = [
+  {
+    name: "the home hero's link to the proof",
+    route: "/",
+    hash: "#work",
+    jump: (page) => page.locator('a.link[href="#work"]').click(),
+  },
+  {
+    name: "a case study's link to the client's words",
+    route: "/work/victorias-painting",
+    hash: "#client-words",
+    jump: (page) => page.locator(".in-outcome").getByRole("link", { name: "In the client’s words" }).click(),
+  },
+  {
+    name: "the skip link",
+    route: "/about",
+    hash: "#content",
+    jump: async (page) => {
+      await page.keyboard.press("Tab");
+      await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
+      await page.keyboard.press("Enter");
+    },
+  },
+  {
+    name: "a link in the booking form's error summary",
+    route: "/discovery",
+    hash: "#f-name",
+    jump: async (page) => {
+      await page.getByRole("button", { name: "Send request" }).click();
+      const summary = page.getByRole("group", { name: "Please fix the following" });
+      await expect(summary).toBeFocused({ timeout: 15_000 });
+      await summary.locator('a[href="#f-name"]').click();
+    },
+  },
+];
+
+for (const { name, route, hash, jump } of JUMPS) {
+  test(`after ${name}, Back from the next page brings this page back, not only its address`, async ({ page }) => {
+    const stopped = async () => {
+      let last = -1;
+      await expect
+        .poll(async () => {
+          const y = await page.evaluate(() => window.scrollY);
+          const still = y === last;
+          last = y;
+          return still;
+        })
+        .toBe(true);
+    };
+    await page.goto(route);
+    // the page's scripts have taken over once the router's state is on the history entry
+    await expect.poll(() => page.evaluate(() => window.history.state !== null)).toBe(true);
+    const h1 = (await page.locator("h1").textContent())!;
+    const title = await page.title();
+    await jump(page);
+    await expect(page).toHaveURL((url) => url.pathname === route && url.hash === hash);
+    await expect.poll(() => page.evaluate(() => window.history.state !== null)).toBe(true);
+    await stopped();
+    // on to another page by a header link: the booking button, or the logo from the booking page
+    const away = route === "/discovery" ? "/" : "/discovery";
+    await page.locator(route === "/discovery" ? ".site-head .brand" : ".site-head .wrap > .btn").click();
+    await expect(page).toHaveURL((url) => url.pathname === away && url.hash === "");
+    await expect(page.locator("h1")).not.toHaveText(h1);
+    await stopped();
+    await page.goBack();
+    await expect(page).toHaveURL((url) => url.pathname === route && url.hash === hash);
+    await expect(page.locator("h1")).toHaveText(h1);
+    // the booking page's tab title says "Error" while its summary shows, so it is compared on the other pages only
+    if (route !== "/discovery") await expect(page).toHaveTitle(title);
+  });
+}
+
+const HOME_H1 = "Be on the trail before your competitors wake up.";
+const hasState = (page: import("@playwright/test").Page) => page.evaluate(() => window.history.state !== null);
+const heroJump = 'a.link[href="#work"]';
+/** Leaves by the header's booking button and waits for that page. */
+async function toDiscovery(page: import("@playwright/test").Page) {
+  await page.locator(".site-head .wrap > .btn").click();
+  await expect(page).toHaveURL((url) => url.pathname === "/discovery");
+  await expect(page.locator("h1")).toHaveText("Book a discovery session");
+}
+const atHome = async (page: import("@playwright/test").Page, hash: string) => {
+  // read from the page itself: it also has to work while the page is still loading
+  await expect.poll(() => page.evaluate(() => window.location.pathname + window.location.hash)).toBe(`/${hash}`);
+  await expect(page.locator("h1")).toHaveText(HOME_H1);
+};
+
+for (const way of ["Back first, then on to another page", "straight on to another page, then two steps back"] as const) {
+  test(`a jump pressed before the page's scripts have loaded leaves Back working: ${way}`, async ({ page }) => {
+    // hold the scripts back, as a slow connection does; the page is readable and its links work meanwhile
+    let release = () => {};
+    const held = new Promise<void>((resolve) => (release = resolve));
+    await page.route("**/_next/static/**/*.js", async (route) => {
+      await held;
+      await route.continue();
+    });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await page.locator(heroJump).click();
+    await atHome(page, "#work");
+    // the browser alone made that entry, and the one the page was opened on has no state either
+    expect(await hasState(page)).toBe(false);
+    release();
+    await expect.poll(() => hasState(page)).toBe(true);
+    // let the router finish starting up: for a moment after it takes over it writes the address it was
+    // opened on back onto whatever entry is current, which is its own doing and not what is tested here
+    await page.waitForLoadState("networkidle");
+
+    if (way.startsWith("Back first")) {
+      await page.goBack();
+      await atHome(page, "");
+      await expect.poll(() => hasState(page)).toBe(true);
+      await toDiscovery(page);
+      await page.goBack();
+      await atHome(page, "");
+      // the same jump again, now with scripts running, and Back from the next page
+      await page.locator(heroJump).click();
+      await atHome(page, "#work");
+      await expect.poll(() => hasState(page)).toBe(true);
+      await toDiscovery(page);
+      await page.goBack();
+      await atHome(page, "#work");
+    } else {
+      await toDiscovery(page);
+      await page.evaluate(() => window.history.go(-2));
+      await atHome(page, "");
+      await page.goForward();
+      await atHome(page, "#work");
+      await page.goForward();
+      await expect(page).toHaveURL((url) => url.pathname === "/discovery");
+      await expect(page.locator("h1")).toHaveText("Book a discovery session");
+      await page.goBack();
+      await atHome(page, "#work");
+    }
+  });
+}
+
+test("a jump made with a modifier key that does not open a new tab leaves Back working", async ({ page }) => {
+  // on a Mac the same key opens the link in a new tab, and this tab does not move
+  test.skip(process.platform === "darwin", "Meta+click opens a new tab on macOS");
+  await page.goto("/");
+  await expect.poll(() => hasState(page)).toBe(true);
+  // the Windows key held during the click: Chromium on Windows and Linux follows the link in this tab
+  await page.locator(heroJump).click({ modifiers: ["Meta"] });
+  await atHome(page, "#work");
+  await expect.poll(() => hasState(page)).toBe(true);
+  await toDiscovery(page);
+  await page.goBack();
+  await atHome(page, "#work");
+});
+
+test("a #hash put on the address by hand, with no link pressed at all, leaves Back working", async ({ page }) => {
+  await page.goto("/work");
+  await expect.poll(() => hasState(page)).toBe(true);
+  await page.evaluate(() => {
+    window.location.hash = "victorias-painting";
+  });
+  await expect.poll(() => hasState(page)).toBe(true);
+  await toDiscovery(page);
+  await page.goBack();
+  await expect(page).toHaveURL((url) => url.pathname === "/work" && url.hash === "#victorias-painting");
+  await expect(page.locator("h1")).toHaveText("Work");
 });
 
 // ---- print ----

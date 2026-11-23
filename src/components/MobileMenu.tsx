@@ -31,6 +31,8 @@ export function MobileMenu() {
   // the menu is open only on the page it was opened from, so navigating closes it
   const pathname = usePathname();
   const [openOn, setOpenOn] = useState<string | null>(null);
+  // left by Back or Forward with the menu open: forget it, or it would be open again on the next visit to that page
+  if (openOn !== null && openOn !== pathname) setOpenOn(null);
   const open = openOn === pathname;
   const setOpen = useCallback(
     (next: boolean) => setOpenOn(next ? pathname : null),

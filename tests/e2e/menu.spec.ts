@@ -64,6 +64,48 @@ test.describe("phone menu", () => {
     });
   }
 
+  test("a page left by Back with its menu open does not come back with the menu open", async ({ page }) => {
+    await page.goto("/about");
+    const toggle = page.getByRole("button", { name: "Menu" });
+    const panel = page.locator("#mobile-menu");
+    const closed = async () => {
+      await expect(toggle).toHaveAttribute("aria-expanded", "false");
+      await expect(panel).toBeHidden();
+      // the page behind is in use again
+      await expect(page.locator("#content")).not.toHaveAttribute("inert", /.*/);
+    };
+    await toggle.click();
+    await panel.getByRole("link", { name: "Work", exact: true }).click();
+    await expect(page).toHaveURL(/\/work$/);
+    await closed();
+    // the menu is opened on /work, and the phone's Back gesture is used with it open
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await page.goBack();
+    await expect(page).toHaveURL(/\/about$/);
+    await closed();
+    // returning by Forward
+    await page.goForward();
+    await expect(page).toHaveURL(/\/work$/);
+    await expect(page.locator("h1")).toHaveText("Work");
+    await closed();
+    // the same again, returning by a link
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await page.goBack();
+    await expect(page).toHaveURL(/\/about$/);
+    await page.locator('.site-foot a[href="/work"]').first().click();
+    await expect(page).toHaveURL(/\/work$/);
+    await expect(page.locator("h1")).toHaveText("Work");
+    await closed();
+    // and the menu still opens and closes there
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await expect(panel).toBeVisible();
+    await toggle.click();
+    await closed();
+  });
+
   test("the three services sit under Services, indented, each a full touch target", async ({ page }) => {
     await page.goto("/about");
     await page.getByRole("button", { name: "Menu" }).click();

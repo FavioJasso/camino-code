@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { HistoryRepair } from "@/components/HistoryRepair";
 import { JsonLd } from "@/components/JsonLd";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -73,6 +74,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* the organization comes first, so it is the first ld+json script on every page; pages add theirs inside main */}
         <JsonLd data={organization} />
         <SkipLink />
+        {/* draws nothing: keeps Back and Forward working around jumps within a page */}
+        <HistoryRepair />
         <SiteHeader />
         {/* no tabIndex here: the skip link makes main focusable only while it holds focus (SkipLink.tsx) */}
         <main id="content" className="flex-1">

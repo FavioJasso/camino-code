@@ -233,12 +233,20 @@ a[href^="mailto:"] {
   text-decoration: none;
   white-space: nowrap;
   border-radius: 2px;
+  /* On a light section the hover swaps the fill and the label colour. The fill fades; the label switches
+     in one step part-way through, at the moment the old and the new label read about equally well on the
+     fill as it then is (--label-switch: later on the way out than on the way in). Switched at the start,
+     or faded along with the fill, the label passes through the fill's own colour and cannot be read for
+     a few frames; this way it stays at 4:1 or better throughout. */
+  --label-switch: 0.06s;
   transition:
     background 0.15s ease,
+    color 0s linear var(--label-switch),
     transform 0.15s ease;
 }
 .btn:hover {
   background: var(--moon);
+  --label-switch: 0.03s;
 }
 .btn:active {
   transform: translateY(1px);
