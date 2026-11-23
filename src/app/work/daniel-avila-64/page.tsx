@@ -6,11 +6,19 @@ import { danielAvila64 as da, danielAvila64Study as study } from "@/content/proo
 import { pageMetadata } from "@/content/seo";
 import { breadcrumbList, caseStudyLd } from "@/lib/structured-data";
 import { MoreWork } from "../MoreWork";
+import { StudyCrumbs } from "../StudyCrumbs";
 import { UnderTheHood } from "../UnderTheHood";
 import { GALLERY_SIZES, WorkImage } from "../WorkImage";
 
 const description =
   "A playable 3D portfolio built by Camino Code for Daniel Avila: an N64-era castle to explore, over a complete HTML portfolio recruiters can read at once.";
+
+/** Home / Work / this study: shown above "At a glance" and given to the structured data, from one list. */
+const trail = [
+  { name: "Home", path: "/" },
+  { name: "Work", path: "/work" },
+  { name: da.name, path: da.href },
+];
 
 export const metadata = pageMetadata({
   title: "DANIEL AVILA 64 case study | Camino Code",
@@ -23,8 +31,9 @@ export default function DanielAvila64Page() {
     <>
       <PageBand stage={2} time="morning" kicker="Case study" title={study.title} />
       {/* in-still: this section runs past the bottom of the window when the page loads, so it does not fade in */}
-      <section className="inner-sec in-dark on-dark in-still" aria-labelledby="at-a-glance">
+      <section className="inner-sec in-dark on-dark in-still in-study-top" aria-labelledby="at-a-glance">
         <div className="wrap">
+          <StudyCrumbs trail={trail} />
           <p className="in-mono in-label">
             <i>01</i> / 06
           </p>
@@ -141,13 +150,7 @@ export default function DanielAvila64Page() {
       <MoreWork current={da.href} />
       <BookDiscovery heading="Want something like this?" />
       <JsonLd data={caseStudyLd({ headline: study.title, description, path: da.href, image: da.cardImage.src, about: da.name })} />
-      <JsonLd
-        data={breadcrumbList([
-          { name: "Home", path: "/" },
-          { name: "Work", path: "/work" },
-          { name: da.name, path: da.href },
-        ])}
-      />
+      <JsonLd data={breadcrumbList(trail)} />
     </>
   );
 }

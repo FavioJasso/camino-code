@@ -211,6 +211,38 @@
 .in-light .btn:focus-visible {
   outline-color: var(--ink);
 }
+
+/* Breadcrumb at the top of a page's first section: Home / Services / this service on a service page,
+   Home / Work / this study on a case study. One set of rules for both; each page's own stylesheet
+   (services.css, work.css) only sets the room around it. */
+.in-crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 0.625rem;
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+}
+.in-crumbs li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 2.75rem;
+}
+.in-crumbs li + li::before {
+  content: "/";
+  color: var(--fg-soft);
+}
+/* the current page is text, not a touch target: if it wraps to a second row it sits close under the links */
+.in-crumbs li[aria-current] {
+  min-height: 0;
+}
+.in-crumbs a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
 .in-link {
   display: inline-flex;
   align-items: center;
@@ -641,9 +673,6 @@ p + .facts {
   border-radius: 0.25rem;
   background: var(--day);
   max-width: 36rem;
-}
-.in-confirm h3 {
-  font-size: 1.375rem;
 }
 /* while a send is under way the buttons are aria-disabled, not disabled, so keyboard focus stays on them */
 .in-form .btn:disabled,

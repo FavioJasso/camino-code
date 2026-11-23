@@ -17,7 +17,8 @@ import { UnderTheHood } from "./UnderTheHood";
 import { CARD_SIZES, WorkImage } from "./WorkImage";
 
 export const metadata = pageMetadata({
-  title: "Work | Camino Code",
+  // the band title, then what the page holds, in the words the 404 screen uses for this page
+  title: "Work: the case studies | Camino Code",
   description:
     "Case studies from Camino Code: a reconciliation system for Transparent Energy, the playable 3D portfolio DANIEL AVILA 64, and websites for Victoria's Painting and Daniel Avila.",
   path: "/work",
@@ -25,6 +26,9 @@ export const metadata = pageMetadata({
 
 /** The short label each study carries above its name, from the shared list. */
 const kind = (href: string) => caseStudies.find((s) => s.href === href)?.kind;
+
+/** The id of a study's block on this page, which "On this page" jumps to: the last part of its address. */
+const anchor = (href: string) => href.slice(href.lastIndexOf("/") + 1);
 
 /** "Read the case study", with the study's name added for screen readers: four links on one page need four names. */
 function StudyLink({ href, name }: { href: string; name: string }) {
@@ -39,8 +43,31 @@ export default function WorkPage() {
   return (
     <>
       <PageBand stage={2} time="morning" title="Work" />
+      {/* the four projects by name, as jumps to their blocks below: the page is several screens long */}
+      <section className="inner-sec in-dark on-dark in-still in-toc">
+        <div className="wrap">
+          <nav aria-labelledby="toc-title">
+            <p className="in-mono" id="toc-title">
+              On this page
+            </p>
+            <ol>
+              {caseStudies.map((s) => (
+                <li key={s.href}>
+                  {/* The comma is for screen readers, which read the name and the label as one link.
+                      Back from whatever page is opened after a jump is kept working by HistoryRepair (layout). */}
+                  <a href={`#${anchor(s.href)}`}>
+                    <span className="in-toc-name">{s.name}</span>
+                    <span className="in-visually-hidden">, </span>
+                    <span className="in-mono">{s.kind}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        </div>
+      </section>
       {/* in-still: this card runs past the bottom of the window when the page loads, so it does not fade in */}
-      <section className="inner-sec in-light in-still" aria-labelledby="te-title">
+      <section id={anchor(te.href)} className="inner-sec in-light in-still" aria-labelledby="te-title">
         <div className="wrap">
           <p className="in-mono in-label">
             <i>01</i> {kind(te.href)}
@@ -60,7 +87,7 @@ export default function WorkPage() {
         </div>
       </section>
       {/* its figures are developer measurements, so the card leads with the screenshot and the summary and keeps them to one small line */}
-      <section className="inner-sec in-light in-day work-card" aria-labelledby="da-title">
+      <section id={anchor(da.href)} className="inner-sec in-light in-day work-card" aria-labelledby="da-title">
         <div className="wrap">
           <p className="in-mono in-label">
             <i>02</i> {kind(da.href)}
@@ -80,7 +107,7 @@ export default function WorkPage() {
         </div>
       </section>
       {/* the two website projects have no measured outcomes, so no figures: image, summary, credit, link */}
-      <section className="inner-sec in-light in-day work-card" aria-labelledby="vp-title">
+      <section id={anchor(vp.href)} className="inner-sec in-light in-day work-card" aria-labelledby="vp-title">
         <div className="wrap">
           <p className="in-mono in-label">
             <i>03</i> {kind(vp.href)}
@@ -98,7 +125,7 @@ export default function WorkPage() {
           </div>
         </div>
       </section>
-      <section className="inner-sec in-light in-day work-card" aria-labelledby="da-first-title">
+      <section id={anchor(daFirst.href)} className="inner-sec in-light in-day work-card" aria-labelledby="da-first-title">
         <div className="wrap">
           <p className="in-mono in-label">
             <i>04</i> {kind(daFirst.href)}

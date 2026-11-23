@@ -1,37 +1,10 @@
 /* Services index (/services) and the three service pages. Imported by those pages after PageBand,
    so it loads after inner.css. Every class is "in-" prefixed and uses the section's role variables. */
 
-/* Breadcrumb above a service page's opening line: Home / Services / this service */
+/* Breadcrumb above a service page's opening line: Home / Services / this service. The trail's own
+   rules (.in-crumbs) are in inner.css, shared with the case studies; this is the room above it. */
 .inner-sec.in-svc-intro .wrap {
   padding-top: clamp(1.25rem, 3vw, 2.25rem);
-}
-.in-crumbs ol {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0 0.625rem;
-  list-style: none;
-  margin: 0 0 0.75rem;
-  padding: 0;
-}
-.in-crumbs li {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.625rem;
-  min-height: 2.75rem;
-}
-.in-crumbs li + li::before {
-  content: "/";
-  color: var(--fg-soft);
-}
-/* the current page is text, not a touch target: if it wraps to a second row it sits close under the links */
-.in-crumbs li[aria-current] {
-  min-height: 0;
-}
-.in-crumbs a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.75rem;
 }
 
 /* The three services as rows: a letter, the name, then what it covers */

@@ -8,10 +8,18 @@ import { breadcrumbList, caseStudyLd } from "@/lib/structured-data";
 import { CLIENT_WORDS_ID, ClientLine } from "../ClientLine";
 import { ClientQuote } from "../ClientQuote";
 import { MoreWork } from "../MoreWork";
+import { StudyCrumbs } from "../StudyCrumbs";
 import { GALLERY_SIZES, WorkImage } from "../WorkImage";
 
 const description =
   "A first website for Victoria's Painting, a New Jersey painting company: services, service areas, a free-estimate form and call buttons, designed and built by Camino Code.";
+
+/** Home / Work / this study: shown above "At a glance" and given to the structured data, from one list. */
+const trail = [
+  { name: "Home", path: "/" },
+  { name: "Work", path: "/work" },
+  { name: vp.name, path: vp.href },
+];
 
 export const metadata = pageMetadata({
   title: "Victoria's Painting case study | Camino Code",
@@ -24,8 +32,9 @@ export default function VictoriasPaintingPage() {
     <>
       <PageBand stage={2} time="morning" kicker="Case study" title={study.title} />
       {/* in-still: this section runs past the bottom of the window when the page loads, so it does not fade in */}
-      <section className="inner-sec in-dark on-dark in-still" aria-labelledby="at-a-glance">
+      <section className="inner-sec in-dark on-dark in-still in-study-top" aria-labelledby="at-a-glance">
         <div className="wrap">
+          <StudyCrumbs trail={trail} />
           <p className="in-mono in-label">
             <i>01</i> / 06
           </p>
@@ -132,13 +141,7 @@ export default function VictoriasPaintingPage() {
       <MoreWork current={vp.href} />
       <BookDiscovery heading="Need a website like this?" />
       <JsonLd data={caseStudyLd({ headline: study.title, description, path: vp.href, image: vp.cardImage.src, about: vp.name })} />
-      <JsonLd
-        data={breadcrumbList([
-          { name: "Home", path: "/" },
-          { name: "Work", path: "/work" },
-          { name: vp.name, path: vp.href },
-        ])}
-      />
+      <JsonLd data={breadcrumbList(trail)} />
     </>
   );
 }

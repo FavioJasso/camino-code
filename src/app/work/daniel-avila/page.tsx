@@ -9,10 +9,18 @@ import { breadcrumbList, caseStudyLd } from "@/lib/structured-data";
 import { CLIENT_WORDS_ID, ClientLine } from "../ClientLine";
 import { ClientQuote } from "../ClientQuote";
 import { MoreWork } from "../MoreWork";
+import { StudyCrumbs } from "../StudyCrumbs";
 import { GALLERY_SIZES, WorkImage } from "../WorkImage";
 
 const description =
   "The first portfolio site Camino Code designed and built for IT professional Daniel Avila, and the starting point for the later DANIEL AVILA 64 rebuild.";
+
+/** Home / Work / this study: shown above "At a glance" and given to the structured data, from one list. */
+const trail = [
+  { name: "Home", path: "/" },
+  { name: "Work", path: "/work" },
+  { name: study.project, path: da.href },
+];
 
 export const metadata = pageMetadata({
   title: "Daniel Avila portfolio case study | Camino Code",
@@ -25,8 +33,9 @@ export default function DanielAvilaPage() {
     <>
       <PageBand stage={2} time="morning" kicker="Case study" title={study.title} />
       {/* in-still: this section runs past the bottom of the window when the page loads, so it does not fade in */}
-      <section className="inner-sec in-dark on-dark in-still" aria-labelledby="at-a-glance">
+      <section className="inner-sec in-dark on-dark in-still in-study-top" aria-labelledby="at-a-glance">
         <div className="wrap">
+          <StudyCrumbs trail={trail} />
           <p className="in-mono in-label">
             <i>01</i> / 06
           </p>
@@ -135,13 +144,7 @@ export default function DanielAvilaPage() {
       <MoreWork current={da.href} />
       <BookDiscovery heading="Need a site like this?" />
       <JsonLd data={caseStudyLd({ headline: study.title, description, path: da.href, image: da.cardImage.src, about: study.project })} />
-      <JsonLd
-        data={breadcrumbList([
-          { name: "Home", path: "/" },
-          { name: "Work", path: "/work" },
-          { name: study.project, path: da.href },
-        ])}
-      />
+      <JsonLd data={breadcrumbList(trail)} />
     </>
   );
 }

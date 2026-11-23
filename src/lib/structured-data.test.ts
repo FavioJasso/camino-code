@@ -88,17 +88,17 @@ describe("structured data builders", () => {
 
 describe("pageMetadata", () => {
   it("gives a page its canonical path and repeats title, description and the shared image in the share tags", () => {
-    const meta = pageMetadata({ title: "Work | Camino Code", description: "Case studies.", path: "/work" });
-    expect(meta.title).toBe("Work | Camino Code");
+    const meta = pageMetadata({ title: "Work: the case studies | Camino Code", description: "Case studies.", path: "/work" });
+    expect(meta.title).toBe("Work: the case studies | Camino Code");
     expect(meta.alternates).toEqual({ canonical: "/work" });
     expect(meta.openGraph).toMatchObject({
       url: "/work",
-      title: "Work | Camino Code",
+      title: "Work: the case studies | Camino Code",
       description: "Case studies.",
       siteName: "Camino Code",
       images: [{ url: "/og.png", width: 1200, height: 630 }],
     });
-    expect(meta.twitter).toMatchObject({ card: "summary_large_image", title: "Work | Camino Code", images: ["/og.png"] });
+    expect(meta.twitter).toMatchObject({ card: "summary_large_image", title: "Work: the case studies | Camino Code", images: ["/og.png"] });
   });
 });
 

@@ -1,10 +1,12 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
-import { STUDIES } from "./routes";
+import { STUDIES, absolute } from "./routes";
 
 /* The four case studies, the /work index and the proof blocks on the service pages. The two website
    projects carry facts and the client's own words only: no figures block, and none of the old pages'
    filler statistics. Every study brings its outcome up under "At a glance". Only Transparent Energy
-   shows large figures: the DANIEL AVILA 64 measurements are one small "Under the hood" line. */
+   shows large figures: the DANIEL AVILA 64 measurements are one small "Under the hood" line.
+   Wayfinding: /work opens with an "On this page" list of its four projects, and each study carries
+   the trail Home / Work / its name, as the service pages do. */
 
 const flat = (text: string | null) => (text ?? "").replace(/\s+/g, " ");
 
@@ -29,6 +31,14 @@ async function settled(page: Page) {
       return still;
     })
     .toBe(true);
+}
+
+/**
+ * Waits until the page's scripts have taken over: Next's router writes its state onto the history
+ * entry when it does. A press on a link before that moment is the browser's alone, as with scripts off.
+ */
+async function routerReady(page: Page) {
+  await expect.poll(() => page.evaluate(() => window.history.state !== null)).toBe(true);
 }
 
 /** The "Under the hood" line: its label, the four measurements, and type no larger than body text. */
@@ -246,6 +256,237 @@ test("on /work a project's title and image lead to its case study too", async ({
     [box.x + 20, box.y + box.height / 2],
   );
   expect(hit).toBe("P");
+});
+
+test("/work opens with its four projects as jumps, each landing clear of the sticky header", async ({ page }) => {
+  await page.goto("/work");
+  const nav = page.getByRole("navigation", { name: "On this page" });
+  await expect(nav).toHaveCount(1);
+  const links = nav.locator("a");
+  // the names and short labels the cards below carry, and nothing else: a comma joins them for screen readers
+  await expect(links).toHaveText([
+    "Transparent Energy, Reconciliation system",
+    "DANIEL AVILA 64, Playable portfolio",
+    "Victoria's Painting, Business website",
+    "Daniel Avila, First portfolio site",
+  ]);
+  const ids = STUDIES.map((route) => route.slice(route.lastIndexOf("/") + 1));
+  expect(await links.evaluateAll((els) => els.map((a) => a.getAttribute("href")))).toEqual(ids.map((id) => `#${id}`));
+  // the list is not a heading and adds no card: the page's outline is the four projects, as before
+  await expect(nav.locator("h2, h3, .in-label, .in-link")).toHaveCount(0);
+  // it sits between the band and the first project, and stays short: that project still starts on the first screen
+  await expect(page.locator("main > section").nth(1).getByRole("navigation", { name: "On this page" })).toHaveCount(1);
+  const strip = (await page.locator("main > section").nth(1).boundingBox())!;
+  expect(strip.height).toBeLessThan(page.viewportSize()!.width < 900 ? 260 : 160);
+  await expect(page.locator("#te-title")).toBeInViewport();
+
+  for (const [i, id] of ids.entries()) {
+    await page.goto("/work");
+    const link = nav.locator("a").nth(i);
+    expect((await link.boundingBox())!.height, id).toBeGreaterThanOrEqual(44);
+    await link.click();
+    await expect(page).toHaveURL(new RegExp(`/work#${id}$`));
+    const block = page.locator(`main > section#${id}`);
+    await expect(block.locator("h2")).toBeInViewport();
+    await settled(page);
+    const at = await block.evaluate((el) => ({
+      block: el.getBoundingClientRect().top,
+      label: el.querySelector(".in-label")!.getBoundingClientRect().top,
+      heading: el.querySelector("h2")!.getBoundingClientRect().top,
+      header: document.querySelector(".site-head")!.getBoundingClientRect().bottom,
+    }));
+    // the block's top edge meets the header; its label and heading follow below, in view
+    expect(at.block, id).toBeGreaterThanOrEqual(at.header - 1);
+    expect(at.block, id).toBeLessThan(at.header + 40);
+    expect(at.label, id).toBeGreaterThan(at.header);
+    expect(at.heading, id).toBeGreaterThan(at.label);
+    // the keyboard follows the jump: the next Tab stop is that project's own link, not the next entry in the list
+    await page.keyboard.press("Tab");
+    await expect(block.locator("a.in-link"), id).toBeFocused();
+  }
+
+  // with motion reduced the jump is instant and lands in the same place
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/work");
+  await nav.locator("a").nth(2).click();
+  await expect(page.locator(`main > section#${ids[2]} h2`)).toBeInViewport();
+  const landed = await page.locator(`main > section#${ids[2]}`).evaluate((el) => ({
+    heading: el.querySelector("h2")!.getBoundingClientRect().top,
+    header: document.querySelector(".site-head")!.getBoundingClientRect().bottom,
+    height: window.innerHeight,
+  }));
+  expect(landed.heading).toBeGreaterThan(landed.header);
+  expect(landed.heading).toBeLessThan(landed.height);
+
+  // jump links do nothing on paper: the list is left out of a print
+  await page.emulateMedia({ media: "print" });
+  await expect(page.locator("main > section.in-toc")).toBeHidden();
+});
+
+test("after a jump on /work, Back from the next page returns to the list at that project", async ({ page }) => {
+  const id = "daniel-avila-64";
+  const nav = page.getByRole("navigation", { name: "On this page" });
+  const block = page.locator(`main > section#${id}`);
+  const jump = async () => {
+    await nav.locator(`a[href="#${id}"]`).click();
+    await expect(page).toHaveURL(new RegExp(`/work#${id}$`));
+    await expect(block.locator("h2")).toBeInViewport();
+    await settled(page);
+  };
+  /** The case study is showing, and has come to rest: a Back pressed mid-scroll is a different test. */
+  const expectTheStudy = async () => {
+    await expect(page).toHaveURL(/\/work\/daniel-avila-64$/);
+    await expect(page.locator("h1")).toHaveText("DANIEL AVILA 64: a playable 3D portfolio");
+    await settled(page);
+  };
+  /** Follows the project's own link to its case study. */
+  const openTheStudy = async () => {
+    await block.locator("a.in-link").click();
+    await expectTheStudy();
+  };
+  /** Back must bring /work itself back, not only its address. */
+  const backToTheList = async () => {
+    await page.goBack();
+    await expect(page).toHaveURL(new RegExp(`/work#${id}$`));
+    await expect(page.locator("h1")).toHaveText("Work");
+    await expect(page).toHaveTitle("Work: the case studies | Camino Code");
+    await settled(page);
+  };
+  /** Once the page has come to rest, the project the visitor left is on screen, under the header. */
+  const expectTheProject = async () => {
+    const at = await block.evaluate((el) => ({
+      top: el.getBoundingClientRect().top,
+      bottom: el.getBoundingClientRect().bottom,
+      header: document.querySelector(".site-head")!.getBoundingClientRect().bottom,
+      height: window.innerHeight,
+    }));
+    expect(at.top).toBeLessThan(at.height);
+    expect(at.bottom).toBeGreaterThan(at.header);
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(0);
+  };
+
+  await page.goto("/work");
+  await routerReady(page);
+  await jump();
+  // on to the case study from that block, and back
+  await openTheStudy();
+  await backToTheList();
+  await expectTheProject();
+  // Forward is the case study again, and Back works a second time
+  await page.goForward();
+  await expectTheStudy();
+  await backToTheList();
+  await expectTheProject();
+
+  // the same entry pressed again after scrolling away still jumps, and Back still works after it
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await jump();
+  await openTheStudy();
+  await backToTheList();
+  await expectTheProject();
+
+  // any other link on the site can follow a jump: the header's button, then Back
+  await page.locator(".site-head .wrap > .btn").click();
+  await expect(page).toHaveURL(/\/discovery$/);
+  await expect(page.locator("h1")).toHaveText("Book a discovery session");
+  await settled(page);
+  await backToTheList();
+  // one more Back is the list as it was opened, at the top
+  await page.goBack();
+  await expect(page).toHaveURL(/\/work$/);
+  await expect(page.locator("h1")).toHaveText("Work");
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+});
+
+test("with the text size raised, the entries of \"On this page\" wrap inside their columns", async ({ page }, testInfo) => {
+  // width, height, text size in percent: the four-column row on a desktop, the two-by-two block on phones
+  const cases =
+    testInfo.project.name === "desktop"
+      ? [
+          [1024, 800, 200],
+          [1440, 900, 200],
+        ]
+      : [
+          [320, 568, 130],
+          [390, 844, 150],
+          [390, 844, 200],
+        ];
+  for (const [width, height, percent] of cases) {
+    const at = `${width} px wide, text at ${percent}%`;
+    await page.setViewportSize({ width, height });
+    await page.goto("/work");
+    await page.addStyleTag({ content: `html { font-size: ${percent}% !important; }` });
+    const list = await page.locator("main > section.in-toc").evaluate((strip) => {
+      /** Where the words themselves are drawn: a long word can run past the box of the link that holds it. */
+      const words = (el: Element) => {
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        return [...range.getClientRects()];
+      };
+      const touch = (a: DOMRect, b: DOMRect) =>
+        a.left < b.right - 0.5 && b.left < a.right - 0.5 && a.top < b.bottom - 0.5 && b.top < a.bottom - 0.5;
+      const links = [...strip.querySelectorAll("a")];
+      const drawn = links.map((a) => [...a.querySelectorAll("span:not(.in-visually-hidden)")].flatMap(words));
+      const clashes: string[] = [];
+      for (let i = 0; i < links.length; i++) {
+        for (let j = i + 1; j < links.length; j++) {
+          if (drawn[i].some((a) => drawn[j].some((b) => touch(a, b)))) clashes.push(`${links[i].textContent} / ${links[j].textContent}`);
+        }
+      }
+      const wrap = strip.querySelector(".wrap")!;
+      const edge = wrap.getBoundingClientRect().right - parseFloat(getComputedStyle(wrap).paddingRight);
+      return {
+        clashes,
+        past: Math.max(...drawn.flat().map((rect) => rect.right)) - edge,
+        shortest: Math.min(...links.map((a) => a.getBoundingClientRect().height)),
+      };
+    });
+    // no entry is printed over its neighbour, none runs past the column of text, and each is still a full touch target
+    expect(list.clashes, at).toEqual([]);
+    expect(list.past, at).toBeLessThanOrEqual(1);
+    expect(list.shortest, at).toBeGreaterThanOrEqual(44);
+  }
+});
+
+test("every case study carries the trail Home / Work / its name, and its breadcrumb data says the same", async ({ page }) => {
+  const names: Record<string, string> = {
+    "/work/transparent-energy": "Transparent Energy",
+    "/work/daniel-avila-64": "DANIEL AVILA 64",
+    "/work/victorias-painting": "Victoria's Painting",
+    "/work/daniel-avila": "Daniel Avila's first portfolio site",
+  };
+  for (const route of STUDIES) {
+    await page.goto(route);
+    // the same pattern as the service pages: a nav named Breadcrumb, links for the levels above, the page itself as text
+    const crumbs = page.getByRole("navigation", { name: "Breadcrumb" });
+    await expect(crumbs, route).toHaveCount(1);
+    expect(await crumbs.locator("a").evaluateAll((els) => els.map((a) => a.getAttribute("href"))), route).toEqual(["/", "/work"]);
+    await expect(crumbs.locator("li"), route).toHaveText(["Home", "Work", names[route]]);
+    const current = crumbs.locator('[aria-current="page"]');
+    await expect(current, route).toHaveText(names[route]);
+    await expect(current.locator("a"), route).toHaveCount(0);
+    for (const link of await crumbs.locator("a").all()) {
+      expect((await link.boundingBox())!.height, route).toBeGreaterThanOrEqual(44);
+    }
+    // under the band and above "At a glance", so a phone shows the way back on the first screen
+    const first = page.locator("main > section").nth(1);
+    await expect(first.locator(".in-crumbs"), route).toHaveCount(1);
+    const trailTop = (await crumbs.boundingBox())!.y;
+    expect(trailTop, route).toBeLessThan((await first.locator("#at-a-glance").boundingBox())!.y);
+    expect(trailTop, route).toBeLessThan(page.viewportSize()!.height);
+    // one BreadcrumbList, naming the same three levels
+    const lists = await page
+      .locator('script[type="application/ld+json"]')
+      .evaluateAll((els) => els.map((el) => JSON.parse(el.textContent!)).filter((block) => block["@type"] === "BreadcrumbList"));
+    expect(lists, route).toHaveLength(1);
+    const items = lists[0].itemListElement as Array<{ name: string; item: string }>;
+    expect(items.map((item) => item.name), route).toEqual(["Home", "Work", names[route]]);
+    expect(items.map((item) => item.item), route).toEqual([absolute("/"), absolute("/work"), absolute(route)]);
+  }
+  // and it is a way back: Work leads to the index
+  await page.getByRole("navigation", { name: "Breadcrumb" }).getByRole("link", { name: "Work" }).click();
+  await expect(page).toHaveURL(/\/work$/);
+  await expect(page.locator("h1")).toHaveText("Work");
 });
 
 test("Transparent Energy shows its three figures once, under At a glance", async ({ page }) => {

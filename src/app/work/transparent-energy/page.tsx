@@ -6,10 +6,18 @@ import { transparentEnergy as te, transparentEnergyStudy as study } from "@/cont
 import { pageMetadata } from "@/content/seo";
 import { breadcrumbList, caseStudyLd } from "@/lib/structured-data";
 import { MoreWork } from "../MoreWork";
+import { StudyCrumbs } from "../StudyCrumbs";
 
 const title = "Transparent Energy: reconciliation, automated";
 const description =
   "How an automated Python pipeline on AWS replaced hand reconciliation of Excel, PDF and vendor files at Transparent Energy, in 3.5 months with a team of two.";
+
+/** Home / Work / this study: shown above "At a glance" and given to the structured data, from one list. */
+const trail = [
+  { name: "Home", path: "/" },
+  { name: "Work", path: "/work" },
+  { name: te.name, path: te.href },
+];
 
 export const metadata = pageMetadata({
   title: "Transparent Energy case study | Camino Code",
@@ -22,8 +30,9 @@ export default function TransparentEnergyPage() {
     <>
       <PageBand stage={2} time="morning" kicker="Case study" title={title} />
       {/* in-still: this section runs past the bottom of the window when the page loads, so it does not fade in */}
-      <section className="inner-sec in-dark on-dark in-still" aria-labelledby="at-a-glance">
+      <section className="inner-sec in-dark on-dark in-still in-study-top" aria-labelledby="at-a-glance">
         <div className="wrap">
+          <StudyCrumbs trail={trail} />
           <p className="in-mono in-label">
             <i>01</i> / 07
           </p>
@@ -125,13 +134,7 @@ export default function TransparentEnergyPage() {
       <MoreWork current={te.href} />
       <BookDiscovery heading="Have a process like this?" />
       <JsonLd data={caseStudyLd({ headline: title, description, path: te.href, about: te.name })} />
-      <JsonLd
-        data={breadcrumbList([
-          { name: "Home", path: "/" },
-          { name: "Work", path: "/work" },
-          { name: te.name, path: te.href },
-        ])}
-      />
+      <JsonLd data={breadcrumbList(trail)} />
     </>
   );
 }
