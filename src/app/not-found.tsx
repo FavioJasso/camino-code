@@ -28,7 +28,7 @@ export default function NotFound() {
           <ul className="ticks">
             <li>
               <Link href="/services">Services</Link>
-              : software, data, and AI and governance.
+              : software, data, and AI &amp; governance.
             </li>
             <li>
               <Link href="/work">Work</Link>

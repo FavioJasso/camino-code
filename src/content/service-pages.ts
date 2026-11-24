@@ -33,7 +33,7 @@ export type ServicePage = {
 export const servicesIndex = {
   title: "Software, data and AI services | Camino Code",
   description:
-    "The three services Camino Code offers small and mid-sized businesses: software, data, and AI and governance. What each covers and how they fit together.",
+    "The three services Camino Code offers small and mid-sized businesses: software, data, and AI & governance. What each covers and how they fit together.",
   intro:
     "Software, data and AI for small and mid-sized businesses. Every service starts with the same first conversation.",
   fitLead:
@@ -146,7 +146,7 @@ export const servicePages: Record<Service["slug"], ServicePage> = {
   },
   "ai-governance": {
     slug: "ai-governance",
-    title: "AI and governance",
+    title: "AI & governance",
     description:
       "Practical AI where it pays for itself, with the rules, access controls and checks to use it safely. Start with a free conversation.",
     kicker: "AI & governance",

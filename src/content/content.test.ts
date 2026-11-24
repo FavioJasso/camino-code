@@ -161,6 +161,15 @@ describe("services", () => {
     ]);
   });
 
+  it("call the third service 'AI & governance' everywhere it is named", () => {
+    const ai = services.find((s) => s.slug === "ai-governance")!;
+    expect(ai.name).toBe("AI & governance");
+    expect(servicePages["ai-governance"].title).toBe("AI & governance");
+    expect(servicePages["ai-governance"].kicker).toBe("AI & governance");
+    expect(servicesIndex.description).toContain("AI & governance");
+    expect(readFileSync(join(__dirname, "../app/not-found.tsx"), "utf8")).not.toContain("AI and governance");
+  });
+
   it("show Transparent Energy on Software and Data, each from its own side and with its own figure", () => {
     const software = servicePages.software.proof!;
     const data = servicePages.data.proof!;
