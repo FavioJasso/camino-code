@@ -304,7 +304,7 @@ describe("submitBooking refusals the form can recover from", () => {
   it("says in the fallback message that the details are kept, and gives the email address and the phone number", async () => {
     const r = await submitBooking(idle, booking());
     expect(r.errors?.form).toBe(
-      "We couldn't send this. Your details are still in the form, so you can try again. You can also call +1 973-234-2073, or email us at contact@caminocode.com and we'll reply within one business day.",
+      "Your details are still in the form, so you can try again. You can also call +1 973-234-2073, or email us at contact@caminocode.com and we'll reply within one business day.",
     );
   });
 });

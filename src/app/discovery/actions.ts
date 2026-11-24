@@ -31,7 +31,7 @@ export type State = {
   sentTo?: string;
 };
 
-const FALLBACK = `We couldn't send this. Your details are still in the form, so you can try again. You can also call ${site.contact.phone}, or email us at ${site.contact.email} and we'll reply within one business day.`;
+const FALLBACK = `Your details are still in the form, so you can try again. You can also call ${site.contact.phone}, or email us at ${site.contact.email} and we'll reply within one business day.`;
 const DEV_SECRET = "camino-code-development-only-secret";
 
 const isProduction = () => process.env.VERCEL_ENV === "production";
