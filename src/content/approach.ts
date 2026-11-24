@@ -5,10 +5,10 @@ export const stages = [
   { name: "Hand over", line: "We hand over the system with documentation your team can work from." },
 ] as const;
 
+/** The facts table under the first conversation on /approach. The reply time is in the booking band. */
 export const discoveryFacts = [
   { label: "Cost", value: "Free" },
   { label: "Length", value: "45 minutes" },
   { label: "Format", value: "Video or in person" },
   { label: "You get", value: "A one-page written summary within a week" },
-  { label: "Reply time", value: "Within one business day" },
 ] as const;

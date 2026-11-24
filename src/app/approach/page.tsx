@@ -9,7 +9,7 @@ import { breadcrumbList } from "@/lib/structured-data";
 export const metadata = pageMetadata({
   title: "Approach | Camino Code",
   description:
-    "Every engagement starts with a free 45-minute discovery session and a one-page written summary, then moves in stages you can see working.",
+    "How a project runs: a conversation about your business, a one-page summary of what to fix first, then work in stages you can see running.",
   path: "/approach",
 });
 
@@ -20,12 +20,12 @@ export default function ApproachPage() {
       <section className="inner-sec in-light" aria-labelledby="discovery-title">
         <div className="wrap">
           <p className="in-mono in-label">
-            <i>01</i> Discovery
+            <i>01</i> Conversation
           </p>
-          <h2 id="discovery-title">It starts with discovery</h2>
+          <h2 id="discovery-title">It starts with a conversation</h2>
           <p className="in-lead">
-            Discovery is a free conversation with Favio Jasso, Camino Code&rsquo;s founder, about
-            your business: the tools you use, where the data lives, and where time is being lost.
+            The first step is a free conversation about your business: the tools you use, where your
+            numbers live, and the jobs that eat the week.
           </p>
           <dl className="facts in-facts-gap">
             {discoveryFacts.map((f) => (
@@ -53,8 +53,8 @@ export default function ApproachPage() {
           </p>
           <h2 id="start-title">If you have not started</h2>
           <p className="in-lead">
-            You are not behind. Starting properly matters more than starting first, and discovery
-            is where we work out where to start.
+            You are not behind. Starting properly matters more than starting first, and the first
+            conversation is where we work out where to start.
           </p>
         </div>
       </section>
