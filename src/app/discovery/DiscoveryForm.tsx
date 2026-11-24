@@ -199,7 +199,7 @@ export function DiscoveryForm({ intro }: { intro: ReactNode }) {
         Thank you. Your request is in.
       </h2>
       <p>
-        We reply within one business day to agree a time for your free 45-minute conversation.{" "}
+        We reply within one business day to agree on a time for your free 45-minute conversation.{" "}
         {state.sentTo ? (
           <>
             We will reply to <strong className="in-sent-to">{state.sentTo}</strong>.{" "}

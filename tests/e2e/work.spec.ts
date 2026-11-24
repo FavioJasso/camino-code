@@ -365,6 +365,10 @@ test("after a jump on /work, Back from the next page returns to the list at that
     await expect(page).toHaveURL(new RegExp(`/work#${id}$`));
     await expect(page.locator("h1")).toHaveText("Work");
     await expect(page).toHaveTitle("Work: the case studies | Camino Code");
+    // the browser puts the list back at the project only once /work has been drawn again (about 300ms
+    // later on a phone), so the page sits still at the top until then: wait for the project to arrive
+    // before waiting for the page to come to rest, or the next Back lands mid-restore
+    await expect(block.locator("h3")).toBeInViewport();
     await settled(page);
   };
   /** Once the page has come to rest, the project the visitor left is on screen, under the header. */

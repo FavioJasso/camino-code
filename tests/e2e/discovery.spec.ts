@@ -424,7 +424,7 @@ test("success is announced in a status region that existed before submit, takes 
   expect(await handle!.evaluate((el) => el.isConnected)).toBe(true);
   await expect(page.getByRole("heading", { name: /Your request is in/ })).toBeFocused();
   await expect(status).toContainText(
-    "We reply within one business day to agree a time for your free 45-minute conversation. We will reply to ana@example.com. If you do not hear from us, write to contact@caminocode.com.",
+    "We reply within one business day to agree on a time for your free 45-minute conversation. We will reply to ana@example.com. If you do not hear from us, write to contact@caminocode.com.",
   );
   expect(await violations(page)).toEqual([]);
 });

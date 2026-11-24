@@ -272,7 +272,7 @@ test("the hero text link changes colour under the pointer", async ({ page }, tes
   await expect(link).toHaveCSS("color", "rgb(247, 201, 72)");
 });
 
-const DISCOVERY_NOTE = "A first look at how your business runs today. You leave knowing what to fix first.";
+const DISCOVERY_NOTE = "A first look at how your business runs today.";
 
 test("the hero says what the first conversation is, next to the button, where the first screen has room", async ({ page }) => {
   const hero = page.locator(".hero");
@@ -362,19 +362,19 @@ test("the hero says what the first conversation is, next to the button, where th
   }
 });
 
-test("the hero note says what the first conversation is, backed by /approach, without repeating the lead or a promise", async ({
+test("the hero note says what the first conversation is, without repeating the lead or a promise", async ({
   page,
 }) => {
-  // what you leave with is the Route stage's own words on /approach, and the facts it stands on are published there
+  // the promises are published on /approach; the note claims none of them
   await page.goto("/approach");
   const facts = (await page.locator("main").innerText()).toLowerCase();
   for (const fact of ["45 minutes", "video or in person", "a one-page written summary within a week", "what to fix first"]) {
     expect(facts).toContain(fact);
   }
-  expect(DISCOVERY_NOTE.toLowerCase()).toContain("what to fix first");
-  // the home page says each promise once, beside the lower button (and "free" in the lead): the note names none of them
-  expect(DISCOVERY_NOTE).not.toMatch(/free|founder|45|video|in person|one-page|summary|business day|discovery/i);
+  // the home page says each promise once, beside the lower button and in the Route stage (and "free" in the lead): the note names none of them
+  expect(DISCOVERY_NOTE).not.toMatch(/free|founder|45|video|in person|one-page|summary|business day|discovery|what to fix/i);
   await page.goto("/");
+  expect((await page.locator("main").innerText()).toLowerCase().match(/what to fix first/g)).toHaveLength(1);
   const lead = (await page.locator(".hero .lead").innerText()).replace(/\s+/g, " ");
   await expect(page.locator(".hero .hero-note")).toHaveText(DISCOVERY_NOTE);
   // the lead says what the firm does; the note says what the first conversation is: no sentence is shared

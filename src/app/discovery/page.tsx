@@ -50,13 +50,13 @@ export default function DiscoveryPage() {
               <li>
                 <div>
                   <h3>We reply</h3>
-                  <p>Within one business day, to agree a time for a 45-minute conversation.</p>
+                  <p>To agree on a time for the conversation.</p>
                 </div>
               </li>
               <li>
                 <div>
                   <h3>We talk</h3>
-                  <p>By video or in person. It is free, and we look at the technology and data you already have.</p>
+                  <p>We look at the technology and data you already have.</p>
                 </div>
               </li>
               <li>
