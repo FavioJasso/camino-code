@@ -176,6 +176,8 @@ test.describe("phone menu", () => {
     await toggle.click();
     await expect(page.locator("main")).toHaveAttribute("inert", "");
     await expect(page.locator("footer")).toHaveAttribute("inert", "");
+    // the skip link points into main, so Tab must not reach it while the menu is open
+    await expect(page.locator(".skip-link")).toHaveAttribute("inert", "");
     await page.mouse.move(200, 500);
     await page.mouse.wheel(0, 600);
     await page.waitForTimeout(150);
@@ -189,6 +191,7 @@ test.describe("phone menu", () => {
     await expect(toggle).toHaveAttribute("aria-expanded", "false");
     await expect(page.locator("main")).not.toHaveAttribute("inert", "");
     await expect(page.locator("footer")).not.toHaveAttribute("inert", "");
+    await expect(page.locator(".skip-link")).not.toHaveAttribute("inert", "");
     expect(
       await page.evaluate(
         () => getComputedStyle(document.documentElement).overflow,

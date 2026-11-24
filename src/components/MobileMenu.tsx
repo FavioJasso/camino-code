@@ -51,7 +51,9 @@ export function MobileMenu() {
   // while open: page behind is inert and does not scroll; Escape closes; widening past the phone layout closes
   useEffect(() => {
     if (!open) return;
+    // the skip link too: it points into main, which is inert while the menu is open
     const behind = [
+      document.querySelector(".skip-link"),
       document.getElementById("content"),
       document.querySelector(".site-foot"),
     ];
