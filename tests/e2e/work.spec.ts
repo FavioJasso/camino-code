@@ -91,7 +91,7 @@ test("Victoria's Painting case study: facts only, the client's quote, gallery an
     await expect(img).toHaveAttribute("alt", /\S+ \S+ \S+/);
     await expect(img).toHaveAttribute("width", "1920");
     await expect(img).toHaveAttribute("height", "1280");
-    await expect(img).toHaveAttribute("srcset", /-960\.webp 960w, \S+\.webp 1920w/);
+    await expect(img).toHaveAttribute("srcset", /-960\.webp 960w, \S+-1280\.webp 1280w, \S+\.webp 1920w/);
   }
   await expect(page.getByRole("link", { name: "Visit victoriaspainting.com" })).toHaveAttribute(
     "href",
@@ -633,5 +633,17 @@ test("with text at 200% on a phone, no case study scrolls sideways (a domain in 
       text: Math.max(...[...document.querySelectorAll("main p, main li")].map((el) => el.scrollWidth - el.clientWidth)),
     }));
     expect(m, route).toEqual({ page: 0, text: 0 });
+  }
+});
+
+test("every case-study image offers all three sizes, and each file exists", async ({ page, request }) => {
+  for (const route of ["/work", ...STUDIES]) {
+    await page.goto(route);
+    const sets = await page.locator("main img[srcset*='/work/']").evaluateAll((imgs) => imgs.map((i) => i.getAttribute("srcset")!));
+    for (const set of sets) {
+      const files = set.split(",").map((part) => part.trim().split(" "));
+      expect(files.map(([, w]) => w), set).toEqual(["960w", "1280w", "1920w"]);
+      for (const [file] of files) expect((await request.get(file)).status(), file).toBe(200);
+    }
   }
 });
