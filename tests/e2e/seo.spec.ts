@@ -12,6 +12,9 @@ const REDIRECTS: Array<[string, string]> = [
   ["/case-study/healthtrack", "/work"],
   ["/case-study/finserve", "/work"],
   ["/case-study", "/work"],
+  // two more pages from the old site's sitemap
+  ["/case-study-detailed", "/work"],
+  ["/all-models", "/services"],
   ["/contact", "/discovery"],
   ["/manifest.json", "/manifest.webmanifest"],
   ["/og-images/og-image.png", "/og.png"],
@@ -125,6 +128,29 @@ test("every page has its own title and description, and the share tags repeat th
     descriptions.set(description, p);
     expect(decode(html.match(/property="og:title" content="([^"]*)"/)?.[1] ?? ""), p).toBe(title);
     expect(decode(html.match(/property="og:description" content="([^"]*)"/)?.[1] ?? ""), p).toBe(description);
+  }
+});
+
+test("Work, Approach and About say what the page is in the tab title and on a share card, not one word", async ({
+  request,
+}) => {
+  // each is the page's own heading (for /work, the words the 404 screen uses for it), then the brand
+  for (const [path, title] of [
+    ["/work", "Work: the case studies | Camino Code"],
+    ["/approach", "How we work | Camino Code"],
+    ["/about", "About Camino Code | Camino Code"],
+  ]) {
+    const html = await (await request.get(path)).text();
+    expect(decode(html.match(/<title>([^<]*)<\/title>/)?.[1] ?? ""), path).toBe(title);
+    expect(decode(html.match(/property="og:title" content="([^"]*)"/)?.[1] ?? ""), path).toBe(title);
+    expect(decode(html.match(/name="twitter:title" content="([^"]*)"/)?.[1] ?? ""), path).toBe(title);
+  }
+  // no page is left with a single word before the brand, apart from the two legal pages
+  for (const p of PAGES) {
+    const html = await (await request.get(p)).text();
+    const title = decode(html.match(/<title>([^<]*)<\/title>/)?.[1] ?? "");
+    if (p === "/privacy" || p === "/terms") continue;
+    expect(title.replace(/ \| Camino Code$/, "").trim().split(/\s+/).length, `title "${title}" on ${p}`).toBeGreaterThan(1);
   }
 });
 

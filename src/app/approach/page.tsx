@@ -7,7 +7,8 @@ import { pageMetadata } from "@/content/seo";
 import { breadcrumbList } from "@/lib/structured-data";
 
 export const metadata = pageMetadata({
-  title: "Approach | Camino Code",
+  // the band title below: it says what the page is, where "Approach" alone did not
+  title: "How we work | Camino Code",
   description:
     "How a project runs: a conversation about your business, a one-page summary of what to fix first, then work in stages you can see running.",
   path: "/approach",

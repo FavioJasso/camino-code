@@ -5,20 +5,34 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { currentState } from "./NavLink";
 
-const LINKS = [
-  { href: "/services/software", label: "Software" },
-  { href: "/services/data", label: "Data" },
-  { href: "/services/ai-governance", label: "AI & governance" },
+type MenuLink = { href: string; label: string; sub?: MenuLink[] };
+
+/* The header's order, with the three services listed under Services. */
+const LINKS: MenuLink[] = [
+  {
+    href: "/services",
+    label: "Services",
+    sub: [
+      { href: "/services/software", label: "Software" },
+      { href: "/services/data", label: "Data" },
+      { href: "/services/ai-governance", label: "AI & governance" },
+    ],
+  },
   { href: "/work", label: "Work" },
   { href: "/approach", label: "Approach" },
   { href: "/about", label: "About" },
 ];
 
-/** Phone menu: shown under 900 px only (CSS). The toggle stays above the panel and doubles as the close button. */
+/**
+ * Phone menu: shown when the header has no room for its links (under 900 px, or with large text; CSS).
+ * The toggle stays above the panel and doubles as the close button.
+ */
 export function MobileMenu() {
   // the menu is open only on the page it was opened from, so navigating closes it
   const pathname = usePathname();
   const [openOn, setOpenOn] = useState<string | null>(null);
+  // left by Back or Forward with the menu open: forget it, or it would be open again on the next visit to that page
+  if (openOn !== null && openOn !== pathname) setOpenOn(null);
   const open = openOn === pathname;
   const setOpen = useCallback(
     (next: boolean) => setOpenOn(next ? pathname : null),
@@ -48,15 +62,32 @@ export function MobileMenu() {
     };
     const wide = window.matchMedia("(min-width: 900px)");
     const onWide = () => wide.matches && close(false);
+    // with large text the desktop row comes back at a width of its own: close once the button is gone
+    const onResize = () => {
+      if (button.current && getComputedStyle(button.current).display === "none") close(false);
+    };
     document.addEventListener("keydown", onKey);
     wide.addEventListener("change", onWide);
+    window.addEventListener("resize", onResize);
     return () => {
       behind.forEach((el) => el?.removeAttribute("inert"));
       document.documentElement.classList.remove("menu-open");
       document.removeEventListener("keydown", onKey);
       wide.removeEventListener("change", onWide);
+      window.removeEventListener("resize", onResize);
     };
   }, [open, close]);
+
+  // a row with pages under it is current only on its own page: on one of those pages, that page's row carries the mark
+  const item = (l: MenuLink) => (
+    <Link
+      href={l.href}
+      aria-current={l.sub ? (pathname === l.href ? "page" : undefined) : currentState(pathname, l.href)}
+      onClick={() => setOpen(false)}
+    >
+      {l.label}
+    </Link>
+  );
 
   return (
     <>
@@ -79,9 +110,14 @@ export function MobileMenu() {
           <ul>
             {LINKS.map((l) => (
               <li key={l.href}>
-                <Link href={l.href} aria-current={currentState(pathname, l.href)} onClick={() => setOpen(false)}>
-                  {l.label}
-                </Link>
+                {item(l)}
+                {l.sub ? (
+                  <ul className="menu-sub">
+                    {l.sub.map((s) => (
+                      <li key={s.href}>{item(s)}</li>
+                    ))}
+                  </ul>
+                ) : null}
               </li>
             ))}
           </ul>

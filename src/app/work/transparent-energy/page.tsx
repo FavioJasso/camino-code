@@ -6,10 +6,18 @@ import { transparentEnergy as te, transparentEnergyStudy as study } from "@/cont
 import { pageMetadata } from "@/content/seo";
 import { breadcrumbList, caseStudyLd } from "@/lib/structured-data";
 import { MoreWork } from "../MoreWork";
+import { StudyCrumbs } from "../StudyCrumbs";
 
 const title = "Transparent Energy: reconciliation, automated";
 const description =
   "How an automated Python pipeline on AWS replaced hand reconciliation of Excel, PDF and vendor files at Transparent Energy, in 3.5 months with a team of two.";
+
+/** Home / Work / this study: shown above "At a glance" and given to the structured data, from one list. */
+const trail = [
+  { name: "Home", path: "/" },
+  { name: "Work", path: "/work" },
+  { name: te.name, path: te.href },
+];
 
 export const metadata = pageMetadata({
   title: "Transparent Energy case study | Camino Code",
@@ -21,27 +29,31 @@ export default function TransparentEnergyPage() {
   return (
     <>
       <PageBand stage={2} time="morning" kicker="Case study" title={title} />
-      <section className="inner-sec in-dark on-dark" aria-labelledby="at-a-glance">
+      {/* in-still: this section runs past the bottom of the window when the page loads, so it does not fade in */}
+      <section className="inner-sec in-dark on-dark in-still in-study-top" aria-labelledby="at-a-glance">
         <div className="wrap">
+          <StudyCrumbs trail={trail} />
           <p className="in-mono in-label">
             <i>01</i> / 07
           </p>
           <h2 id="at-a-glance">At a glance</h2>
+          {/* "Time" is left out of this row: the same 3.5 months is the third figure directly below */}
           <dl className="facts">
-            {study.facts.map((f) => (
+            {study.facts.filter((f) => f.label !== "Time").map((f) => (
               <div key={f.label}>
                 <dt className="in-mono">{f.label}</dt>
                 <dd>{f.value}</dd>
               </div>
             ))}
           </dl>
+          {/* the outcome first: the three permitted figures sit here, not at the foot of the page */}
+          <Figures />
           <p className="in-mono credit in-credit-gap">
             {te.wording}
           </p>
         </div>
       </section>
-      {/* in-still: this section's heading is at the bottom of the window when the page loads, so it does not fade in */}
-      <section className="inner-sec in-light in-still" aria-labelledby="before-title">
+      <section className="inner-sec in-light" aria-labelledby="before-title">
         <div className="wrap">
           <p className="in-mono in-label">
             <i>02</i> / 07
@@ -115,20 +127,14 @@ export default function TransparentEnergyPage() {
             <i>07</i> / 07
           </p>
           <h2 id="result-title">Result</h2>
-          <Figures />
+          {/* the figures are under "At a glance"; they are not shown a second time here */}
           <p>{te.summary}</p>
         </div>
       </section>
       <MoreWork current={te.href} />
       <BookDiscovery heading="Have a process like this?" />
       <JsonLd data={caseStudyLd({ headline: title, description, path: te.href, about: te.name })} />
-      <JsonLd
-        data={breadcrumbList([
-          { name: "Home", path: "/" },
-          { name: "Work", path: "/work" },
-          { name: te.name, path: te.href },
-        ])}
-      />
+      <JsonLd data={breadcrumbList(trail)} />
     </>
   );
 }

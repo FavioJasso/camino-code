@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { SPAM, parseBooking, signTimestamp, verifyTimestamp } from "./booking";
+import { SPAM, checkTimestamp, parseBooking, signTimestamp, verifyTimestamp } from "./booking";
+import { MAX_AGE_MS, MIN_AGE_MS } from "./booking-shared";
 
 function form(fields: Record<string, string>) {
   const f = new FormData();
@@ -83,6 +84,28 @@ describe("timestamp tokens", () => {
 
   it("gives every token a different nonce", () => {
     expect(signTimestamp(t, secret)).not.toBe(signTimestamp(t, secret));
+  });
+
+  it("says why a token was refused, for the server log", () => {
+    const token = signTimestamp(t, secret, "203.0.113.7");
+    expect(checkTimestamp(token, secret, t + 5_000, "203.0.113.7")).toBe("ok");
+    expect(checkTimestamp(token, secret, t + 2_999, "203.0.113.7")).toBe("young");
+    expect(checkTimestamp(token, secret, t + MAX_AGE_MS + 1, "203.0.113.7")).toBe("expired");
+    expect(checkTimestamp(token, secret, t + 5_000, "198.51.100.4")).toBe("signature"); // another network
+    expect(checkTimestamp(token, "other", t + 5_000, "203.0.113.7")).toBe("signature");
+    expect(checkTimestamp("garbage", secret, t + 5_000, "203.0.113.7")).toBe("malformed");
+    expect(checkTimestamp("", secret, t + 5_000, "203.0.113.7")).toBe("malformed");
+  });
+
+  it("checks the signature before the age, so a forged token learns nothing about the time window", () => {
+    const forged = signTimestamp(t, "other");
+    expect(checkTimestamp(forged, secret, t + 1)).toBe("signature");
+    expect(checkTimestamp(forged, secret, t + MAX_AGE_MS + 1)).toBe("signature");
+  });
+
+  it("uses the limits the form is told about", () => {
+    expect(MIN_AGE_MS).toBe(3_000);
+    expect(MAX_AGE_MS).toBe(30 * 60_000);
   });
 });
 

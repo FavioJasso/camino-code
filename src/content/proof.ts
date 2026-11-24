@@ -53,6 +53,9 @@ export const danielAvila64 = {
     { value: "4", label: "control schemes, all live" },
     { value: "100%", label: "touch and plain-HTML ready" },
   ],
+  // these four are developer measurements, not business results: pages show them as one small line
+  // under this label (<UnderTheHood />), never in the large <Figures /> block
+  figuresLabel: "Under the hood",
   summary:
     "A playable 3D portfolio: an N64-era castle you can explore, with every section one click away for recruiters.",
   href: "/work/daniel-avila-64",

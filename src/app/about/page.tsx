@@ -12,7 +12,8 @@ import { breadcrumbList, faqPage, personLd } from "@/lib/structured-data";
 import "./about.css";
 
 export const metadata = pageMetadata({
-  title: "About | Camino Code",
+  // the band title below, then the brand as on every page
+  title: "About Camino Code | Camino Code",
   description:
     "Favio Jasso started Camino Code in Newark, NJ to help small and mid-sized businesses with software, data and AI. Book a free first conversation.",
   path: "/about",

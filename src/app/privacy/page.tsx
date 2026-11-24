@@ -19,7 +19,9 @@ export const metadata = pageMetadata({
  * - the email delivery service: src/app/discovery/actions.ts (Resend)
  * - the network address and spam limits: src/app/discovery/actions.ts, src/lib/abuse-guard.ts
  * - analytics: src/app/layout.tsx (Analytics, SpeedInsights), actions.ts (the "discovery_request" event)
- * - browser storage: src/components/home/SceneMount.tsx (sessionStorage "camino:motion-paused")
+ * - browser storage: src/components/home/SceneMount.tsx (sessionStorage "camino:motion-paused"),
+ *   src/app/discovery/DiscoveryForm.tsx (sessionStorage "camino:discovery-draft": the six visible form
+ *   fields while they are being filled in, removed when the request is sent; never the spam-check values)
  */
 export default function PrivacyPage() {
   return (
@@ -38,7 +40,7 @@ export default function PrivacyPage() {
           <p>We use Vercel Web Analytics and Vercel Speed Insights to count visits and measure how fast pages load. Both come from Vercel, the company that hosts this site. When a discovery request is sent, we also count that one was sent. That count carries nothing you typed into the form. The site does not use advertising trackers.</p>
           <p>Vercel states that Web Analytics works without third-party cookies: a visitor is identified by a hash made from the incoming request, and that visitor session is discarded after 24 hours.</p>
           <h2>What this site stores in your browser</h2>
-          <p>Our own code on this site sets no cookies. If you use the Pause animation button, your choice is kept in your browser&rsquo;s session storage, so it carries from page to page. It is cleared when you close the tab.</p>
+          <p>Our own code on this site sets no cookies. If you use the Pause animation button, your choice is kept in your browser&rsquo;s session storage, so it carries from page to page. It is cleared when you close the tab. What you type into the discovery form is also kept in session storage, so a reload does not lose it, until your request is sent or you close the tab.</p>
           <h2>How long we keep it</h2>
           <p>We keep your inquiry for as long as we are in touch with you, and delete it when you ask us to.</p>
           <h2>Your choices</h2>

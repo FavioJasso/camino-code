@@ -16,7 +16,8 @@ import { breadcrumbList } from "@/lib/structured-data";
 import { WEBSITE_CARD_SIZES, WorkImage } from "./WorkImage";
 
 export const metadata = pageMetadata({
-  title: "Work | Camino Code",
+  // the band title, then what the page holds, in the words the 404 screen uses for this page
+  title: "Work: the case studies | Camino Code",
   description:
     "An automated reconciliation system for Transparent Energy, plus a website for Victoria's Painting and two portfolio sites for Daniel Avila.",
   path: "/work",
@@ -31,6 +32,9 @@ const WEBSITES: Record<WebsiteHref, typeof victoriasPainting | typeof danielAvil
   [danielAvila64.href]: danielAvila64,
   [danielAvila.href]: danielAvila,
 };
+
+/** The id of a study's block on this page, which "On this page" jumps to: the last part of its address. */
+const anchor = (href: string) => href.slice(href.lastIndexOf("/") + 1);
 
 /** "Read the case study", with the study's name added for screen readers: four links on one page need four names. */
 function StudyLink({ href, name }: { href: string; name: string }) {
@@ -48,20 +52,47 @@ export default function WorkPage() {
   return (
     <>
       <PageBand stage={2} time="morning" title="Work" />
-      {/* the system first, at full weight: its label, figures, summary and credit */}
-      <section className="inner-sec in-light" aria-labelledby="te-title">
+      {/* the four projects by name, as jumps to their blocks below: the page is several screens long */}
+      <section className="inner-sec in-dark on-dark in-still in-toc">
+        <div className="wrap">
+          <nav aria-labelledby="toc-title">
+            <p className="in-mono" id="toc-title">
+              On this page
+            </p>
+            <ol>
+              {caseStudies.map((s) => (
+                <li key={s.href}>
+                  {/* The comma is for screen readers, which read the name and the label as one link.
+                      Back from whatever page is opened after a jump is kept working by HistoryRepair (layout). */}
+                  <a href={`#${anchor(s.href)}`}>
+                    <span className="in-toc-name">{s.name}</span>
+                    <span className="in-visually-hidden">, </span>
+                    <span className="in-mono">{s.kind}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        </div>
+      </section>
+      {/* the system first, at full weight: its label, figures, summary and credit.
+          in-still: this card runs past the bottom of the window when the page loads, so it does not fade in */}
+      <section id={anchor(te.href)} className="inner-sec in-light in-still" aria-labelledby="te-title">
         <div className="wrap">
           <p className="in-mono in-label">
             <i>01</i> {system.kind}
           </p>
-          <h2 id="te-title">{te.name}</h2>
-          <Figures />
-          <div className="in-proof-body">
-            <div>
-              <p>{te.summary}</p>
-              <p className="in-mono credit">{te.wording}</p>
+          {/* in-card: the link under the summary stretches over the card, so the title and the figures lead to the study too */}
+          <div className="in-card">
+            <h2 id="te-title">{te.name}</h2>
+            <Figures />
+            <div className="in-proof-body in-proof-stack">
+              <div>
+                <p>{te.summary}</p>
+                <p className="in-mono credit">{te.wording}</p>
+              </div>
+              <StudyLink href={te.href} name={te.name} />
             </div>
-            <StudyLink href={te.href} name={te.name} />
           </div>
         </div>
       </section>
@@ -75,7 +106,9 @@ export default function WorkPage() {
             {websites.map((s) => {
               const study = WEBSITES[s.href];
               return (
-                <li className="in-work-card" key={s.href}>
+                // in-card: the link under the credit stretches over the card, so the title and the image lead to the study too;
+                // the id is the jump target "On this page" points at
+                <li id={anchor(s.href)} className="in-work-card in-card" key={s.href}>
                   <WorkImage src={study.cardImage.src} alt={study.cardImage.alt} sizes={WEBSITE_CARD_SIZES} />
                   <p className="in-mono">{s.kind}</p>
                   <h3>{s.name}</h3>

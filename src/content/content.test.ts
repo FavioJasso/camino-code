@@ -109,6 +109,9 @@ describe("case studies", () => {
   it("show figures only where an outcome was measured", () => {
     expect(proof.transparentEnergy.figures.map((f) => f.value)).toEqual(["$65,000+", "85%", "3.5 months"]);
     expect(proof.danielAvila64.figures).toHaveLength(4);
+    // business results show as large figures; developer measurements carry a label and show as one small line
+    expect(proof.danielAvila64.figuresLabel).toBe("Under the hood");
+    expect(proof.transparentEnergy).not.toHaveProperty("figuresLabel");
     expect(proof.victoriasPainting).not.toHaveProperty("figures");
     expect(proof.danielAvila).not.toHaveProperty("figures");
     // nothing measured on the two website projects, so no percentages, multiples or round-the-clock claims

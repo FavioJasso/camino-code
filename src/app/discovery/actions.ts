@@ -4,11 +4,12 @@ import { track } from "@vercel/analytics/server";
 import { Resend } from "resend";
 import { headers } from "next/headers";
 import {
+  LIMITS,
   SPAM,
+  checkTimestamp,
   parseBooking,
   signTimestamp,
   tokenDeadline,
-  verifyTimestamp,
   visitorKeyFromIp,
   type Booking,
   type BookingErrors,
@@ -20,9 +21,17 @@ export type State = {
   status: "idle" | "error" | "sent";
   errors?: BookingErrors;
   values?: Partial<Booking>;
+  /**
+   * Set when the form's signed timestamp was the only thing wrong (missing, too young, expired, issued
+   * to another network, or already used): the same values with a fresh one would pass this check.
+   * The form then fetches a fresh one and resends once by itself.
+   */
+  retry?: true;
+  /** The address the reply goes to, shown back so a typo is noticed (a filled spam trap gets its own back too). */
+  sentTo?: string;
 };
 
-const FALLBACK = `We couldn't send this. Email us at ${site.contact.email} and we'll reply within one business day.`;
+const FALLBACK = `We couldn't send this. Your details are still in the form, so you can try again. You can also call ${site.contact.phone}, or email us at ${site.contact.email} and we'll reply within one business day.`;
 const DEV_SECRET = "camino-code-development-only-secret";
 
 const isProduction = () => process.env.VERCEL_ENV === "production";
@@ -38,7 +47,10 @@ const SENDS_PER_VISITOR_PER_HOUR = 10;
 /** Ceiling on sends per server instance per hour, whatever addresses they come from. */
 const GLOBAL_SENDS_PER_HOUR = 60;
 const HOUR_MS = 60 * 60 * 1000;
-/** Tokens a visitor may request per 10 minutes (the form asks for one after mount and after each result). */
+/**
+ * Tokens a visitor may request per 10 minutes. The form asks for one when it appears, about every
+ * 10 minutes while it is on screen, when the tab or the connection comes back, and after a refused send.
+ */
 function mintLimit(): number {
   return isProduction() ? 30 : Math.max(30, sendLimit());
 }
@@ -77,7 +89,7 @@ export async function issueFormToken(): Promise<string> {
   if (!allowSend(`mint:${visitor}`, Date.now(), mintLimit(), SEND_WINDOW_MS)) {
     if (!mintWarned) {
       mintWarned = true;
-      console.warn("[booking] token requests limited for a visitor; their next submit falls back to email.");
+      console.warn("[booking] token requests limited for a visitor; their next submit gets the fallback message.");
     }
     return "";
   }
@@ -97,46 +109,62 @@ function oneLine(s: string): string {
   return s.replace(/\s+/g, " ").trim();
 }
 
+/**
+ * Every refusal after validation: the same message for the visitor, and one line in the server log
+ * with a short reason code. The log never carries anything the visitor typed, their address or the token.
+ * `retry` marks the refusals a fresh token would cure (see State.retry).
+ */
+function fallback(reason: string, values: Partial<Booking>, retry = false): State {
+  console.warn(`[booking] fallback: ${reason}`);
+  return { status: "error", errors: { form: FALLBACK }, values, ...(retry ? { retry: true as const } : {}) };
+}
+
 export async function submitBooking(_prev: State, form: FormData): Promise<State> {
   const values = valuesOf(form);
   const parsed = parseBooking(form, Date.now());
   if (!parsed.ok) {
-    if (parsed.errors.form === SPAM) return { status: "sent" };
+    if (parsed.errors.form === SPAM) {
+      // A filled spam trap gets the answer a real send gets, the address shown back included (it is the
+      // sender's own input, and only a plausible one is repeated): nothing is sent and nothing is logged.
+      const to = (values.email ?? "").trim();
+      return { status: "sent", ...(to && to.length <= LIMITS.email ? { sentTo: to } : {}) };
+    }
     return { status: "error", errors: parsed.errors, values };
   }
 
   // Every send needs a valid signed timestamp, which the form gets once its script has run.
-  // Missing, forged or stale tokens (including JavaScript-off visitors) get the email fallback,
-  // never a silent drop and never an email.
-  const token = form.get("t");
+  // Missing, forged or stale tokens (including JavaScript-off visitors) get the fallback message,
+  // never a silent drop and never an email. The checks are the same for a first send and a resend.
   const s = secret();
+  if (!s) return fallback("no-secret", values);
+  const token = form.get("t");
+  if (typeof token !== "string" || token === "") return fallback("token-missing", values, true);
   const visitor = await visitorKey();
   const now = Date.now();
-  if (!s || typeof token !== "string" || !verifyTimestamp(token, s, now, visitor)) {
-    return { status: "error", errors: { form: FALLBACK }, values };
-  }
+  const verdict = checkTimestamp(token, s, now, visitor);
+  if (verdict !== "ok") return fallback(`token-${verdict}`, values, true);
 
   // Order matters: per-visitor limits first, then the token is spent (so a replay is refused before it
   // can touch the shared ceiling), then the per-instance ceiling, which one visitor alone cannot reach.
-  if (
-    !allowSend(`send:${visitor}`, now, sendLimit(), SEND_WINDOW_MS) ||
-    !allowSend(`send1h:${visitor}`, now, isProduction() ? SENDS_PER_VISITOR_PER_HOUR : Math.max(SENDS_PER_VISITOR_PER_HOUR, sendLimit()), HOUR_MS) ||
-    !consumeToken(token, now, tokenDeadline(token)) ||
-    !allowGlobalSend(now, isProduction() ? GLOBAL_SENDS_PER_HOUR : Math.max(GLOBAL_SENDS_PER_HOUR, sendLimit()), HOUR_MS)
-  ) {
-    return { status: "error", errors: { form: FALLBACK }, values };
+  if (!allowSend(`send:${visitor}`, now, sendLimit(), SEND_WINDOW_MS)) return fallback("rate-visitor", values);
+  if (!allowSend(`send1h:${visitor}`, now, isProduction() ? SENDS_PER_VISITOR_PER_HOUR : Math.max(SENDS_PER_VISITOR_PER_HOUR, sendLimit()), HOUR_MS)) {
+    return fallback("rate-visitor-hour", values);
+  }
+  if (!consumeToken(token, now, tokenDeadline(token))) return fallback("token-used", values, true);
+  if (!allowGlobalSend(now, isProduction() ? GLOBAL_SENDS_PER_HOUR : Math.max(GLOBAL_SENDS_PER_HOUR, sendLimit()), HOUR_MS)) {
+    return fallback("rate-server", values);
   }
 
+  const b = parsed.data;
   // Test-only: lets Playwright reach the success state without Resend. Disabled in production.
-  if (!isProduction() && process.env.BOOKING_TEST_MODE === "sent" && parsed.data.business === "__test_sent__") {
-    return { status: "sent" };
+  if (!isProduction() && process.env.BOOKING_TEST_MODE === "sent" && b.business === "__test_sent__") {
+    return { status: "sent", sentTo: b.email };
   }
 
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.BOOKING_FROM;
-  if (!apiKey || !from) return { status: "error", errors: { form: FALLBACK }, values };
+  if (!apiKey || !from) return fallback("mail-not-configured", values);
 
-  const b = parsed.data;
   try {
     const { error } = await new Resend(apiKey).emails.send({
       from,
@@ -157,7 +185,7 @@ export async function submitBooking(_prev: State, form: FormData): Promise<State
     if (error) throw new Error(error.message);
   } catch (e) {
     console.error("[booking] send failed", e instanceof Error ? e.message : e);
-    return { status: "error", errors: { form: FALLBACK }, values };
+    return fallback("send-failed", values);
   }
   // Counting is best-effort: analytics must never turn a delivered booking into an error.
   try {
@@ -165,5 +193,5 @@ export async function submitBooking(_prev: State, form: FormData): Promise<State
   } catch (e) {
     console.warn("[booking] analytics event failed", e instanceof Error ? e.message : e);
   }
-  return { status: "sent" };
+  return { status: "sent", sentTo: b.email };
 }

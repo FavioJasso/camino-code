@@ -42,6 +42,12 @@ export function Hero() {
             <Link className="btn btn-lg" href="/discovery">
               Book a discovery session
             </Link>
+            {/* what the first conversation is and what you leave with, backed by the Route stage on /approach. The length,
+                format, summary and reply time are said once each further down, beside the lower button; under the
+                button on phones, under the row on desktop (home.css) */}
+            <p className="hero-note">
+              A first look at how your business runs today. You leave knowing what to fix first.
+            </p>
             <a className="link" href="#work">
               See what it did for Transparent Energy
             </a>

@@ -3,6 +3,80 @@
    inner.css sets per section (--fg-soft, --accent, --line, --dots). Selectors carry two classes
    where they adjust an inner.css rule, so they win whichever stylesheet loads first. */
 
+/* Breadcrumb above a case study's first section: Home / Work / this study. The trail's own rules
+   (.in-crumbs) are in inner.css, shared with the service pages; this is the room around it. */
+.inner-sec.in-study-top .wrap {
+  padding-top: clamp(1.25rem, 3vw, 2.25rem);
+}
+/* here the trail is followed by the small "01 / 06" label, not by a large opening line: a little more
+   room keeps the two apart, most of all when a long project name wraps to a second row on a phone */
+.in-study-top .in-crumbs ol {
+  margin-bottom: 1.25rem;
+}
+
+/* "On this page" at the top of the index: the four projects as jump links, one row on a wide screen
+   and two by two on a phone. Navigation, so it stays low and quiet. Each link holds the project's name
+   and, under it, its short label, so the whole entry is the touch target. A jump lands with the block's
+   top edge under the sticky header (scroll-padding-top in globals.css): its label and heading follow
+   below, with the block's own padding as air. */
+.inner-sec.in-toc .wrap {
+  padding-block: 1.125rem 1.25rem;
+}
+.in-toc ol {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0 2rem;
+  list-style: none;
+  margin: 0.375rem 0 0;
+  padding: 0;
+}
+/* the link is as wide as its words, not as its column: no empty space beside it answers a click.
+   min-width 0, here and on the link: a flex item is otherwise never narrower than its longest word,
+   so with the text size raised a long word ran on over the entry beside it */
+.in-toc li {
+  display: flex;
+  align-items: flex-start;
+  min-width: 0;
+}
+/* three classes: it adjusts the link rule in inner.css whichever stylesheet loads first */
+.inner-sec.in-toc a:not(.btn) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.25rem;
+  min-width: 0;
+  min-height: 2.75rem;
+  padding-block: 0.375rem;
+  text-decoration: none;
+  /* a word wider than its column (large text on a phone) breaks inside the column as a last resort */
+  overflow-wrap: anywhere;
+}
+/* the underline that says "link" sits under the name alone */
+.in-toc-name {
+  font-weight: 700;
+  line-height: 1.3;
+  text-decoration: underline 1px var(--accent);
+  text-underline-offset: 0.3rem;
+}
+.in-toc a:hover .in-toc-name {
+  text-decoration-thickness: 2px;
+}
+.in-toc a .in-mono {
+  line-height: 1.5;
+}
+@media (max-width: 899px) {
+  .in-toc ol {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.25rem 1rem;
+  }
+}
+@media print {
+  /* jump links do nothing on paper */
+  .in-toc {
+    display: none;
+  }
+}
+
 /* One long quote in the client's own words */
 .in-quote {
   margin: 2rem 0 0;
@@ -47,7 +121,8 @@
   margin: 0;
   padding: 3px 0 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  /* min(): with large text on a phone 13rem is wider than the column, and the list must not widen the page */
+  grid-template-columns: repeat(auto-fit, minmax(min(13rem, 100%), 1fr));
   gap: 0 2rem;
   background: var(--dots);
 }
@@ -100,9 +175,8 @@
 .inner-sec .in-work-card .credit {
   margin-top: 0.75rem;
 }
-/* the links line up along the foot of the row, however long each line is */
+/* the card's one link sits directly under the summary and its credit, as on the system's card above */
 .in-work-card .in-link {
-  margin-top: auto;
   padding-top: 0.5rem;
   align-self: flex-start;
 }
@@ -113,5 +187,120 @@
   }
   .in-work-card {
     max-width: 32rem;
+  }
+}
+
+/* A card on the index. Its one link sits directly under the summary and stretches (::after) over the
+   card, so the title and the image lead to the case study too, while screen readers and the keyboard
+   still meet a single link per project. */
+.in-card {
+  position: relative;
+}
+.in-proof-body.in-proof-stack {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+}
+.in-proof-body.in-proof-stack .in-link {
+  justify-self: start;
+}
+.in-card .in-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+/* the summary and credit stay above the stretched link: plain text that can still be selected */
+.in-card .in-proof-body > div {
+  position: relative;
+  z-index: 1;
+}
+/* the same on a website card, where the summary and credit are the card's own paragraphs */
+.in-work-card.in-card > p {
+  position: relative;
+  z-index: 1;
+}
+/* a jump from "On this page" to a website card lands with the card under the sticky header even when it
+   comes before the row has been revealed, while the row still has 1.25rem to rise (as .in-sub[id] below) */
+.in-work-card[id] {
+  scroll-margin-top: 1.25rem;
+}
+/* pointing anywhere on the card underlines its title, as the link's own underline thickens */
+.in-card:has(.in-link:hover) h2,
+.in-card:has(.in-link:hover) h3 {
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.3rem;
+}
+
+/* Developer measurements: one small line at body size under a short label, never the large figures */
+.in-hood {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+.in-hood ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.125rem 1.75rem;
+  list-style: none;
+  margin: 0.375rem 0 0;
+  padding: 0;
+  color: var(--fg-soft);
+}
+.in-hood b {
+  font-weight: 700;
+  color: var(--fg);
+}
+
+/* The outcome, brought up under "At a glance": one statement behind the accent rule. On the two
+   website studies it is a sentence of the client's testimonial, with the way down to the full text. */
+.inner-sec .in-outcome {
+  max-width: 54ch;
+  margin: 1.75rem 0 0;
+  padding-left: 1.25rem;
+  border-left: 3px solid var(--accent);
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+.in-outcome figure,
+.in-outcome blockquote {
+  margin: 0;
+}
+.in-outcome figcaption {
+  margin-top: 0.75rem;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--fg-soft);
+}
+.inner-sec .in-outcome figure + p {
+  margin-top: 0.25rem;
+  font-size: 1.0625rem;
+}
+/* the heading the client line jumps to: air under the sticky header, with room for the 1.25rem the
+   heading still has to rise when the jump comes before it has been revealed */
+.in-sub[id] {
+  scroll-margin-top: 2.5rem;
+}
+/* the three permitted figures under the facts on the Transparent Energy study */
+.facts + .in-figs {
+  margin-top: 1.75rem;
+}
+
+/* DANIEL AVILA 64 opens on its title screen: the facts on the left, the screenshot on the right */
+.in-glance {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem clamp(1.5rem, 4vw, 4rem);
+  align-items: start;
+}
+.in-glance img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+}
+@media (max-width: 899px) {
+  .in-glance {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

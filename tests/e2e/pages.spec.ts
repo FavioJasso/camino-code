@@ -98,7 +98,7 @@ test("each service page asks two questions; the band answers cost and reply time
   }
 });
 
-test("DANIEL AVILA 64 case study shows its four figures, gallery and visit link", async ({ page }) => {
+test("DANIEL AVILA 64 case study shows its four measurements, gallery and visit link", async ({ page }) => {
   await page.goto("/work/daniel-avila-64");
   const main = ((await page.locator("main").innerText()) ?? "").replace(/\s+/g, " ");
   for (const f of [
@@ -260,8 +260,9 @@ test("no inner page scrolls sideways at 320 px", async ({ page }) => {
   }
 });
 
-test("Work and the case studies show their proof figures large, in wide Archivo", async ({ page }) => {
-  for (const route of ["/work", "/work/transparent-energy", "/work/daniel-avila-64"]) {
+test("Work and the Transparent Energy case study show their proof figures large, in wide Archivo", async ({ page }) => {
+  // DANIEL AVILA 64 has no large figures: its developer measurements are one small line (work.spec.ts)
+  for (const route of ["/work", "/work/transparent-energy"]) {
     await page.goto(route);
     const fig = page.locator(".in-fig b").first();
     await expect(fig).toBeVisible();

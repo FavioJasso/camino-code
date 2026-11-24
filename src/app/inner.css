@@ -70,6 +70,10 @@
   letter-spacing: -0.02em;
   text-wrap: balance;
 }
+/* the error pages move focus to their title so it is read out: no ring around a heading */
+.band h1:focus {
+  outline: none;
+}
 
 .in-dark {
   --bg: var(--dusk);
@@ -207,6 +211,38 @@
 .in-light .btn:focus-visible {
   outline-color: var(--ink);
 }
+
+/* Breadcrumb at the top of a page's first section: Home / Services / this service on a service page,
+   Home / Work / this study on a case study. One set of rules for both; each page's own stylesheet
+   (services.css, work.css) only sets the room around it. */
+.in-crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 0.625rem;
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+}
+.in-crumbs li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 2.75rem;
+}
+.in-crumbs li + li::before {
+  content: "/";
+  color: var(--fg-soft);
+}
+/* the current page is text, not a touch target: if it wraps to a second row it sits close under the links */
+.in-crumbs li[aria-current] {
+  min-height: 0;
+}
+.in-crumbs a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
 .in-link {
   display: inline-flex;
   align-items: center;
@@ -223,8 +259,12 @@
 }
 .in-btn-lg {
   min-height: 3rem;
-  padding: 0 1.5rem;
+  padding: 0.375rem 1.5rem;
   font-size: 1rem;
+  /* with large text on a phone the label takes two lines instead of running off the side */
+  line-height: 1.2;
+  text-align: center;
+  white-space: normal;
 }
 
 .cols {
@@ -252,10 +292,9 @@
   left: 0;
   /* centred on the first line: the item's top padding, half a 1.55 line, less half the dot */
   top: calc(0.75rem + 0.775em - 0.25rem);
-  width: 0.5rem;
-  height: 0.5rem;
+  /* the dot is a border, not a fill, so it survives printing and Windows contrast themes */
+  border: 0.25rem solid var(--accent);
   border-radius: 50%;
-  background: var(--accent);
 }
 .ticks li:last-child {
   border-bottom: 1px solid var(--line);
@@ -328,7 +367,8 @@ p + .ticks,
   display: block;
   font-weight: 800;
   font-stretch: 122%;
-  font-size: clamp(2.3rem, 3.8vw, 3.5rem);
+  /* the vw cap only bites when the visitor's text is large: the figure then stops growing before it leaves its column */
+  font-size: min(clamp(2.3rem, 3.8vw, 3.5rem), 4.5vw);
   line-height: 1;
   letter-spacing: -0.03em;
   white-space: nowrap;
@@ -492,7 +532,8 @@ p + .facts {
     padding: 1.375rem 0;
   }
   .in-fig b {
-    font-size: clamp(2.6rem, 13vw, 3.4rem);
+    font-size: min(clamp(2.6rem, 13vw, 3.4rem), 14.5vw);
+    white-space: normal;
   }
   .in-proof-body {
     grid-template-columns: minmax(0, 1fr);
@@ -626,10 +667,9 @@ p + .facts {
   background: var(--day);
   max-width: 36rem;
 }
-.in-confirm h3 {
-  font-size: 1.375rem;
-}
-.in-form .btn:disabled {
+/* while a send is under way the buttons are aria-disabled, not disabled, so keyboard focus stays on them */
+.in-form .btn:disabled,
+.in-form .btn[aria-disabled="true"] {
   opacity: 0.7;
 }
 @media (max-width: 52rem) {
@@ -705,6 +745,7 @@ p + .facts {
   .in-sunrise {
     order: -1;
     width: 11rem;
+    max-width: 100%;
     margin-bottom: 0.25rem;
   }
 }
@@ -736,5 +777,41 @@ p + .facts {
     .inner-sec.in-still .wrap.cols > * > * {
       animation: none;
     }
+  }
+}
+
+/* Print (the palette swap, the reveal and what is hidden are in globals.css): the band is just the title,
+   and lists and figure rows stay on one sheet */
+@media print {
+  .band {
+    min-height: 0;
+  }
+  .band-art {
+    display: none;
+  }
+  .band .wrap,
+  .band-live .wrap {
+    padding-block: 1.5rem 0.5rem;
+  }
+  .inner-sec .wrap {
+    padding-block: 1.5rem;
+  }
+  /* a section's label stays with the heading under it */
+  .in-label {
+    break-after: avoid;
+  }
+  .in-figs,
+  .in-fig,
+  .facts,
+  .faq > div,
+  .quotes figure,
+  .in-work-card {
+    break-inside: avoid;
+  }
+  /* the draft chip is light text on an Ink fill, and fills do not print */
+  .draft,
+  .in-light .draft {
+    border: 1px solid var(--ink);
+    color: var(--ink);
   }
 }

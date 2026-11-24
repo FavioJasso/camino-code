@@ -66,6 +66,9 @@ const nextConfig: NextConfig = {
       permanent("/case-study/daniel-avila-64", "/work/daniel-avila-64"),
       // last of the case-study rows (the first match wins): retired template pages, typos and the bare path
       permanent("/case-study/:slug*", "/work"),
+      // two more pages from the old site's sitemap
+      permanent("/case-study-detailed", "/work"),
+      permanent("/all-models", "/services"),
       permanent("/contact", "/discovery"),
       // files the old site served: installed shortcuts and cached share cards may still ask for them
       permanent("/manifest.json", "/manifest.webmanifest"),

@@ -1,7 +1,7 @@
 "use client"; // error boundaries must be Client Components
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { EmailLink, PhoneLink } from "@/components/ContactLinks";
 import { PageBand } from "@/components/PageBand";
 
@@ -14,9 +14,20 @@ export default function RouteError({ error, retry }: { error: unknown; retry: ()
     console.error(error);
   }, [error]);
 
+  // the page this replaces may have been scrolled: start at the top, with focus on the heading
+  const title = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    const toTop = () => window.scrollTo({ top: 0, behavior: "instant" });
+    toTop();
+    title.current?.focus({ preventScroll: true });
+    // after Back or Forward the browser puts the old scroll position back a moment later: undo that too
+    const frame = requestAnimationFrame(toTop);
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
   return (
     <>
-      <PageBand time="night" kicker="Error" title="Something went wrong on this page" />
+      <PageBand time="night" kicker="Error" title="Something went wrong on this page" titleRef={title} />
       <section className="inner-sec in-light">
         <div className="wrap">
           <p className="in-lead">This page did not load as it should. You can try again, or go back to the home page.</p>

@@ -2,7 +2,7 @@
 
 import "./globals.css"; // first, so inner.css (through PageBand) still loads after it
 import localFont from "next/font/local";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { EmailLink, PhoneLink } from "@/components/ContactLinks";
 import { BrandMark } from "@/components/BrandMark";
 import { PageBand } from "@/components/PageBand";
@@ -34,6 +34,17 @@ export default function GlobalError({ error, retry }: { error: unknown; retry: (
     console.error(error);
   }, [error]);
 
+  // the page this replaces may have been scrolled: start at the top, with focus on the heading
+  const title = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    const toTop = () => window.scrollTo({ top: 0, behavior: "instant" });
+    toTop();
+    title.current?.focus({ preventScroll: true });
+    // after Back or Forward the browser puts the old scroll position back a moment later: undo that too
+    const frame = requestAnimationFrame(toTop);
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
   return (
     <html lang="en" className={`${archivo.variable} ${martianMono.variable}`}>
       <body className="flex min-h-screen flex-col">
@@ -48,7 +59,7 @@ export default function GlobalError({ error, retry }: { error: unknown; retry: (
           </div>
         </header>
         <main id="content" className="flex-1">
-          <PageBand time="night" kicker="Error" title="Something went wrong" />
+          <PageBand time="night" kicker="Error" title="Something went wrong" titleRef={title} />
           <section className="inner-sec in-light">
             <div className="wrap">
               <p className="in-lead">The site did not load as it should. You can try again, or reload the home page.</p>

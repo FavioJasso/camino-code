@@ -8,7 +8,10 @@ export function Discovery() {
       <div className="wrap">
         <div className="sec-head">
           <p className="mono">
-            <i>04</i> Approach <span className="t">07:30 · Daylight</span>
+            <i>04</i> Approach{" "}
+            <span className="t" aria-hidden="true">
+              07:30 · Daylight
+            </span>
           </p>
           <h2 id="discovery-title">It starts with a conversation.</h2>
           <p className="lead">
@@ -18,6 +21,11 @@ export function Discovery() {
           </p>
         </div>
         <TrailStages />
+        <p className="stages-more">
+          <Link className="link" href="/approach">
+            See how we work
+          </Link>
+        </p>
         <div className="cta">
           <Link className="btn btn-lg" href="/discovery">
             Book a discovery session

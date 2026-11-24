@@ -5,12 +5,21 @@ import { victoriasPainting as vp, victoriasPaintingStudy as study } from "@/cont
 import { pageMetadata } from "@/content/seo";
 import { testimonialFor } from "@/content/testimonials";
 import { breadcrumbList, caseStudyLd } from "@/lib/structured-data";
+import { CLIENT_WORDS_ID, ClientLine } from "../ClientLine";
 import { ClientQuote } from "../ClientQuote";
 import { MoreWork } from "../MoreWork";
+import { StudyCrumbs } from "../StudyCrumbs";
 import { GALLERY_SIZES, WorkImage } from "../WorkImage";
 
 const description =
   "The first website for Victoria's Painting, a New Jersey painting company: services, service areas, a free-estimate form and call buttons, built by Camino Code.";
+
+/** Home / Work / this study: shown above "At a glance" and given to the structured data, from one list. */
+const trail = [
+  { name: "Home", path: "/" },
+  { name: "Work", path: "/work" },
+  { name: vp.name, path: vp.href },
+];
 
 export const metadata = pageMetadata({
   title: "Victoria's Painting case study | Camino Code",
@@ -22,8 +31,10 @@ export default function VictoriasPaintingPage() {
   return (
     <>
       <PageBand stage={2} time="morning" kicker="Case study" title={study.title} />
-      <section className="inner-sec in-dark on-dark" aria-labelledby="at-a-glance">
+      {/* in-still: this section runs past the bottom of the window when the page loads, so it does not fade in */}
+      <section className="inner-sec in-dark on-dark in-still in-study-top" aria-labelledby="at-a-glance">
         <div className="wrap">
+          <StudyCrumbs trail={trail} />
           <p className="in-mono in-label">
             <i>01</i> / 06
           </p>
@@ -37,6 +48,8 @@ export default function VictoriasPaintingPage() {
               </div>
             ))}
           </dl>
+          {/* the outcome first: one sentence of the client's testimonial, which is shown in full under Result */}
+          <ClientLine testimonial={testimonialFor(vp.href)} />
           <p className="in-mono credit in-credit-gap">
             {vp.wording}
           </p>
@@ -114,7 +127,9 @@ export default function VictoriasPaintingPage() {
               <li key={r}>{r}</li>
             ))}
           </ul>
-          <h3 className="in-sub">In the client&rsquo;s words</h3>
+          <h3 className="in-sub" id={CLIENT_WORDS_ID}>
+            In the client&rsquo;s words
+          </h3>
           <ClientQuote testimonial={testimonialFor(vp.href)} />
           <p>
             <a className="in-link" href={study.visitHref} rel="noopener">
@@ -126,13 +141,7 @@ export default function VictoriasPaintingPage() {
       <MoreWork current={vp.href} />
       <BookDiscovery />
       <JsonLd data={caseStudyLd({ headline: study.title, description, path: vp.href, image: vp.cardImage.src, about: vp.name })} />
-      <JsonLd
-        data={breadcrumbList([
-          { name: "Home", path: "/" },
-          { name: "Work", path: "/work" },
-          { name: vp.name, path: vp.href },
-        ])}
-      />
+      <JsonLd data={breadcrumbList(trail)} />
     </>
   );
 }
