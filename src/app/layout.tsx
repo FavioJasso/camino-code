@@ -24,7 +24,9 @@ const martianMono = localFont({
   src: "../fonts/MartianMono-Variable.woff2",
   variable: "--font-martian",
   weight: "100 800",
-  display: "swap",
+  // preloaded, so it is used whenever it arrives in time (and from the second page on); a slow first
+  // visit keeps the fallback instead of re-wrapping the breadcrumb and labels once it lands (layout shift)
+  display: "optional",
   declarations: [{ prop: "font-stretch", value: "75% 112.5%" }],
 });
 
