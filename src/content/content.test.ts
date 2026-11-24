@@ -80,6 +80,13 @@ describe("case studies", () => {
   it("are listed in the order /work and the sitemap show them, each at its own page", () => {
     const hrefs = proof.caseStudies.map((s) => s.href as string);
     expect(hrefs).toEqual(PAGE_PATHS.filter((p) => p.startsWith("/work/")));
+    // the system first, then the three web builds with the business client first
+    expect(proof.caseStudies.map((s) => [s.name, s.kind])).toEqual([
+      ["Transparent Energy", "Automation and data system"],
+      ["Victoria's Painting", "Business website"],
+      ["DANIEL AVILA 64", "Playable 3D portfolio"],
+      ["Daniel Avila", "Portfolio site"],
+    ]);
     expect(new Set(proof.caseStudies.map((s) => s.name)).size).toBe(hrefs.length);
   });
 

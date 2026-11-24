@@ -6,24 +6,28 @@ import { JsonLd } from "@/components/JsonLd";
 import { PageBand } from "@/components/PageBand";
 import {
   caseStudies,
-  danielAvila as daFirst,
-  danielAvila64 as da,
+  danielAvila,
+  danielAvila64,
   transparentEnergy as te,
-  victoriasPainting as vp,
+  victoriasPainting,
 } from "@/content/proof";
 import { pageMetadata } from "@/content/seo";
 import { breadcrumbList } from "@/lib/structured-data";
-import { CARD_SIZES, WorkImage } from "./WorkImage";
+import { WEBSITE_CARD_SIZES, WorkImage } from "./WorkImage";
 
 export const metadata = pageMetadata({
   title: "Work | Camino Code",
   description:
-    "Case studies from Camino Code: a reconciliation system for Transparent Energy, the playable 3D portfolio DANIEL AVILA 64, and websites for Victoria's Painting and Daniel Avila.",
+    "An automated reconciliation system for Transparent Energy, plus a website for Victoria's Painting and two portfolio sites for Daniel Avila.",
   path: "/work",
 });
 
-/** The short label each study carries above its name, from the shared list. */
-const kind = (href: string) => caseStudies.find((s) => s.href === href)?.kind;
+/** The three web builds, looked up by path so they follow the order caseStudies gives them. */
+const WEBSITES: Record<string, typeof victoriasPainting | typeof danielAvila64 | typeof danielAvila> = {
+  [victoriasPainting.href]: victoriasPainting,
+  [danielAvila64.href]: danielAvila64,
+  [danielAvila.href]: danielAvila,
+};
 
 /** "Read the case study", with the study's name added for screen readers: four links on one page need four names. */
 function StudyLink({ href, name }: { href: string; name: string }) {
@@ -35,13 +39,15 @@ function StudyLink({ href, name }: { href: string; name: string }) {
 }
 
 export default function WorkPage() {
+  const [system, ...websites] = caseStudies;
   return (
     <>
       <PageBand stage={2} time="morning" title="Work" />
+      {/* the system first, at full weight: its label, figures, summary and credit */}
       <section className="inner-sec in-light" aria-labelledby="te-title">
         <div className="wrap">
           <p className="in-mono in-label">
-            <i>01</i> {kind(te.href)}
+            <i>01</i> {system.kind}
           </p>
           <h2 id="te-title">{te.name}</h2>
           <Figures />
@@ -54,54 +60,27 @@ export default function WorkPage() {
           </div>
         </div>
       </section>
-      <section className="inner-sec in-light in-day work-card" aria-labelledby="da-title">
+      {/* then the web builds under one small heading, as three equal, lighter cards with no figures */}
+      <section className="inner-sec in-light in-day" aria-labelledby="websites-title">
         <div className="wrap">
-          <p className="in-mono in-label">
-            <i>02</i> {kind(da.href)}
-          </p>
-          <h2 id="da-title">{da.name}</h2>
-          <WorkImage src={da.cardImage.src} alt={da.cardImage.alt} sizes={CARD_SIZES} />
-          <Figures figures={da.figures} />
-          <div className="in-proof-body">
-            <div>
-              <p>{da.summary}</p>
-              <p className="in-mono credit">{da.wording}</p>
-            </div>
-            <StudyLink href={da.href} name={da.name} />
-          </div>
-        </div>
-      </section>
-      {/* the two website projects have no measured outcomes, so no figures: image, summary, credit, link */}
-      <section className="inner-sec in-light in-day work-card" aria-labelledby="vp-title">
-        <div className="wrap">
-          <p className="in-mono in-label">
-            <i>03</i> {kind(vp.href)}
-          </p>
-          <h2 id="vp-title">{vp.name}</h2>
-          <WorkImage src={vp.cardImage.src} alt={vp.cardImage.alt} sizes={CARD_SIZES} />
-          <div className="in-proof-body in-proof-flush">
-            <div>
-              <p>{vp.summary}</p>
-              <p className="in-mono credit">{vp.wording}</p>
-            </div>
-            <StudyLink href={vp.href} name={vp.name} />
-          </div>
-        </div>
-      </section>
-      <section className="inner-sec in-light in-day work-card" aria-labelledby="da-first-title">
-        <div className="wrap">
-          <p className="in-mono in-label">
-            <i>04</i> {kind(daFirst.href)}
-          </p>
-          <h2 id="da-first-title">{daFirst.name}</h2>
-          <WorkImage src={daFirst.cardImage.src} alt={daFirst.cardImage.alt} sizes={CARD_SIZES} />
-          <div className="in-proof-body in-proof-flush">
-            <div>
-              <p>{daFirst.summary}</p>
-              <p className="in-mono credit">{daFirst.wording}</p>
-            </div>
-            <StudyLink href={daFirst.href} name={daFirst.name} />
-          </div>
+          <h2 id="websites-title" className="in-work-group">
+            Websites
+          </h2>
+          <ul className="in-work-cards">
+            {websites.map((s) => {
+              const study = WEBSITES[s.href];
+              return (
+                <li className="in-work-card" key={s.href}>
+                  <WorkImage src={study.cardImage.src} alt={study.cardImage.alt} sizes={WEBSITE_CARD_SIZES} />
+                  <p className="in-mono">{s.kind}</p>
+                  <h3>{s.name}</h3>
+                  <p>{study.summary}</p>
+                  <p className="in-mono credit">{study.wording}</p>
+                  <StudyLink href={s.href} name={s.name} />
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </section>
       <BookDiscovery heading="Is something in your business still done by hand?" />

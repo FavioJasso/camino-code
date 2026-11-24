@@ -116,7 +116,7 @@ export const danielAvila64Study = {
 } as const;
 
 /*
- * The two website projects below were carried over from the original site's case-study pages.
+ * The two website builds below were carried over from the original site's case-study pages.
  * They are website design-and-build projects for small clients, and are described as that.
  * Nobody measured an outcome on either, so neither has figures: do not pass them to <Figures />.
  * Left out on purpose: the old pages' filler stats ("3x", "100%", "24/7", "SEO ready"), their star
@@ -129,7 +129,7 @@ export const victoriasPainting = {
   name: "Victoria's Painting",
   wording: "Built by Camino Code for Victoria's Painting",
   summary:
-    "The first website for a New Jersey painting company. It shows the company's services and the towns it serves, with a free-estimate form and call buttons. Camino Code designed it and built it from scratch.",
+    "The first website for a New Jersey painting company, with its services, the towns it serves and a free-estimate form.",
   href: "/work/victorias-painting",
   cardImage: {
     src: "/work/victorias-painting/card.webp",
@@ -192,7 +192,7 @@ export const danielAvila = {
   name: "Daniel Avila",
   wording: "Built by Camino Code for Daniel Avila",
   summary:
-    "The first portfolio site for IT professional Daniel Avila: a clean, structured home for his experience, certifications and projects. He later came back for a full rebuild, DANIEL AVILA 64.",
+    "The first portfolio site for IT professional Daniel Avila: a clean, structured home for his experience, certifications and projects.",
   href: "/work/daniel-avila",
   cardImage: {
     src: "/work/daniel-avila/card.webp",
@@ -252,12 +252,16 @@ export const danielAvilaStudy = {
   nextHref: "/work/daniel-avila-64",
 } as const;
 
-/** Every case study, in the order /work lists them, with the short label each one carries there. */
+/**
+ * Every case study, in the order /work lists them, with the short label each one carries there.
+ * The system comes first; then the three web builds, the business client first. PAGE_PATHS in
+ * seo.ts (and so the sitemap) follows the same order.
+ */
 export const caseStudies = [
-  { name: transparentEnergy.name, kind: "Reconciliation system", href: transparentEnergy.href },
-  { name: danielAvila64.name, kind: "Playable portfolio", href: danielAvila64.href },
+  { name: transparentEnergy.name, kind: "Automation and data system", href: transparentEnergy.href },
   { name: victoriasPainting.name, kind: "Business website", href: victoriasPainting.href },
-  { name: danielAvila.name, kind: "First portfolio site", href: danielAvila.href },
+  { name: danielAvila64.name, kind: "Playable 3D portfolio", href: danielAvila64.href },
+  { name: danielAvila.name, kind: "Portfolio site", href: danielAvila.href },
 ] as const;
 
 /** Case studies that the service pages and the /services index can show, keyed by ProofOnPage["study"]. */

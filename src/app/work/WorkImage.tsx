@@ -1,5 +1,5 @@
-/** `sizes` for the card image on /work (the image is capped at 48rem). */
-export const CARD_SIZES = "(max-width: 815px) calc(100vw - 2rem), 768px";
+/** `sizes` for a website card on /work: one column below 900 px (capped at 32rem), three across the wrap above it. */
+export const WEBSITE_CARD_SIZES = "(max-width: 899px) min(32rem, calc(100vw - 2rem)), min(23rem, calc((100vw - 6rem) / 3))";
 /** `sizes` for an image in a case study's two-column gallery. */
 export const GALLERY_SIZES = "(max-width: 899px) calc(100vw - 2rem), min(566px, calc(50vw - 1.5rem))";
 
