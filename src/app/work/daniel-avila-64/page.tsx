@@ -71,7 +71,6 @@ export default function DanielAvila64Page() {
               <li key={c}>{c}</li>
             ))}
           </ul>
-          <p>{study.challengeNote}</p>
           <p>
             {study.firstSiteNote}{" "}
             <Link href={study.firstSiteHref}>{study.firstSiteLabel}</Link>

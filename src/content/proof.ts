@@ -78,8 +78,6 @@ export const danielAvila64Study = {
     "Keep all content readable by search engines, résumé parsers and screen readers.",
     "Capture the feel of the era with 100% original characters, art, music and sound.",
   ],
-  challengeNote:
-    "An octagonal lobby with five doors; behind each one, a painting that opens a section of Daniel’s career.",
   // points back to the first project for the same client (danielAvila below)
   firstSiteNote:
     "Camino Code also built Daniel’s first portfolio site, which this rebuild replaced at the same address.",
@@ -153,8 +151,8 @@ export const victoriasPaintingStudy = {
     "Victoria's Painting needed a professional website to reach more customers and show its painting services. The main challenges were:",
   challenges: [
     "No online presence to show the company's work and services.",
-    "Show trust and experience with clear information.",
-    "Make it easy for customers to get in touch quickly.",
+    "Showing trust and experience with clear information.",
+    "Making it easy for customers to get in touch quickly.",
   ],
   builtIntro:
     "Camino Code designed and built a custom business website from scratch, with the focus on customers and ease of use. It has:",
