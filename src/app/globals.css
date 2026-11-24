@@ -1,24 +1,741 @@
 @import "tailwindcss";
 
-/* Critical styles only - minimal CSS for initial render */
-* {
-  font-family: var(--font-poppins), sans-serif;
-  box-sizing: border-box;
+/* Palette. Bright Ember is never text on a light background; use Ember ink there. */
+:root {
+  --midnight: #0e1320;
+  --dusk: #1c2540;
+  --cream: #f4ebdc; /* Star cream */
+  --haze: #a9b4d0;
+  --ember: #ff7a3d;
+  --moon: #f7c948;
+  --morning: #f2e6d0;
+  --day: #faf4e8;
+  --ink: #141a2b;
+  --ink-soft: #4a5266;
+  --ember-ink: #b3391b;
+
+  --rule: rgba(169, 180, 208, 0.22);
+  --rule-ink: rgba(20, 26, 43, 0.18);
+  --wrap: 73.75rem;
+  /* height of the sticky header row; phones step it down below */
+  --head-h: 4.25rem;
+}
+@media (max-width: 899px) {
+  :root {
+    --head-h: 3.75rem;
+  }
+}
+
+@theme inline {
+  --color-midnight: var(--midnight);
+  --color-dusk: var(--dusk);
+  --color-cream: var(--cream);
+  --color-haze: var(--haze);
+  --color-ember: var(--ember);
+  --color-moon: var(--moon);
+  --color-morning: var(--morning);
+  --color-day: var(--day);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ember-ink: var(--ember-ink);
+
+  --font-sans: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-martian), ui-monospace, "SF Mono", Menlo, Consolas,
+    monospace;
 }
 
 html {
+  background: var(--day);
+  color-scheme: light;
+  /* in-page links travel, and land below the sticky header (its row plus the 1px rule).
+     Route changes stay instant only if <html> carries data-scroll-behavior="smooth" (src/app/layout.tsx):
+     Next 16 no longer switches smooth scrolling off during navigation by itself. */
   scroll-behavior: smooth;
-  background-color: rgba(248, 244, 239, 1);
+  scroll-padding-top: calc(var(--head-h) + 1px + env(safe-area-inset-top, 0px));
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+/* the home page's base is night: dark scrollbar and overscroll, as in the design */
+html:has(.home) {
+  background: var(--midnight);
+  color-scheme: dark;
+}
+html:has(.home) body {
+  background: var(--midnight);
 }
 
 body {
-  overflow-x: hidden;
-  cursor: none;
+  background: var(--day);
+  color: var(--ink);
+  font-family: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Hide default cursor globally - critical for UX */
-* {
-  cursor: none !important;
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
+/* Dark surfaces use Moon for focus. */
+.on-dark :focus-visible {
+  outline-color: var(--moon);
+}
 
+.wrap {
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  background: var(--midnight);
+  color: var(--cream);
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 2px;
+}
+.skip-link:focus {
+  top: max(1rem, env(safe-area-inset-top, 0px));
+  outline: 2px solid var(--moon);
+  outline-offset: 2px;
+}
+/* the skip link moves focus to main (focusable only while it holds that focus), which shows no ring around the whole page */
+#content:focus {
+  outline: none;
+}
+
+/* a long word breaks instead of running off the side when the visitor's text is large */
+h1,
+h2,
+h3 {
+  overflow-wrap: break-word;
+}
+
+/* Header. The row is laid out for the room it has, measured in rem by container queries on the header, so
+   it follows the visitor's text size as well as the window. The phone row (mark, wordmark, Book discovery,
+   Menu) is the base; the desktop row with its links needs a 900 px window and 45rem of header. */
+.site-head {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  container: head / inline-size;
+  background: var(--midnight);
+  color: var(--cream);
+  border-bottom: 1px solid var(--rule);
+  color-scheme: dark;
+}
+.site-head .wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: var(--head-h);
+}
+/* if the row still runs out of room (wider letter spacing, a fallback font), the brand gives way first:
+   the wordmark wraps to a second line, which the fixed height cuts off, and the mark stays */
+.brand {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: center;
+  gap: 0 0.625rem;
+  flex: 0 1 auto;
+  min-width: 1.625rem;
+  height: 2.75rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-decoration: none;
+  font-weight: 800;
+  font-stretch: 118%;
+  font-size: 1.0625rem;
+  line-height: 2.75rem;
+  letter-spacing: 0.02em;
+}
+/* Cut only the second line: the last letter's ink reaches a little past the link's edge. In its own
+   @supports block because the build merges two overflow declarations in one rule into the last, and a
+   browser without overflow: clip (Safari 15) must keep the plain cut above, or the wrapped wordmark
+   would hang below the header. */
+@supports (overflow: visible clip) {
+  .brand {
+    overflow: visible clip;
+  }
+}
+.brand svg {
+  width: 1.625rem;
+  height: 1.875rem;
+  /* with its margins the mark is as tall as the link, so it stays centred when it is alone on the line */
+  margin-block: 0.4375rem;
+  flex: none;
+}
+.nav {
+  display: none;
+  gap: 1.75rem;
+  margin-left: auto;
+}
+.nav a {
+  display: flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-family: var(--font-martian), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--haze);
+}
+.nav a:hover {
+  color: var(--cream);
+}
+/* the section the visitor is in: Cream, on a thin Ember line */
+.nav a[aria-current] {
+  color: var(--cream);
+  text-decoration: underline;
+  text-decoration-color: var(--ember);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.5rem;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+/* the email address is one long word: with large text on a phone it may break instead of pushing the page wide */
+a[href^="mailto:"] {
+  overflow-wrap: anywhere;
+}
+/* so does a domain in running text (victoriaspainting.com), which has no place to break otherwise */
+main p,
+main li {
+  overflow-wrap: break-word;
+}
+/* a link box (inline-flex) sizes itself to its longest word, so it needs the stronger rule */
+main .in-link {
+  overflow-wrap: anywhere;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  background: var(--ember);
+  color: var(--midnight);
+  font-weight: 700;
+  font-stretch: 108%;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  border-radius: 2px;
+  /* On a light section the hover swaps the fill and the label colour. The fill fades; the label switches
+     in one step part-way through, at the moment the old and the new label read about equally well on the
+     fill as it then is (--label-switch: later on the way out than on the way in). Switched at the start,
+     or faded along with the fill, the label passes through the fill's own colour and cannot be read for
+     a few frames; this way it stays at 4:1 or better throughout. */
+  --label-switch: 0.06s;
+  transition:
+    background 0.15s ease,
+    color 0s linear var(--label-switch),
+    transform 0.15s ease;
+}
+.btn:hover {
+  background: var(--moon);
+  --label-switch: 0.03s;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+
+/* Windows contrast themes drop the fill, so the button keeps an edge there (an outline: no change in size) */
+@media (forced-colors: active) {
+  .btn:not(:focus-visible) {
+    outline: 1px solid ButtonText;
+    outline-offset: -1px;
+  }
+}
+
+/* Phone menu */
+/* the header row's own button: the menu's button below keeps its full size and width */
+.site-head .wrap > .btn {
+  margin-left: auto;
+}
+/* the button and its icon are sized in em from one font size, so the last step below can stop them growing with the text */
+.menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75em;
+  height: 2.75em;
+  flex: none;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--cream);
+  font-size: 1rem;
+  cursor: pointer;
+}
+.menu-icon {
+  position: relative;
+  width: 1.25em;
+  height: 0.875em;
+}
+/* the bars are borders, not backgrounds: Windows contrast themes repaint backgrounds and keep borders */
+.menu-icon i {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  border-top: 2px solid currentColor;
+  transition: transform 0.2s ease;
+}
+.menu-icon i:first-child {
+  top: 0.125em;
+}
+.menu-icon i:last-child {
+  bottom: 0.125em;
+}
+.menu-toggle[aria-expanded="true"] .menu-icon i:first-child {
+  transform: translateY(0.3125em) rotate(45deg);
+}
+.menu-toggle[aria-expanded="true"] .menu-icon i:last-child {
+  transform: translateY(-0.3125em) rotate(-45deg);
+}
+/* hangs from the sticky header and fills the rest of the screen below it */
+.menu-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: absolute;
+  top: calc(100% + 1px);
+  left: 0;
+  right: 0;
+  height: calc(100vh - var(--head-h) - 1px - env(safe-area-inset-top, 0px));
+  height: calc(100dvh - var(--head-h) - 1px - env(safe-area-inset-top, 0px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.5rem max(1rem, env(safe-area-inset-left, 0px)) max(1.5rem, env(safe-area-inset-bottom, 0px));
+  background: var(--midnight);
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 0.2s ease,
+    visibility 0s linear 0.2s;
+}
+.menu-panel[data-open="true"] {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+.menu-panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.menu-panel li a {
+  display: flex;
+  align-items: center;
+  min-height: 3.5rem;
+  border-bottom: 1px solid var(--rule);
+  font-weight: 700;
+  font-stretch: 112%;
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: var(--cream);
+}
+/* the three services sit under Services: indented, and a step smaller */
+.menu-panel .menu-sub a {
+  min-height: 3rem;
+  padding-left: 1.25rem;
+  font-size: 1.1875rem;
+}
+/* the page or section the visitor is in carries a lantern dot (a border, so contrast themes keep it) */
+.menu-panel li a[aria-current]::after {
+  content: "";
+  flex: none;
+  margin-left: auto;
+  border: 0.25rem solid var(--ember);
+  border-radius: 50%;
+}
+.menu-panel .menu-cta {
+  min-height: 3.25rem;
+  font-size: 1rem;
+}
+html.menu-open {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-panel,
+  .menu-panel[data-open="true"],
+  .menu-icon i,
+  .btn {
+    transition: none;
+  }
+}
+
+/* Desktop row: the links in place of the Menu button */
+@media (min-width: 900px) {
+  @container head (min-width: 45rem) {
+    .site-head .wrap {
+      gap: 1.5rem;
+    }
+    .nav {
+      display: flex;
+    }
+    .site-head .wrap > .btn {
+      margin-left: 0;
+    }
+    .menu-toggle,
+    .menu-panel {
+      display: none;
+    }
+  }
+}
+
+/* mark + wordmark + Book discovery + Menu need about 26rem (418 px) at full size: tighten the row so it keeps the 16 px gutter on 360-419 px phones */
+@container head (max-width: 26.24rem) {
+  .site-head .wrap {
+    gap: 0.5rem;
+  }
+  .brand {
+    column-gap: 0.5rem;
+    font-size: 0.875rem;
+    letter-spacing: 0.01em;
+  }
+  .site-head .wrap > .btn {
+    padding: 0 0.625rem;
+    font-size: 0.8125rem;
+  }
+}
+
+@container head (max-width: 23.74rem) {
+  .brand {
+    font-size: 0.8125rem;
+  }
+  .site-head .wrap > .btn {
+    padding: 0 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+@container head (max-width: 22.49rem) {
+  /* room for the Menu button: the mark alone carries the brand (the link keeps its aria-label) */
+  .brand span {
+    display: none;
+  }
+}
+
+/* large text on a phone: the button's label takes two lines, and the mark and the Menu button stop growing with the text */
+@container head (max-width: 15.49rem) {
+  .site-head .wrap {
+    gap: 0.375rem;
+  }
+  .brand {
+    min-width: 26px;
+  }
+  .brand svg {
+    width: 26px;
+    height: 30px;
+    margin-block: calc(1.375rem - 15px);
+  }
+  .site-head .wrap > .btn {
+    flex: 0 1 auto;
+    min-width: 0;
+    padding: 0 0.375rem;
+    line-height: 1.1;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .menu-toggle {
+    font-size: 16px;
+  }
+}
+
+/* Footer: every page ends in Day, as the morning does. Ink on Day, Ink-soft labels, Ember ink for the accent. */
+.site-foot {
+  position: relative;
+  z-index: 1;
+  background: var(--day);
+  color: var(--ink);
+  border-top: 1px solid var(--rule-ink);
+  /* a page whose height is a fraction of a pixel leaves a sliver of the root under the footer
+     (Midnight on the home page): paint it Day */
+  box-shadow: 0 1px 0 var(--day);
+  font-size: 0.95rem;
+  color-scheme: light;
+  container: foot / inline-size;
+}
+.site-foot .wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  align-items: start;
+  gap: 2rem clamp(2rem, 5vw, 4.5rem);
+  padding-block: 2.25rem 2.75rem;
+}
+.site-foot h2 {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-martian), ui-monospace, monospace;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.site-foot p {
+  margin: 0;
+  color: var(--ink);
+}
+.site-foot .foot-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 0.5rem;
+  font-weight: 800;
+  font-stretch: 118%;
+  font-size: 1.0625rem;
+  letter-spacing: 0.02em;
+}
+.foot-brand svg {
+  width: 1.625rem;
+  height: 1.875rem;
+  flex: none;
+}
+.site-foot ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* the site list runs down two columns: services, then the rest */
+.site-foot .foot-cols {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(4, auto);
+  grid-auto-columns: max-content;
+  column-gap: clamp(1.5rem, 4vw, 3rem);
+}
+.site-foot a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--ink);
+  text-decoration-color: var(--ember-ink);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3rem;
+}
+.site-foot a:hover {
+  text-decoration-line: underline;
+}
+@media (max-width: 899px) {
+  /* the name takes a row of its own, then the three lists stand side by side */
+  .site-foot .wrap {
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
+  }
+  .foot-id {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 599px) {
+  /* phones: the site list takes a row as well, and contact sits beside legal */
+  .site-foot .wrap {
+    grid-template-columns: repeat(2, auto);
+  }
+  .foot-site {
+    grid-column: 1 / -1;
+  }
+}
+/* Large text: the same two steps again, taken by the footer's room in rem. At the default text size 52rem
+   (832 px) is inside the 899 px step and 37.49rem is the 599 px step, so nothing changes there. */
+@container foot (max-width: 52rem) {
+  .site-foot .wrap {
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
+  }
+  .foot-id {
+    grid-column: 1 / -1;
+  }
+}
+@container foot (max-width: 37.49rem) {
+  .site-foot .wrap {
+    grid-template-columns: repeat(2, auto);
+  }
+  .foot-site {
+    grid-column: 1 / -1;
+  }
+}
+/* and on a phone, where the two columns need about 17.6rem: everything in one column */
+@container foot (max-width: 17.99rem) {
+  .site-foot .wrap {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .site-foot .foot-cols {
+    grid-auto-flow: row;
+    grid-template-rows: none;
+    grid-auto-columns: auto;
+  }
+}
+
+/* founder portrait (shared by home and About; callers set only the width) */
+.founder-photo {
+  margin: 0;
+}
+.founder-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 400 / 501;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+/* Motion control: present only while a live scene runs (home scene, inner-page bands) */
+.motion-toggle {
+  position: fixed;
+  z-index: 6;
+  right: max(0.75rem, env(safe-area-inset-right, 0px));
+  bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+  min-height: 2.75rem;
+  /* 12 px text in about the width the 10 px label had: a wider control would sit on the hero's button
+     on a landscape phone, and step aside */
+  padding: 0 0.75rem;
+  background: var(--midnight);
+  color: var(--cream);
+  border: 1px solid var(--haze);
+  border-radius: 2px;
+  font-family: var(--font-martian), ui-monospace, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s ease, visibility 0.2s;
+}
+.motion-toggle:hover {
+  border-color: var(--cream);
+}
+/* paused: the label reads "Play animation", and the edge turns Ember with it */
+.motion-toggle.is-paused {
+  border-color: var(--ember);
+}
+.motion-toggle:focus-visible {
+  outline: 2px solid var(--moon);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px var(--midnight);
+}
+/* when solid panels cover the scene there is nothing to pause, so the control steps aside */
+.motion-toggle.is-away {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Print and save as PDF: ink on white paper, everything there whether or not it was scrolled into view,
+   and nothing that only works on a screen. The page stylesheets load after this file, so the rules that
+   must beat them are !important. */
+@page {
+  margin: 1.5cm;
+}
+@media print {
+  /* dark surfaces turn to paper and their light text to ink, wherever a rule reads the palette */
+  :root {
+    --midnight: #fff;
+    --dusk: #fff;
+    --morning: #fff;
+    --day: #fff;
+    --cream: #141a2b;
+    --haze: #4a5266;
+    --ember: #b3391b;
+    --rule: rgba(20, 26, 43, 0.18);
+  }
+  /* no fills (most browsers leave them out of a print anyway, which strands light text on white), and no
+     animation: the scroll reveal would leave whatever was not yet scrolled into view invisible */
+  *,
+  *::before,
+  *::after {
+    background: none !important;
+    box-shadow: none !important;
+    animation: none !important;
+    transition: none !important;
+    /* the home page and the header ask for a dark canvas, which prints black when background printing is on */
+    color-scheme: light !important;
+  }
+  html {
+    background: #fff !important;
+  }
+  body {
+    display: block !important;
+    min-height: 0 !important;
+  }
+  /* the header is a letterhead: the name at the top of the first sheet, not stuck to every one */
+  .site-head {
+    position: static !important;
+    border-bottom-color: var(--ink);
+  }
+  /* left out: navigation and controls, the scene, and the home page's sunrise window (a view onto the scene) */
+  .skip-link,
+  .nav,
+  .site-head .btn,
+  .menu-toggle,
+  .menu-panel,
+  .motion-toggle,
+  .site-foot nav,
+  #scene,
+  #dawn-window,
+  canvas {
+    display: none !important;
+  }
+  /* home: on a screen the hero and the edge line are as tall as the window; on paper they take the room their words need */
+  .hero,
+  .edge {
+    min-height: 0 !important;
+  }
+  .home .wrap {
+    padding-block: 1.5rem !important;
+  }
+  /* the footer is the name, the place and the contact details, set close */
+  .site-foot {
+    break-inside: avoid;
+  }
+  .site-foot .wrap {
+    gap: 0.75rem 2rem;
+    padding-block: 1rem;
+  }
+  .site-foot a {
+    min-height: 0;
+  }
+  /* a button prints as an outlined label */
+  .btn {
+    border: 1px solid var(--ink);
+    color: var(--ink) !important;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+  /* a list or a figure stays on one sheet; a list too long for that breaks between its items */
+  ul,
+  ol,
+  dl,
+  li,
+  figure,
+  blockquote,
+  img {
+    break-inside: avoid;
+  }
+}

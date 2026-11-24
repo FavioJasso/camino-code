@@ -12,12 +12,26 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# environment variables
+# environment variables (.env.example is the only env file that is committed)
 .env
 .env.production
+.env.local
+.env*.local
+
+# Vercel CLI project link (written by `vercel link`)
+.vercel
 
 # macOS-specific files
 .DS_Store
 
 # jetbrains setting folder
 .idea/
+.superpowers/
+
+# next / tooling
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+/test-results/
+/playwright-report/

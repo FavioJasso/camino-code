@@ -1,378 +1,93 @@
-<div align="center">
-  <img src="public/assets/iconText.png" alt="Camino Code Logo" width="400"/>
-  
-  # Camino Code
+# Camino Code website
 
-  ### Building Systems That Think With You
+The website of Camino Code, a software, data and AI consultancy in Newark, New Jersey. The canonical address is `https://www.caminocode.com`.
 
-  [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-  [![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org/)
-  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
-  [![Three.js](https://img.shields.io/badge/Three.js-Latest-black?style=for-the-badge&logo=three.js)](https://threejs.org/)
+## Stack
 
-  [Website](https://caminocode.com) • [Case Studies](https://caminocode.com/case-studies) • [Contact](https://caminocode.com/contact)
+- Next.js 16 (App Router, Turbopack) with React 19 and TypeScript. This Next.js version has breaking changes: read `AGENTS.md` and the docs in `node_modules/next/dist/docs/` before using an unfamiliar API.
+- Hand-written CSS (`src/app/*.css`) on top of the Tailwind 4 reset, which is loaded through `@tailwindcss/turbopack` in `next.config.ts`.
+- three.js for the live terrain scene on the home page and in the inner-page header bands (`src/scene/`).
+- sharp for the images made at build time.
+- Resend for the discovery form's email. Vercel Analytics and Speed Insights for visit counts and page speed.
+- Vitest for unit tests. Playwright with axe for end-to-end and accessibility tests.
 
-</div>
+The project targets Node 24 (`.nvmrc`, and `engines` in `package.json`). CI runs on it.
 
----
+## Scripts
 
-## 📋 Table of Contents
+| Command | What it does |
+|---|---|
+| `npm run dev` | Development server with hot reload. |
+| `npm run build` | Production build. `prebuild` runs `npm run stills` first. |
+| `npm run start` | Serves the production build. |
+| `npm run lint` | ESLint. `next build` does not lint. |
+| `npm run typecheck` | `tsc --noEmit`. |
+| `npm test` | Vitest unit tests. This rewrites the generated stills (see below). |
+| `npm run test:e2e` | Playwright tests against a production build. |
+| `npm run stills` | Regenerates the still images and the share image. |
+| `npm run icons` | Regenerates the tab, Apple and web-manifest icons. Run by hand when the mark changes. |
 
-- [About](#about)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Development](#development)
-- [Build & Deployment](#build--deployment)
-- [SEO & Performance](#seo--performance)
-- [Contributing](#contributing)
-- [Team](#team)
-- [License](#license)
+## Environment variables
 
----
+Copy `.env.example` to `.env.local` for local work. `.env.local` is ignored by git. All four are optional locally.
 
-## 🎯 About
+| Variable | Purpose |
+|---|---|
+| `RESEND_API_KEY` | Resend API key for the discovery form. |
+| `BOOKING_FROM` | Sender address on a domain verified in Resend. |
+| `BOOKING_TO` | Where discovery requests are delivered. Defaults to the published contact address. |
+| `FORM_SECRET` | Random string that signs the form's token. Required in production. |
 
-**Camino Code** is an Applied AI Systems, Data Science, and Product Engineering organization based in New Jersey. We help businesses build intelligent systems that adapt and grow with them.
+Without `RESEND_API_KEY` or `BOOKING_FROM` the form sends nothing: it shows its failure message (try again, phone, pre-filled email link) and keeps what the visitor typed. In production, a missing `FORM_SECRET` has the same effect. Each fallback writes `[booking] fallback: <reason>` to the server log, with nothing the visitor typed (the reason codes are in `src/app/discovery/actions.ts`).
 
-### What We Do
+Two more variables exist for automated tests only and are ignored in production: `BOOKING_TEST_MODE` and `BOOKING_SENDS_PER_10_MIN` (`src/app/discovery/actions.ts`, `playwright.config.ts`).
 
-- 🤖 **Applied AI Systems** - Develop custom AI solutions tailored to your business needs
-- 📊 **Data Science** - Extract powerful insights from your data
-- 🔧 **Product Engineering** - Build scalable, modern digital products
-- ⚡ **Workflow Automation** - Streamline operations and reduce manual work
-- 🚀 **Digital Transformation** - Empower your business for the digital age
+## Generated images
 
----
+- **Stills and the share image.** `npm run stills` runs `scripts/render-stills.ts`, which draws the SVG stills in `public/stills/` and the share image `public/og.png` from the same terrain maths the live scene uses (`src/scene/terrain.ts`). It runs before every build, and `npm test` runs it too. The output is committed. If `git status` shows these files changed after a build or a test run, find out why before committing.
+- **Icons.** `npm run icons` runs `scripts/render-icons.mjs`, which writes `src/app/icon.svg`, `src/app/favicon.ico`, `src/app/apple-icon.png`, `public/icon-192.png` and `public/icon-512.png` from the mark. It is not part of the build: run it when the mark changes and commit the output. The mark itself is drawn in `src/components/BrandMark.tsx`.
+- **Case-study images.** Each image lives in `public/work/<slug>/` as a pair: `<name>.webp` (1920 x 1280) and `<name>-960.webp` (960 x 640). `node scripts/work-images.mjs <slug> <name> <source-file>` makes both files from one source image.
 
-## ✨ Features
+## Tests
 
-### 🎨 Modern Design
-- Sleek, responsive UI with smooth animations
-- Interactive 3D elements powered by Three.js
-- Custom cursor and scroll animations
-- Mobile-first responsive design
-
-### 🚀 Performance Optimized
-- Server-side rendering (SSR) with Next.js 15
-- Optimized image loading and lazy loading
-- Code splitting and tree shaking
-- Lighthouse score optimized
-
-### 🔍 SEO Ready
-- Dynamic metadata generation
-- Structured data (JSON-LD)
-- XML sitemap and RSS feed
-- Open Graph and Twitter card support
-- Optimized robots.txt and manifest.json
-
-### 🎭 User Experience
-- Smooth page transitions
-- Custom loading states
-- Interactive case study galleries
-- Contact forms with validation
-- Accessibility (WCAG) compliant
-
----
-
-## 🛠️ Tech Stack
-
-### Core Framework
-- **[Next.js 15](https://nextjs.org/)** - React framework with App Router
-- **[React 18](https://reactjs.org/)** - UI library with latest features
-- **[JavaScript/JSX](https://developer.mozilla.org/en-US/docs/Web/JavaScript)** - Modern ES6+ syntax
-
-### Styling & Animation
-- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
-- **[GSAP (GreenSock)](https://greensock.com/gsap/)** - Professional animation library
-- **[Locomotive Scroll](https://locomotivemtl.github.io/locomotive-scroll/)** - Smooth scrolling
-
-### 3D & Graphics
-- **[Three.js](https://threejs.org/)** - 3D graphics library
-- **[React Three Fiber](https://docs.pmnd.rs/react-three-fiber/)** - React renderer for Three.js
-- **[@react-three/drei](https://github.com/pmndrs/drei)** - Useful helpers for R3F
-
-### Forms & Validation
-- **[React Hook Form](https://react-hook-form.com/)** - Performant form handling
-- **Email Integration** - Contact form functionality
-
-### Development Tools
-- **[ESLint](https://eslint.org/)** - Code linting
-- **[PostCSS](https://postcss.org/)** - CSS processing
-- **[Sharp](https://sharp.pixelplumbing.com/)** - Image optimization
-
----
-
-## 📁 Project Structure
-
-```text
-camino-code/
-├── public/                      # Static assets
-│   ├── assets/
-│   │   ├── images/             # Image assets
-│   │   │   ├── case_studies/   # Case study images
-│   │   │   └── ...
-│   │   └── icons/              # Icons and logos
-│   ├── *.glb                   # 3D models
-│   ├── favicon.svg
-│   ├── manifest.json           # PWA manifest
-│   └── robots.txt              # SEO robots file
-│
-├── src/
-│   ├── app/                    # Next.js App Router
-│   │   ├── about/              # About page
-│   │   ├── case-studies/       # Case studies listing
-│   │   ├── case-study/         # Individual case studies
-│   │   │   ├── daniel-avila/
-│   │   │   ├── healthtrack/
-│   │   │   ├── techwave/
-│   │   │   └── victorias-painting/
-│   │   ├── contact/            # Contact page
-│   │   ├── services/           # Services page
-│   │   ├── layout.js           # Root layout
-│   │   ├── page.js             # Home page
-│   │   ├── globals.css         # Global styles
-│   │   ├── sitemap.js          # Dynamic sitemap
-│   │   └── rss.xml/            # RSS feed
-│   │
-│   ├── components/             # React components
-│   │   ├── common/             # Shared components
-│   │   ├── AboutUsFounder.jsx
-│   │   ├── AboutUsHero.jsx
-│   │   ├── CaseStudyDetails.jsx
-│   │   ├── ContactFormPages.jsx
-│   │   ├── CustomCursor.jsx
-│   │   ├── Footer.jsx
-│   │   ├── HomeAbout.jsx
-│   │   ├── HomeServices.jsx
-│   │   ├── ModelViewer.jsx
-│   │   ├── NavigationBar.jsx
-│   │   ├── Projects.jsx
-│   │   ├── SEOHead.jsx
-│   │   ├── ServicesDetails.jsx
-│   │   ├── SmoothScroll.jsx
-│   │   └── Work.jsx
-│   │
-│   ├── config/                 # Configuration files
-│   │   └── seo.js              # SEO configuration
-│   │
-│   ├── hooks/                  # Custom React hooks
-│   │   ├── useAnimations.js
-│   │   └── useIsMobile.js
-│   │
-│   └── utils/                  # Utility functions
-│       └── animations.js
-│
-├── .gitignore
-├── eslint.config.mjs           # ESLint configuration
-├── jsconfig.json               # JavaScript configuration
-├── next.config.mjs             # Next.js configuration
-├── package.json                # Dependencies
-├── postcss.config.mjs          # PostCSS configuration
-├── README.md                   # This file
-├── SEO-CHECKLIST.md           # SEO guidelines
-└── tsconfig.json               # TypeScript configuration
+```
+npm run lint
+npm run typecheck
+npm test
+npx playwright install chromium   # once
+npm run test:e2e
 ```
 
----
+- Unit tests are the `*.test.ts` files under `src/` and `scripts/`.
+- End-to-end tests are in `tests/e2e/`. Playwright builds the site and serves it on port 3100, then runs three projects: desktop, phone, and the live scene with software WebGL. Locally it reuses anything already listening on port 3100, so stop other servers on that port first.
+- CI (`.github/workflows/ci.yml`) runs lint, the type check, the unit tests and the Playwright tests on pushes to `main` and `rebuild` and on every pull request.
 
-## 🚀 Getting Started
+A new page has to be added by hand to the sitemap list (`PAGE_PATHS` in `src/content/seo.ts`) and to the route list the tests share (`PAGES` in `tests/e2e/routes.ts`). A redirect is added in `next.config.ts` and in `REDIRECTS` in `tests/e2e/seo.spec.ts`.
 
-### Prerequisites
+## Security headers
 
-Before you begin, ensure you have the following installed:
-- **Node.js** (v18.0.0 or higher)
-- **npm** (v9.0.0 or higher) or **yarn**
+`next.config.ts` sets the response headers for every path, including a Content-Security-Policy and a Permissions-Policy. The policy allows this origin only, plus what each environment needs: `eval`, a websocket and the Vercel debug scripts in development, and the Vercel toolbar's origins on preview deployments (`VERCEL_ENV=preview`). Anything new that loads from another origin (a font, a script, an embed, an image host) has to be added there, or the browser will block it. `tests/e2e/csp.spec.ts` loads every page and fails on any violation.
 
-### Installation
+## Previews and production
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/caminocode/camino-code.git
-   cd camino-code
-   ```
+The site deploys on Vercel (`vercel.json`). A branch is reviewed on its Vercel preview deployment. Nothing merges to `main` without Favio's go-ahead (`PLACEHOLDERS.md`).
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
+Before a production launch:
 
-3. **Set up environment variables** (if needed)
-   ```bash
-   cp .env.example .env.local
-   ```
-   Edit `.env.local` with your configuration
+1. Set `RESEND_API_KEY`, `BOOKING_FROM` and `FORM_SECRET` for the Production environment in the Vercel project.
+2. Send one real request through `/discovery` on the deployed site and confirm the email arrives.
+3. Check that Web Analytics and Speed Insights are switched on in the Vercel project.
+4. Open the deployed site with the browser console open and confirm it reports no Content-Security-Policy violation, on the preview (with the Vercel toolbar) and on production. The tests cover a local production build, not Vercel's own scripts.
 
-4. **Start the development server**
-   ```bash
-   npm run dev
-   ```
+## Where content lives
 
-5. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+- `src/content/site.ts`: company name, contact details and the LinkedIn address.
+- `src/content/seo.ts`: the site address, the sitemap list and the page metadata helper.
+- `src/content/services.ts` and `src/content/service-pages.ts`: the three services, their pages and the `/services` index.
+- `src/content/proof.ts`: case studies and their figures.
+- `src/content/approach.ts`, `src/content/faq.ts`, `src/content/founder.ts`, `src/content/testimonials.ts`: the approach stages, questions, founder text and client quotes.
+- `src/app/privacy/page.tsx` and `src/app/terms/page.tsx`: the legal pages. Both are drafts until the owner approves them.
+- `src/app/`: one folder per page. `src/components/`: shared parts such as the header, footer, header band and closing band.
+- `public/.well-known/security.txt`: the security contact. Its `Expires` date needs renewing before 20 November 2027.
 
----
-
-## 💻 Development
-
-### Available Commands
-
-All commands are run from the root of the project:
-
-| Command              | Action                                           |
-| :------------------- | :----------------------------------------------- |
-| `npm install`        | Install dependencies                             |
-| `npm run dev`        | Start development server at `localhost:3000`     |
-| `npm run build`      | Build production site to `.next/`                |
-| `npm start`          | Preview production build locally                 |
-| `npm run lint`       | Run ESLint to check code quality                 |
-| `npm run lint:fix`   | Run ESLint and auto-fix issues                   |
-
-### Development Workflow
-
-1. **Create a new branch** for your feature
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-
-2. **Make your changes** and test locally
-   ```bash
-   npm run dev
-   ```
-
-3. **Lint your code** before committing
-   ```bash
-   npm run lint
-   ```
-
-4. **Build and test** the production version
-   ```bash
-   npm run build
-   npm start
-   ```
-
----
-
-## 📦 Build & Deployment
-
-### Building for Production
-
-```bash
-npm run build
-```
-
-This creates an optimized production build in the `.next/` directory.
-
-### Deployment Options
-
-#### Vercel (Recommended)
-The easiest way to deploy is using [Vercel](https://vercel.com):
-
-```bash
-npm install -g vercel
-vercel
-```
-
-#### Other Platforms
-- **Netlify**: Configure build command to `npm run build` and publish directory to `.next`
-- **AWS Amplify**: Follow the Next.js deployment guide
-- **Docker**: Use the provided Dockerfile (if available)
-
-### Environment Variables
-
-Make sure to set up your environment variables in your deployment platform:
-- `NEXT_PUBLIC_SITE_URL` - Your site URL
-- `NEXT_PUBLIC_GA_ID` - Google Analytics ID (if using)
-- Any other API keys or secrets
-
----
-
-## 🔍 SEO & Performance
-
-### SEO Features
-- ✅ Dynamic meta tags for all pages
-- ✅ Structured data (JSON-LD) for rich snippets
-- ✅ XML sitemap generation
-- ✅ RSS feed for blog/case studies
-- ✅ Optimized robots.txt
-- ✅ Open Graph tags for social sharing
-- ✅ Twitter Card support
-- ✅ Canonical URLs
-
-### Performance Optimizations
-- ✅ Server-side rendering (SSR)
-- ✅ Image optimization with Next.js Image
-- ✅ Code splitting and lazy loading
-- ✅ Font optimization
-- ✅ CSS optimization with Tailwind
-- ✅ JavaScript minification
-- ✅ Automatic static optimization
-
-For detailed SEO guidelines, check [SEO-CHECKLIST.md](./SEO-CHECKLIST.md)
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Here's how you can help:
-
-### Reporting Issues
-- Use the GitHub issue tracker
-- Describe the issue in detail
-- Include steps to reproduce
-- Add screenshots if applicable
-
-### Submitting Changes
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### Code Style
-- Follow the existing code style
-- Use ESLint to check your code
-- Write clear commit messages
-- Add comments for complex logic
-
----
-
-## 👥 Team
-
-### CaminoCode.com Contributors
-
-- **Favio Jasso** - Founder & CEO
-- **John Rey Calesa** - Software Engineer
-- **Sandro Nahuel Ramirez Tokarsky** - Software Engineer
-- **Ayelén Vázquez De La Rosa** - Concept Artist
-
----
-
-## 📄 License
-
-This project is proprietary and confidential. All rights reserved by Camino Code.
-
-For licensing inquiries, please contact us at [contact@caminocode.com](mailto:contact@caminocode.com)
-
----
-
-## 📞 Contact
-
-**Camino Code**
-
-- 🌐 Website: [caminocode.com](https://caminocode.com)
-- 📧 Email: [contact@caminocode.com](mailto:contact@caminocode.com)
-- 📍 Location: New Jersey, USA
-
----
-
-<div align="center">
-
-### Built with ❤️ by Camino Code
-
-[⬆ Back to Top](#camino-code)
-
-</div>
+`PLACEHOLDERS.md` lists every statement that still waits for the owner's confirmation. Only confirmed facts go on the site.

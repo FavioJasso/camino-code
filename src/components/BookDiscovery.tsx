@@ -1,0 +1,62 @@
+import Link from "next/link";
+import type { ReactNode } from "react";
+import { EmailLink, PhoneLink } from "@/components/ContactLinks";
+
+/** A sun rising in the saddle of a dotted ridge line: decoration for the closing band. */
+function Sunrise() {
+  return (
+    <svg className="in-sunrise" viewBox="0 0 320 150" aria-hidden="true" focusable="false">
+      <defs>
+        {/* only the sky above the ridge: the ridge hides the lower sun */}
+        <clipPath id="in-sunrise-sky">
+          <path d="M0 118 L48 96 L84 106 L124 62 L196 104 L268 66 L300 86 L320 80 L320 0 L0 0 Z" />
+        </clipPath>
+      </defs>
+      <g clipPath="url(#in-sunrise-sky)">
+        <circle className="in-sun-ring" cx="196" cy="112" r="58" />
+        <circle className="in-sun" cx="196" cy="112" r="44" />
+      </g>
+      <path className="in-ridge" d="M0 118 L48 96 L84 106 L124 62 L196 104 L268 66 L300 86 L320 80" />
+      <line className="in-horizon" x1="0" y1="140" x2="320" y2="140" />
+    </svg>
+  );
+}
+
+/** The sunrise band that closes every inner page: Day light, a sun on the ridge, then the way to book. */
+export function ClosingBand({ heading, children }: { heading: string; children: ReactNode }) {
+  return (
+    <section className="inner-sec in-light in-day in-book" aria-labelledby="book-title">
+      <div className="wrap">
+        <div className="in-book-head">
+          <h2 id="book-title">{heading}</h2>
+          <Sunrise />
+        </div>
+        {children}
+      </div>
+    </section>
+  );
+}
+
+/**
+ * The booking band. Every promise about the first conversation (free, 45 minutes, video or in
+ * person, the one-page summary, the reply time) sits here once, next to the button.
+ */
+export function BookDiscovery({ heading = "See where the hours go" }: { heading?: string }) {
+  return (
+    <ClosingBand heading={heading}>
+      <p className="in-lead">
+        Free, 45 minutes, by video or in person. Within a week you get a one-page summary: what to
+        fix first, and what to leave alone.
+      </p>
+      <div className="in-cta">
+        <Link className="btn in-btn-lg" href="/discovery">
+          Book a discovery session
+        </Link>
+        <p>
+          Or write to <EmailLink /> or call <PhoneLink />. You&rsquo;ll hear back within one business
+          day.
+        </p>
+      </div>
+    </ClosingBand>
+  );
+}

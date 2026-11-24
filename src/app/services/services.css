@@ -1,0 +1,114 @@
+/* Services index (/services) and the three service pages. Imported by those pages after PageBand,
+   so it loads after inner.css. Every class is "in-" prefixed and uses the section's role variables. */
+
+/* Breadcrumb above a service page's opening line: Home / Services / this service. The trail's own
+   rules (.in-crumbs) are in inner.css, shared with the case studies; this is the room above it. */
+.inner-sec.in-svc-intro .wrap {
+  padding-top: clamp(1.25rem, 3vw, 2.25rem);
+}
+
+/* The three services as rows: a letter, the name, then what it covers */
+.in-svc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line-strong);
+}
+.in-svc {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 5fr) minmax(0, 7fr);
+  gap: 0.5rem 1.5rem;
+  align-items: baseline;
+  padding-block: 1.875rem;
+  border-bottom: 1px solid var(--line);
+}
+.inner-sec .in-svc .in-svc-key {
+  color: var(--accent);
+}
+.inner-sec .in-svc h3 {
+  margin: 0;
+  font-weight: 800;
+  font-stretch: 118%;
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.in-svc-body p {
+  max-width: 52ch;
+}
+.inner-sec .in-svc-when {
+  color: var(--fg-soft);
+}
+.inner-sec .in-svc-when .in-mono {
+  margin-right: 0.375rem;
+  color: var(--fg);
+}
+.in-svc-body .in-link {
+  margin-top: 0.375rem;
+}
+
+/* The case study behind the services: one card under a dotted rule, kept to a readable measure */
+.in-svc-proof {
+  max-width: 62ch;
+  padding: calc(3px + 1.5rem) 0 0.5rem;
+  background: var(--dots);
+}
+.inner-sec .in-svc-proof h3 {
+  margin: 0.5rem 0 0.75rem;
+  font-weight: 800;
+  font-stretch: 118%;
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.in-svc-fig b {
+  margin-right: 0.375rem;
+  font-weight: 800;
+  font-stretch: 118%;
+  font-size: 1.375rem;
+  letter-spacing: -0.01em;
+  color: var(--accent);
+}
+.in-svc-proof .credit {
+  margin-top: 0.875rem;
+}
+.in-svc-proof .in-link {
+  margin-top: 0.5rem;
+}
+
+/* Links to the other services at the foot of a service page */
+.in-svc-more {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 1.5rem;
+  max-width: 62ch;
+  margin-top: 1.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--line);
+}
+.in-svc-more ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.in-svc-more a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-weight: 500;
+}
+
+@media (max-width: 899px) {
+  .in-svc {
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    gap: 0.375rem 0.75rem;
+    padding-block: 1.375rem;
+  }
+  .in-svc-body {
+    grid-column: 2;
+  }
+}

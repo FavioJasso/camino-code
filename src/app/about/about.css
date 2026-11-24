@@ -1,0 +1,20 @@
+/* About page only. Builds on inner.css (which PageBand brings in); every class is
+   prefixed "in-" and none of them is used by another page. */
+
+/* a row of text links under a block of copy */
+.in-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.75rem;
+  margin-top: 1rem;
+}
+
+/* the small caption under a client's sentence: who said it, and what was built */
+.quotes figcaption.in-mono {
+  line-height: 1.6;
+}
+
+/* the link from a testimonial to its case study, under the caption */
+.quotes .in-quote-link {
+  margin-top: 0.25rem;
+}
