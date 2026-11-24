@@ -95,7 +95,7 @@ Legal and housekeeping
 36. Approve each sentence added to the privacy page (listed above), and confirm that production is hosted on Vercel.
 37. Is "Last updated: 20 November 2026" the right date line for both legal drafts?
 38. security.txt sends security reports to contact@caminocode.com. Is that the right mailbox?
-39. robots.txt allows every crawler, AI crawlers included; the old site blocked five AI crawlers. Confirm the change.
+39. robots.txt allows every crawler, AI crawlers included; the old site blocked five AI crawlers and four SEO bots (AhrefsBot, SemrushBot, DotBot, MJ12bot). Confirm the change for both groups.
 
 Added on 23 Nov 2026 (usability fixes)
 
@@ -117,3 +117,22 @@ Added on 23 Nov 2026 (usability fixes, second batch)
 52. Approve the three titles "Work: the case studies | Camino Code", "How we work | Camino Code" and "About Camino Code | Camino Code". The last repeats the brand. Options built only from words already on those pages: "Case studies | Camino Code" for Work, and "About: Favio Jasso, founder | Camino Code" for About.
 53. The label "On this page" above the project list on /work is new wording: approve or replace. On a 320x568 phone the list (measured with the older, shorter labels at 252 px) pushes the first project's label and heading just below the first screen. Leave it, or make the list shorter at that width, for example the four names without the short labels?
 54. The trail on /work/daniel-avila ends "Daniel Avila's first portfolio site", the name its breadcrumb data already used, while /work calls the project "Daniel Avila". Keep the long name in the trail, or use the short one in both the trail and the data?
+
+Added on 24 Nov 2026 (release review before the merge to main)
+
+55. Is "Operations Platform" Transparent Energy's own name for its system? The case study capitalizes it (as the old site did); the About note and the service pages write "operations platform". Whichever it is, one form should be used everywhere.
+56. The terms page has the heading "Discovery" over "The discovery session is free." Elsewhere in running copy this is now "the first conversation". Change it with the rest of the terms review, or keep it?
+57. The DANIEL AVILA 64 result line "Same Vercel workflow as before: merge to main and it is live." is developer wording. Keep it, drop it, or say "Daniel updates it the same way as before."?
+58. daniel-avila/card.webp is 295 kB at its largest size, about twice the other cards. Phones now get a 104 kB version; re-encoding the large file would cost a little sharpness on wide screens. Do it?
+
+## Launch checklist (settings only Favio can reach)
+
+Recorded on 24 Nov 2026. None of these can be read or changed from the repository.
+
+- **Booking form mail settings, Vercel > camino-code > Settings > Environment Variables, Production.** `FORM_SECRET` (a long random string, for example the output of `openssl rand -hex 32`), `RESEND_API_KEY` and `BOOKING_FROM` (a sender on a domain that shows Verified in Resend, for example "Camino Code <booking@caminocode.com>"). `BOOKING_TO` is optional and defaults to contact@caminocode.com. The site that was live before this rebuild used none of them. Until all three exist, every request ends in the box "We could not send your request" with the phone number and an email link pre-filled with what was typed. Vercel applies new variables only to new deployments: redeploy after adding them.
+- **After they are set.** Send one real request on www.caminocode.com and check that it arrives. In Vercel's runtime logs, a line starting `[booking] fallback:` means a request was refused.
+- **Previews.** Without `FORM_SECRET` a preview signs form tokens with the development secret that is in this repository. Either give Preview its own `FORM_SECRET`, or keep `RESEND_API_KEY` out of Preview.
+- **Old mail service.** The previous site's form posted to a separate Vercel project (api-send-mail). Once bookings arrive through Resend it can be retired.
+- **Domains.** The Production Branch should be `main`, and caminocode.com should stay a redirect to www.caminocode.com.
+- **Search engines.** Submit https://www.caminocode.com/sitemap.xml in Search Console and Bing Webmaster Tools, and remove the old sitemap entries (sitemap.xml on the bare domain, sitemap-0.xml) if they are registered.
+- **Gone on purpose.** /rss.xml and /humans.txt from the old site now answer 404, and so do the old image files under /assets/ (only cached pages and image search still ask for them).
