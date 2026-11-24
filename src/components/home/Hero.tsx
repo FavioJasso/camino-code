@@ -33,8 +33,10 @@ export function Hero() {
           </p>
           <h1 id="hero-title">Be on the trail before your competitors wake up.</h1>
           <p className="lead">
-            We bring data, AI and the rules to run them safely into small and
-            mid-sized businesses. It starts with a free discovery session.
+            We build software that takes the re-typing out of your team&rsquo;s
+            day, make your reports agree, and put AI to work only where it pays
+            for itself, with rules your staff can follow. It starts with a free
+            conversation.
           </p>
           <div className="hero-actions">
             <Link className="btn btn-lg" href="/discovery">

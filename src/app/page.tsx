@@ -14,7 +14,7 @@ import { pageMetadata } from "@/content/seo";
 export const metadata = pageMetadata({
   title: "Camino Code | Software, data and AI consulting in Newark, NJ",
   description:
-    "Camino Code is a software, data and AI consultancy in Newark, New Jersey, for small and mid-sized businesses. It starts with a free discovery session.",
+    "Camino Code is a software, data and AI consultancy in Newark, New Jersey, for small and mid-sized businesses. It starts with a free conversation.",
   path: "/",
 });
 

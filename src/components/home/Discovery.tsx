@@ -10,11 +10,11 @@ export function Discovery() {
           <p className="mono">
             <i>04</i> Approach <span className="t">07:30 · Daylight</span>
           </p>
-          <h2 id="discovery-title">It starts with discovery.</h2>
+          <h2 id="discovery-title">It starts with a conversation.</h2>
           <p className="lead">
-            A free 45-minute conversation, by video or in person. Within a week
-            you get a one-page summary of where data or AI would pay off, and
-            where it wouldn&rsquo;t. We reply within one business day.
+            A free 45-minute conversation, by video or in person, about the tools
+            you use, where your numbers live and where the hours go. If you go
+            ahead, this is how it runs.
           </p>
         </div>
         <TrailStages />
@@ -27,7 +27,7 @@ export function Discovery() {
             <a className="nowrap" href={site.contact.phoneHref}>
               {site.contact.phone}
             </a>
-            .
+            . You&rsquo;ll hear back within one business day.
           </p>
         </div>
       </div>
