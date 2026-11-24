@@ -47,6 +47,8 @@ const SENDS_PER_VISITOR_PER_HOUR = 10;
 /** Ceiling on sends per server instance per hour, whatever addresses they come from. */
 const GLOBAL_SENDS_PER_HOUR = 60;
 const HOUR_MS = 60 * 60 * 1000;
+/** A stalled mail API must not keep the visitor on "Sending" until the function times out. */
+const SEND_TIMEOUT_MS = 15_000;
 /**
  * Tokens a visitor may request per 10 minutes. The form asks for one when it appears, about every
  * 10 minutes while it is on screen, when the tab or the connection comes back, and after a refused send.
@@ -181,7 +183,7 @@ export async function submitBooking(_prev: State, form: FormData): Promise<State
         "What they would like looked at:",
         b.lookAt ?? "-",
       ].join("\n"),
-    });
+    }, { signal: AbortSignal.timeout(SEND_TIMEOUT_MS) });
     if (error) throw new Error(error.message);
   } catch (e) {
     console.error("[booking] send failed", e instanceof Error ? e.message : e);

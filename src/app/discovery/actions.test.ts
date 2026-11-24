@@ -268,6 +268,13 @@ describe("submitBooking refusals the form can recover from", () => {
     expect(reasons()).toEqual(["send-failed"]);
   });
 
+  it("gives the mail service a deadline, so a stalled send ends in the fallback", async () => {
+    await submitBooking(idle, booking(freshToken()));
+    const options = (send.mock.calls[0] as unknown[])[1] as { signal?: AbortSignal } | undefined;
+    expect(options?.signal).toBeInstanceOf(AbortSignal);
+    expect(options?.signal?.aborted).toBe(false);
+  });
+
   it("does not mark a missing FORM_SECRET in production as retryable", async () => {
     vi.stubEnv("VERCEL_ENV", "production");
     vi.stubEnv("FORM_SECRET", "");
