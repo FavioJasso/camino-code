@@ -1,17 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { discoveryFacts } from "./approach";
 import { faq } from "./faq";
-import { founder, whoYouWorkWith } from "./founder";
+import { founder, moreThan } from "./founder";
 import * as proof from "./proof";
 import { PAGE_PATHS } from "./seo";
 import { servicePages, servicesIndex } from "./service-pages";
 import { services } from "./services";
 import { site } from "./site";
-import { testimonialFor, testimonials } from "./testimonials";
+import { captionFor, testimonialFor, testimonials } from "./testimonials";
 
 /* Rules the copy has to keep, checked on the content files themselves so a slip fails before a page is built. */
 
-const allCopy = { discoveryFacts, faq, founder, whoYouWorkWith, proof, servicePages, servicesIndex, services, site };
+const allCopy = { discoveryFacts, faq, founder, proof, servicePages, servicesIndex, services, site };
 
 /** Every string in a value, however deeply nested. */
 function strings(value: unknown): string[] {
@@ -53,6 +53,17 @@ describe("testimonials", () => {
       const at = full.indexOf(t.quote);
       expect(at === 0 || /[.!?] $/.test(full.slice(0, at))).toBe(true);
     }
+  });
+
+  it("show the two sentences chosen for About, with a caption that says what was built", () => {
+    expect(testimonials.map((t) => t.quote)).toEqual([
+      "From the very beginning, Favio demonstrated a high level of professionalism, commitment, and a genuine interest in understanding the essence of my business.",
+      "What impressed me most was how collaborative the process was.",
+    ]);
+    expect(testimonials.map(captionFor)).toEqual([
+      "Juan Porras · Founder, Victoria's Painting · Business website",
+      "Daniel Avila · IT Support Professional · Portfolio website",
+    ]);
   });
 
   it("each belong to one case study", () => {
@@ -122,14 +133,35 @@ describe("services", () => {
   });
 });
 
-describe("FAQ", () => {
-  it("has eight plain-text answers with no price, guarantee or ownership promise", () => {
-    expect(faq).toHaveLength(8);
-    expect(new Set(faq.map((f) => f.question)).size).toBe(8);
+describe("About", () => {
+  it("asks three questions the page does not already answer, with plain-text answers and no price, guarantee or ownership promise", () => {
+    expect(faq.map((f) => f.question)).toEqual([
+      "Our data is a mess. Is that a problem?",
+      "Do we have to replace the software we already use?",
+      "How does the work run once we agree on it?",
+    ]);
     for (const item of faq) {
       expect(item.question).toMatch(/\?$/);
       expect(item.answer).not.toMatch(/<|\$|guarantee|refund|you own/i);
     }
+  });
+
+  it("says the cleared $65,000+ figure in words, derived from the figure itself", () => {
+    const [saved] = proof.transparentEnergy.figures;
+    expect(saved.value).toBe("$65,000+");
+    expect(moreThan(saved.value)).toBe("more than $65,000");
+    const note = founder.about.note.join(" ");
+    expect(note).toContain(`saves ${moreThan(saved.value)} a year in analyst time`);
+    expect(note).toContain(`in ${proof.transparentEnergy.figures[2].value},`);
+    // the figure itself, with its plus, stays on the figure blocks
+    expect(note).not.toContain("$65,000+");
+  });
+
+  it("is in the first person from top to bottom", () => {
+    const note = founder.about.note.join(" ");
+    expect(note).toMatch(/\bI started Camino Code\b/);
+    expect(note).not.toMatch(/\bFavio\b|\bhe\b/);
+    for (const item of faq) expect(`${item.question} ${item.answer}`).not.toMatch(/\bFavio\b|\bhe\b/);
   });
 });
 

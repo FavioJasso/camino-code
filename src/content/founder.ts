@@ -2,24 +2,31 @@ import { transparentEnergy } from "@/content/proof";
 import { site } from "@/content/site";
 
 /*
- * Who a client is hiring: everything the site says about the founder and about who
- * does the work. The home founder block and the About page both read from here, so
- * the bio is extended in this one file.
+ * Who a client is hiring: everything the site says about the founder. The home founder
+ * block and the About page both read from here, so the bio is extended in this one file.
  *
  * Rules for this file:
  * - Confirmed facts only. Not yet confirmed, and so left out: the founding year,
  *   education, past employers, years of experience, awards, certifications, project
  *   counts, team size, named collaborators, prices, and ownership or support terms.
  *   Add a fact when Favio confirms it; never leave a slot or a guess.
- * - Camino Code is founder-led. Never "one-man" or "solo", and never "our team",
- *   "staff" or "agency".
- * - "We" is how Camino Code works. "Favio" (or "I" in his own note) is used wherever
- *   one person acts or makes the promise.
+ * - Never "one-man" or "solo", and never "our team", "staff" or "agency". Say what the
+ *   client gets instead of putting a label on the company.
+ * - The home block is in the third person, because the rest of the home page speaks as
+ *   the firm. The About note is in the first person from top to bottom.
  * - The Transparent Energy wording stays as cleared: the founder led the build, with
  *   the three figures in src/content/proof.ts and nothing beyond them.
  */
 
 const [savedAYear, , startToRunning] = transparentEnergy.figures;
+
+/**
+ * A "$65,000+" figure as it is said inside a sentence: "more than $65,000". Derived from
+ * the cleared figure, so the note and the figure cannot drift apart.
+ */
+export function moreThan(figure: string): string {
+  return `more than ${figure.replace(/\+$/, "")}`;
+}
 
 export const founder = {
   name: "Favio Jasso",
@@ -27,48 +34,30 @@ export const founder = {
   /** The larger portrait file, for structured data. The page images come from FounderPhoto. */
   portrait: "/people/favio-jasso-800.webp",
 
-  /** Home page block. Third person, short: the full note is on the About page. */
+  /** Home page block. Third person, short: his own note is on the About page. */
   home: {
     heading: "You work with the founder.",
     paragraphs: [
-      `Favio Jasso founded ${site.name} in ${site.contact.place}. He runs every discovery session, leads every build and is your point of contact from the first conversation to hand-over.`,
-      `He led the build of the reconciliation system for ${transparentEnergy.name}. Camino Code has also built DANIEL AVILA 64, a playable 3D portfolio, and websites for Victoria's Painting and Daniel Avila.`,
+      `Favio Jasso started ${site.name} in ${site.contact.place}. The person you talk to first is the person who answers for the work.`,
     ],
-    link: { label: "More about Favio", href: "/about" },
+    link: { label: "Read Favio's note", href: "/about" },
   },
 
   /**
-   * About page block: a short note in Favio's own voice. To extend the bio, add
-   * sentences here (first person) and the matching fact to `home.paragraphs` (third
-   * person) if it belongs on the home page too.
+   * About page block: a note in Favio's own voice. Every sentence here is a draft waiting
+   * for his yes (see PLACEHOLDERS.md).
    */
   about: {
     heading: "Favio Jasso, founder",
     note: [
-      `I founded ${site.name} in ${site.contact.place}. We work with small and mid-sized businesses on software, data and AI.`,
-      `I led the build of the reconciliation system for ${transparentEnergy.name}. Analysts had been reconciling Excel, PDF and vendor files by hand, and an automated system now does it every day. It went from start to running system in ${startToRunning.value} and saves ${savedAYear.value} a year in analyst time.`,
-      "Camino Code has also built DANIEL AVILA 64, a playable 3D portfolio for Daniel Avila, and websites for Victoria's Painting and for Daniel Avila.",
-      "I run every discovery session myself. The person you talk to first is the person who answers for the work.",
+      `A lot of good businesses run on workarounds: the spreadsheet only one person understands, the report someone rebuilds every Monday, the same numbers typed into three systems. That holds until that person takes a week off, or the business grows. I started ${site.name} in ${site.contact.place}, to replace those workarounds with software, cleaner data and, where it pays, AI.`,
+      `${transparentEnergy.name} had a version of this. Their analysts were reconciling Excel, PDF and vendor files by hand. I led the build of an automated system that now does it every day, built into their own operations platform. It went from start to running system in ${startToRunning.value}, and it saves ${moreThan(savedAYear.value)} a year in analyst time.`,
+      "Most of the money is in the work your people repeat every week, rarely in a new platform. So I start with what you already have and fix what costs you most. If you haven't started, you're not behind.",
+      "If we work together, you deal with me, from the first conversation to the finished system. On bigger projects, people I trust take on specific parts, and you still have one person to call.",
     ],
     links: [
       { label: "Read the Transparent Energy case study", href: transparentEnergy.href },
       { label: "See all work", href: "/work" },
     ],
   },
-} as const;
-
-/** The "Who you work with" block on the About page. It also defines the site's "we". */
-export const whoYouWorkWith = {
-  heading: "Who you work with",
-  lead: "Camino Code is founder-led. Favio leads every engagement and is your point of contact from discovery to hand-over.",
-  body: "When a project needs more hands, specialists join for specific parts of the work. Favio stays responsible for all of it.",
-  facts: [
-    { label: "Your contact", value: "Favio Jasso, founder" },
-    { label: "Discovery", value: "Run by Favio" },
-    { label: "The build", value: "Led by Favio" },
-    { label: "Reply time", value: "Within one business day" },
-  ],
-  link: { label: "See how we work", href: "/approach" },
-  /** The one place the site says who "we" is. */
-  we: "When this site says “we”, it means Favio and the people working on your project.",
 } as const;

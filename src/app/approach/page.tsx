@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { BookDiscovery } from "@/components/BookDiscovery";
 import { JsonLd } from "@/components/JsonLd";
 import { PageBand } from "@/components/PageBand";
@@ -45,10 +44,6 @@ export default function ApproachPage() {
           </p>
           <h2 id="stages-title">Then, in stages</h2>
           <TrailStages />
-          <p className="in-aside">
-            Favio leads every stage and is your point of contact from discovery to hand-over.{" "}
-            <Link href="/about#who">Who you work with</Link>
-          </p>
         </div>
       </section>
       <section className="inner-sec in-light in-day" aria-labelledby="start-title">

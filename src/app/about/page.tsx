@@ -5,21 +5,21 @@ import { FounderPhoto } from "@/components/FounderPhoto";
 import { JsonLd } from "@/components/JsonLd";
 import { PageBand } from "@/components/PageBand";
 import { faq } from "@/content/faq";
-import { founder, whoYouWorkWith as who } from "@/content/founder";
+import { founder } from "@/content/founder";
 import { pageMetadata } from "@/content/seo";
-import { testimonials } from "@/content/testimonials";
+import { captionFor, testimonials } from "@/content/testimonials";
 import { breadcrumbList, faqPage, personLd } from "@/lib/structured-data";
 import "./about.css";
 
 export const metadata = pageMetadata({
   title: "About | Camino Code",
   description:
-    "Camino Code is a founder-led software, data and AI consultancy in Newark, New Jersey. Favio Jasso, the founder, leads every engagement from discovery to hand-over.",
+    "Favio Jasso started Camino Code in Newark, NJ to help small and mid-sized businesses with software, data and AI. Book a free first conversation.",
   path: "/about",
 });
 
 /** Link text for each testimonial's case study: two links on one page need two different names. */
-const STUDY_LINK: Record<string, string> = {
+const STUDY_LINK: Record<(typeof testimonials)[number]["href"], string> = {
   "/work/victorias-painting": "Read the Victoria's Painting case study",
   "/work/daniel-avila": "Read the Daniel Avila portfolio case study",
 };
@@ -51,37 +51,12 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-      {/* id "who" is the target of the link under the stages on /approach */}
-      <section className="inner-sec in-light" id="who" aria-labelledby="who-title">
+      <section className="inner-sec in-light in-day" aria-labelledby="clients-title">
         <div className="wrap">
           <p className="in-mono in-label">
-            <i>02</i> Working together
+            <i>02</i> Clients
           </p>
-          <h2 id="who-title">{who.heading}</h2>
-          <p className="in-lead">{who.lead}</p>
-          <p>{who.body}</p>
-          <dl className="facts">
-            {who.facts.map((f) => (
-              <div key={f.label}>
-                <dt className="in-mono">{f.label}</dt>
-                <dd>{f.value}</dd>
-              </div>
-            ))}
-          </dl>
-          <p className="in-aside">{who.we}</p>
-          <div className="in-links">
-            <Link className="in-link" href={who.link.href}>
-              {who.link.label}
-            </Link>
-          </div>
-        </div>
-      </section>
-      <section className="inner-sec in-light in-day" aria-labelledby="kind-words-title">
-        <div className="wrap">
-          <p className="in-mono in-label">
-            <i>03</i> Kind words
-          </p>
-          <h2 id="kind-words-title">Kind words from website projects</h2>
+          <h2 id="clients-title">In their words</h2>
           <div className="quotes">
             {testimonials.map((t) => (
               <div key={t.name}>
@@ -89,28 +64,25 @@ export default function AboutPage() {
                   <blockquote>
                     <p>&ldquo;{t.quote}&rdquo;</p>
                   </blockquote>
-                  <figcaption>
-                    {t.name}, {t.role}, {t.company}
-                  </figcaption>
+                  <figcaption className="in-mono">{captionFor(t)}</figcaption>
                 </figure>
                 <p className="in-quote-link">
                   <Link className="in-link" href={t.href}>
-                    {STUDY_LINK[t.href] ?? `Read the ${t.company} case study`}
+                    {STUDY_LINK[t.href]}
                   </Link>
                 </p>
               </div>
             ))}
           </div>
-          <p className="in-aside">Both were website projects.</p>
         </div>
       </section>
       <section className="inner-sec in-light in-day" aria-labelledby="faq-title">
         <div className="wrap">
           <p className="in-mono in-label">
-            <i>04</i> FAQ
+            <i>03</i> Questions
           </p>
           <h2 id="faq-title">Questions</h2>
-          <Faq items={faq} className="in-faq-cols" />
+          <Faq items={faq} />
         </div>
       </section>
       <BookDiscovery />

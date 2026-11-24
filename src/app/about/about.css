@@ -9,19 +9,12 @@
   margin-top: 1rem;
 }
 
-/* the link from a testimonial to its case study, under the giver's name */
-.quotes .in-quote-link {
-  margin-top: 0.25rem;
+/* the small caption under a client's sentence: who said it, and what was built */
+.quotes figcaption.in-mono {
+  line-height: 1.6;
 }
 
-/* eight questions read better side by side once there is room for two columns */
-@media (min-width: 900px) {
-  .faq.in-faq-cols {
-    max-width: none;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.75rem clamp(1.5rem, 4vw, 4rem);
-  }
-  .faq.in-faq-cols dd {
-    max-width: 52ch;
-  }
+/* the link from a testimonial to its case study, under the caption */
+.quotes .in-quote-link {
+  margin-top: 0.25rem;
 }
