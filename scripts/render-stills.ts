@@ -36,6 +36,7 @@ import {
   type SceneCamera,
 } from '../src/scene/terrain';
 import { sceneFrame, skyOf, toHex, type Dot, type Frame, type RGB } from '../src/scene/frame';
+import { MARK_GAP_WIDTH, MARK_MOUNTAIN, MARK_SUN, MARK_TRAIL, MARK_TRAIL_WIDTH } from '../src/lib/brand-mark';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = join(ROOT, 'public', 'stills');
@@ -744,19 +745,20 @@ export function renderAllStills(): Record<string, string> {
 const WORDMARK =
   'M115 3q-33 0-56-10q-23-10-34-30q-12-19-12-49q0-43 26-66q27-23 76-23q28 0 49 9q22 8 34 24q12 16 12 39h-49q0-11-6-19q-5-7-16-12q-10-4-24-4q-17 0-28 6q-12 6-17 17q-6 11-6 25v8q0 14 5 25q6 11 17 17q12 6 28 6q16 0 26-4q11-4 17-11q6-8 6-19h46q0 22-11 38q-12 16-33 25q-21 8-50 8zm176 0q-12 0-22-2q-9-1-17-6q-7-4-12-11q-4-8-4-19q0-16 8-25q8-9 22-13q15-5 35-6q20-2 44-2v-5q0-7-3-11q-4-5-10-7q-7-2-17-2q-7 0-14 2q-7 1-11 3q-4 3-4 8v2h-45q0-1 0-2q0-1 0-2q0-12 8-21q9-9 26-14q17-5 42-5q23 0 39 5q16 4 25 14q9 9 9 25v54q0 4 2 6q2 3 6 3h12v26q-4 2-11 3q-7 2-15 2q-12 0-19-2q-7-3-11-7q-4-4-5-9h-2q-7 5-15 9q-8 5-19 7q-10 2-22 2zm13-29q6 0 13-1q7-2 13-5q7-3 11-7q4-4 4-10v-8q-22 0-36 2q-14 2-21 6q-7 4-7 11q0 5 3 7q4 3 9 4q5 1 11 1zm127 26v-132h37l3 21h2q6-8 14-14q8-5 18-7q9-3 19-3q17 0 29 6q11 6 17 18h2q7-8 15-14q8-5 17-7q10-3 19-3q18 0 29 6q11 6 17 17q7 12 7 30v82h-45v-75q0-7-2-12q-2-4-5-8q-3-3-7-4q-5-2-11-2q-8 0-15 4q-7 4-11 10q-4 7-4 16v71h-45v-75q0-7-2-12q-1-4-4-8q-3-3-8-4q-4-2-10-2q-9 0-16 4q-7 4-11 10q-4 7-4 16v71zm281-150v-31h45v31zm0 150v-132h45v132zm82 0v-132h36l3 21h2q7-8 15-14q8-5 18-7q10-3 20-3q18 0 30 6q12 6 18 18q6 12 6 29v82h-45v-75q0-7-1-11q-2-5-6-9q-3-3-8-4q-5-2-11-2q-9 0-17 4q-7 4-11 10q-5 7-5 16v71zm261 3q-25 0-44-8q-18-7-28-23q-10-15-10-38q0-23 10-38q10-16 28-23q19-8 44-8q25 0 44 8q18 7 28 23q10 15 10 38q0 23-10 38q-10 16-28 23q-19 8-44 8zm0-31q12 0 20-4q9-4 12-12q4-8 4-19v-6q0-11-4-19q-3-7-12-12q-8-4-20-4q-12 0-20 4q-8 5-12 12q-4 8-4 19v6q0 11 4 19q4 8 12 12q8 4 20 4zm286 31q-34 0-57-10q-22-10-34-30q-11-19-11-49q0-43 26-66q26-23 76-23q28 0 49 9q21 8 33 24q12 16 12 39h-48q0-11-6-19q-6-7-16-12q-10-4-25-4q-17 0-28 6q-11 6-17 17q-6 11-6 25v8q0 14 6 25q6 11 17 17q11 6 28 6q15 0 26-4q11-4 16-11q6-8 6-19h47q0 22-12 38q-11 16-32 25q-21 8-50 8zm204 0q-25 0-43-8q-19-7-29-23q-10-15-10-38q0-23 10-38q10-16 29-23q18-8 43-8q25 0 44 8q18 7 28 23q11 15 11 38q0 23-11 38q-10 16-28 23q-19 8-44 8zm0-31q13 0 21-4q8-4 12-12q3-8 3-19v-6q0-11-3-19q-4-7-12-12q-8-4-21-4q-12 0-20 4q-8 5-12 12q-4 8-4 19v6q0 11 4 19q4 8 12 12q8 4 20 4zm173 31q-19 0-34-7q-15-8-23-23q-8-15-8-39q0-24 8-39q9-15 23-22q14-8 33-8q9 0 17 2q9 2 16 6q7 4 12 10h2v-64h45v181h-37l-3-20h-2q-9 13-22 18q-12 5-27 5zm13-34q11 0 19-4q7-4 11-12q3-7 3-17v-3q0-8-2-14q-2-6-6-11q-4-4-10-7q-6-2-15-2q-11 0-18 4q-7 4-11 11q-3 8-3 18v5q0 10 3 17q4 8 11 11q7 4 18 4zm193 34q-26 0-45-7q-18-8-29-23q-10-15-10-39q0-23 10-38q10-16 29-23q18-8 43-8q26 0 44 7q18 8 28 23q9 15 9 38v10h-116q0 11 4 17q5 7 13 11q8 3 21 3q6 0 12-1q6-2 10-4q5-3 8-7q2-4 3-8h45q0 11-6 20q-5 10-16 16q-11 7-25 10q-15 3-32 3zm-37-84h69q0-6-2-10q-2-5-7-8q-4-3-10-5q-6-2-13-2q-11 0-19 3q-8 3-13 9q-4 6-5 13z';
 
-// The mark, as src/components/BrandMark.tsx draws it on a 26 x 30 canvas: sun, mountain, the camino cut into
-// the peak. Masks make the gap and the trail real cut-outs, so it sits on the scene, not on a flat tile.
+// The mark's master drawing (src/lib/brand-mark.ts, as src/components/BrandMark.tsx draws it) on a 26 x 30
+// canvas: sun, mountain, the camino cut into the peak. Masks make the gap and the trail real cut-outs, so it
+// sits on the scene, not on a flat tile.
 const MARK = {
-  sun: 'cx="13.5" cy="10.5" r="8.5"',
-  mountain: 'M1 28 L12 9.5 L16.5 17 L19.5 14.5 L25 28 Z',
-  trail: 'M5.6 25.8 L20 23.2 L8.4 20.4 L14.4 17.6 L12 13.6',
+  sun: `cx="${MARK_SUN.cx}" cy="${MARK_SUN.cy}" r="${MARK_SUN.r}"`,
+  mountain: MARK_MOUNTAIN,
+  trail: MARK_TRAIL,
 };
 function markSvg(x: number, y: number, scale: number): string {
   const area = 'maskUnits="userSpaceOnUse" x="0" y="0" width="26" height="30"><rect width="26" height="30" fill="#fff"/>';
   return (
     `<g transform="translate(${num(x)} ${num(y)}) scale(${+scale.toFixed(3)})">` +
-    `<mask id="mark-sun" ${area}<path d="${MARK.mountain}" fill="#000" stroke="#000" stroke-width="2.4" stroke-linejoin="round"/></mask>` +
-    `<mask id="mark-peak" ${area}<path d="${MARK.trail}" fill="none" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></mask>` +
+    `<mask id="mark-sun" ${area}<path d="${MARK.mountain}" fill="#000" stroke="#000" stroke-width="${MARK_GAP_WIDTH}" stroke-linejoin="round"/></mask>` +
+    `<mask id="mark-peak" ${area}<path d="${MARK.trail}" fill="none" stroke="#000" stroke-width="${MARK_TRAIL_WIDTH}" stroke-linecap="round" stroke-linejoin="round"/></mask>` +
     `<circle ${MARK.sun} fill="${PALETTE.ember}" mask="url(#mark-sun)"/><path d="${MARK.mountain}" fill="${PALETTE.cream}" mask="url(#mark-peak)"/></g>`
   );
 }

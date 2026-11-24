@@ -1,9 +1,17 @@
 import { useId } from "react";
+import {
+  MARK_GAP_WIDTH as GAP_WIDTH,
+  MARK_MOUNTAIN as MOUNTAIN,
+  MARK_SUN as SUN,
+  MARK_TRAIL as TRAIL,
+  MARK_TRAIL_WIDTH as TRAIL_WIDTH,
+} from "@/lib/brand-mark";
 
 /*
  * The Camino Code mark: first light over the saddle, with the camino cut into the peak.
  * It carries the original logo's picture (a warm sun behind a pale mountain) in the
- * site's three colours. One 26 x 30 drawing, two paintings:
+ * site's three colours. One 26 x 30 drawing (the master in src/lib/brand-mark.ts: the
+ * trail is three angular legs, drawn wide enough to hold at small sizes), two paintings:
  *
  * - tone "dark" (default): for the Midnight header and any dark panel. The gap around
  *   the mountain and the trail are painted in Midnight.
@@ -13,10 +21,6 @@ import { useId } from "react";
  * Size it from CSS (the header reserves 26 x 30 px). It is decorative next to the
  * wordmark, so it is hidden from assistive technology.
  */
-
-const SUN = { cx: 13.5, cy: 10.5, r: 8.5 };
-const MOUNTAIN = "M1 28 L12 9.5 L16.5 17 L19.5 14.5 L25 28 Z";
-const TRAIL = "M5.6 25.8 L20 23.2 L8.4 20.4 L14.4 17.6 L12 13.6";
 
 export function BrandMark({
   tone = "dark",
@@ -35,7 +39,7 @@ export function BrandMark({
         <defs>
           <mask id={sunMask} maskUnits="userSpaceOnUse" x="0" y="0" width="26" height="30">
             <rect width="26" height="30" fill="#fff" />
-            <path d={MOUNTAIN} fill="#000" stroke="#000" strokeWidth="2.4" strokeLinejoin="round" />
+            <path d={MOUNTAIN} fill="#000" stroke="#000" strokeWidth={GAP_WIDTH} strokeLinejoin="round" />
           </mask>
           <mask id={peakMask} maskUnits="userSpaceOnUse" x="0" y="0" width="26" height="30">
             <rect width="26" height="30" fill="#fff" />
@@ -43,7 +47,7 @@ export function BrandMark({
               d={TRAIL}
               fill="none"
               stroke="#000"
-              strokeWidth="1.8"
+              strokeWidth={TRAIL_WIDTH}
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -63,14 +67,14 @@ export function BrandMark({
         d={MOUNTAIN}
         fill="var(--cream)"
         stroke="var(--midnight)"
-        strokeWidth="2.4"
+        strokeWidth={GAP_WIDTH}
         strokeLinejoin="round"
         paintOrder="stroke"
       />
       <path
         d={TRAIL}
         stroke="var(--midnight)"
-        strokeWidth="1.8"
+        strokeWidth={TRAIL_WIDTH}
         strokeLinecap="round"
         strokeLinejoin="round"
       />

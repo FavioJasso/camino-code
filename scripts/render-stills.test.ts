@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import sharp from 'sharp';
 import { SADDLE } from '../src/scene/terrain';
+import { MARK_TRAIL, MARK_TRAIL_WIDTH } from '../src/lib/brand-mark';
 import { BAND_LAYOUTS, BAND_STILLS, OG_SIZE, SADDLE_LABEL_METRES, bandStillName, renderAllStills, writeStills } from './render-stills';
 
 const BAND_NAMES = BAND_STILLS.flatMap(({ stage, time }) => BAND_LAYOUTS.map((layout) => bandStillName(stage, time, layout)));
@@ -132,11 +133,35 @@ describe('icons', () => {
     expect(sizes).toEqual([16, 32, 48]);
   });
 
-  it('the tab icon is the square tile: sun and mountain, no trail', () => {
+  it('the tab icon is the small tier: sun, mountain with a 3.2 gap, and a one-turn trail cut 3.6 wide', () => {
     const svg = readFileSync(join(ROOT, 'src', 'app', 'icon.svg'), 'utf8');
     expect(svg).toContain('viewBox="0 0 32 32"');
+    expect(svg).toContain('<rect width="32" height="32" rx="7" fill="#0E1320"/>');
     expect(svg).toContain('<circle cx="16.5" cy="10.5" r="8.5" fill="#FF7A3D"/>');
-    expect(svg.match(/<path /g)).toHaveLength(1);
+    expect(svg).toContain(
+      '<path d="M4 28 L15 9.5 L19.5 17 L22.5 14.5 L28 28 Z" fill="#F4EBDC" stroke="#0E1320" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke"/>',
+    );
+    expect(svg).toContain(
+      '<path d="M9.5 25 L21.5 22.4 L14.6 17.6" fill="none" stroke="#0E1320" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>',
+    );
+    expect(svg.match(/<path /g)).toHaveLength(2);
+  });
+
+  it('the app icons draw the same master trail as BrandMark and the share image', () => {
+    const script = readFileSync(join(ROOT, 'scripts', 'render-icons.mjs'), 'utf8');
+    expect(script.match(/^const TRAIL = '([^']+)';$/m)?.[1]).toBe(MARK_TRAIL);
+    expect(Number(script.match(/^const TRAIL_WIDTH = ([\d.]+);$/m)?.[1])).toBe(MARK_TRAIL_WIDTH);
+    // the app-icon tile paints that trail, not a literal of its own
+    expect(script).toContain('<path d="${TRAIL}" stroke="${MIDNIGHT}" stroke-width="${TRAIL_WIDTH}"');
+    // the component and the share image read the shared drawing rather than keeping copies
+    const component = readFileSync(join(ROOT, 'src', 'components', 'BrandMark.tsx'), 'utf8');
+    expect(component).toContain('from "@/lib/brand-mark"');
+    expect(component).not.toMatch(/"M\d/);
+    const stills = readFileSync(join(ROOT, 'scripts', 'render-stills.ts'), 'utf8');
+    expect(stills).toContain('trail: MARK_TRAIL,');
+    expect(stills).toContain('stroke-width="${MARK_TRAIL_WIDTH}"');
+    expect(MARK_TRAIL).toBe('M5.5 25.4 L19.6 22.6 L9.8 18.8 L12.2 15');
+    expect(MARK_TRAIL_WIDTH).toBe(2.6);
   });
 
   it('the Apple and manifest icons are opaque squares of the stated sizes', async () => {
