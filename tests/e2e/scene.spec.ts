@@ -395,3 +395,30 @@ test("home -> /work -> /approach -> / leaves exactly one live WebGL context", as
   expect(await liveContexts()).toBe(1);
   expect(await page.evaluate(() => document.querySelectorAll("canvas").length)).toBe(1);
 });
+
+test("with the browser's text at 200% the readouts sit under the header, inside the screen, and clear of the headline", async ({
+  page,
+  context,
+}) => {
+  const cdp = await context.newCDPSession(page);
+  await cdp.send("Page.enable");
+  await cdp.send("Page.setFontSizes", { fontSizes: { standard: 32, fixed: 32 } });
+  await page.goto("/");
+  await expect(page.locator("#scene")).toHaveClass(/\bis-live\b/, { timeout: 10_000 });
+  await expect(page.locator("#scene-ui")).toContainText("Stage 0");
+  await page.waitForTimeout(500);
+  const m = await page.evaluate(() => {
+    const [box, tag] = [...document.getElementById("scene-ui")!.children] as HTMLElement[];
+    const r = box.getBoundingClientRect();
+    const t = tag.querySelector("span")!.getBoundingClientRect();
+    const h = document.getElementById("hero-title")!.getBoundingClientRect();
+    const crosses = t.right > h.left && t.left < h.right && t.bottom > h.top && t.top < h.bottom;
+    return {
+      belowHeader: r.top >= document.querySelector(".site-head")!.getBoundingClientRect().bottom,
+      inside: r.right <= innerWidth,
+      textFits: [...box.querySelectorAll("div")].every((row) => row.scrollWidth <= row.clientWidth),
+      tagHiddenIfCrossing: !crosses || tag.style.opacity === "0",
+    };
+  });
+  expect(m).toEqual({ belowHeader: true, inside: true, textFits: true, tagHiddenIfCrossing: true });
+});
