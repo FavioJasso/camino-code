@@ -313,6 +313,10 @@ p + .ticks,
 .in-figs[data-count="4"] {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
+/* a service page leads with one figure, which takes the whole row */
+.in-figs[data-count="1"] {
+  grid-template-columns: minmax(0, 1fr);
+}
 .in-fig {
   padding: 2.25rem 1.5rem 2.25rem 0;
 }

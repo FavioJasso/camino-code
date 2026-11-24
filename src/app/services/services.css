@@ -74,18 +74,11 @@
   margin-top: 0.375rem;
 }
 
-/* Case studies behind the services: two entries side by side */
-.in-svc-proofs {
-  list-style: none;
-  margin: 0;
-  padding: 3px 0 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 clamp(1.5rem, 4vw, 4rem);
-  background: var(--dots);
-}
+/* The case study behind the services: one card under a dotted rule, kept to a readable measure */
 .in-svc-proof {
-  padding-block: 1.5rem 0.5rem;
+  max-width: 62ch;
+  padding: calc(3px + 1.5rem) 0 0.5rem;
+  background: var(--dots);
 }
 .inner-sec .in-svc-proof h3 {
   margin: 0.5rem 0 0.75rem;
@@ -144,11 +137,5 @@
   }
   .in-svc-body {
     grid-column: 2;
-  }
-  .in-svc-proofs {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .in-svc-proof + .in-svc-proof {
-    border-top: 1px solid var(--line);
   }
 }

@@ -260,8 +260,7 @@ export const caseStudies = [
   { name: danielAvila.name, kind: "First portfolio site", href: danielAvila.href },
 ] as const;
 
-/** Proof blocks that service pages can show, keyed by ServicePage["proof"]. */
+/** Case studies that the service pages and the /services index can show, keyed by ProofOnPage["study"]. */
 export const proofBlocks = {
   transparentEnergy,
-  danielAvila64,
 } as const;

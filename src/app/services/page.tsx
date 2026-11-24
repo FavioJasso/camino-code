@@ -4,7 +4,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { PageBand } from "@/components/PageBand";
 import { proofBlocks } from "@/content/proof";
 import { pageMetadata } from "@/content/seo";
-import { servicePages, servicesIndex } from "@/content/service-pages";
+import { proofFigure, servicePages, servicesIndex } from "@/content/service-pages";
 import { services } from "@/content/services";
 import { breadcrumbList } from "@/lib/structured-data";
 import "./services.css";
@@ -16,11 +16,11 @@ export const metadata = pageMetadata({
 });
 
 export default function ServicesPage() {
-  // Only services whose own page shows a case study appear under "Case studies"; the rest make no proof claim.
-  const proofs = services.flatMap((service) => {
-    const key = servicePages[service.slug].proof;
-    return key ? [{ service, proof: proofBlocks[key] }] : [];
-  });
+  // One project shows two services: the card names every service whose own page carries this study.
+  const card = servicesIndex.proof;
+  const study = proofBlocks[card.study];
+  const figure = proofFigure(card);
+  const shownOn = services.filter((s) => servicePages[s.slug].proof?.study === card.study).map((s) => s.name);
 
   return (
     <>
@@ -86,23 +86,19 @@ export default function ServicesPage() {
           <p className="in-mono in-label">
             <i>03</i> Proof
           </p>
-          <h2 id="proof-title">Case studies</h2>
-          <ul className="in-svc-proofs">
-            {proofs.map(({ service, proof }) => (
-              <li className="in-svc-proof" key={service.slug}>
-                <p className="in-mono">{service.name}</p>
-                <h3>{proof.name}</h3>
-                <p className="in-svc-fig">
-                  <b>{proof.figures[0].value}</b> {proof.figures[0].label}
-                </p>
-                <p>{proof.summary}</p>
-                <p className="in-mono credit">{proof.wording}</p>
-                <Link className="in-link" href={proof.href}>
-                  Read the {proof.name} case study
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <h2 id="proof-title">{card.heading}</h2>
+          <div className="in-svc-proof">
+            <p className="in-mono">{shownOn.join(" and ")}</p>
+            <h3>{study.name}</h3>
+            <p className="in-svc-fig">
+              <b>{figure.value}</b> {figure.label}
+            </p>
+            <p>{card.summary}</p>
+            <p className="in-mono credit">{study.wording}</p>
+            <Link className="in-link" href={study.href}>
+              Read the {study.name} case study
+            </Link>
+          </div>
           <Link className="in-link" href="/work">
             See all work
           </Link>

@@ -7,7 +7,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { PageBand } from "@/components/PageBand";
 import { proofBlocks } from "@/content/proof";
 import { pageMetadata } from "@/content/seo";
-import { servicePages } from "@/content/service-pages";
+import { proofFigure, servicePages } from "@/content/service-pages";
 import { services } from "@/content/services";
 import { breadcrumbList, faqPage, serviceLd } from "@/lib/structured-data";
 import "../services.css";
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
 export default async function ServicePage({ params }: { params: Promise<Params> }) {
   const page = pageFor((await params).slug);
   if (!page) notFound();
-  const proof = page.proof ? proofBlocks[page.proof] : null;
+  const proof = page.proof ? { ...proofBlocks[page.proof.study], figure: proofFigure(page.proof), summary: page.proof.summary } : null;
   const service = services.find((s) => s.slug === page.slug);
   const others = services.filter((s) => s.slug !== page.slug);
   const path = `/services/${page.slug}`;
@@ -96,14 +96,14 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
               <i>03</i> Proof
             </p>
             <h2 id="proof-title">{proof.name}</h2>
-            <Figures figures={proof.figures} />
+            <Figures figures={[proof.figure]} />
             <div className="in-proof-body">
               <div>
                 <p>{proof.summary}</p>
                 <p className="in-mono credit">{proof.wording}</p>
               </div>
               <Link className="in-link" href={proof.href}>
-                Read the case study
+                Read the {proof.name} case study
               </Link>
             </div>
           </div>
@@ -138,7 +138,6 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
               </div>
             ))}
           </dl>
-          <p className="in-aside">Favio Jasso, Camino Code&rsquo;s founder, runs the discovery session.</p>
           <nav className="in-svc-more" aria-labelledby="more-title">
             <p className="in-mono" id="more-title">
               Other services

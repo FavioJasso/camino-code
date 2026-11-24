@@ -4,7 +4,7 @@ import { faq } from "./faq";
 import { founder, moreThan } from "./founder";
 import * as proof from "./proof";
 import { PAGE_PATHS } from "./seo";
-import { servicePages, servicesIndex } from "./service-pages";
+import { proofFigure, servicePages, servicesIndex } from "./service-pages";
 import { services } from "./services";
 import { site } from "./site";
 import { captionFor, testimonialFor, testimonials } from "./testimonials";
@@ -125,11 +125,42 @@ describe("services", () => {
       expect(s.href).toBe(`/services/${s.slug}`);
       expect(PAGE_PATHS).toContain(s.href);
       expect(servicePages[s.slug].slug).toBe(s.slug);
-      expect(servicePages[s.slug].faq).toHaveLength(3);
+      // the band on the same page answers cost and reply time, so each page keeps two questions
+      expect(servicePages[s.slug].faq).toHaveLength(2);
+      for (const { q } of servicePages[s.slug].faq) expect(q).not.toMatch(/cost|hear back/i);
     }
-    expect(servicePages.software.proof).toBe("danielAvila64");
-    expect(servicePages.data.proof).toBe("transparentEnergy");
+    expect(servicePages.software.faq.map((f) => f.q)).toEqual([
+      "Do we have to replace what we already use?",
+      "Do you build websites too?",
+    ]);
+  });
+
+  it("show Transparent Energy on Software and Data, each from its own side and with its own figure", () => {
+    const software = servicePages.software.proof!;
+    const data = servicePages.data.proof!;
+    expect(software.study).toBe("transparentEnergy");
+    expect(data.study).toBe("transparentEnergy");
     expect(servicePages["ai-governance"].proof).toBeNull();
+    expect(proofFigure(software)).toEqual({ value: "85%", label: "less manual reconciliation work" });
+    expect(proofFigure(data).value).toBe("$65,000+");
+    expect(proofFigure(servicesIndex.proof).value).toBe("$65,000+");
+    // Data keeps the study's own summary; Software describes the software side
+    expect(data.summary).toBe(proof.transparentEnergy.summary);
+    expect(software.summary).not.toBe(data.summary);
+    expect(software.summary).toMatch(/runs on a schedule/);
+  });
+
+  it("lead Software with automation and keep a website as one part of it", () => {
+    expect(services[0].line).toMatch(/^Automation/);
+    expect(services[0].line).not.toMatch(/website/i);
+    expect(servicePages.software.gets[0]).toMatch(/^Automation/);
+    expect(servicePages.software.gets.at(-1)).toMatch(/^A website, when you need one/);
+  });
+
+  it("only offer DANIEL AVILA 64's developer figures on its own case study", () => {
+    expect(Object.keys(proof.proofBlocks)).toEqual(["transparentEnergy"]);
+    const elsewhere = strings({ servicePages, servicesIndex, services, founder, faq, testimonials, caseStudies: proof.caseStudies });
+    for (const line of elsewhere) expect(line).not.toMatch(/158 kB/);
   });
 });
 
