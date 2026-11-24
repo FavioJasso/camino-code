@@ -12,7 +12,7 @@ import { StudyCrumbs } from "../StudyCrumbs";
 import { GALLERY_SIZES, WorkImage } from "../WorkImage";
 
 const description =
-  "The first website for Victoria's Painting, a New Jersey painting company: services, service areas, a free-estimate form and call buttons, built by Camino Code.";
+  "The first website for Victoria’s Painting, a New Jersey painting company: services, service areas, a free-estimate form and call buttons, built by Camino Code.";
 
 /** Home / Work / this study: shown above "At a glance" and given to the structured data, from one list. */
 const trail = [
@@ -22,7 +22,7 @@ const trail = [
 ];
 
 export const metadata = pageMetadata({
-  title: "Victoria's Painting case study | Camino Code",
+  title: "Victoria’s Painting case study | Camino Code",
   description,
   path: vp.href,
 });

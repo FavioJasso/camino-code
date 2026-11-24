@@ -26,13 +26,13 @@ describe("structured data builders", () => {
     const data = breadcrumbList([
       { name: "Home", path: "/" },
       { name: "Work", path: "/work" },
-      { name: "Victoria's Painting", path: "/work/victorias-painting" },
+      { name: "Victoria’s Painting", path: "/work/victorias-painting" },
     ]);
     expect(data["@type"]).toBe("BreadcrumbList");
     expect(data.itemListElement).toEqual([
       { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
       { "@type": "ListItem", position: 2, name: "Work", item: `${SITE_URL}/work` },
-      { "@type": "ListItem", position: 3, name: "Victoria's Painting", item: `${SITE_URL}/work/victorias-painting` },
+      { "@type": "ListItem", position: 3, name: "Victoria’s Painting", item: `${SITE_URL}/work/victorias-painting` },
     ]);
   });
 

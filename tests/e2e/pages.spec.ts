@@ -56,13 +56,13 @@ test("Software and Data both prove themselves with Transparent Energy, each with
   const software = await proofOn("software");
   expect(software).toContain("85% less manual reconciliation work");
   expect(software).toContain(
-    "A system built into Transparent Energy's own operations platform now does the daily reconciliation their analysts used to do by hand. It runs on a schedule, flags anything that doesn't match, and gives the team dashboards and exports to work from.",
+    "A system built into Transparent Energy’s own operations platform now does the daily reconciliation their analysts used to do by hand. It runs on a schedule, flags anything that doesn’t match, and gives the team dashboards and exports to work from.",
   );
-  expect(software.toLowerCase()).toContain("camino code's founder led the build");
+  expect(software.toLowerCase()).toContain("camino code’s founder led the build");
   const data = await proofOn("data");
   expect(data).toContain("$65,000+ a year saved in analyst time");
   expect(data).toContain("Analysts were reconciling Excel, PDF and vendor files by hand. An automated system now does it every day.");
-  expect(data.toLowerCase()).toContain("camino code's founder led the build");
+  expect(data.toLowerCase()).toContain("camino code’s founder led the build");
   await page.goto("/services/ai-governance");
   expect(await page.locator("main").innerText()).not.toContain("Transparent Energy");
 });
@@ -145,7 +145,7 @@ test("case study and about carry no banned claims", async ({ page }) => {
   // textContent: the captions are set in uppercase mono, and the names are checked as written
   const about = (await page.locator("main").textContent()) ?? "";
   expect(about).toContain("Juan Porras");
-  expect(about).toContain("Victoria's Painting");
+  expect(about).toContain("Victoria’s Painting");
   expect(about).toContain("Daniel Avila");
 });
 

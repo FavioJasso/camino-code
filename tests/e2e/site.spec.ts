@@ -28,8 +28,8 @@ test("/services introduces the three services and shows one project that spans t
   const text = flat(await card.innerText());
   expect(text).toMatch(/^Software and Data /i);
   expect(text).toContain("$65,000+ a year saved in analyst time");
-  expect(text).toContain("The software runs it every day, built into the client's own operations platform, with dashboards and exports.");
-  expect(text.toLowerCase()).toContain("camino code's founder led the build");
+  expect(text).toContain("The software runs it every day, built into the client’s own operations platform, with dashboards and exports.");
+  expect(text.toLowerCase()).toContain("camino code’s founder led the build");
   await expect(card.getByRole("link", { name: "Read the Transparent Energy case study" })).toHaveAttribute("href", "/work/transparent-energy");
   const all = flat(await main.innerText());
   expect(all).not.toContain("DANIEL AVILA 64");
@@ -385,13 +385,13 @@ test("nothing links to the old /about#who anchor, and the About page no longer h
    own test in work.spec.ts. */
 const JUMPS: { name: string; route: string; hash: string; jump: (page: import("@playwright/test").Page) => Promise<void> }[] = [
   {
-    name: "the home hero's link to the proof",
+    name: "the home hero’s link to the proof",
     route: "/",
     hash: "#work",
     jump: (page) => page.locator('a.link[href="#work"]').click(),
   },
   {
-    name: "a case study's link to the client's words",
+    name: "a case study’s link to the client’s words",
     route: "/work/victorias-painting",
     hash: "#client-words",
     jump: (page) => page.locator(".in-outcome").getByRole("link", { name: "In the client’s words" }).click(),
@@ -407,7 +407,7 @@ const JUMPS: { name: string; route: string; hash: string; jump: (page: import("@
     },
   },
   {
-    name: "a link in the booking form's error summary",
+    name: "a link in the booking form’s error summary",
     route: "/discovery",
     hash: "#f-name",
     jump: async (page) => {

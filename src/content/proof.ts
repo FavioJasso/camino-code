@@ -1,6 +1,6 @@
 export const transparentEnergy = {
   name: "Transparent Energy",
-  wording: "Camino Code's founder led the build",
+  wording: "Camino Code’s founder led the build",
   figures: [
     { value: "$65,000+", label: "a year saved in analyst time" },
     { value: "85%", label: "less manual reconciliation work" },
@@ -28,7 +28,7 @@ export const transparentEnergyStudy = {
     "A Python ETL pipeline, using Pandas and regular expressions, that cleans, matches and consolidates data from each source.",
     "Matching logic that lines up contract deal IDs with vendor data.",
     "A validation layer that flags discrepancies and leaves a clear audit trail.",
-    "Dashboards inside Transparent Energy's Operations Platform to follow reconciliation results.",
+    "Dashboards inside Transparent Energy’s Operations Platform to follow reconciliation results.",
     "Excel and PDF exports for reporting.",
     "A configurable scheduler that refreshes the data every day.",
   ],
@@ -40,7 +40,7 @@ export const transparentEnergyStudy = {
   ],
   stack: ["Python", "Pandas", "Regular expressions", "AWS S3", "AWS Elastic Beanstalk"],
   handedOver:
-    "A running system inside the company's own Operations Platform: the daily pipeline, the validation checks, the dashboards and the exports.",
+    "A running system inside the company’s own Operations Platform: the daily pipeline, the validation checks, the dashboards and the exports.",
 } as const;
 
 /** DANIEL AVILA 64: Camino Code built it for Daniel Avila. Facts come from the project's production build and test runs. */
@@ -127,30 +127,30 @@ export const danielAvila64Study = {
 
 /** Victoria's Painting: the company's first website. Facts come from the old case-study page and screenshots of the client's site. */
 export const victoriasPainting = {
-  name: "Victoria's Painting",
-  wording: "Built by Camino Code for Victoria's Painting",
+  name: "Victoria’s Painting",
+  wording: "Built by Camino Code for Victoria’s Painting",
   summary:
     "The first website for a New Jersey painting company, with its services, the towns it serves and a free-estimate form.",
   href: "/work/victorias-painting",
   cardImage: {
     src: "/work/victorias-painting/card.webp",
-    alt: "The Victoria's Painting home page in a browser window: a navy hero with the headline Transform Your Home, four round service icons and a Call Us button.",
+    alt: "The Victoria’s Painting home page in a browser window: a navy hero with the headline Transform Your Home, four round service icons and a Call Us button.",
   },
 } as const;
 
 export const victoriasPaintingStudy = {
-  title: "Victoria's Painting: a first website for a painting company",
+  title: "Victoria’s Painting: a first website for a painting company",
   subtitle:
-    "How we built a clean, modern website that shows homeowners what Victoria's Painting does and makes it easy to get in touch.",
+    "How we built a clean, modern website that shows homeowners what Victoria’s Painting does and makes it easy to get in touch.",
   facts: [
-    { label: "Client", value: "Victoria's Painting" },
+    { label: "Client", value: "Victoria’s Painting" },
     { label: "Industry", value: "Painting company, New Jersey" },
     { label: "Project", value: "Website design and build" },
   ],
   challengeIntro:
-    "Victoria's Painting needed a professional website to reach more customers and show its painting services. The main challenges were:",
+    "Victoria’s Painting needed a professional website to reach more customers and show its painting services. The main challenges were:",
   challenges: [
-    "No online presence to show the company's work and services.",
+    "No online presence to show the company’s work and services.",
     "Showing trust and experience with clear information.",
     "Making it easy for customers to get in touch quickly.",
   ],
@@ -164,10 +164,10 @@ export const victoriasPaintingStudy = {
     "A service-area section with a Google map and a list of the towns served.",
     "Large call buttons that show the phone number, for quick contact.",
     "A free-estimate form that asks which service is needed.",
-    "A statistics band for the company's own track record.",
+    "A statistics band for the company’s own track record.",
   ],
   phases: [
-    { phase: "Discovery and planning", line: "Met with the client to understand the business goals. Researched other painting company websites. Planned the site's structure and content." },
+    { phase: "Discovery and planning", line: "Met with the client to understand the business goals. Researched other painting company websites. Planned the site’s structure and content." },
     { phase: "Design", line: "Created sample designs in Figma. Made layouts that adjust to any screen size. Chose colors and fonts that build trust." },
     { phase: "Development", line: "Built the site with React. Added the contact form with EmailJS. Integrated Google Maps for the service areas." },
     { phase: "Testing and deployment", line: "Tested on different browsers and devices. Checked loading speed and fixed issues. Launched the site with hosting and security." },
@@ -175,11 +175,11 @@ export const victoriasPaintingStudy = {
   gallery: [
     { src: "/work/victorias-painting/gallery-01.webp", alt: "The Our Services section: six photo cards, from drywall painting and repair to deck sealing and staining, each with an Explore button." },
     { src: "/work/victorias-painting/gallery-02.webp", alt: "The Areas Served section: a Google map of northern New Jersey with pins, beside a list of twenty towns and a call button." },
-    { src: "/work/victorias-painting/gallery-03.webp", alt: "The free-estimate form, with name, email, phone, service and message fields, beside a card with the company's phone, email and location." },
+    { src: "/work/victorias-painting/gallery-03.webp", alt: "The free-estimate form, with name, email, phone, service and message fields, beside a card with the company’s phone, email and location." },
     { src: "/work/victorias-painting/gallery-04.webp", alt: "The Ready For A Change section: five statistics tiles beside a short pitch and a Get Free Consultation button." },
   ],
   results: [
-    "Victoria's Painting has its first website, live at victoriaspainting.com.",
+    "Victoria’s Painting has its first website, live at victoriaspainting.com.",
     "Services, service areas and contact details each have a clear place on the site.",
     "Customers can call the number on the buttons or ask for a free estimate through the form.",
     "Layouts adjust to any screen size, and the site was tested on different browsers and devices before launch.",
@@ -197,16 +197,16 @@ export const danielAvila = {
   href: "/work/daniel-avila",
   cardImage: {
     src: "/work/daniel-avila/card.webp",
-    alt: "Daniel Avila's first portfolio site in a browser window: his name, the title Desktop Support Technician, two buttons and his portrait on a soft blue background.",
+    alt: "Daniel Avila’s first portfolio site in a browser window: his name, the title Desktop Support Technician, two buttons and his portrait on a soft blue background.",
   },
 } as const;
 
 export const danielAvilaStudy = {
   title: "Daniel Avila: a first portfolio site",
   // names the project where the client's name alone would be confused with DANIEL AVILA 64 (structured data)
-  project: "Daniel Avila's first portfolio site",
+  project: "Daniel Avila’s first portfolio site",
   subtitle:
-    "How we built a clean, modern portfolio site that sets out an IT professional's skills, certifications and experience.",
+    "How we built a clean, modern portfolio site that sets out an IT professional’s skills, certifications and experience.",
   facts: [
     { label: "Client", value: "Daniel Avila" },
     { label: "Industry", value: "Personal portfolio" },
@@ -238,7 +238,7 @@ export const danielAvilaStudy = {
   gallery: [
     { src: "/work/daniel-avila/gallery-01.webp", alt: "The projects section: two numbered cards, a high-performance PC build and 3D printing projects, each with tags and a View Details button." },
     { src: "/work/daniel-avila/gallery-02.webp", alt: "The about section: a three-paragraph bio beside three highlight cards, Technical Expertise, User-Focused Support and Continuous Growth." },
-    { src: "/work/daniel-avila/gallery-03.webp", alt: "The experience section: two part-time IT support roles, each shown with the employer's logo." },
+    { src: "/work/daniel-avila/gallery-03.webp", alt: "The experience section: two part-time IT support roles, each shown with the employer’s logo." },
   ],
   results: [
     "Daniel had his first portfolio site, live at danielavila.tech.",

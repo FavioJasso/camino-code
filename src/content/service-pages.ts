@@ -60,7 +60,7 @@ export const servicesIndex = {
     study: "transparentEnergy",
     figure: "$65,000+",
     summary:
-      "The data work cleans and matches Excel, PDF and vendor files. The software runs it every day, built into the client's own operations platform, with dashboards and exports.",
+      "The data work cleans and matches Excel, PDF and vendor files. The software runs it every day, built into the client’s own operations platform, with dashboards and exports.",
   } satisfies ProofOnPage & { heading: string },
 } as const;
 
@@ -79,7 +79,7 @@ export const servicePages: Record<Service["slug"], ServicePage> = {
       "Automation, internal tools and integrations built around how your business already runs, and a website when you need one. Start with a free conversation.",
     kicker: "Software",
     intro:
-      "Most businesses do not need a new platform. They need the three or four things their team does every day to stop living in spreadsheets, inboxes and someone's memory.",
+      "Most businesses do not need a new platform. They need the three or four things their team does every day to stop living in spreadsheets, inboxes and someone’s memory.",
     problems: [
       "Your team re-types the same information into two or three systems.",
       "Work depends on a spreadsheet that only one person fully understands.",
@@ -87,7 +87,7 @@ export const servicePages: Record<Service["slug"], ServicePage> = {
       "Off-the-shelf software almost fits, but the gap is where the time goes.",
     ],
     gets: [
-      "Automation for the jobs your team repeats every day or every week, so they run on a schedule instead of on someone's memory.",
+      "Automation for the jobs your team repeats every day or every week, so they run on a schedule instead of on someone’s memory.",
       "Internal tools shaped around your actual process, not a generic one.",
       "Integrations that move data between the systems you already pay for.",
       "Client portals, so customers can see their own status without asking.",
@@ -108,7 +108,7 @@ export const servicePages: Record<Service["slug"], ServicePage> = {
       study: "transparentEnergy",
       figure: "85%",
       summary:
-        "A system built into Transparent Energy's own operations platform now does the daily reconciliation their analysts used to do by hand. It runs on a schedule, flags anything that doesn't match, and gives the team dashboards and exports to work from.",
+        "A system built into Transparent Energy’s own operations platform now does the daily reconciliation their analysts used to do by hand. It runs on a schedule, flags anything that doesn’t match, and gives the team dashboards and exports to work from.",
     },
   },
   data: {

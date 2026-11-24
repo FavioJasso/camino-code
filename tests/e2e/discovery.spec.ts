@@ -2,7 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
 const REFUSED =
-  "Your details are still in the form, so you can try again. You can also call +1 973-234-2073, or email us at contact@caminocode.com and we'll reply within one business day.";
+  "Your details are still in the form, so you can try again. You can also call +1 973-234-2073, or email us at contact@caminocode.com and we’ll reply within one business day.";
 const NOT_SENT =
   "Your request did not go through. Your details are still in the form. Check your connection and try again. You can also call +1 973-234-2073 or email us at contact@caminocode.com.";
 /**

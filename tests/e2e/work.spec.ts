@@ -52,14 +52,14 @@ async function expectHoodLine(hood: Locator) {
 
 test("Victoria's Painting case study: facts only, the client's quote, gallery and visit link", async ({ page }) => {
   await page.goto("/work/victorias-painting");
-  await expect(page.locator("h1")).toHaveText("Victoria's Painting: a first website for a painting company");
+  await expect(page.locator("h1")).toHaveText("Victoria’s Painting: a first website for a painting company");
   const main = flat(await page.locator("main").innerText());
   // no figures block, and none of the old template stats, the client's own numbers, or unconfirmed durations
   await expect(page.locator(".in-fig")).toHaveCount(0);
   for (const banned of ["100%", "3x", "24/7", "SEO", "390", "40 years", "members", "4 months", "3 weeks"]) {
     expect(main, banned).not.toContain(banned);
   }
-  expect(main).toMatch(/Built by Camino Code for Victoria's Painting/i);
+  expect(main).toMatch(/Built by Camino Code for Victoria’s Painting/i);
   for (const fact of ["Painting company, New Jersey", "Website design and build", "Figma", "React", "EmailJS", "Google Maps"]) {
     expect(main.toLowerCase(), fact).toContain(fact.toLowerCase());
   }
@@ -70,14 +70,14 @@ test("Victoria's Painting case study: facts only, the client's quote, gallery an
   await expect(line.locator("blockquote")).toHaveText(
     "“From the very beginning, Favio demonstrated a high level of professionalism, commitment, and a genuine interest in understanding the essence of my business.”",
   );
-  await expect(line.locator("figcaption")).toHaveText("Juan Porras, Founder, Victoria's Painting");
+  await expect(line.locator("figcaption")).toHaveText("Juan Porras, Founder, Victoria’s Painting");
   await expect(line.getByRole("link", { name: "In the client’s words" })).toHaveAttribute("href", "#client-words");
   await expect(sectionOf(page, "result-title").locator("#client-words")).toHaveText("In the client’s words");
   // the testimonial is the client's whole text, attributed as the original page gave it
   const quote = page.locator("figure.in-quote");
   await expect(quote.locator("blockquote p")).toHaveCount(4);
   await expect(quote.locator("blockquote p").first()).toHaveText(
-    "I would like to express my sincere appreciation to Favio Jasso from Camino Code for the outstanding work he did in developing the website for my company, Victoria's Painting.",
+    "I would like to express my sincere appreciation to Favio Jasso from Camino Code for the outstanding work he did in developing the website for my company, Victoria’s Painting.",
   );
   await expect(quote).toContainText(
     "His ability to turn my ideas into a modern, functional, and visually appealing design exceeded all my expectations.",
@@ -85,7 +85,7 @@ test("Victoria's Painting case study: facts only, the client's quote, gallery an
   await expect(quote.locator("blockquote p").last()).toHaveText(
     "I highly recommend Favio Jasso and the Camino Code team for their dedication, talent, and excellence in every detail of the project.",
   );
-  await expect(quote.locator("figcaption")).toHaveText("Juan Porras, Founder of Victoria's Painting");
+  await expect(quote.locator("figcaption")).toHaveText("Juan Porras, Founder of Victoria’s Painting");
   await expect(page.locator(".gallery img")).toHaveCount(4);
   for (const img of await page.locator(".gallery img").all()) {
     await expect(img).toHaveAttribute("alt", /\S+ \S+ \S+/);
@@ -127,7 +127,7 @@ test("Daniel Avila's first site: facts only, his quote, three safe images, and t
     /^Collaborating with Camino Code in creating my professional website, danielavila\.tech, was a phenomenal experience\./,
   );
   await expect(quote).toContainText(
-    "Camino Code didn't just build me a website, they helped me create an online presence that actually feels like me.",
+    "Camino Code didn’t just build me a website, they helped me create an online presence that actually feels like me.",
   );
   await expect(quote.locator("figcaption")).toHaveText("Daniel Avila, IT Support Professional");
   // three gallery images; the old contact screenshot (a personal phone number and email) must never ship
@@ -174,22 +174,22 @@ test("/work leads with the system at full weight, then the three web builds as e
   await expect(page.locator("main .in-label").first()).toHaveText("01 Automation and data system");
   // one small heading over three cards, the business client first
   const cards = page.locator(".in-work-card");
-  await expect(cards.locator("h3")).toHaveText(["Victoria's Painting", "DANIEL AVILA 64", "Daniel Avila"]);
+  await expect(cards.locator("h3")).toHaveText(["Victoria’s Painting", "DANIEL AVILA 64", "Daniel Avila"]);
   await expect(cards.locator("p.in-mono:not(.credit)")).toHaveText(["Business website", "Playable 3D portfolio", "Portfolio site"]);
   const links = page.locator("main a.in-link");
   expect(await links.evaluateAll((els) => els.map((a) => a.getAttribute("href")))).toEqual(STUDIES);
   // four links with the same visible words carry four different names
   expect(await links.evaluateAll((els) => els.map((a) => a.textContent))).toEqual([
     "Read the case study: Transparent Energy",
-    "Read the case study: Victoria's Painting",
+    "Read the case study: Victoria’s Painting",
     "Read the case study: DANIEL AVILA 64",
     "Read the case study: Daniel Avila",
   ]);
   const main = flat(await page.locator("main").innerText());
   for (const credit of [
-    "Camino Code's founder led the build",
+    "Camino Code’s founder led the build",
     "Built by Camino Code for Daniel Avila",
-    "Built by Camino Code for Victoria's Painting",
+    "Built by Camino Code for Victoria’s Painting",
   ]) {
     expect(main.toLowerCase(), credit).toContain(credit.toLowerCase());
   }
@@ -224,7 +224,7 @@ test("/work leads with the system at full weight, then the three web builds as e
   }
   await expect(page.locator('meta[name="description"]')).toHaveAttribute(
     "content",
-    "An automated reconciliation system for Transparent Energy, plus a website for Victoria's Painting and two portfolio sites for Daniel Avila.",
+    "An automated reconciliation system for Transparent Energy, plus a website for Victoria’s Painting and two portfolio sites for Daniel Avila.",
   );
 });
 
@@ -280,7 +280,7 @@ test("/work opens with its four projects as jumps, each landing clear of the sti
   // the names and short labels the cards below carry, and nothing else: a comma joins them for screen readers
   await expect(links).toHaveText([
     "Transparent Energy, Automation and data system",
-    "Victoria's Painting, Business website",
+    "Victoria’s Painting, Business website",
     "DANIEL AVILA 64, Playable 3D portfolio",
     "Daniel Avila, Portfolio site",
   ]);
@@ -471,8 +471,8 @@ test("every case study carries the trail Home / Work / its name, and its breadcr
   const names: Record<string, string> = {
     "/work/transparent-energy": "Transparent Energy",
     "/work/daniel-avila-64": "DANIEL AVILA 64",
-    "/work/victorias-painting": "Victoria's Painting",
-    "/work/daniel-avila": "Daniel Avila's first portfolio site",
+    "/work/victorias-painting": "Victoria’s Painting",
+    "/work/daniel-avila": "Daniel Avila’s first portfolio site",
   };
   for (const route of STUDIES) {
     await page.goto(route);
@@ -570,7 +570,7 @@ test("service pages: Software and Data both prove themselves with Transparent En
   await expect(proof.locator(".in-fig b")).toHaveText(["85%"]);
   await expect(proof.locator("img")).toHaveCount(0);
   await expect(proof).toContainText(
-    "A system built into Transparent Energy's own operations platform now does the daily reconciliation their analysts used to do by hand.",
+    "A system built into Transparent Energy’s own operations platform now does the daily reconciliation their analysts used to do by hand.",
   );
   await expect(proof.locator(".in-hood")).toHaveCount(0);
   await expect(proof.locator('a[href="/work/transparent-energy"]')).toHaveCount(1);
@@ -596,10 +596,10 @@ test("About quotes each client in their own words, with a caption that says what
     "“What impressed me most was how collaborative the process was.”",
   ]);
   await expect(main.locator(".quotes figcaption")).toHaveText([
-    "Juan Porras · Founder, Victoria's Painting · Business website",
+    "Juan Porras · Founder, Victoria’s Painting · Business website",
     "Daniel Avila · IT Support Professional · Portfolio website",
   ]);
-  await expect(page.getByRole("link", { name: "Read the Victoria's Painting case study" })).toHaveAttribute(
+  await expect(page.getByRole("link", { name: "Read the Victoria’s Painting case study" })).toHaveAttribute(
     "href",
     "/work/victorias-painting",
   );

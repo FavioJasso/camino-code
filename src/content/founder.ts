@@ -40,7 +40,7 @@ export const founder = {
     paragraphs: [
       `Favio Jasso started ${site.name} in ${site.contact.place}. The person you talk to first is the person who answers for the work.`,
     ],
-    link: { label: "Read Favio's note", href: "/about" },
+    link: { label: "Read Favio’s note", href: "/about" },
   },
 
   /**
@@ -52,7 +52,7 @@ export const founder = {
     note: [
       `A lot of good businesses run on workarounds: the spreadsheet only one person understands, the report someone rebuilds every Monday, the same numbers typed into three systems. That holds until that person takes a week off, or the business grows. I started ${site.name} in ${site.contact.place}, to replace those workarounds with software, cleaner data and, where it pays, AI.`,
       `${transparentEnergy.name} had a version of this. Their analysts were reconciling Excel, PDF and vendor files by hand. I led the build of an automated system that now does it every day, built into their own operations platform. It went from start to running system in ${startToRunning.value}, and it saves ${moreThan(savedAYear.value)} a year in analyst time.`,
-      "Most of the money is in the work your people repeat every week, rarely in a new platform. So I start with what you already have and fix what costs you most. If you haven't started, you're not behind.",
+      "Most of the money is in the work your people repeat every week, rarely in a new platform. So I start with what you already have and fix what costs you most. If you haven’t started, you’re not behind.",
       "If we work together, you deal with me, from the first conversation to the finished system. On bigger projects, people I trust take on specific parts, and you still have one person to call.",
     ],
     links: [

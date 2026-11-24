@@ -77,7 +77,7 @@ describe("testimonials", () => {
       "What impressed me most was how collaborative the process was.",
     ]);
     expect(testimonials.map(captionFor)).toEqual([
-      "Juan Porras · Founder, Victoria's Painting · Business website",
+      "Juan Porras · Founder, Victoria’s Painting · Business website",
       "Daniel Avila · IT Support Professional · Portfolio website",
     ]);
   });
@@ -99,7 +99,7 @@ describe("case studies", () => {
     // the system first, then the three web builds with the business client first
     expect(proof.caseStudies.map((s) => [s.name, s.kind])).toEqual([
       ["Transparent Energy", "Automation and data system"],
-      ["Victoria's Painting", "Business website"],
+      ["Victoria’s Painting", "Business website"],
       ["DANIEL AVILA 64", "Playable 3D portfolio"],
       ["Daniel Avila", "Portfolio site"],
     ]);

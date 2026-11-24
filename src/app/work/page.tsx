@@ -19,7 +19,7 @@ export const metadata = pageMetadata({
   // the band title, then what the page holds, in the words the 404 screen uses for this page
   title: "Work: the case studies | Camino Code",
   description:
-    "An automated reconciliation system for Transparent Energy, plus a website for Victoria's Painting and two portfolio sites for Daniel Avila.",
+    "An automated reconciliation system for Transparent Energy, plus a website for Victoria’s Painting and two portfolio sites for Daniel Avila.",
   path: "/work",
 });
 

@@ -14,16 +14,16 @@ export const faq: readonly FaqItem[] = [
   {
     question: "Our data is a mess. Is that a problem?",
     answer:
-      "No. Messy files in several formats, and a spreadsheet nobody wants to touch, are a normal place to start. The first conversation is where I find out what's usable.",
+      "No. Messy files in several formats, and a spreadsheet nobody wants to touch, are a normal place to start. The first conversation is where I find out what’s usable.",
   },
   {
     question: "Do we have to replace the software we already use?",
     answer:
-      "Not as a starting point. I look at what you have first, and only suggest something new where the tools you already pay for can't be made to fit.",
+      "Not as a starting point. I look at what you have first, and only suggest something new where the tools you already pay for can’t be made to fit.",
   },
   {
     question: "How does the work run once we agree on it?",
     answer:
-      "In stages you can see working, one at a time, so you can check each part before the next one starts. When it's finished, you get documentation your team can work from.",
+      "In stages you can see working, one at a time, so you can check each part before the next one starts. When it’s finished, you get documentation your team can work from.",
   },
 ];

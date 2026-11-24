@@ -407,9 +407,9 @@ test("founder block says who you work with, in the third person, and links to hi
   await expect(section.locator("p.lead")).toHaveText([
     "Favio Jasso started Camino Code in Newark, New Jersey. The person you talk to first is the person who answers for the work.",
   ]);
-  await expect(section.getByRole("link", { name: "Read Favio's note" })).toHaveAttribute("href", "/about");
+  await expect(section.getByRole("link", { name: "Read Favio’s note" })).toHaveAttribute("href", "/about");
   // the list of websites is gone; the proof above already carries Transparent Energy
-  for (const gone of ["DANIEL AVILA 64", "Victoria's Painting", "Transparent Energy"]) await expect(section).not.toContainText(gone);
+  for (const gone of ["DANIEL AVILA 64", "Victoria’s Painting", "Transparent Energy"]) await expect(section).not.toContainText(gone);
   const text = (await section.innerText()).toLowerCase();
   for (const banned of [/one-man/, /\bsolo\b/, /\bour team\b/, /\bour staff\b/, /award/, /years of experience/]) {
     expect(text).not.toMatch(banned);

@@ -21,7 +21,7 @@ export const metadata = pageMetadata({
 
 /** Link text for each testimonial's case study: two links on one page need two different names. */
 const STUDY_LINK: Record<(typeof testimonials)[number]["href"], string> = {
-  "/work/victorias-painting": "Read the Victoria's Painting case study",
+  "/work/victorias-painting": "Read the Victoria’s Painting case study",
   "/work/daniel-avila": "Read the Daniel Avila portfolio case study",
 };
 

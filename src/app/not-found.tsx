@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <>
-      <PageBand time="night" kicker="404" title="This trail doesn't lead anywhere" lazyStill />
+      <PageBand time="night" kicker="404" title="This trail doesn’t lead anywhere" lazyStill />
       <section className="inner-sec in-light">
         <div className="wrap">
           <p className="in-lead">The page you were looking for is not here. It may have moved, or the link may be mistyped.</p>
