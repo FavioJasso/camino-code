@@ -637,12 +637,14 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
     const FONT =
       "font:500 0.65625rem/1.5 var(--font-martian),ui-monospace,Menlo,monospace;letter-spacing:.09em;text-transform:uppercase;color:var(--haze);font-variant-numeric:tabular-nums;";
     const narrow = innerWidth < 900; // phones: one strip under the header; desktop: a small block top-right
+    // Both sit just under the header and are sized in em, so larger text in the browser's settings moves them down
+    // with the taller header and widens the block with its text (at the default size: 80 px / 62 px down, 168 px wide).
     const box = el(
       "div",
       FONT + "position:absolute;box-sizing:border-box;transition:opacity .25s ease;background:" + CHIP + ";" +
         (narrow
-          ? "top:calc(env(safe-area-inset-top,0px) + var(--scene-ui-top,62px));left:0;right:0;padding:6px max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));display:flex;flex-wrap:wrap;justify-content:space-between;gap:0 10px"
-          : "top:calc(env(safe-area-inset-top,0px) + var(--scene-ui-top,80px));right:max(6px,env(safe-area-inset-right,0px));width:168px;padding:8px 10px"),
+          ? "top:calc(env(safe-area-inset-top,0px) + max(var(--scene-ui-top,62px),var(--head-h) + 2px));left:0;right:0;padding:6px max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));display:flex;flex-wrap:wrap;justify-content:space-between;gap:0 10px"
+          : "top:calc(env(safe-area-inset-top,0px) + max(var(--scene-ui-top,80px),var(--head-h) + 12px));right:max(6px,env(safe-area-inset-right,0px));width:16em;padding:8px 10px"),
     );
     const row = (label: string): [HTMLElement, HTMLElement] => {
       const r = el("div", "display:flex;justify-content:space-between;gap:8px;white-space:nowrap");
@@ -684,6 +686,17 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
 
     const sp = new Vector3();
     const SAD_Y = SADDLE.y - 0.32 + 1.6;
+    // with larger text in the browser's settings the hero copy reaches the readouts: they then give way to it
+    const bigText = parseFloat(getComputedStyle(document.documentElement).fontSize) > 16;
+    const copy = bigText ? [...document.querySelectorAll<HTMLElement>(".hero-copy .eyebrow > span, #hero-title, .hero-copy .lead")] : [];
+    const overCopy = (e: HTMLElement) => {
+      if (!copy.length) return false;
+      const a = e.getBoundingClientRect();
+      return copy.some((c) => {
+        const b = c.getBoundingClientRect();
+        return a.right > b.left && a.left < b.right && a.bottom > b.top && a.top < b.bottom;
+      });
+    };
     let lastKey = "", lastMode = -1, tagKey = "";
     parts.push({
       update(s) {
@@ -707,9 +720,9 @@ export function startScene(root: HTMLElement, opts: SceneOptions = {}): SceneHan
         }
         // the bracket leaves before the window's lower edge reaches it; phones under 820 px tall: the hero copy
         // (with its note by the button from 720 px) covers the saddle
-        const tf = s.d > (narrow ? 0.6 : 0.65) || (narrow && !dawn && view.h < 820) ? "0" : "1";
+        const tf = s.d > (narrow ? 0.6 : 0.65) || (narrow && !dawn && view.h < 820) || overCopy(tagText) ? "0" : "1";
         if (tag.style.opacity !== tf) tag.style.opacity = tf;
-        const bo = dawn ? (s.d > 0.8 ? "0" : "1") : !narrow || s.p < 0.1 ? "1" : s.p > 0.16 ? "0" : (1 - (s.p - 0.1) / 0.06).toFixed(2);
+        const bo = overCopy(box) ? "0" : dawn ? (s.d > 0.8 ? "0" : "1") : !narrow || s.p < 0.1 ? "1" : s.p > 0.16 ? "0" : (1 - (s.p - 0.1) / 0.06).toFixed(2);
         if (box.style.opacity !== bo) box.style.opacity = bo;
         camera.updateMatrixWorld();
         sp.set(SADDLE.x, SAD_Y, RIDGE_Z).project(camera);
