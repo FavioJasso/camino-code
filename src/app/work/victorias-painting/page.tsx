@@ -124,7 +124,7 @@ export default function VictoriasPaintingPage() {
         </div>
       </section>
       <MoreWork current={vp.href} />
-      <BookDiscovery heading="Need a website like this?" />
+      <BookDiscovery />
       <JsonLd data={caseStudyLd({ headline: study.title, description, path: vp.href, image: vp.cardImage.src, about: vp.name })} />
       <JsonLd
         data={breadcrumbList([

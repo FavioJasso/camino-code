@@ -47,7 +47,7 @@ export default function PrivacyPage() {
           <p>Camino Code, {site.contact.place}.</p>
         </div>
       </section>
-      <BookDiscovery heading="Questions? Start with discovery" />
+      <BookDiscovery heading="Questions? Start with a conversation" />
       <JsonLd
         data={breadcrumbList([
           { name: "Home", path: "/" },

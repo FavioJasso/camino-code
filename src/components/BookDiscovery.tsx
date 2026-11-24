@@ -37,19 +37,24 @@ export function ClosingBand({ heading, children }: { heading: string; children: 
   );
 }
 
-export function BookDiscovery({ heading = "Start with discovery" }: { heading?: string }) {
+/**
+ * The booking band. Every promise about the first conversation (free, 45 minutes, video or in
+ * person, the one-page summary, the reply time) sits here once, next to the button.
+ */
+export function BookDiscovery({ heading = "See where the hours go" }: { heading?: string }) {
   return (
     <ClosingBand heading={heading}>
       <p className="in-lead">
-        A free 45-minute conversation, by video or in person. Within a week you get a one-page
-        written summary. We reply within one business day.
+        Free, 45 minutes, by video or in person. Within a week you get a one-page summary: what to
+        fix first, and what to leave alone.
       </p>
       <div className="in-cta">
         <Link className="btn in-btn-lg" href="/discovery">
           Book a discovery session
         </Link>
         <p>
-          Or write to <EmailLink /> or call <PhoneLink />.
+          Or write to <EmailLink /> or call <PhoneLink />. You&rsquo;ll hear back within one business
+          day.
         </p>
       </div>
     </ClosingBand>

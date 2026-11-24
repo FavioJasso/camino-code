@@ -104,7 +104,7 @@ export default function WorkPage() {
           </div>
         </div>
       </section>
-      <BookDiscovery />
+      <BookDiscovery heading="Is something in your business still done by hand?" />
       <JsonLd
         data={breadcrumbList([
           { name: "Home", path: "/" },

@@ -100,12 +100,12 @@ export default function TransparentEnergyPage() {
           </ul>
         </div>
       </section>
-      <section className="inner-sec in-light in-day" aria-labelledby="handover-title">
+      <section className="inner-sec in-light in-day" aria-labelledby="handed-over-title">
         <div className="wrap">
           <p className="in-mono in-label">
             <i>06</i> / 07
           </p>
-          <h2 id="handover-title">What was handed over</h2>
+          <h2 id="handed-over-title">What was handed over</h2>
           <p>{study.handedOver}</p>
         </div>
       </section>

@@ -33,7 +33,7 @@ export default function TermsPage() {
           <p>Questions about these terms: <EmailLink /> or <PhoneLink />. Camino Code, {site.contact.place}.</p>
         </div>
       </section>
-      <BookDiscovery heading="Questions? Start with discovery" />
+      <BookDiscovery heading="Questions? Start with a conversation" />
       <JsonLd
         data={breadcrumbList([
           { name: "Home", path: "/" },

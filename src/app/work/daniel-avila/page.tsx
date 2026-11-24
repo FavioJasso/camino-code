@@ -127,7 +127,7 @@ export default function DanielAvilaPage() {
         </div>
       </section>
       <MoreWork current={da.href} />
-      <BookDiscovery heading="Need a site like this?" />
+      <BookDiscovery />
       <JsonLd data={caseStudyLd({ headline: study.title, description, path: da.href, image: da.cardImage.src, about: study.project })} />
       <JsonLd
         data={breadcrumbList([
