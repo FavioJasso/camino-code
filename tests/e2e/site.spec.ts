@@ -2,39 +2,40 @@ import { expect, test } from "@playwright/test";
 import { EMAIL, EMAIL_HREF, LINKEDIN, PAGES, PHONE, PHONE_HREF, ROUTES } from "./routes";
 
 /* Things that hold across the site: the services index, navigation and its current state,
-   contact links, the footer, the founder-led wording, the FAQ, and a crawl of every link and image. */
+   contact links, the footer, the About page and its questions, the word list, and a crawl of
+   every link and image. */
 
 const flat = (text: string | null) => (text ?? "").replace(/\s+/g, " ");
 
 // ---- services ----
 
-test("/services introduces the three services and shows only the proof their own pages carry", async ({ page }) => {
+test("/services introduces the three services and shows one project that spans two of them", async ({ page }) => {
   await page.goto("/services");
   await expect(page.locator("h1")).toHaveText("Services");
   const main = page.locator("main");
-  for (const href of [
-    "/services/software",
-    "/services/data",
-    "/services/ai-governance",
-    "/work/daniel-avila-64",
-    "/work/transparent-energy",
-    "/work",
-    "/approach",
-  ]) {
+  await expect(main).toContainText(
+    "Software, data and AI for small and mid-sized businesses. Every service starts with the same first conversation.",
+  );
+  for (const href of ["/services/software", "/services/data", "/services/ai-governance", "/work/transparent-energy", "/work", "/approach"]) {
     await expect(main.locator(`a[href="${href}"]`).first(), href).toBeVisible();
   }
   await expect(main.locator(".in-svc h3")).toHaveText(["Software", "Data", "AI & governance"]);
-  // case studies: Software and Data only; AI & governance makes no proof claim
-  const proofs = main.locator(".in-svc-proof");
-  await expect(proofs).toHaveCount(2);
-  await expect(proofs.locator("h3")).toHaveText(["DANIEL AVILA 64", "Transparent Energy"]);
-  expect(flat(await proofs.nth(0).innerText()).toLowerCase()).not.toContain("governance");
-  expect(flat(await proofs.nth(1).innerText()).toLowerCase()).not.toContain("governance");
-  const text = flat(await main.innerText());
+  // one case-study card: the Transparent Energy system, which is both Software and Data work
+  await expect(main.getByRole("heading", { level: 2, name: "One system, two services" })).toBeVisible();
+  const card = main.locator(".in-svc-proof");
+  await expect(card).toHaveCount(1);
+  await expect(card.locator("h3")).toHaveText("Transparent Energy");
+  const text = flat(await card.innerText());
+  expect(text).toMatch(/^Software and Data /i);
   expect(text).toContain("$65,000+ a year saved in analyst time");
-  expect(text).toContain("158 kB first-load JavaScript");
+  expect(text).toContain("The software runs it every day, built into the client's own operations platform, with dashboards and exports.");
   expect(text.toLowerCase()).toContain("camino code's founder led the build");
-  expect(text).not.toContain("100%");
+  await expect(card.getByRole("link", { name: "Read the Transparent Energy case study" })).toHaveAttribute("href", "/work/transparent-energy");
+  const all = flat(await main.innerText());
+  expect(all).not.toContain("DANIEL AVILA 64");
+  expect(all).not.toContain("158 kB");
+  expect(all).not.toContain("100%");
+  expect(all).not.toMatch(/after discovery|discovery starts/i);
 });
 
 test("service pages carry a breadcrumb back to /services and links to the other services", async ({ page }) => {
@@ -202,54 +203,67 @@ test("a route change starts the new page at the top, at once", async ({ page }, 
   expect(await page.evaluate(() => window.scrollY)).toBe(0);
 });
 
-test("/about#who lands with the heading clear of the sticky header", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" }); // an instant jump, so the position can be read at once
-  await page.goto("/approach");
-  await page.locator('main a[href="/about#who"]').click();
-  await expect(page).toHaveURL(/\/about#who$/);
-  const heading = page.getByRole("heading", { level: 2, name: "Who you work with" });
-  await expect(heading).toBeInViewport();
-  const { top, headerBottom } = await page.evaluate(() => ({
-    top: document.getElementById("who")!.getBoundingClientRect().top,
-    headerBottom: document.querySelector(".site-head")!.getBoundingClientRect().bottom,
-  }));
-  expect(top).toBeGreaterThanOrEqual(headerBottom - 1);
-  expect(top).toBeLessThan(headerBottom + 40);
+test("nothing links to the old /about#who anchor, and the About page no longer has it", async ({ page }) => {
+  for (const route of PAGES) {
+    await page.goto(route);
+    await expect(page.locator('a[href*="#who"]'), route).toHaveCount(0);
+  }
+  await page.goto("/about");
+  await expect(page.locator("#who")).toHaveCount(0);
 });
 
-// ---- founder-led wording, About, FAQ ----
+// ---- About: the founder note, client words, questions ----
 
-test("/about says who you work with, links each testimonial to its case study, and makes no team claims", async ({
-  page,
-}) => {
+test("/about is three sections in Favio's own voice, then the booking band", async ({ page }) => {
   await page.goto("/about");
   const main = page.locator("main");
-  await expect(main.getByRole("heading", { level: 2, name: "Favio Jasso, founder" })).toBeVisible();
-  await expect(main.getByRole("heading", { level: 2, name: "Who you work with" })).toBeVisible();
-  await expect(main).toContainText("Camino Code is founder-led.");
-  await expect(main).toContainText("I founded Camino Code in Newark, New Jersey.");
-  await expect(main).toContainText("When this site says “we”, it means Favio and the people working on your project.");
+  await expect(main.getByRole("heading", { level: 2 })).toHaveText([
+    "Favio Jasso, founder",
+    "In their words",
+    "Questions",
+    "See where the hours go",
+  ]);
+  expect(await main.locator(".in-label").allTextContents()).toEqual(["01 Founder", "02 Clients", "03 Questions"]);
+  const note = flat(await main.locator('section[aria-labelledby="founder-title"]').innerText());
+  expect(note).toContain("I started Camino Code in Newark, New Jersey, to replace those workarounds with software, cleaner data and, where it pays, AI.");
+  // the cleared figures, said once, in a sentence
+  expect(note).toContain(
+    "It went from start to running system in 3.5 months, and it saves more than $65,000 a year in analyst time.",
+  );
+  expect(note).toContain("If we work together, you deal with me, from the first conversation to the finished system.");
   await expect(main.locator('a[href="/work/victorias-painting"]')).toBeVisible();
   await expect(main.locator('a[href="/work/daniel-avila"]')).toBeVisible();
   await expect(main.locator('a[href="/work/transparent-energy"]')).toBeVisible();
-  const text = (await main.innerText()).toLowerCase();
+  await expect(main.getByRole("link", { name: "See all work" })).toHaveAttribute("href", "/work");
+  const text = flat(await main.innerText());
+  // the old block, its table, the "we" definition and the website framing are gone
+  for (const gone of ["Who you work with", "founder-led", "When this site says", "Run by Favio", "Led by Favio", "Your contact", "Kind words", "website projects", "Both were"]) {
+    expect(text, gone).not.toContain(gone);
+  }
+  const lower = text.toLowerCase();
   // "your team" (the client's) is allowed, so these are whole phrases, not the word "team"
   for (const banned of [/one-man/, /\bsolo\b/, /\bour team\b/, /\bour staff\b/, /founder & ceo/, /award/, /years of experience/, /10\+/]) {
-    expect(text).not.toMatch(banned);
+    expect(lower).not.toMatch(banned);
   }
-  // the only Transparent Energy figures here are the permitted ones
-  expect(text).toContain("3.5 months");
-  expect(text).toContain("$65,000+");
+  // the only Transparent Energy figures here are the permitted ones, the $65,000 in words
+  expect(text).not.toContain("$65,000+");
   expect(text).not.toContain("100%");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+    "content",
+    "Favio Jasso started Camino Code in Newark, NJ to help small and mid-sized businesses with software, data and AI. Book a free first conversation.",
+  );
 });
 
-test("/about FAQ has eight questions and its FAQPage data matches the visible text", async ({ page }) => {
+test("/about asks three questions and its FAQPage data matches the visible text", async ({ page }) => {
   await page.goto("/about");
   const shown = await page.locator("main dl.faq > div").evaluateAll((els) =>
     els.map((el) => ({ question: el.querySelector("dt")!.textContent, answer: el.querySelector("dd")!.textContent })),
   );
-  expect(shown).toHaveLength(8);
-  expect(shown[0].question).toBe("Who will I work with?");
+  expect(shown.map((q) => q.question)).toEqual([
+    "Our data is a mess. Is that a problem?",
+    "Do we have to replace the software we already use?",
+    "How does the work run once we agree on it?",
+  ]);
   const blocks = await page
     .locator('script[type="application/ld+json"]')
     .evaluateAll((els) => els.map((el) => JSON.parse(el.textContent!)));
@@ -268,11 +282,61 @@ test("/about FAQ has eight questions and its FAQPage data matches the visible te
   for (const { answer } of shown) expect(answer).not.toMatch(/\$|guarantee|refund|you own/i);
 });
 
-test("/approach names who runs discovery and links to who you work with", async ({ page }) => {
+test("/approach starts with a conversation, without naming the founder again or repeating the reply time", async ({ page }) => {
   await page.goto("/approach");
-  await expect(page.locator("main")).toContainText(/Favio Jasso, Camino Code.s founder/);
-  await expect(page.locator('main a[href="/about#who"]')).toBeVisible();
-  await expect(page.locator('main a[href="/about#who"]')).toHaveText("Who you work with");
+  const main = page.locator("main");
+  await expect(main.getByRole("heading", { level: 2, name: "It starts with a conversation" })).toBeVisible();
+  await expect(main).toContainText(
+    "The first step is a free conversation about your business: the tools you use, where your numbers live, and the jobs that eat the week.",
+  );
+  await expect(main).toContainText(
+    "You are not behind. Starting properly matters more than starting first, and the first conversation is where we work out where to start.",
+  );
+  expect(await main.locator('section[aria-labelledby="discovery-title"] .facts dt').allTextContents()).toEqual(["Cost", "Length", "Format", "You get"]);
+  const text = flat(await main.innerText());
+  expect(text).not.toContain("Favio");
+  // the reply time is said once, in the band beside the button
+  expect(text.match(/one business day/g)).toHaveLength(1);
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+    "content",
+    "How a project runs: a conversation about your business, a one-page summary of what to fix first, then work in stages you can see running.",
+  );
+});
+
+// ---- the closing band and the word list ----
+
+test("every inner page closes on one band that carries each promise once", async ({ page }) => {
+  const HEADINGS: Record<string, string> = {
+    "/work": "Is something in your business still done by hand?",
+    "/work/transparent-energy": "Have a process like this?",
+    "/privacy": "Questions? Start with a conversation",
+    "/terms": "Questions? Start with a conversation",
+  };
+  for (const route of ROUTES) {
+    await page.goto(route);
+    const band = page.locator("main > section.in-book");
+    await expect(band.locator("h2"), route).toHaveText(HEADINGS[route] ?? "See where the hours go");
+    const text = flat(await band.innerText());
+    expect(text, route).toContain(
+      "Free, 45 minutes, by video or in person. Within a week you get a one-page summary: what to fix first, and what to leave alone.",
+    );
+    expect(text, route).toMatch(/Or write to contact@caminocode\.com or call \+1 973-234-2073\. You.ll hear back within one business day\./);
+    await expect(band.getByRole("link", { name: "Book a discovery session" }), route).toHaveAttribute("href", "/discovery");
+  }
+});
+
+test("no page or meta description uses the old consultant words or the noun hand-over", async ({ page }) => {
+  for (const route of [...PAGES, "/no-such-page"]) {
+    await page.goto(route);
+    const text = flat(await page.locator("body").innerText());
+    const description = (await page.locator('meta[name="description"]').getAttribute("content")) ?? "";
+    for (const words of [text, description]) {
+      expect(words, route).not.toMatch(/founder-led|engagement|point of contact|hand-over|handover|more hands/i);
+    }
+  }
+  // the stage name is a plain verb and stays
+  await page.goto("/approach");
+  await expect(page.locator(".trail-list h3").last()).toHaveText("Hand over");
 });
 
 // ---- legal drafts ----

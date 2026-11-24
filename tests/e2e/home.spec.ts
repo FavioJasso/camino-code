@@ -100,7 +100,7 @@ test("home has its own title and description, canonical and share address", asyn
   await expect(page).toHaveTitle("Camino Code | Software, data and AI consulting in Newark, NJ");
   await expect(page.locator('meta[name="description"]')).toHaveAttribute(
     "content",
-    "Camino Code is a software, data and AI consultancy in Newark, New Jersey, for small and mid-sized businesses. It starts with a free discovery session.",
+    "Camino Code is a software, data and AI consultancy in Newark, New Jersey, for small and mid-sized businesses. It starts with a free conversation.",
   );
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://www.caminocode.com");
   await expect(page.locator('meta[property="og:url"]')).toHaveAttribute("content", "https://www.caminocode.com");
@@ -133,12 +133,16 @@ test("the hero proof line shows the first permitted figure, and steps aside on s
   await expect(proof).toBeHidden();
 });
 
-test("founder block leads with the founder and links to About", async ({ page }) => {
+test("founder block says who you work with, in the third person, and links to his note", async ({ page }) => {
   await page.goto("/");
   const section = page.locator("#founder");
   await expect(section.getByRole("heading", { level: 2 })).toHaveText("You work with the founder.");
-  await expect(section).toContainText("Favio Jasso founded Camino Code in Newark, New Jersey.");
-  await expect(section.getByRole("link", { name: "More about Favio" })).toHaveAttribute("href", "/about");
+  await expect(section.locator("p.lead")).toHaveText([
+    "Favio Jasso started Camino Code in Newark, New Jersey. The person you talk to first is the person who answers for the work.",
+  ]);
+  await expect(section.getByRole("link", { name: "Read Favio's note" })).toHaveAttribute("href", "/about");
+  // the list of websites is gone; the proof above already carries Transparent Energy
+  for (const gone of ["DANIEL AVILA 64", "Victoria's Painting", "Transparent Energy"]) await expect(section).not.toContainText(gone);
   const text = (await section.innerText()).toLowerCase();
   for (const banned of [/one-man/, /\bsolo\b/, /\bour team\b/, /\bour staff\b/, /award/, /years of experience/]) {
     expect(text).not.toMatch(banned);
@@ -171,4 +175,28 @@ test("the hero still is framed where the live camera puts the saddle", async ({ 
     return { img: [img.width, img.height], gl: [gl.width, gl.height] };
   });
   expect(boxes.img).toEqual(boxes.gl);
+});
+
+test("the hero names software, reports and AI, and ends on a free conversation", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator(".hero .lead")).toHaveText(
+    "We build software that takes the re-typing out of your team’s day, make your reports agree, and put AI to work only where it pays for itself, with rules your staff can follow. It starts with a free conversation.",
+  );
+});
+
+test("the approach section starts with a conversation and puts the reply time beside the button", async ({ page }) => {
+  await page.goto("/");
+  const section = page.locator("#discovery");
+  await expect(section.getByRole("heading", { level: 2 })).toHaveText("It starts with a conversation.");
+  await expect(section.locator(".sec-head .lead")).toHaveText(
+    "A free 45-minute conversation, by video or in person, about the tools you use, where your numbers live and where the hours go. If you go ahead, this is how it runs.",
+  );
+  await expect(section.locator(".cta-contact")).toHaveText(
+    "Or write to contact@caminocode.com or call +1 973-234-2073. You’ll hear back within one business day.",
+  );
+  // each promise once on the page: the summary is the Route stage's, the reply time the contact line's
+  const text = (await page.locator("main").innerText()).replace(/\s+/g, " ");
+  expect(text.match(/one business day/g)).toHaveLength(1);
+  expect(text.match(/one-page summary/g)).toHaveLength(1);
+  expect(text.match(/45-minute/g)).toHaveLength(1);
 });

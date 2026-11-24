@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
-import { ROUTES } from "./routes";
+import { PAGES, ROUTES } from "./routes";
 
 const titles = new Map<string, string>();
 
@@ -39,16 +39,62 @@ test("unknown path shows the designed 404 with status 404", async ({ page }) => 
   expect(results.violations).toEqual([]);
 });
 
-test("only the Data page carries the Transparent Energy proof, with the permitted figures", async ({
+test("Software and Data both prove themselves with Transparent Energy, each with its own figure and summary", async ({
   page,
 }) => {
-  await page.goto("/services/data");
-  const data = (await page.locator("main").textContent()) ?? "";
-  for (const figure of ["$65,000+", "85%", "3.5 months"]) expect(data).toContain(figure);
-  expect(data).toContain("Camino Code's founder led the build");
-  for (const slug of ["software", "ai-governance"]) {
+  const proofOn = async (slug: string) => {
     await page.goto(`/services/${slug}`);
-    expect(await page.locator("main").innerText()).not.toContain("Transparent Energy");
+    const section = page.locator('section[aria-labelledby="proof-title"]');
+    await expect(section.locator("h2")).toHaveText("Transparent Energy");
+    await expect(section.locator(".in-fig")).toHaveCount(1);
+    await expect(section.getByRole("link", { name: "Read the Transparent Energy case study" })).toHaveAttribute(
+      "href",
+      "/work/transparent-energy",
+    );
+    return ((await section.innerText()) ?? "").replace(/\s+/g, " ");
+  };
+  const software = await proofOn("software");
+  expect(software).toContain("85% less manual reconciliation work");
+  expect(software).toContain(
+    "A system built into Transparent Energy's own operations platform now does the daily reconciliation their analysts used to do by hand. It runs on a schedule, flags anything that doesn't match, and gives the team dashboards and exports to work from.",
+  );
+  expect(software.toLowerCase()).toContain("camino code's founder led the build");
+  const data = await proofOn("data");
+  expect(data).toContain("$65,000+ a year saved in analyst time");
+  expect(data).toContain("Analysts were reconciling Excel, PDF and vendor files by hand. An automated system now does it every day.");
+  expect(data.toLowerCase()).toContain("camino code's founder led the build");
+  await page.goto("/services/ai-governance");
+  expect(await page.locator("main").innerText()).not.toContain("Transparent Energy");
+});
+
+test("Software leads with automation and keeps a website as one part of the work", async ({ page }) => {
+  await page.goto("/services/software");
+  const gets = await page.locator("main .cols > div").nth(1).locator(".ticks li").allInnerTexts();
+  expect(gets[0]).toMatch(/^Automation for the jobs your team repeats/);
+  expect(gets.at(-1)).toBe("A website, when you need one, built to fit with the rest.");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+    "content",
+    "Automation, internal tools and integrations built around how your business already runs, and a website when you need one. Start with a free conversation.",
+  );
+  expect(await page.locator("main").innerText()).not.toContain("DANIEL AVILA 64");
+});
+
+test("each service page asks two questions; the band answers cost and reply time", async ({ page }) => {
+  for (const slug of ["software", "data", "ai-governance"]) {
+    await page.goto(`/services/${slug}`);
+    const questions = await page.locator("main dl.faq dt").allInnerTexts();
+    expect(questions, slug).toHaveLength(2);
+    for (const q of questions) expect(q, slug).not.toMatch(/cost|hear back/i);
+    const steps = await page.locator('section[aria-labelledby="engaged-title"] .steps li').allInnerTexts();
+    expect(steps, slug).toEqual([
+      "It starts with a conversation about your business: the tools you use, where your numbers live and where the hours go.",
+      "You get a one-page summary of what we found and what we would do first.",
+      "If you go ahead, we build in stages you can see working, one at a time.",
+      "When the project is finished, you get documentation your team can work from.",
+    ]);
+    // no bare "discovery" left in the copy: only the booking button names the session
+    const text = (await page.locator("main").innerText()).replace(/Book a discovery session/g, "");
+    expect(text, slug).not.toMatch(/discovery/i);
   }
 });
 
@@ -81,16 +127,13 @@ test("no built page contains TODO", async ({ request }) => {
   }
 });
 
-test("Software page shows DANIEL AVILA 64 as its proof point; Data keeps Transparent Energy", async ({
-  page,
-}) => {
-  await page.goto("/services/software");
-  const software = ((await page.locator("main").innerText()) ?? "").replace(/\s+/g, " ");
-  expect(software).toContain("DANIEL AVILA 64");
-  expect(software).toContain("158 kB first-load JavaScript");
-  await expect(page.locator('main a[href="/work/daniel-avila-64"]')).toBeVisible();
-  await page.goto("/services/ai-governance");
-  expect(await page.locator("main").innerText()).not.toContain("DANIEL AVILA 64");
+test("DANIEL AVILA 64's developer figures appear only on its own case study", async ({ page }) => {
+  for (const route of PAGES) {
+    await page.goto(route);
+    const text = await page.locator("main").innerText();
+    if (route === "/work/daniel-avila-64") expect(text).toContain("158 kB");
+    else expect(text, route).not.toContain("158 kB");
+  }
 });
 
 test("case study and about carry no banned claims", async ({ page }) => {
@@ -99,7 +142,8 @@ test("case study and about carry no banned claims", async ({ page }) => {
   expect(study).not.toContain("100%");
   expect(study).toContain("3.5 months");
   await page.goto("/about");
-  const about = await page.locator("main").innerText();
+  // textContent: the captions are set in uppercase mono, and the names are checked as written
+  const about = (await page.locator("main").textContent()) ?? "";
   expect(about).toContain("Juan Porras");
   expect(about).toContain("Victoria's Painting");
   expect(about).toContain("Daniel Avila");

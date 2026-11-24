@@ -13,8 +13,8 @@ export const PAGES = [
   "/services/ai-governance",
   "/work",
   "/work/transparent-energy",
-  "/work/daniel-avila-64",
   "/work/victorias-painting",
+  "/work/daniel-avila-64",
   "/work/daniel-avila",
   "/approach",
   "/about",
@@ -29,11 +29,11 @@ export const PAGES = [
  */
 export const ROUTES = PAGES.filter((p) => p !== "/" && p !== "/discovery");
 
-/** The four case studies, in the order /work lists them. */
+/** The four case studies, in the order /work lists them: the system, then the web builds, business client first. */
 export const STUDIES = [
   "/work/transparent-energy",
-  "/work/daniel-avila-64",
   "/work/victorias-painting",
+  "/work/daniel-avila-64",
   "/work/daniel-avila",
 ];
 

@@ -175,7 +175,8 @@ test("service pages: the FAQ data repeats the questions shown, word for word", a
     const shown = await page.locator("main dl.faq > div").evaluateAll((els) =>
       els.map((el) => ({ question: el.querySelector("dt")!.textContent, answer: el.querySelector("dd")!.textContent })),
     );
-    expect(shown.length, slug).toBe(3);
+    // two questions each: the booking band on the same page answers cost and reply time
+    expect(shown.length, slug).toBe(2);
     const blocks = structuredData(await page.content());
     const faq = blocks.find((b) => b["@type"] === "FAQPage") as {
       mainEntity: Array<{ name: string; acceptedAnswer: { text: string } }>;

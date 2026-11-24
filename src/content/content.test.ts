@@ -1,5 +1,7 @@
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { discoveryFacts } from "./approach";
+import { discoveryFacts, stages } from "./approach";
 import { faq } from "./faq";
 import { founder, moreThan } from "./founder";
 import * as proof from "./proof";
@@ -11,7 +13,7 @@ import { captionFor, testimonialFor, testimonials } from "./testimonials";
 
 /* Rules the copy has to keep, checked on the content files themselves so a slip fails before a page is built. */
 
-const allCopy = { discoveryFacts, faq, founder, proof, servicePages, servicesIndex, services, site };
+const allCopy = { stages, discoveryFacts, faq, founder, proof, servicePages, servicesIndex, services, site, testimonials };
 
 /** Every string in a value, however deeply nested. */
 function strings(value: unknown): string[] {
@@ -34,6 +36,20 @@ describe("copy", () => {
 
   it("keeps the house style: no exclamation marks and no long dashes", () => {
     for (const line of copy) expect(line).not.toMatch(/[!–—]/);
+  });
+
+  it("drops the consultant words and the British noun: no founder-led, engagement, point of contact or hand-over", () => {
+    const banned = /founder-led|engagement|point of contact|hand-over|handover/i;
+    for (const line of copy) expect(line).not.toMatch(banned);
+    // and none in the copy written straight into the pages and components, or their comments
+    const src = join(__dirname, "..");
+    const files = readdirSync(src, { recursive: true, encoding: "utf8" }).filter(
+      (f) => /\.(tsx?|css)$/.test(f) && !f.endsWith(".test.ts"),
+    );
+    expect(files.length).toBeGreaterThan(40);
+    for (const file of files) expect(readFileSync(join(src, file), "utf8"), file).not.toMatch(banned);
+    // the stage name stays: "Hand over" is a plain verb
+    expect(stages.map((s) => s.name)).toEqual(["Scout", "Route", "Build", "Hand over"]);
   });
 
   it("never calls the company a one-person shop, or claims a staff", () => {
