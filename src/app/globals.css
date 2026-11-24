@@ -222,6 +222,10 @@ main p,
 main li {
   overflow-wrap: break-word;
 }
+/* a link box (inline-flex) sizes itself to its longest word, so it needs the stronger rule */
+main .in-link {
+  overflow-wrap: anywhere;
+}
 
 .btn {
   display: inline-flex;
