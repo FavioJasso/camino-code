@@ -20,7 +20,8 @@ const martianMono = localFont({
   src: "../fonts/MartianMono-Variable.woff2",
   variable: "--font-martian",
   weight: "100 800",
-  display: "swap",
+  // must match layout.tsx: both declarations ship in the shared stylesheet under one family name, and the later rule wins
+  display: "optional",
   declarations: [{ prop: "font-stretch", value: "75% 112.5%" }],
 });
 
