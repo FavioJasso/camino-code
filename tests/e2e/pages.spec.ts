@@ -168,7 +168,8 @@ test("/about shows the sized founder portrait and no FJ placeholder", async ({ p
   const srcset = (await img.getAttribute("srcset")) ?? "";
   expect(srcset).toMatch(/favio-jasso-400\.webp 400w/);
   expect(srcset).toMatch(/favio-jasso-800\.webp 800w/);
-  await expect(img).toHaveAttribute("loading", "eager");
+  await expect(img).toHaveAttribute("loading", "lazy");
+  await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth > 0)).toBe(true);
   // no caption under the portrait: the heading beside it already names him
   await expect(page.locator(".founder-photo figcaption")).toHaveCount(0);
   await expect(page.locator("main")).not.toContainText("Founder · Newark, NJ");

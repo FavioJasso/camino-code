@@ -31,7 +31,9 @@ export default function AboutPage() {
       <PageBand stage={4} time="day" kicker="About" title="About Camino Code" />
       <section className="inner-sec in-light" aria-labelledby="founder-title">
         <div className="wrap founder-row">
-          <FounderPhoto loading="eager" className="in-portrait" sizes="(max-width: 599px) 160px, 144px" />
+          {/* lazy, as on the home page: an eager image puts a preload hint in the About payload, and every page that
+              prefetches the About link would then download the portrait */}
+          <FounderPhoto className="in-portrait" sizes="(max-width: 599px) 160px, 144px" />
           <div>
             <p className="in-mono in-label">
               <i>01</i> Founder

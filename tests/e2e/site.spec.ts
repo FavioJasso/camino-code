@@ -174,6 +174,21 @@ test("two more addresses from the old site's sitemap redirect for good", async (
   }
 });
 
+test("only the pages that show the founder portrait download it", async ({ page, request }) => {
+  // the About link is prefetched from every page: its payload must carry no preload hint for the portrait
+  for (const route of ["/about", "/privacy"]) {
+    const html = await (await request.get(route)).text();
+    expect(html, route).not.toMatch(/HL\[[^\]]*\/people\//);
+    expect(html, route).not.toMatch(/<link[^>]+rel="preload"[^>]+\/people\//);
+  }
+  const fetched: string[] = [];
+  page.on("request", (req) => fetched.push(req.url()));
+  await page.goto("/privacy");
+  await page.waitForLoadState("load");
+  await page.waitForTimeout(1500);
+  expect(fetched.filter((url) => url.includes("/people/"))).toEqual([]);
+});
+
 test("no page preloads the 404 screen's band image", async ({ page, request }) => {
   // Next carries the 404 screen inside every page's payload, so its image is named there;
   // what must not be there is a preload for it: a link tag, or React's hint (:HL[...]) in the payload
