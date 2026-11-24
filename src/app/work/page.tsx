@@ -22,8 +22,11 @@ export const metadata = pageMetadata({
   path: "/work",
 });
 
-/** The three web builds, looked up by path so they follow the order caseStudies gives them. */
-const WEBSITES: Record<string, typeof victoriasPainting | typeof danielAvila64 | typeof danielAvila> = {
+type WebsiteHref = Exclude<(typeof caseStudies)[number]["href"], typeof te.href>;
+
+/** The three web builds, looked up by path so they follow the order caseStudies gives them.
+    Keyed by every caseStudies path except the system's, so a study added there without an entry here fails the type check. */
+const WEBSITES: Record<WebsiteHref, typeof victoriasPainting | typeof danielAvila64 | typeof danielAvila> = {
   [victoriasPainting.href]: victoriasPainting,
   [danielAvila64.href]: danielAvila64,
   [danielAvila.href]: danielAvila,
@@ -39,7 +42,9 @@ function StudyLink({ href, name }: { href: string; name: string }) {
 }
 
 export default function WorkPage() {
-  const [system, ...websites] = caseStudies;
+  // picked by path, not position, so reordering caseStudies cannot put another study's label on the system
+  const system = caseStudies.find((s) => s.href === te.href)!;
+  const websites = caseStudies.filter((s): s is Extract<(typeof caseStudies)[number], { href: WebsiteHref }> => s.href !== te.href);
   return (
     <>
       <PageBand stage={2} time="morning" title="Work" />

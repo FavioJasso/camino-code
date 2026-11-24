@@ -88,7 +88,9 @@ test("founder section shows the sized portrait and no FJ placeholder", async ({ 
   expect(srcset).toMatch(/favio-jasso-400\.webp 400w/);
   expect(srcset).toMatch(/favio-jasso-800\.webp 800w/);
   await expect(img).toHaveAttribute("loading", "lazy");
-  await expect(section).toContainText("Favio Jasso · Founder · Newark, NJ");
+  // no caption under the portrait: the paragraph beside it already names him and Newark
+  await expect(section.locator("figcaption")).toHaveCount(0);
+  await expect(section).not.toContainText("Founder · Newark, NJ");
   await expect(section).not.toContainText(/\bFJ\b/);
   // the image actually loads
   await img.scrollIntoViewIfNeeded();

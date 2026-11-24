@@ -15,7 +15,6 @@ export function FounderPhoto({ className, sizes, loading = "lazy" }: { className
         loading={loading}
         decoding="async"
       />
-      <figcaption>Favio Jasso · Founder · Newark, NJ</figcaption>
     </figure>
   );
 }

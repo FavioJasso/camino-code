@@ -27,7 +27,22 @@ test.describe("phone layout", () => {
     });
   }
 
-  for (const path of ["/", "/privacy", "/services/data"]) {
+  const FIT_PATHS = ["/", "/privacy", "/services/data", "/about", "/work", "/services", "/services/software"];
+
+  for (const path of FIT_PATHS) {
+    test(`${path} has no sideways scroll at 320 px`, async ({ page }) => {
+      await page.setViewportSize({ width: 320, height: 844 });
+      await page.goto(path);
+      const m = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        innerWidth: window.innerWidth,
+      }));
+      expect(m.innerWidth).toBe(320);
+      expect(m.scrollWidth).toBeLessThanOrEqual(m.innerWidth);
+    });
+  }
+
+  for (const path of FIT_PATHS) {
     for (const state of ["closed", "open"] as const) {
       test(`${path} fits 390 px with the menu ${state}`, async ({ page }) => {
         await page.goto(path);
