@@ -217,6 +217,11 @@ h3 {
 a[href^="mailto:"] {
   overflow-wrap: anywhere;
 }
+/* so does a domain in running text (victoriaspainting.com), which has no place to break otherwise */
+main p,
+main li {
+  overflow-wrap: break-word;
+}
 
 .btn {
   display: inline-flex;

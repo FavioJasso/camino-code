@@ -620,3 +620,18 @@ test("the short quote on About is a sentence from the full testimonial on the ca
     expect(full, route).toContain(short[i].replace(/^“|”$/g, ""));
   }
 });
+
+test("with text at 200% on a phone, no case study scrolls sideways (a domain in the text breaks instead)", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== "phone", "phone viewport only");
+  for (const route of STUDIES) {
+    await page.goto(route);
+    await page.addStyleTag({ content: "html { font-size: 200% !important; }" });
+    const m = await page.evaluate(() => ({
+      page: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      text: Math.max(...[...document.querySelectorAll("main p, main li")].map((el) => el.scrollWidth - el.clientWidth)),
+    }));
+    expect(m, route).toEqual({ page: 0, text: 0 });
+  }
+});
